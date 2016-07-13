@@ -14,7 +14,7 @@ public class MainController implements EventHandler<ActionEvent> {
     private final int PORT = 9000;
 
     private Stage primaryStage;
-    private IntroView introView;
+
 
     public MainController(Stage primaryStage) {
 
@@ -23,7 +23,7 @@ public class MainController implements EventHandler<ActionEvent> {
         connectToServer();
         configStage(primaryStage);
 
-        introView = new IntroView(primaryStage, this);
+        new IntroView(primaryStage, this);
     }
 
     private void connectToServer() {
@@ -41,9 +41,6 @@ public class MainController implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-
         new GameLobbyView(primaryStage, this);
-
     }
-
 }
