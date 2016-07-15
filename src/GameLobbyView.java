@@ -13,7 +13,6 @@ import java.io.IOException;
 
 /**
  * Created by Hermann Grieder on 13.07.2016.
- *
  */
 public class GameLobbyView {
 
@@ -22,28 +21,26 @@ public class GameLobbyView {
 
     public GameLobbyView(Stage primaryStage, MainController mainController) {
 
-            this.mainController = mainController;
+        this.mainController = mainController;
 
-            VBox root = new VBox();
+        VBox root = new VBox();
 
-            Label lblTest = new Label("Game Lobby Scene");
-            txtAreaChat = new TextArea();
-            TextField txtChatMessage = new TextField();
-            Button btnSend = new Button("Send");
+        Label lblTest = new Label("Game Lobby Scene");
+        txtAreaChat = new TextArea();
+        TextField txtChatMessage = new TextField();
+        Button btnSend = new Button("Send");
 
-            root.getChildren().addAll(lblTest, txtAreaChat, txtChatMessage, btnSend);
+        root.getChildren().addAll(lblTest, txtAreaChat, txtChatMessage, btnSend);
 
-            Scene gameLobbyScene = new Scene(root);
-            primaryStage.setScene(gameLobbyScene);
+        Scene gameLobbyScene = new Scene(root);
+        primaryStage.setScene(gameLobbyScene);
 
         /* Send Chat Message as String to the Controller */
-        btnSend.setOnAction(new EventHandler<ActionEvent>(){
+        btnSend.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 try {
-
                     mainController.sendChatMessage(txtChatMessage.getText());
-                    System.out.println(txtChatMessage.getText() + " Text von textfield");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -22,10 +22,11 @@ public class ChatClient{
 
         try {
             socket = new Socket(serverAddress, 9000);
+            receiveChatMessage();
         } catch (IOException e){
             System.out.println("Connection to Server Failed");
         }
-       // receiveChatMessage();
+
     }
 
 
@@ -34,7 +35,7 @@ public class ChatClient{
         in = new BufferedReader(new InputStreamReader(
                 socket.getInputStream()));
         // Process all messages from server, according to the protocol.
-        while ((line = in.readLine()) != null) {
+        while (true) {
             mainController.receiveChatMessage(line);
 //            if (line.startsWith("SUBMITNAME")) {
 //                out.println(getName());
@@ -46,8 +47,9 @@ public class ChatClient{
         }
     }
 
-    public void sendChatMessage() throws IOException {
+    public void sendChatMessage(String text) throws IOException {
         out = new PrintWriter(socket.getOutputStream(), true);
+        out.append(text);
         out.println();
         out.flush();
     }

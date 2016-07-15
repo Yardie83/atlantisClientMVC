@@ -32,15 +32,14 @@ public class MainController implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-        GameLobbyView gameLobbyView = new GameLobbyView(primaryStage, this);
+        new GameLobbyView(primaryStage, this);
         if(event.getEventType() == ActionEvent.ACTION){
 
         }
     }
 
     public void sendChatMessage(String text) throws IOException {
-        chatClient.sendChatMessage();
-        System.out.println("sendChatMessage Methode");
+        chatClient.sendChatMessage(text);
     }
 
     public void receiveChatMessage(String chatText) {
