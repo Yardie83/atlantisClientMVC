@@ -22,6 +22,11 @@ public class MainController implements EventHandler<ActionEvent> {
         configStage(primaryStage);
         new IntroView(primaryStage, this);
         chatClient = new ChatClient(this);
+
+        // The method below needs to be somewhere else.
+        // Also it does not work correctly
+        //chatClient.run();
+
     }
 
     private void configStage(Stage primaryStage){
@@ -32,9 +37,10 @@ public class MainController implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-        new GameLobbyView(primaryStage, this);
-        if(event.getEventType() == ActionEvent.ACTION){
-
+        try {
+            new GameLobbyView(primaryStage, this, chatClient);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

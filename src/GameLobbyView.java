@@ -13,15 +13,19 @@ import java.io.IOException;
 
 /**
  * Created by Hermann Grieder on 13.07.2016.
+ *
  */
 public class GameLobbyView {
+
+    private ChatClient chatClient;
 
     private MainController mainController;
     private TextArea txtAreaChat;
 
-    public GameLobbyView(Stage primaryStage, MainController mainController) {
+    public GameLobbyView(Stage primaryStage, MainController mainController, ChatClient chatClient) throws IOException {
 
         this.mainController = mainController;
+        this.chatClient = chatClient;
 
         VBox root = new VBox();
 
@@ -34,6 +38,7 @@ public class GameLobbyView {
 
         Scene gameLobbyScene = new Scene(root);
         primaryStage.setScene(gameLobbyScene);
+
 
         /* Send Chat Message as String to the Controller */
         btnSend.setOnAction(new EventHandler<ActionEvent>() {
@@ -49,7 +54,7 @@ public class GameLobbyView {
 
     }
 
-    public void appendChatMessage(String message) {
-        txtAreaChat.appendText(message + "/n");
+    public void appendChatMessage(String chatText) {
+        txtAreaChat.appendText(chatText + "/n");
     }
 }
