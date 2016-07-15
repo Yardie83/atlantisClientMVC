@@ -1,9 +1,15 @@
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  * Created by Hermann Grieder on 13.07.2016.
@@ -11,18 +17,40 @@ import javafx.stage.Stage;
  */
 public class GameLobbyView {
 
+    private MainController mainController;
+    private TextArea txtAreaChat;
+
     public GameLobbyView(Stage primaryStage, MainController mainController) {
-        VBox root = new VBox();
 
-        Label testlbl = new Label("Game Lobby Scene");
-        Button changeSceneBtn = new Button("Change Scene");
+            this.mainController = mainController;
 
-        changeSceneBtn.addEventHandler(ActionEvent.ACTION,mainController);
+            VBox root = new VBox();
 
-        root.getChildren().addAll(testlbl, changeSceneBtn);
+            Label lblTest = new Label("Game Lobby Scene");
+            txtAreaChat = new TextArea();
+            TextField txtChatMessage = new TextField();
+            Button btnSend = new Button("Send");
 
-        Scene gameLobbyScene = new Scene(root);
+            root.getChildren().addAll(lblTest, txtAreaChat, txtChatMessage, btnSend);
 
-        primaryStage.setScene(gameLobbyScene);
+            Scene gameLobbyScene = new Scene(root);
+            primaryStage.setScene(gameLobbyScene);
+
+        /* Send Chat Message as String to the Controller */
+        btnSend.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    mainController.sendChatMessage(txtChatMessage.getText());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    public void appendChatMessage(String message) {
+        txtAreaChat.appendText(message + "/n");
     }
 }

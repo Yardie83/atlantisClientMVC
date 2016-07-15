@@ -1,6 +1,8 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
+
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -13,17 +15,18 @@ public class MainController implements EventHandler<ActionEvent> {
     private final String HOST = "127.0.0.1";
     private final int PORT = 9000;
 
+    private GameLobbyView gameLobbyView;
     private Stage primaryStage;
+    private ChatClient chatClient;
 
 
-    public MainController(Stage primaryStage) {
+    public MainController(Stage primaryStage) throws IOException {
 
         this.primaryStage = primaryStage;
-
         connectToServer();
         configStage(primaryStage);
-
         new IntroView(primaryStage, this);
+        chatClient = new ChatClient(this);
     }
 
     private void connectToServer() {
@@ -41,6 +44,18 @@ public class MainController implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-        new GameLobbyView(primaryStage, this);
+        GameLobbyView gameLobbyView = new GameLobbyView(primaryStage, this);
+        if(event.getEventType() == ActionEvent.ACTION){
+
+        }
     }
+
+    public void sendChatMessage(String text) throws IOException {
+        chatClient.sendChatMessage();
+    }
+
+    public void receiveChatMessage(String chatText) {
+        gameLobbyView.appendChatMessage(chatText);
+    }
+
 }
