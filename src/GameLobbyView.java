@@ -41,7 +41,9 @@ public class GameLobbyView {
             @Override
             public void handle(ActionEvent event) {
                 try {
+
                     mainController.sendChatMessage(txtChatMessage.getText());
+                    System.out.println(txtChatMessage.getText() + " Text von textfield");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

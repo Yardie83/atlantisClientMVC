@@ -14,17 +14,18 @@ public class ChatClient{
     private BufferedReader in;
     private PrintWriter out;
     private Socket socket;
-    private final String serverAddress = "127.0.0.1";
+    private final String serverAddress = "localhost";
+    private String line;
 
     public ChatClient(MainController mainController) throws IOException {
         this.mainController = mainController;
 
         try {
-            socket = new Socket(serverAddress, 9001);
-            receiveChatMessage();
+            socket = new Socket(serverAddress, 9000);
         } catch (IOException e){
             System.out.println("Connection to Server Failed");
         }
+       // receiveChatMessage();
     }
 
 
@@ -33,8 +34,7 @@ public class ChatClient{
         in = new BufferedReader(new InputStreamReader(
                 socket.getInputStream()));
         // Process all messages from server, according to the protocol.
-        while (true) {
-            String line = in.readLine();
+        while ((line = in.readLine()) != null) {
             mainController.receiveChatMessage(line);
 //            if (line.startsWith("SUBMITNAME")) {
 //                out.println(getName());
@@ -48,5 +48,7 @@ public class ChatClient{
 
     public void sendChatMessage() throws IOException {
         out = new PrintWriter(socket.getOutputStream(), true);
+        out.println();
+        out.flush();
     }
 }
