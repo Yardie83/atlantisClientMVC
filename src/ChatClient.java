@@ -13,14 +13,21 @@ public class ChatClient{
     private MainController mainController;
     private BufferedReader in;
     private PrintWriter out;
-    private final Socket socket;
+    private Socket socket;
     private final String serverAddress = "127.0.0.1";
 
     public ChatClient(MainController mainController) throws IOException {
         this.mainController = mainController;
-        socket = new Socket(serverAddress, 9001);
-        receiveChatMessage();
+
+        try {
+            socket = new Socket(serverAddress, 9001);
+            receiveChatMessage();
+        } catch (IOException e){
+            System.out.println("Connection to Server Failed");
+        }
     }
+
+
     private void receiveChatMessage() throws IOException {
 
         in = new BufferedReader(new InputStreamReader(
