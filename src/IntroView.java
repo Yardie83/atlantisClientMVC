@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.io.IOException;
 
 /**
  * Created by Hermann Grieder on 13.07.2016.
@@ -21,7 +22,17 @@ class IntroView {
         Label testlbl = new Label("Test");
         Button changeSceneBtn = new Button("Change Scene");
 
-        changeSceneBtn.addEventHandler(ActionEvent.ACTION,mainController);
+        changeSceneBtn.setOnAction(new EventHandler<ActionEvent>(){
+
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    mainController.createGameLobby();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         root.getChildren().addAll(testlbl, changeSceneBtn);
 
@@ -30,6 +41,4 @@ class IntroView {
         primaryStage.setScene(introScene);
         primaryStage.show();
     }
-
-
 }

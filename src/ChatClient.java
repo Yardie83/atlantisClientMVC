@@ -19,23 +19,4 @@ public class ChatClient {
     public ChatClient(MainController mainController) throws IOException {
         this.mainController = mainController;
     }
-
-    public void run() throws IOException{
-        Socket socket = new Socket(serverAddress, 9000);
-        in = new BufferedReader(new InputStreamReader(
-                socket.getInputStream()));
-        out = new PrintWriter(socket.getOutputStream(), true);
-
-        while((line = in.readLine()) != null){
-            System.out.println(line);
-            //mainController.receiveChatMessage(line);
-        }
-    }
-
-    public void sendChatMessage(String text) throws IOException {
-        out.append(text);
-        out.println();
-        out.flush();
-    }
-
 }
