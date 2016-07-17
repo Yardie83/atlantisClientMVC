@@ -1,44 +1,20 @@
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
-
-import javax.swing.*;
-import java.io.IOException;
+import javafx.scene.layout.Pane;
 
 /**
- * Created by Hermann Grieder on 13.07.2016.
- *
+ * Created by LorisGrether and Hermann Grieder on 17.07.2016.
  */
-class IntroView {
+public class IntroView extends Parent{
 
-    IntroView(Stage primaryStage, MainController mainController) {
 
-        VBox root = new VBox();
+    public IntroView() {
 
-        Label testlbl = new Label("Test");
-        Button changeSceneBtn = new Button("Change Scene");
+        Button button = new Button("IntroView");
+        this.getChildren().add(button);
 
-        changeSceneBtn.setOnAction(new EventHandler<ActionEvent>(){
-
-            @Override
-            public void handle(ActionEvent event) {
-                try {
-                    mainController.createGameLobby();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        root.getChildren().addAll(testlbl, changeSceneBtn);
-
-        Scene introScene = new Scene(root);
-
-        primaryStage.setScene(introScene);
-        primaryStage.show();
     }
+
+
+
 }

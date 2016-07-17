@@ -4,10 +4,13 @@ import javafx.stage.Stage;
 import java.net.Socket;
 
 /**
- * Created by Hermann Grieder on 13.07.2016.
- *
+ * Created by LorisGrether and Hermann Grieder on 17.07.2016.
  */
 public class AtlantisClient extends Application {
+
+    private AtlantisView view;
+    private AtlantisController controller;
+    private AtlantisModel model;
 
     public static void main(String[] args) {
         launch();
@@ -15,9 +18,16 @@ public class AtlantisClient extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        AtlantisClient client = new AtlantisClient();
-        Connection connection = new Connection(client);
-        new MainController(primaryStage, connection);
+        model = new AtlantisModel();
+        view = new AtlantisView(primaryStage, model);
+        controller = new AtlantisController(model, view);
 
+        view.start();
+    }
+
+    @Override
+    public void stop() {
+        if (view != null)
+            view.stop();
     }
 }
