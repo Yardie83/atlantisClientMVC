@@ -5,6 +5,7 @@ import java.net.Socket;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ *
  */
 public class AtlantisClient extends Application {
 
