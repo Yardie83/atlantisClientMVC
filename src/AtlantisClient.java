@@ -13,6 +13,7 @@ public class AtlantisClient extends Application {
     private AtlantisController controller;
     private AtlantisModel model;
 
+
     public static void main(String[] args) {
         launch();
     }

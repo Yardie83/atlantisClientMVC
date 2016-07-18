@@ -10,7 +10,7 @@ import javafx.stage.Stage;
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
  */
 public class GameLobbyView extends Parent {
-
+    private AtlantisView view;
     private Label lblWindowTitle;
     private Label lblStatus;
     private Label lblInfos;
@@ -24,7 +24,8 @@ public class GameLobbyView extends Parent {
     private Button btnOptions;
     private Button btnExit;
 
-    public GameLobbyView(AtlantisModel model) {
+    public GameLobbyView(AtlantisView view) {
+        this.view = view;
 
         BorderPane root = new BorderPane();
 

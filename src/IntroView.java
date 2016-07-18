@@ -1,20 +1,46 @@
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
+
+import java.nio.file.Paths;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ *
  */
-public class IntroView extends Parent{
+public class IntroView extends Parent {
+    AtlantisView view;
 
+    private MediaPlayer mp;
 
-    public IntroView() {
+    public IntroView(AtlantisView view) {
+        this.view = view;
 
-        Button button = new Button("IntroView");
-        this.getChildren().add(button);
+        try {
+            Media media = new Media(Paths.get("src/res/atlantis.mp4").toUri().toString());
+            mp = new MediaPlayer(media);
+            MediaView mediaView = new MediaView(mp);
+            DoubleProperty width = mediaView.fitWidthProperty();
+            DoubleProperty height = mediaView.fitHeightProperty();
 
+            width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+            height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
+
+            mediaView.setPreserveRatio(true);
+
+            this.getChildren().add(mediaView);
+
+        } catch (Exception e) {
+            System.out.println("Could not load intro movie");
+            e.printStackTrace();
+        }
     }
 
-
-
+    public MediaPlayer getMediaPlayer() {
+        return mp;
+    }
 }

@@ -54,13 +54,9 @@ public class AtlantisModel {
                                 System.out.println("Connecting to Server");
                                 connectToServer();
                             } else {
-
                                 response = inReader.readLine();
                                 System.out.println("Server -> " + response);
                                 updateChatString(response);
-
-                                //ich weiss nit wie ich "response" in the controller krieg und denn
-                                // d'GUI ka update.
                             }
                         }
                     } catch (IOException e) {
@@ -76,7 +72,7 @@ public class AtlantisModel {
     }
 
     private void updateChatString(String response) {
-        chatString.setValue(response + "\n");
+        chatString.setValue(response);
     }
 
     public SimpleStringProperty getChatString() {

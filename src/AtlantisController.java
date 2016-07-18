@@ -1,7 +1,4 @@
-import com.sun.javafx.property.adapter.PropertyDescriptor;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
@@ -12,25 +9,47 @@ import javafx.stage.WindowEvent;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
- *
  */
 
-public class AtlantisController{
+public class AtlantisController {
 
     final private AtlantisModel model;
     final private AtlantisView view;
+    private boolean debugMode = false;
 
     public AtlantisController(AtlantisModel model, AtlantisView view) {
         this.model = model;
         this.view = view;
-        this.view.createIntroView();
+
+        if (debugMode) {
+            view.createGameLobbyView();
+        } else {
+            view.createIntroView();
+        }
+
+
+        view.getStage().setOnShowing(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if (debugMode) {
+                    System.out.println("DebugMode is on. Intro was skipped");
+                    createGameLobby();
+                } else {
+                    try {
+                        view.getIntroView().getMediaPlayer().play();
+                    } catch (Exception e) {
+                        System.err.println("Not able to play intro video");
+                    }
+                }
+            }
+        });
 
         view.getScene().setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                view.createGameLobbyView();
-                handleGameLobby();
-                model.connectToServer();
+                view.getIntroView().getMediaPlayer().stop();
+                view.getIntroView().getMediaPlayer().dispose();
+                createGameLobby();
             }
         });
 
@@ -43,7 +62,10 @@ public class AtlantisController{
         });
     }
 
-    private void handleGameLobby() {
+    private void createGameLobby() {
+
+        view.createGameLobbyView();
+        model.connectToServer();
 
         view.getGameLobbyView().getBtnExit().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -56,16 +78,12 @@ public class AtlantisController{
         view.getGameLobbyView().getTxtField().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER){
+                if (event.getCode() == KeyCode.ENTER) {
                     TextField txtField = view.getGameLobbyView().getTxtField();
                     model.sendMessage(txtField.getText());
                     txtField.clear();
                 }
             }
         });
-
-
-
-
     }
 }

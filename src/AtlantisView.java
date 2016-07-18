@@ -1,6 +1,8 @@
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.awt.*;
+
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
  *
@@ -18,31 +20,41 @@ public class AtlantisView {
 
         this.model = model;
         this.primaryStage = primaryStage;
-
         initStage();
     }
 
     private void initStage() {
-        primaryStage.setTitle("Atlanits");
-        primaryStage.setMinHeight(600);
-        primaryStage.setMinWidth(800);
+        primaryStage.setTitle("Atlantis");
+        primaryStage.setFullScreenExitHint("");
+        primaryStage.setHeight(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+        primaryStage.setWidth(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
+        primaryStage.setMaximized(true);
+        primaryStage.setResizable(true);
+        primaryStage.setX(0);
+        primaryStage.setY(0);
+
     }
 
-    public void createIntroView(){
+    public void toggleFullscreen() {
+        primaryStage.setFullScreen(!primaryStage.isFullScreen());
+    }
 
-        this.introView = new IntroView();
+
+    public void createIntroView() {
+        toggleFullscreen();
+        this.introView = new IntroView(this);
         Scene scene = new Scene(introView);
         setScene(scene);
     }
 
-    public void createGameLobbyView(){
-
-        this.gameLobbyView = new GameLobbyView(model);
+    public void createGameLobbyView() {
+        toggleFullscreen();
+        this.gameLobbyView = new GameLobbyView(this);
         Scene scene = new Scene(gameLobbyView);
         setScene(scene);
     }
 
-    private void setScene(Scene scene){
+    private void setScene(Scene scene) {
         this.scene = scene;
         primaryStage.setScene(scene);
     }
@@ -59,7 +71,7 @@ public class AtlantisView {
         return primaryStage;
     }
 
-    public Scene getScene(){
+    public Scene getScene() {
         return scene;
     }
 
