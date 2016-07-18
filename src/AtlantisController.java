@@ -1,4 +1,6 @@
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
@@ -9,13 +11,14 @@ import javafx.stage.WindowEvent;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ *
  */
 
-public class AtlantisController {
+public class AtlantisController implements ChangeListener {
 
     final private AtlantisModel model;
     final private AtlantisView view;
-    private boolean debugMode = false;
+    private boolean debugMode = true;
 
     public AtlantisController(AtlantisModel model, AtlantisView view) {
         this.model = model;
@@ -26,7 +29,6 @@ public class AtlantisController {
         } else {
             view.createIntroView();
         }
-
 
         view.getStage().setOnShowing(new EventHandler<WindowEvent>() {
             @Override
@@ -56,8 +58,10 @@ public class AtlantisController {
         view.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
+                model.closeConnection();
                 view.stop();
                 Platform.exit();
+
             }
         });
     }
@@ -75,6 +79,9 @@ public class AtlantisController {
             }
         });
 
+        /*
+            CHAT: If the user presses enter the message is sent to the server
+         */
         view.getGameLobbyView().getTxtField().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -85,5 +92,18 @@ public class AtlantisController {
                 }
             }
         });
+
+        /*
+            Add this controller class as the change listenere to the chatstring in the model class.
+            Since the model should not know of the view or the controller we have to get the information out
+            somehow.
+         */
+
+        model.chatString.addListener(this);
+    }
+
+    @Override
+    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+        view.getGameLobbyView().getTxtArea().appendText(model.getChatString().getValue() + "\n");
     }
 }

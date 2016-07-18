@@ -26,9 +26,9 @@ public class AtlantisView {
     private void initStage() {
         primaryStage.setTitle("Atlantis");
         primaryStage.setFullScreenExitHint("");
-        primaryStage.setHeight(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
-        primaryStage.setWidth(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
-        primaryStage.setMaximized(true);
+        //primaryStage.setHeight(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
+        //primaryStage.setWidth(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
+        //primaryStage.setMaximized(true);
         primaryStage.setResizable(true);
         primaryStage.setX(0);
         primaryStage.setY(0);

@@ -14,13 +14,18 @@ public class AtlantisModel {
     private Socket socket;
     private final String HOST = "127.0.0.1";
     private final int PORT = 9000;
-    private SimpleStringProperty chatString = new SimpleStringProperty();
+    public SimpleStringProperty chatString = new SimpleStringProperty();
 
     public AtlantisModel() {
     }
 
     public void connectToServer() {
 
+        if (socket != null && !socket.isClosed()) {
+            closeConnection();
+        }
+
+        System.out.println("Connecting to Server");
         try {
             socket = new Socket(HOST, PORT);
             inReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -32,35 +37,40 @@ public class AtlantisModel {
     }
 
     public void sendMessage(String text) {
-        if (socket == null || socket.isClosed() ) {
+        if (socket == null || socket.isClosed()) {
             connectToServer();
+            sendMessage(text);
         } else {
-            outWriter.println(text);
-            outWriter.flush();
+            if (text.equals("QUIT")) {
+                closeConnection();
+            } else {
+                outWriter.println(text);
+                outWriter.flush();
+            }
         }
     }
 
     private void receiveMessage() {
-
         Task receiveMessageTask = new Task() {
             @Override
             protected Object call() throws Exception {
                 while (!isCancelled()) {
-                    System.out.println("Task started");
+                    System.out.println("Connected to Server\nWaiting for incoming messages");
                     try {
                         String response;
                         while (true) {
                             if (socket == null || socket.isClosed()) {
-                                System.out.println("Connecting to Server");
                                 connectToServer();
                             } else {
                                 response = inReader.readLine();
                                 System.out.println("Server -> " + response);
-                                updateChatString(response);
+                                chatString.setValue(response);
                             }
                         }
                     } catch (IOException e) {
-                        System.err.println("Could not get response from host");
+                        System.err.println();
+                    } finally {
+                        closeConnection();
                     }
                     break;
                 } // End While
@@ -71,11 +81,21 @@ public class AtlantisModel {
         receiverThread.start();
     }
 
-    private void updateChatString(String response) {
-        chatString.setValue(response);
+
+    public void closeConnection() {
+        try {
+            if (socket != null && !socket.isClosed()) {
+                socket.close();
+                System.out.println("Connection to server closed");
+            }
+        } catch (IOException e) {
+            System.out.println("Could not close connection");
+            e.printStackTrace();
+        }
     }
 
     public SimpleStringProperty getChatString() {
         return chatString;
     }
+
 }

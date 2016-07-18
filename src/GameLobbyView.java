@@ -1,22 +1,22 @@
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ *
  */
-public class GameLobbyView extends Parent {
+public class GameLobbyView extends Parent implements ChangeListener {
     private AtlantisView view;
-    private Label lblWindowTitle;
     private Label lblStatus;
-    private Label lblInfos;
+    private Label lblInfo;
     private TextArea txtArea;
     private TextField txtField;
-    private Label lblGameTitles;
     private ListView gameList;
     private Button btnCreateGame;
     private Button btnLogin;
@@ -40,7 +40,7 @@ public class GameLobbyView extends Parent {
 
     private Node createTop() {
 
-        lblWindowTitle = new Label("Welcome to Atlantis");
+        Label lblWindowTitle = new Label("Welcome to Atlantis");
 
         return lblWindowTitle;
     }
@@ -50,8 +50,8 @@ public class GameLobbyView extends Parent {
         HBox hBox = new HBox(10);
 
         lblStatus = new Label("Status");
-        lblInfos = new Label("Infos");
-        hBox.getChildren().addAll(lblStatus, lblInfos);
+        lblInfo = new Label("Information");
+        hBox.getChildren().addAll(lblStatus, lblInfo);
 
         return hBox;
     }
@@ -62,6 +62,7 @@ public class GameLobbyView extends Parent {
 
         txtArea = new TextArea();
         txtArea.setEditable(false);
+        txtArea.setWrapText(true);
         txtField = new TextField();
         vBox.getChildren().addAll(txtArea, txtField);
 
@@ -72,7 +73,7 @@ public class GameLobbyView extends Parent {
 
         VBox vBox = new VBox();
 
-        lblGameTitles = new Label("Games");
+        Label lblGameTitles = new Label("Games");
         gameList = new ListView();
         gameList.getItems().add(0, "Hallo");
         vBox.getChildren().addAll(lblGameTitles, gameList);
@@ -101,12 +102,12 @@ public class GameLobbyView extends Parent {
         this.lblStatus = lblStatus;
     }
 
-    public Label getLblInfos() {
-        return lblInfos;
+    public Label getLblInfo() {
+        return lblInfo;
     }
 
-    public void setLblInfos(Label lblInfos) {
-        this.lblInfos = lblInfos;
+    public void setLblInfo(Label lblInfo) {
+        this.lblInfo = lblInfo;
     }
 
     public TextArea getTxtArea() {
@@ -151,5 +152,10 @@ public class GameLobbyView extends Parent {
 
     public Button getBtnExit() {
         return btnExit;
+    }
+
+    @Override
+    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+        txtArea.appendText(newValue.toString());
     }
 }

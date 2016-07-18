@@ -16,6 +16,7 @@ public class IntroView extends Parent {
     AtlantisView view;
 
     private MediaPlayer mp;
+    private MediaView mediaView;
 
     public IntroView(AtlantisView view) {
         this.view = view;
@@ -23,7 +24,7 @@ public class IntroView extends Parent {
         try {
             Media media = new Media(Paths.get("src/res/atlantis.mp4").toUri().toString());
             mp = new MediaPlayer(media);
-            MediaView mediaView = new MediaView(mp);
+            mediaView = new MediaView(mp);
             DoubleProperty width = mediaView.fitWidthProperty();
             DoubleProperty height = mediaView.fitHeightProperty();
 
@@ -42,5 +43,13 @@ public class IntroView extends Parent {
 
     public MediaPlayer getMediaPlayer() {
         return mp;
+    }
+
+    public MediaView getMediaView() {
+        return mediaView;
+    }
+
+    public void setMediaView(MediaView mediaView) {
+        this.mediaView = mediaView;
     }
 }
