@@ -11,14 +11,13 @@ import javafx.stage.WindowEvent;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
- *
  */
 
 public class AtlantisController implements ChangeListener {
 
     final private AtlantisModel model;
     final private AtlantisView view;
-    private boolean debugMode = true;
+    private boolean debugMode = false;
 
     public AtlantisController(AtlantisModel model, AtlantisView view) {
         this.model = model;
@@ -75,6 +74,7 @@ public class AtlantisController implements ChangeListener {
             @Override
             public void handle(ActionEvent event) {
                 view.stop();
+                model.closeConnection();
                 Platform.exit();
             }
         });
@@ -86,20 +86,24 @@ public class AtlantisController implements ChangeListener {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
+                    model.setAutoConnect(true);
                     TextField txtField = view.getGameLobbyView().getTxtField();
-                    model.sendMessage(txtField.getText());
+                    if (txtField.getText().equals("QUIT")) {
+                        model.closeConnection();
+                    } else {
+                        model.sendMessage(new Message(MessageType.CHAT, txtField.getText()));
+                    }
                     txtField.clear();
                 }
             }
         });
 
         /*
-            Add this controller class as the change listenere to the chatstring in the model class.
+            Add this controller class as the change listener to the chatstring in the model class.
             Since the model should not know of the view or the controller we have to get the information out
             somehow.
          */
-
-        model.chatString.addListener(this);
+        model.getChatString().addListener(this);
     }
 
     @Override

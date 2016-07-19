@@ -13,8 +13,8 @@ import java.nio.file.Paths;
  *
  */
 public class IntroView extends Parent {
-    AtlantisView view;
 
+    private AtlantisView view;
     private MediaPlayer mp;
     private MediaView mediaView;
 
@@ -31,7 +31,7 @@ public class IntroView extends Parent {
             width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
             height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
 
-            mediaView.setPreserveRatio(true);
+            mediaView.setPreserveRatio(false);
 
             this.getChildren().add(mediaView);
 

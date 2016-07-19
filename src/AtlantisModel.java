@@ -9,12 +9,14 @@ import java.net.Socket;
  */
 public class AtlantisModel {
 
-    BufferedReader inReader;
-    PrintWriter outWriter;
+    private ObjectInputStream inReader;
+    private ObjectOutputStream outputStream;
+    private Message message;
     private Socket socket;
     private final String HOST = "127.0.0.1";
     private final int PORT = 9000;
-    public SimpleStringProperty chatString = new SimpleStringProperty();
+    private SimpleStringProperty chatString = new SimpleStringProperty();
+    private boolean autoConnect = true;
 
     public AtlantisModel() {
     }
@@ -24,29 +26,15 @@ public class AtlantisModel {
         if (socket != null && !socket.isClosed()) {
             closeConnection();
         }
-
-        System.out.println("Connecting to Server");
+        System.out.println("Connecting to Server.");
         try {
             socket = new Socket(HOST, PORT);
-            inReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            outWriter = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            inReader = new ObjectInputStream(socket.getInputStream());
+
             receiveMessage();
         } catch (IOException e) {
             System.err.println("Connection to the server failed. Please check if the server is running");
-        }
-    }
-
-    public void sendMessage(String text) {
-        if (socket == null || socket.isClosed()) {
-            connectToServer();
-            sendMessage(text);
-        } else {
-            if (text.equals("QUIT")) {
-                closeConnection();
-            } else {
-                outWriter.println(text);
-                outWriter.flush();
-            }
         }
     }
 
@@ -54,48 +42,63 @@ public class AtlantisModel {
         Task receiveMessageTask = new Task() {
             @Override
             protected Object call() throws Exception {
-                while (!isCancelled()) {
+                while (true) {
                     System.out.println("Connected to Server\nWaiting for incoming messages");
-                    try {
-                        String response;
-                        while (true) {
-                            if (socket == null || socket.isClosed()) {
+                    while (true) {
+                        try {
+                            if ((socket == null || socket.isClosed()) && autoConnect == true) {
                                 connectToServer();
                             } else {
-                                response = inReader.readLine();
-                                System.out.println("Server -> " + response);
-                                chatString.setValue(response);
+                                message = (Message) inReader.readObject();
+                                chatString.setValue(message.getMessage().toString());
+                                System.out.println("Server -> " + message.getMessage().toString());
                             }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        System.err.println();
-                    } finally {
-                        closeConnection();
+
                     }
-                    break;
-                } // End While
-                return null;
+                }
             }
         };
-        Thread receiverThread = new Thread(receiveMessageTask);
-        receiverThread.start();
+        new Thread(receiveMessageTask);
     }
 
+    public void sendMessage(Message message) {
+        if (socket == null || socket.isClosed()) {
+            connectToServer();
+            sendMessage(message);
+        } else {
+            try {
+                outputStream.writeObject(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void closeConnection() {
         try {
             if (socket != null && !socket.isClosed()) {
+                sendMessage(new Message(MessageType.DISCONNECT));
+                autoConnect = false;
+                inReader.close();
+                outputStream.close();
                 socket.close();
-                System.out.println("Connection to server closed");
+                System.out.println("Connection to the server closed");
             }
         } catch (IOException e) {
-            System.out.println("Could not close connection");
+            System.out.println("Could not close connection to the server");
             e.printStackTrace();
         }
     }
 
     public SimpleStringProperty getChatString() {
         return chatString;
+    }
+
+    public void setAutoConnect(boolean autoConnect) {
+        this.autoConnect = autoConnect;
     }
 
 }
