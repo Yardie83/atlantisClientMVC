@@ -3,6 +3,7 @@ import javafx.concurrent.Task;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -57,7 +58,7 @@ public class AtlantisModel {
                     System.out.println("Connected to Server\nWaiting for incoming messages");
                     chatString.setValue("Connected to Server\nWaiting for incoming messages");
                     connectionStatus.setValue("Connected");
-                    while (true) {
+                    while (autoConnect) {
                         try {
                             if ((socket == null || socket.isClosed())) {
                                 connectToServer();
@@ -67,7 +68,13 @@ public class AtlantisModel {
                                 chatString.setValue("");
                                 System.out.println("Server -> " + message.getMessage().toString());
                             }
-                        } catch (Exception e) {
+                        }
+                        catch (SocketException e){
+                            System.out.println("Connection by server closed");
+                            autoConnect = false;
+                            //closeConnection();
+                        }
+                        catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -104,7 +111,6 @@ public class AtlantisModel {
                 inReader.close();
                 outputStream.close();
                 socket.close();
-                System.out.println("Connection to the server closed");
             }
         } catch (IOException e) {
             System.out.println("Could not close connection to the server");

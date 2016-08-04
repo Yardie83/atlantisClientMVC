@@ -1,3 +1,4 @@
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -60,10 +61,9 @@ public class AtlantisController {
         view.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                System.out.println("I'm here");
                 model.closeConnection();
                 view.stop();
-                Platform.exit();
+                System.exit(0);
             }
         });
     }
