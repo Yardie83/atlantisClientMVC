@@ -11,6 +11,7 @@ import javafx.stage.WindowEvent;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
+ *
  */
 
 public class AtlantisController {
@@ -59,6 +60,7 @@ public class AtlantisController {
         view.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
+                System.out.println("I'm here");
                 model.closeConnection();
                 view.stop();
                 Platform.exit();
@@ -110,7 +112,9 @@ public class AtlantisController {
         model.getChatString().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                view.getGameLobbyView().getTxtArea().appendText("\n" + newValue);
+                if (!(newValue.equals(""))) {
+                    view.getGameLobbyView().getTxtArea().appendText("\n" + newValue);
+                }
             }
         });
 

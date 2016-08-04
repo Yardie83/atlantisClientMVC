@@ -5,7 +5,8 @@ import java.io.*;
 import java.net.Socket;
 
 /**
- * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ * Created by Loris Grether and Hermann Grieder on 17.07.2016.
+ *
  */
 public class AtlantisModel {
 
@@ -18,6 +19,7 @@ public class AtlantisModel {
     private SimpleStringProperty chatString = new SimpleStringProperty();
     private SimpleStringProperty connectionStatus = new SimpleStringProperty();
     private boolean autoConnect = true;
+    private Thread clientThread;
 
     public AtlantisModel() {
     }
@@ -61,8 +63,8 @@ public class AtlantisModel {
                                 connectToServer();
                             } else {
                                 message = (Message) inReader.readObject();
-                                // TODO: When the user types two times the same message it does not show up because there is no "change" registered in the AtlantisController.
                                 chatString.setValue(message.getMessage().toString());
+                                chatString.setValue("");
                                 System.out.println("Server -> " + message.getMessage().toString());
                             }
                         } catch (Exception e) {
@@ -72,7 +74,8 @@ public class AtlantisModel {
                 } return null;
             }
         };
-        new Thread(receiveMessageTask).start();
+        clientThread = new Thread(receiveMessageTask);
+        clientThread.start();
     }
 
     public void sendMessage(Message message) {
@@ -95,8 +98,9 @@ public class AtlantisModel {
     public void closeConnection() {
         try {
             if (socket != null && !socket.isClosed()) {
-                sendMessage(new Message(MessageType.DISCONNECT));
+                sendMessage(new Message(MessageType.DISCONNECT, "Closing"));
                 autoConnect = false;
+                clientThread.interrupt();
                 inReader.close();
                 outputStream.close();
                 socket.close();

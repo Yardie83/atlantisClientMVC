@@ -3,7 +3,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * Created by herma on 21.07.2016.
+ * Created by Hermann Grieder on 21.07.2016.
+ *
  */
 public class OptionsView extends Parent {
 
