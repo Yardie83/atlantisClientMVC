@@ -16,6 +16,7 @@ public class AtlantisModel {
     private final String HOST = "127.0.0.1";
     private final int PORT = 9000;
     private SimpleStringProperty chatString = new SimpleStringProperty();
+    private SimpleStringProperty connectionStatus = new SimpleStringProperty();
     private boolean autoConnect = true;
 
     public AtlantisModel() {
@@ -26,50 +27,64 @@ public class AtlantisModel {
         if (socket != null && !socket.isClosed()) {
             closeConnection();
         }
-        System.out.println("Connecting to Server.");
-        try {
-            socket = new Socket(HOST, PORT);
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
-            inReader = new ObjectInputStream(socket.getInputStream());
-
-            receiveMessage();
-        } catch (IOException e) {
-            System.err.println("Connection to the server failed. Please check if the server is running");
+        if (autoConnect) {
+            System.out.println("Connecting to Server.");
+            chatString.setValue("Connecting to Server.");
+            connectionStatus.setValue("Connecting");
+            try {
+                socket = new Socket(HOST, PORT);
+                outputStream = new ObjectOutputStream(socket.getOutputStream());
+                inReader = new ObjectInputStream(socket.getInputStream());
+                receiveMessage();
+            } catch (IOException e) {
+                System.err.println("Connection to the server failed. Please check if the server is running");
+                chatString.setValue("Connection to the server failed. Please check if the server is running");
+                connectionStatus.setValue("Disconnected");
+            }
+        } else {
+            return;
         }
     }
 
     private void receiveMessage() {
+
         Task receiveMessageTask = new Task() {
             @Override
             protected Object call() throws Exception {
-                while (true) {
+                while (autoConnect) {
                     System.out.println("Connected to Server\nWaiting for incoming messages");
+                    chatString.setValue("Connected to Server\nWaiting for incoming messages");
+                    connectionStatus.setValue("Connected");
                     while (true) {
                         try {
-                            if ((socket == null || socket.isClosed()) && autoConnect == true) {
+                            if ((socket == null || socket.isClosed())) {
                                 connectToServer();
                             } else {
                                 message = (Message) inReader.readObject();
+                                // TODO: When the user types two times the same message it does not show up because there is no "change" registered in the AtlantisController.
                                 chatString.setValue(message.getMessage().toString());
                                 System.out.println("Server -> " + message.getMessage().toString());
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-
                     }
-                }
+                } return null;
             }
         };
-        new Thread(receiveMessageTask);
+        new Thread(receiveMessageTask).start();
     }
 
     public void sendMessage(Message message) {
-        if (socket == null || socket.isClosed()) {
+        if ((socket == null || socket.isClosed()) && autoConnect == true) {
             connectToServer();
+            autoConnect = false;
             sendMessage(message);
+        } else if ((socket == null || socket.isClosed()) && autoConnect == false) {
+            chatString.setValue("Maximum connection attempts reached.");
         } else {
             try {
+                System.out.println("Sending to Server -> " + message.getMessage());
                 outputStream.writeObject(message);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -97,7 +112,11 @@ public class AtlantisModel {
         return chatString;
     }
 
-    public void setAutoConnect(boolean autoConnect) {
+    public SimpleStringProperty getConnectionStatus() {
+        return connectionStatus;
+    }
+
+    public void autoConnect(boolean autoConnect) {
         this.autoConnect = autoConnect;
     }
 

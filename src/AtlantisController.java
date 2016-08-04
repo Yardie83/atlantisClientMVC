@@ -10,14 +10,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 
 /**
- * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  */
 
-public class AtlantisController implements ChangeListener {
+public class AtlantisController {
 
     final private AtlantisModel model;
     final private AtlantisView view;
-    private boolean debugMode = false;
+
+    //Set debugMode to "true" in order to skip the intro video
+    private boolean debugMode = true;
 
     public AtlantisController(AtlantisModel model, AtlantisView view) {
         this.model = model;
@@ -60,7 +62,6 @@ public class AtlantisController implements ChangeListener {
                 model.closeConnection();
                 view.stop();
                 Platform.exit();
-
             }
         });
     }
@@ -80,13 +81,13 @@ public class AtlantisController implements ChangeListener {
         });
 
         /*
-            CHAT: If the user presses enter the message is sent to the server
+         CHAT: When the user presses enter the message is sent to the server
          */
         view.getGameLobbyView().getTxtField().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
-                    model.setAutoConnect(true);
+                    model.autoConnect(true);
                     TextField txtField = view.getGameLobbyView().getTxtField();
                     if (txtField.getText().equals("QUIT")) {
                         model.closeConnection();
@@ -98,16 +99,27 @@ public class AtlantisController implements ChangeListener {
             }
         });
 
-        /*
-            Add this controller class as the change listener to the chatstring in the model class.
-            Since the model should not know of the view or the controller we have to get the information out
-            somehow.
-         */
-        model.getChatString().addListener(this);
-    }
+        view.getGameLobbyView().getBtnOptions().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                view.createOptionsView();
+            }
+        });
 
-    @Override
-    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-        view.getGameLobbyView().getTxtArea().appendText(model.getChatString().getValue() + "\n");
+
+        model.getChatString().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                view.getGameLobbyView().getTxtArea().appendText("\n" + newValue);
+            }
+        });
+
+        model.getConnectionStatus().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                view.getGameLobbyView().getlblStatus().setText("Status: " + newValue);
+            }
+        });
+
     }
 }

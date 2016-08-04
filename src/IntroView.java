@@ -14,13 +14,10 @@ import java.nio.file.Paths;
  */
 public class IntroView extends Parent {
 
-    private AtlantisView view;
     private MediaPlayer mp;
     private MediaView mediaView;
 
-    public IntroView(AtlantisView view) {
-        this.view = view;
-
+    public IntroView() {
         try {
             Media media = new Media(Paths.get("src/res/atlantis.mp4").toUri().toString());
             mp = new MediaPlayer(media);
@@ -43,13 +40,5 @@ public class IntroView extends Parent {
 
     public MediaPlayer getMediaPlayer() {
         return mp;
-    }
-
-    public MediaView getMediaView() {
-        return mediaView;
-    }
-
-    public void setMediaView(MediaView mediaView) {
-        this.mediaView = mediaView;
     }
 }

@@ -15,6 +15,7 @@ public class AtlantisView {
     private GameLobbyView gameLobbyView;
 
     private Scene scene;
+    private OptionsView optionsView;
 
     public AtlantisView(Stage primaryStage, AtlantisModel model) {
 
@@ -42,7 +43,7 @@ public class AtlantisView {
 
     public void createIntroView() {
         toggleFullscreen();
-        this.introView = new IntroView(this);
+        this.introView = new IntroView();
         Scene scene = new Scene(introView);
         setScene(scene);
     }
@@ -51,6 +52,12 @@ public class AtlantisView {
         toggleFullscreen();
         this.gameLobbyView = new GameLobbyView(this);
         Scene scene = new Scene(gameLobbyView);
+        setScene(scene);
+    }
+    //TODO Finish creating the options view
+    public void createOptionsView() {
+        this.optionsView = new OptionsView();
+        Scene scene = new Scene(optionsView);
         setScene(scene);
     }
 
@@ -63,8 +70,7 @@ public class AtlantisView {
         primaryStage.show();
     }
 
-    public void stop() {
-        primaryStage.hide();
+    public void stop() {primaryStage.hide();
     }
 
     public Stage getStage() {
@@ -82,4 +88,5 @@ public class AtlantisView {
     public GameLobbyView getGameLobbyView() {
         return gameLobbyView;
     }
+
 }

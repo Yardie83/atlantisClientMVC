@@ -40,16 +40,27 @@ public class GameLobbyView extends Parent implements ChangeListener {
 
     private Node createTop() {
 
+        VBox vBox = new VBox();
+
+        MenuBar menuBar = new MenuBar();
+        Menu menuFile = new Menu("File");
+        Menu menuOptions = new Menu("Options");
+        Menu menuRules = new Menu("Game Rules");
+        
+        menuBar.getMenus().addAll(menuFile, menuOptions, menuRules);
+                
         Label lblWindowTitle = new Label("Welcome to Atlantis");
 
-        return lblWindowTitle;
+        vBox.getChildren().addAll(menuBar, lblWindowTitle);
+
+        return vBox;
     }
 
     private Node createBottom() {
 
         HBox hBox = new HBox(10);
 
-        lblStatus = new Label("Status");
+        lblStatus = new Label("Status: Disconnected");
         lblInfo = new Label("Information");
         hBox.getChildren().addAll(lblStatus, lblInfo);
 
@@ -92,14 +103,6 @@ public class GameLobbyView extends Parent implements ChangeListener {
 
         vBox.getChildren().addAll(btnCreateGame, btnLogin, btnCreateProfile, btnOptions, btnExit);
         return vBox;
-    }
-
-    public Label getLblStatus() {
-        return lblStatus;
-    }
-
-    public void setLblStatus(Label lblStatus) {
-        this.lblStatus = lblStatus;
     }
 
     public Label getLblInfo() {
@@ -152,6 +155,14 @@ public class GameLobbyView extends Parent implements ChangeListener {
 
     public Button getBtnExit() {
         return btnExit;
+    }
+
+    public Label getlblStatus(){
+        return lblStatus;
+    }
+
+    public void setLblStatus(Label lblStatus){
+        this.lblStatus = lblStatus;
     }
 
     @Override
