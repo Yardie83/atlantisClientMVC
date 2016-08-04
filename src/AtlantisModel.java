@@ -7,7 +7,6 @@ import java.net.SocketException;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
  */
 public class AtlantisModel {
 
@@ -20,7 +19,7 @@ public class AtlantisModel {
     private SimpleStringProperty chatString = new SimpleStringProperty();
     private SimpleStringProperty connectionStatus = new SimpleStringProperty();
     private boolean autoConnect = true;
-    private Thread clientThread;
+    private Thread clientTask;
 
     public AtlantisModel() {
     }
@@ -68,21 +67,21 @@ public class AtlantisModel {
                                 chatString.setValue("");
                                 System.out.println("Server -> " + message.getMessage().toString());
                             }
-                        }
-                        catch (SocketException e){
+                        } catch (SocketException e) {
                             System.out.println("Connection by server closed");
+                            //TODO: Ask Bradyley if this is the correct way to solve this problem
                             autoConnect = false;
                             //closeConnection();
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
-                } return null;
+                }
+                return null;
             }
         };
-        clientThread = new Thread(receiveMessageTask);
-        clientThread.start();
+        clientTask = new Thread(receiveMessageTask);
+        clientTask.start();
     }
 
     public void sendMessage(Message message) {
@@ -107,7 +106,7 @@ public class AtlantisModel {
             if (socket != null && !socket.isClosed()) {
                 sendMessage(new Message(MessageType.DISCONNECT, "Closing"));
                 autoConnect = false;
-                clientThread.interrupt();
+                clientTask.interrupt();
                 inReader.close();
                 outputStream.close();
                 socket.close();
@@ -126,7 +125,7 @@ public class AtlantisModel {
         return connectionStatus;
     }
 
-    public void autoConnect(boolean autoConnect) {
+    public void setAutoConnect(boolean autoConnect) {
         this.autoConnect = autoConnect;
     }
 

@@ -10,7 +10,6 @@ import java.net.Socket;
 public class AtlantisClient extends Application {
 
     private AtlantisView view;
-    private AtlantisController controller;
     private AtlantisModel model;
 
 
@@ -22,7 +21,7 @@ public class AtlantisClient extends Application {
     public void start(Stage primaryStage) throws Exception {
         model = new AtlantisModel();
         view = new AtlantisView(primaryStage, model);
-        controller = new AtlantisController(model, view);
+        new AtlantisController(model, view);
 
         view.start();
     }

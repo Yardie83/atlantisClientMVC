@@ -1,5 +1,3 @@
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -61,9 +59,7 @@ public class AtlantisController {
         view.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                model.closeConnection();
-                view.stop();
-                System.exit(0);
+                closeApplication();
             }
         });
     }
@@ -76,9 +72,7 @@ public class AtlantisController {
         view.getGameLobbyView().getBtnExit().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.stop();
-                model.closeConnection();
-                Platform.exit();
+                closeApplication();
             }
         });
 
@@ -89,7 +83,7 @@ public class AtlantisController {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
-                    model.autoConnect(true);
+                    model.setAutoConnect(true);
                     TextField txtField = view.getGameLobbyView().getTxtField();
                     if (txtField.getText().equals("QUIT")) {
                         model.closeConnection();
@@ -125,5 +119,11 @@ public class AtlantisController {
             }
         });
 
+    }
+
+    private void closeApplication() {
+        model.closeConnection();
+        view.stop();
+        System.exit(0);
     }
 }
