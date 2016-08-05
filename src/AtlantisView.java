@@ -66,8 +66,10 @@ public class AtlantisView {
         this.loginView = new LoginView(this);
         loginStage = new Stage();
         Scene scene = new Scene(loginView);
+        String css = this.getClass().getResource("/res/css_LoginView.css").toExternalForm();
+        scene.getStylesheets().add(css);
         loginStage.setScene(scene);
-        loginStage.setTitle("Atlantis");
+        loginStage.setTitle("Atlantis - Login");
         loginStage.show();
         //TODO: Ask bradley showAndWait()
     }
@@ -77,15 +79,19 @@ public class AtlantisView {
         this.newProfileView = new NewProfileView(this);
         profileStage = new Stage();
         Scene scene = new Scene(newProfileView);
+        String css = this.getClass().getResource("/res/css_NewProfileView.css").toExternalForm();
+        scene.getStylesheets().add(css);
         profileStage.setScene(scene);
-        profileStage.setTitle("Atlantis");
+        profileStage.setTitle("Atlantis - New Profile");
         profileStage.show();
     }
 
-    //TODO Finish creating the options view
+    //TODO: Finish creating the options view
     public void createOptionsView() {
         this.optionsView = new OptionsView();
         Scene scene = new Scene(optionsView);
+        String css = this.getClass().getResource("/res/css_OptionsView.css").toExternalForm();
+        scene.getStylesheets().add(css);
         setScene(scene);
     }
 
@@ -116,11 +122,11 @@ public class AtlantisView {
         return gameLobbyView;
     }
 
-    public Stage getLoginStage() {return loginStage;}
-
     public LoginView getLoginView(){
         return this.loginView;
     }
+
+    public Stage getLoginStage() {return loginStage;}
 
     public NewProfileView getNewProfileView() {
         return newProfileView;
@@ -129,6 +135,5 @@ public class AtlantisView {
     public Stage getProfileStage() {
         return profileStage;
     }
-
 
 }

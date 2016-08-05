@@ -197,8 +197,6 @@ public class AtlantisController {
                     Alert alert = new Alert(Alert.AlertType.WARNING, "Password does not match", ButtonType.OK);
                     alert.show();
                 }
-
-
             }
         });
 

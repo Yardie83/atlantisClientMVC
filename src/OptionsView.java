@@ -11,6 +11,7 @@ public class OptionsView extends Parent {
     //TODO Try to add this view with Modality.WINDOW
     public OptionsView() {
         Stage stage = new Stage();
+        stage.setTitle("Atlantis - Options");
         stage.initModality(Modality.WINDOW_MODAL);
 
         stage.show();
