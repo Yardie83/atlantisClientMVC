@@ -77,13 +77,6 @@ public class AtlantisController {
             }
         });
 
-        view.getGameLobbyView().getBtnExit().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                closeApplication();
-            }
-        });
-
         /*
          CHAT: When the user presses enter the message is sent to the server
          */
@@ -100,6 +93,23 @@ public class AtlantisController {
                     }
                     txtField.clear();
                 }
+            }
+        });
+
+        //TODO: Create a Group node for all the buttons and then create the setOnMouseEntered and setOnMouseExited actions for that group
+
+
+        view.getGameLobbyView().getBtnOptions().setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                view.getGameLobbyView().getBtnOptions().setStyle("-fx-background-color: aqua");
+            }
+        });
+
+        view.getGameLobbyView().getBtnOptions().setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                view.getGameLobbyView().getBtnOptions().setStyle("-fx-background-color: azure");
             }
         });
 

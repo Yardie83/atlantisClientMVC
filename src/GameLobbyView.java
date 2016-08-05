@@ -21,7 +21,6 @@ public class GameLobbyView extends Parent implements ChangeListener {
     private Button btnLogin;
     private Button btnCreateProfile;
     private Button btnOptions;
-    private Button btnExit;
     private Label lblWindowTitle;
     private final BorderPane root;
     private VBox vBoxTop;
@@ -53,6 +52,16 @@ public class GameLobbyView extends Parent implements ChangeListener {
     private void defineStyleClass() {
 
         /*
+        CSS Classes for the buttons in the LEFT part of the Border Pane
+         */
+
+        btnCreateGame.getStyleClass().add("leftButtons");
+        btnLogin.getStyleClass().add("leftButtons");
+        btnCreateProfile.getStyleClass().add("leftButtons");
+        btnOptions.getStyleClass().add("leftButtons");
+
+
+        /*
             CSS IDs for the ROOT border pane of the game lobby.
             Contains all the other elements of the game lobby.
         */
@@ -67,26 +76,26 @@ public class GameLobbyView extends Parent implements ChangeListener {
         lblWindowTitle.setId("lblWindowTitle");
 
         //  CSS IDs for the BOTTOM part of the game lobby (Status bar)
-        bottomHBox.getStyleClass().add("bottomHBox");
-        lblStatus.getStyleClass().add("lblStatus");
-        lblInfo.getStyleClass().add("lblInfo");
+        bottomHBox.setId("bottomHBox");
+        lblStatus.setId("lblStatus");
+        lblInfo.setId("lblInfo");
 
         //  CSS IDs for the RIGHT part of the game lobby (Chat text area and the input text field)
-        rightVBox.getStyleClass().add("rightVBox");
-        txtArea.getStyleClass().add("txtArea0");
-        txtField.getStyleClass().add("txtField");
+        rightVBox.setId("rightVBox");
+        txtArea.setId("txtArea");
+        txtField.setId("txtField");
 
         //  CSS IDs for the CENTER part of the game lobby (small title and Game list)
-        centerVBox.getStyleClass().add("centerVBox");
-        gameList.getStyleClass().add("gameList");
+        centerVBox.setId("centerVBox");
+        gameList.setId("gameListView");
 
         //  CSS IDs for the LEFT part of the game lobby (Game Lobby buttons)
-        leftVBox.getStyleClass().add("leftVBox");
-        btnCreateGame.getStyleClass().add("btnCreateGame");
-        btnLogin.getStyleClass().add("btnLogin");
-        btnCreateProfile.getStyleClass().add("btnCreateProfile");
-        btnOptions.getStyleClass().add("btnOptions");
-        btnExit.getStyleClass().add("btnExit");
+        leftVBox.setId("leftVBox");
+        btnCreateGame.setId("btnCreateGame");
+        btnLogin.setId("btnLogin");
+        btnCreateProfile.setId("btnCreateProfile");
+        btnOptions.setId("btnOptions");
+
     }
 
     private Node createTop() {
@@ -150,9 +159,8 @@ public class GameLobbyView extends Parent implements ChangeListener {
         btnLogin = new Button("Login");
         btnCreateProfile = new Button("Create Profile");
         btnOptions = new Button("Options");
-        btnExit = new Button("Exit");
 
-        leftVBox.getChildren().addAll(btnCreateGame, btnLogin, btnCreateProfile, btnOptions, btnExit);
+        leftVBox.getChildren().addAll(btnCreateGame, btnLogin, btnCreateProfile, btnOptions);
         return leftVBox;
     }
 
@@ -204,9 +212,6 @@ public class GameLobbyView extends Parent implements ChangeListener {
         return btnOptions;
     }
 
-    public Button getBtnExit() {
-        return btnExit;
-    }
 
     public Label getlblStatus() {
         return lblStatus;
