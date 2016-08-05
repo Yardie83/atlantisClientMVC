@@ -53,7 +53,6 @@ public class AtlantisModel {
         Task receiveMessageTask = new Task() {
             @Override
             protected Object call() throws Exception {
-                while (autoConnect) {
                     System.out.println("Connected to Server\nWaiting for incoming messages");
                     chatString.setValue("Connected to Server\nWaiting for incoming messages");
                     connectionStatus.setValue("Connected");
@@ -76,7 +75,6 @@ public class AtlantisModel {
                             e.printStackTrace();
                         }
                     }
-                }
                 return null;
             }
         };

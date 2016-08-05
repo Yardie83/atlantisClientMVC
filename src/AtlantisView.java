@@ -52,6 +52,9 @@ public class AtlantisView {
         toggleFullscreen();
         this.gameLobbyView = new GameLobbyView(this);
         Scene scene = new Scene(gameLobbyView);
+        String css = this.getClass().getResource("/res/css_gameLobby.css").toExternalForm();
+        scene.getStylesheets().clear();
+        scene.getStylesheets().add(css);
         setScene(scene);
     }
 

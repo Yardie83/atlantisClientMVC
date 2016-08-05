@@ -8,8 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
- * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
+ * Created by LorisGrether and Hermann Grieder on 17.07.2016.
  */
 public class GameLobbyView extends Parent implements ChangeListener {
     private AtlantisView view;
@@ -23,77 +22,129 @@ public class GameLobbyView extends Parent implements ChangeListener {
     private Button btnCreateProfile;
     private Button btnOptions;
     private Button btnExit;
+    private Label lblWindowTitle;
+    private final BorderPane root;
+    private VBox vBoxTop;
+    private MenuBar menuBar;
+    private Menu menuRules;
+    private Menu menuOptions;
+    private Menu menuFile;
+    private HBox bottomHBox;
+    private VBox rightVBox;
+    private VBox centerVBox;
+    private VBox leftVBox;
 
     public GameLobbyView(AtlantisView view) {
         this.view = view;
 
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
 
         root.setTop(createTop());
-        root.setLeft(createLeftSide());
+        root.setLeft(createLeft());
         root.setCenter(createCenter());
         root.setRight(createRight());
         root.setBottom(createBottom());
 
+        defineStyleClass();
+
         this.getChildren().add(root);
+    }
+
+    private void defineStyleClass() {
+
+        /*
+            CSS IDs for the ROOT border pane of the game lobby.
+            Contains all the other elements of the game lobby.
+        */
+        root.setId("root");
+
+        //  CSS IDs for the TOP part of the game lobby (menuBar and Title)
+        vBoxTop.setId("vBoxTop");
+        menuBar.setId("menuBar");
+        menuFile.setId("menuFile");
+        menuOptions.setId("menuOptions");
+        menuRules.setId("menuRules");
+        lblWindowTitle.setId("lblWindowTitle");
+
+        //  CSS IDs for the BOTTOM part of the game lobby (Status bar)
+        bottomHBox.getStyleClass().add("bottomHBox");
+        lblStatus.getStyleClass().add("lblStatus");
+        lblInfo.getStyleClass().add("lblInfo");
+
+        //  CSS IDs for the RIGHT part of the game lobby (Chat text area and the input text field)
+        rightVBox.getStyleClass().add("rightVBox");
+        txtArea.getStyleClass().add("txtArea0");
+        txtField.getStyleClass().add("txtField");
+
+        //  CSS IDs for the CENTER part of the game lobby (small title and Game list)
+        centerVBox.getStyleClass().add("centerVBox");
+        gameList.getStyleClass().add("gameList");
+
+        //  CSS IDs for the LEFT part of the game lobby (Game Lobby buttons)
+        leftVBox.getStyleClass().add("leftVBox");
+        btnCreateGame.getStyleClass().add("btnCreateGame");
+        btnLogin.getStyleClass().add("btnLogin");
+        btnCreateProfile.getStyleClass().add("btnCreateProfile");
+        btnOptions.getStyleClass().add("btnOptions");
+        btnExit.getStyleClass().add("btnExit");
     }
 
     private Node createTop() {
 
-        VBox vBox = new VBox();
+        vBoxTop = new VBox();
 
-        MenuBar menuBar = new MenuBar();
-        Menu menuFile = new Menu("File");
-        Menu menuOptions = new Menu("Options");
-        Menu menuRules = new Menu("Game Rules");
-        
+        menuBar = new MenuBar();
+        menuFile = new Menu("File");
+        menuOptions = new Menu("Options");
+        menuRules = new Menu("Game Rules");
+
         menuBar.getMenus().addAll(menuFile, menuOptions, menuRules);
-                
-        Label lblWindowTitle = new Label("Welcome to Atlantis");
 
-        vBox.getChildren().addAll(menuBar, lblWindowTitle);
+        lblWindowTitle = new Label("Welcome to Atlantis");
 
-        return vBox;
+        vBoxTop.getChildren().addAll(menuBar, lblWindowTitle);
+
+        return vBoxTop;
     }
 
     private Node createBottom() {
 
-        HBox hBox = new HBox(10);
+        bottomHBox = new HBox(10);
 
         lblStatus = new Label("Status: Disconnected");
         lblInfo = new Label("Information");
-        hBox.getChildren().addAll(lblStatus, lblInfo);
+        bottomHBox.getChildren().addAll(lblStatus, lblInfo);
 
-        return hBox;
+        return bottomHBox;
     }
 
     private Node createRight() {
 
-        VBox vBox = new VBox();
+        rightVBox = new VBox();
 
         txtArea = new TextArea();
         txtArea.setEditable(false);
         txtArea.setWrapText(true);
         txtField = new TextField();
-        vBox.getChildren().addAll(txtArea, txtField);
+        rightVBox.getChildren().addAll(txtArea, txtField);
 
-        return vBox;
+        return rightVBox;
     }
 
     private Node createCenter() {
 
-        VBox vBox = new VBox();
+        centerVBox = new VBox();
 
         Label lblGameTitles = new Label("Games");
         gameList = new ListView();
         gameList.getItems().add(0, "Hallo");
-        vBox.getChildren().addAll(lblGameTitles, gameList);
-        return vBox;
+        centerVBox.getChildren().addAll(lblGameTitles, gameList);
+        return centerVBox;
     }
 
-    private Node createLeftSide() {
+    private Node createLeft() {
 
-        VBox vBox = new VBox();
+        leftVBox = new VBox();
 
         btnCreateGame = new Button("Create Game");
         btnLogin = new Button("Login");
@@ -101,8 +152,8 @@ public class GameLobbyView extends Parent implements ChangeListener {
         btnOptions = new Button("Options");
         btnExit = new Button("Exit");
 
-        vBox.getChildren().addAll(btnCreateGame, btnLogin, btnCreateProfile, btnOptions, btnExit);
-        return vBox;
+        leftVBox.getChildren().addAll(btnCreateGame, btnLogin, btnCreateProfile, btnOptions, btnExit);
+        return leftVBox;
     }
 
     public Label getLblInfo() {
@@ -157,11 +208,11 @@ public class GameLobbyView extends Parent implements ChangeListener {
         return btnExit;
     }
 
-    public Label getlblStatus(){
+    public Label getlblStatus() {
         return lblStatus;
     }
 
-    public void setLblStatus(Label lblStatus){
+    public void setLblStatus(Label lblStatus) {
         this.lblStatus = lblStatus;
     }
 

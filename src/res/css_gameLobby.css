@@ -1,0 +1,64 @@
+/*GAME LOBBY CSS: Consists of root Border Pane,
+a TOP, BOTTOM, RIGHT, CENTER and LEFT part
+*/
+
+/*root is a Border Pane*/
+#root{
+
+}
+
+/*****************************************/
+/*START TOP*/
+/*****************************************/
+
+#vBoxTop{
+
+}
+
+#menuBar{
+
+}
+
+#menuFile{
+
+}
+
+
+#menuOptions{
+
+}
+
+
+#menuRules{
+
+}
+
+#lblWindowTitle {
+    -fx-font-size: 24px;
+    -fx-background-color: aqua;
+    -fx-padding: 20px;
+    -fx-min-width: 800px;
+}
+
+/*****************************************/
+/*END TOP*/
+/*****************************************/
+
+/*START BOTTOM*/
+
+#bottomHBox{
+
+}
+
+#lblStatus{
+
+}
+
+#lblInfo{
+
+}
+
+/*END BOTTOM*/
+
+/*****************************************/
+
