@@ -19,6 +19,7 @@ public class AtlantisView {
     private Stage loginStage;
 
     private NewProfileView newProfileView;
+
     private Stage profileStage;
 
     public AtlantisView(Stage primaryStage, AtlantisModel model) {
@@ -124,4 +125,10 @@ public class AtlantisView {
     public NewProfileView getNewProfileView() {
         return newProfileView;
     }
+
+    public Stage getProfileStage() {
+        return profileStage;
+    }
+
+
 }

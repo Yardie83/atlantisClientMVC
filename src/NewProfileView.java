@@ -77,4 +77,5 @@ public class NewProfileView extends Parent {
     public Button getBtnCreateProfile() {
         return btnCreateProfile;
     }
+
 }

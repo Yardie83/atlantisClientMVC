@@ -173,6 +173,7 @@ public class AtlantisController {
             public void handle(ActionEvent event) {
                 view.createNewProfileView();
                 handleNewProfileControls();
+                view.getLoginStage().close();
             }
         });
 
@@ -191,6 +192,7 @@ public class AtlantisController {
                 if (password.equals(passwordRevision)) {
                     String userInfo = userName + "," + password;
                     model.sendMessage(new Message(MessageType.CREATEPROFILE, userInfo));
+                    view.getProfileStage().close();
                 } else {
                     Alert alert = new Alert(Alert.AlertType.WARNING, "Password does not match", ButtonType.OK);
                     alert.show();
@@ -199,6 +201,14 @@ public class AtlantisController {
 
             }
         });
+
+        view.getNewProfileView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getProfileStage().close();
+            }
+
+            });
     }
 
     private void closeApplication() {
