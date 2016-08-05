@@ -16,6 +16,10 @@ public class AtlantisView {
     private GameLobbyView gameLobbyView;
     private OptionsView optionsView;
     private LoginView loginView;
+    private Stage loginStage;
+
+    private NewProfileView newProfileView;
+    private Stage profileStage;
 
     public AtlantisView(Stage primaryStage, AtlantisModel model) {
 
@@ -40,7 +44,6 @@ public class AtlantisView {
         primaryStage.setFullScreen(!primaryStage.isFullScreen());
     }
 
-
     public void createIntroView() {
         toggleFullscreen();
         this.introView = new IntroView();
@@ -59,10 +62,23 @@ public class AtlantisView {
     }
 
     public void createLoginView(){
-        toggleFullscreen();
         this.loginView = new LoginView(this);
+        loginStage = new Stage();
         Scene scene = new Scene(loginView);
-        setScene(scene);
+        loginStage.setScene(scene);
+        loginStage.setTitle("Atlantis");
+        loginStage.show();
+        //TODO: Ask bradley showAndWait()
+    }
+
+    public void createNewProfileView(){
+
+        this.newProfileView = new NewProfileView(this);
+        profileStage = new Stage();
+        Scene scene = new Scene(newProfileView);
+        profileStage.setScene(scene);
+        profileStage.setTitle("Atlantis");
+        profileStage.show();
     }
 
     //TODO Finish creating the options view
@@ -81,8 +97,7 @@ public class AtlantisView {
         primaryStage.show();
     }
 
-    public void stop() {primaryStage.hide();
-    }
+    public void stop() {primaryStage.hide();}
 
     public Stage getStage() {
         return primaryStage;
@@ -99,6 +114,8 @@ public class AtlantisView {
     public GameLobbyView getGameLobbyView() {
         return gameLobbyView;
     }
+
+    public Stage getLoginStage() {return loginStage;}
 
     public LoginView getLoginView(){
         return this.loginView;

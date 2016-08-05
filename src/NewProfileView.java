@@ -10,7 +10,7 @@ import javafx.scene.layout.GridPane;
 /**
  * Created by LorisGrether on 04.08.2016.
  */
-public class NewProfile extends Parent {
+public class NewProfileView extends Parent {
 
     private AtlantisView view;
 
@@ -21,7 +21,7 @@ public class NewProfile extends Parent {
     private Button btnCancel;
     private Button btnCreateProfile;
 
-    public NewProfile(AtlantisView view){
+    public NewProfileView(AtlantisView view){
         this.view = view;
 
         BorderPane root = new BorderPane();
@@ -52,8 +52,8 @@ public class NewProfile extends Parent {
 
         GridPane pane = new GridPane();
 
-        pane.add(btnCancel = new Button("Cancel"), 0, 0);
-        pane.add(btnCreateProfile = new Button("Create Profile"), 0, 1);
+        pane.add(btnCreateProfile = new Button("Create Profile"), 0, 0);
+        pane.add(btnCancel = new Button("Cancel"), 0, 1);
 
         return pane;
     }

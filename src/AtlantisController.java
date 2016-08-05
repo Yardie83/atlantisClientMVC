@@ -73,6 +73,7 @@ public class AtlantisController {
             @Override
             public void handle(ActionEvent event) {
                 view.createLoginView();
+                handleLoginViewControls();
             }
         });
 
@@ -125,7 +126,24 @@ public class AtlantisController {
                 view.getGameLobbyView().getlblStatus().setText("Status: " + newValue);
             }
         });
+    }
 
+    private void handleLoginViewControls() {
+
+        view.getLoginView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getLoginStage().close();
+            }
+        });
+
+        view.getLoginView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createNewProfileView();
+                //handleNewProfileControls();
+            }
+        });
     }
 
     private void closeApplication() {
