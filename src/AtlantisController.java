@@ -69,6 +69,13 @@ public class AtlantisController {
         view.createGameLobbyView();
         model.connectToServer();
 
+        view.getGameLobbyView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createLoginView();
+            }
+        });
+
         view.getGameLobbyView().getBtnExit().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

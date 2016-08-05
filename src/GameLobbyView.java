@@ -8,7 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
- * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  *
  */
 public class GameLobbyView extends Parent implements ChangeListener {

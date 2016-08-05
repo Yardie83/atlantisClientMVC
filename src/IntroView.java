@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import java.nio.file.Paths;
 
 /**
- * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  *
  */
 public class IntroView extends Parent {

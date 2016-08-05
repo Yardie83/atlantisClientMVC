@@ -1,21 +1,21 @@
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.awt.*;
-
 /**
- * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  *
  */
 public class AtlantisView {
 
     private Stage primaryStage;
+    private Scene scene;
+
     private AtlantisModel model;
+
     private IntroView introView;
     private GameLobbyView gameLobbyView;
-
-    private Scene scene;
     private OptionsView optionsView;
+    private LoginView loginView;
 
     public AtlantisView(Stage primaryStage, AtlantisModel model) {
 
@@ -54,6 +54,14 @@ public class AtlantisView {
         Scene scene = new Scene(gameLobbyView);
         setScene(scene);
     }
+
+    public void createLoginView(){
+        toggleFullscreen();
+        this.loginView = new LoginView(this);
+        Scene scene = new Scene(loginView);
+        setScene(scene);
+    }
+
     //TODO Finish creating the options view
     public void createOptionsView() {
         this.optionsView = new OptionsView();
@@ -89,4 +97,7 @@ public class AtlantisView {
         return gameLobbyView;
     }
 
+    public LoginView getLoginView(){
+        return this.loginView;
+    }
 }
