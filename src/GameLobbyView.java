@@ -10,7 +10,7 @@ import javafx.scene.layout.VBox;
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
  */
-public class GameLobbyView extends Parent implements ChangeListener {
+public class GameLobbyView extends Parent {
     private AtlantisView view;
     private Label lblStatus;
     private Label lblInfo;
@@ -47,55 +47,6 @@ public class GameLobbyView extends Parent implements ChangeListener {
         defineStyleClass();
 
         this.getChildren().add(root);
-    }
-
-    private void defineStyleClass() {
-
-        /*
-        CSS Classes for the buttons in the LEFT part of the Border Pane
-         */
-
-        btnCreateGame.getStyleClass().add("leftButtons");
-        btnLogin.getStyleClass().add("leftButtons");
-        btnCreateProfile.getStyleClass().add("leftButtons");
-        btnOptions.getStyleClass().add("leftButtons");
-
-
-        /*
-            CSS IDs for the ROOT border pane of the game lobby.
-            Contains all the other elements of the game lobby.
-        */
-        root.setId("root");
-
-        //  CSS IDs for the TOP part of the game lobby (menuBar and Title)
-        vBoxTop.setId("vBoxTop");
-        menuBar.setId("menuBar");
-        menuFile.setId("menuFile");
-        menuOptions.setId("menuOptions");
-        menuRules.setId("menuRules");
-        lblWindowTitle.setId("lblWindowTitle");
-
-        //  CSS IDs for the BOTTOM part of the game lobby (Status bar)
-        bottomHBox.setId("bottomHBox");
-        lblStatus.setId("lblStatus");
-        lblInfo.setId("lblInfo");
-
-        //  CSS IDs for the RIGHT part of the game lobby (Chat text area and the input text field)
-        rightVBox.setId("rightVBox");
-        txtArea.setId("txtArea");
-        txtField.setId("txtField");
-
-        //  CSS IDs for the CENTER part of the game lobby (small title and Game list)
-        centerVBox.setId("centerVBox");
-        gameList.setId("gameListView");
-
-        //  CSS IDs for the LEFT part of the game lobby (Game Lobby buttons)
-        leftVBox.setId("leftVBox");
-        btnCreateGame.setId("btnCreateGame");
-        btnLogin.setId("btnLogin");
-        btnCreateProfile.setId("btnCreateProfile");
-        btnOptions.setId("btnOptions");
-
     }
 
     private Node createTop() {
@@ -164,6 +115,54 @@ public class GameLobbyView extends Parent implements ChangeListener {
         return leftVBox;
     }
 
+    private void defineStyleClass() {
+
+        /*
+        CSS Classes for the buttons in the LEFT part of the Border Pane
+         */
+
+        btnCreateGame.getStyleClass().add("leftButtons");
+        btnLogin.getStyleClass().add("leftButtons");
+        btnCreateProfile.getStyleClass().add("leftButtons");
+        btnOptions.getStyleClass().add("leftButtons");
+
+        /*
+            CSS IDs for the ROOT border pane of the game lobby.
+            Contains all the other elements of the game lobby.
+        */
+        root.setId("root");
+
+        //  CSS IDs for the TOP part of the game lobby (menuBar and Title)
+        vBoxTop.setId("vBoxTop");
+        menuBar.setId("menuBar");
+        menuFile.setId("menuFile");
+        menuOptions.setId("menuOptions");
+        menuRules.setId("menuRules");
+        lblWindowTitle.setId("lblWindowTitle");
+
+        //  CSS IDs for the BOTTOM part of the game lobby (Status bar)
+        bottomHBox.setId("bottomHBox");
+        lblStatus.setId("lblStatus");
+        lblInfo.setId("lblInfo");
+
+        //  CSS IDs for the RIGHT part of the game lobby (Chat text area and the input text field)
+        rightVBox.setId("rightVBox");
+        txtArea.setId("txtArea");
+        txtField.setId("txtField");
+
+        //  CSS IDs for the CENTER part of the game lobby (small title and Game list)
+        centerVBox.setId("centerVBox");
+        gameList.setId("gameListView");
+
+        //  CSS IDs for the LEFT part of the game lobby (Game Lobby buttons)
+        leftVBox.setId("leftVBox");
+        btnCreateGame.setId("btnCreateGame");
+        btnLogin.setId("btnLogin");
+        btnCreateProfile.setId("btnCreateProfile");
+        btnOptions.setId("btnOptions");
+
+    }
+
     public Label getLblInfo() {
         return lblInfo;
     }
@@ -221,8 +220,4 @@ public class GameLobbyView extends Parent implements ChangeListener {
         this.lblStatus = lblStatus;
     }
 
-    @Override
-    public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-        txtArea.appendText(newValue.toString());
-    }
 }

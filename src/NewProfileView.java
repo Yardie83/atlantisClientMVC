@@ -53,8 +53,28 @@ public class NewProfileView extends Parent {
         GridPane pane = new GridPane();
 
         pane.add(btnCreateProfile = new Button("Create Profile"), 0, 0);
-        pane.add(btnCancel = new Button("Cancel"), 0, 1);
+        pane.add(btnCancel = new Button("Cancel"), 1, 0);
 
         return pane;
+    }
+
+    public TextField getTxtUserName() {
+        return txtUserName;
+    }
+
+    public TextField getTxtPassword() {
+        return txtPassword;
+    }
+
+    public TextField getTxtPasswordRevision() {
+        return txtPasswordRevision;
+    }
+
+    public Button getBtnCancel() {
+        return btnCancel;
+    }
+
+    public Button getBtnCreateProfile() {
+        return btnCreateProfile;
     }
 }

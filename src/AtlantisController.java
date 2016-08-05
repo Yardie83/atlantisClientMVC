@@ -2,6 +2,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -10,7 +12,6 @@ import javafx.stage.WindowEvent;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
  */
 
 public class AtlantisController {
@@ -77,6 +78,14 @@ public class AtlantisController {
             }
         });
 
+        view.getGameLobbyView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createNewProfileView();
+                handleNewProfileControls();
+            }
+        });
+
         /*
          CHAT: When the user presses enter the message is sent to the server
          */
@@ -96,16 +105,16 @@ public class AtlantisController {
             }
         });
 
-        //TODO: Create a Group node for all the buttons and then create the setOnMouseEntered and setOnMouseExited actions for that group
+        //TODO: Better to create a Group node for all the buttons and then create the setOnMouseEntered and setOnMouseExited actions for that group
 
-
+        // Change the Background color when the user hovers over the options button
         view.getGameLobbyView().getBtnOptions().setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 view.getGameLobbyView().getBtnOptions().setStyle("-fx-background-color: aqua");
             }
         });
-
+        // Change the Background color when the user moves the mouse off the options button
         view.getGameLobbyView().getBtnOptions().setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -120,7 +129,7 @@ public class AtlantisController {
             }
         });
 
-
+        //TODO: Ask Bradley if there is a better way instead of a ChangeListener. Because when the user enters the same message twice it does not register as a changed value
         model.getChatString().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -140,6 +149,18 @@ public class AtlantisController {
 
     private void handleLoginViewControls() {
 
+        view.getLoginView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                String username = view.getLoginView().getTxtUserName().getText();
+                String password = view.getLoginView().getTxtPassword().getText();
+                String credentials = username + "," + password;
+
+                model.sendMessage(new Message(MessageType.LOGIN, credentials));
+            }
+        });
+
         view.getLoginView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -151,7 +172,31 @@ public class AtlantisController {
             @Override
             public void handle(ActionEvent event) {
                 view.createNewProfileView();
-                //handleNewProfileControls();
+                handleNewProfileControls();
+            }
+        });
+
+        //TODO: Play as Guest Button needs to be handled. But that means we need a game class and a player object which we don't have yet
+    }
+
+    private void handleNewProfileControls() {
+        view.getNewProfileView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //TODO: Sanitize user input before sending it as a message to the server
+                String userName = view.getNewProfileView().getTxtUserName().getText();
+                String password = view.getNewProfileView().getTxtPassword().getText();
+                String passwordRevision = view.getNewProfileView().getTxtPasswordRevision().getText();
+
+                if (password.equals(passwordRevision)) {
+                    String userInfo = userName + "," + password;
+                    model.sendMessage(new Message(MessageType.CREATEPROFILE, userInfo));
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.WARNING, "Password does not match", ButtonType.OK);
+                    alert.show();
+                }
+
+
             }
         });
     }

@@ -120,4 +120,8 @@ public class AtlantisView {
     public LoginView getLoginView(){
         return this.loginView;
     }
+
+    public NewProfileView getNewProfileView() {
+        return newProfileView;
+    }
 }
