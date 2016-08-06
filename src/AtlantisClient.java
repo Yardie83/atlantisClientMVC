@@ -31,4 +31,6 @@ public class AtlantisClient extends Application {
         if (view != null)
             view.stop();
     }
+
+    public void nothing(){}
 }
