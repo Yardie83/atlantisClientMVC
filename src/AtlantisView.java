@@ -6,6 +6,7 @@ import javafx.stage.StageStyle;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
+ *
  */
 public class AtlantisView {
 
