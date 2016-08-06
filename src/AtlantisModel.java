@@ -127,4 +127,16 @@ public class AtlantisModel {
         this.autoConnect = autoConnect;
     }
 
+    public void showGameRules() {
+        try {
+            File file = new File(getClass().getResource("/res/Atlantis_Spielregel.pdf").getFile());
+
+            if (file.exists()){
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

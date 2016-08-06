@@ -1,5 +1,3 @@
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
@@ -25,9 +23,10 @@ public class GameLobbyView extends Parent {
     private final BorderPane root;
     private VBox vBoxTop;
     private MenuBar menuBar;
-    private Menu menuRules;
+    private Menu menuHelp;
     private Menu menuOptions;
     private Menu menuFile;
+    private MenuItem gameRules;
     private HBox bottomHBox;
     private VBox rightVBox;
     private VBox centerVBox;
@@ -56,9 +55,13 @@ public class GameLobbyView extends Parent {
         menuBar = new MenuBar();
         menuFile = new Menu("File");
         menuOptions = new Menu("Options");
-        menuRules = new Menu("Game Rules");
+        menuHelp = new Menu("Help");
 
-        menuBar.getMenus().addAll(menuFile, menuOptions, menuRules);
+        gameRules = new MenuItem("Game Rules");
+
+        menuHelp.getItems().add(gameRules);
+
+        menuBar.getMenus().addAll(menuFile, menuOptions, menuHelp);
 
         lblWindowTitle = new Label("Welcome to Atlantis");
 
@@ -137,7 +140,7 @@ public class GameLobbyView extends Parent {
         menuBar.setId("menuBar");
         menuFile.setId("menuFile");
         menuOptions.setId("menuOptions");
-        menuRules.setId("menuRules");
+        menuHelp.setId("menuHelp");
         lblWindowTitle.setId("lblWindowTitle");
 
         //  CSS IDs for the BOTTOM part of the game lobby (Status bar)
@@ -210,9 +213,12 @@ public class GameLobbyView extends Parent {
         return btnOptions;
     }
 
-
     public Label getlblStatus() {
         return lblStatus;
+    }
+
+    public MenuItem getGameRules() {
+        return this.gameRules;
     }
 
     public void setLblStatus(Label lblStatus) {
