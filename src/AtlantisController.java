@@ -181,10 +181,32 @@ public class AtlantisController {
     }
 
     private void handleNewProfileControls() {
+
+        // Make the Profile Window Draggable
+        final Double[] deltaX = new Double[1];
+        final Double[] deltaY = new Double[1];
+
+        view.getProfileStage().getScene().setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                deltaX[0] = view.getProfileStage().getX() - event.getScreenX();
+                deltaY[0] = view.getProfileStage().getY() - event.getScreenY();
+            }
+        });
+
+        view.getProfileStage().getScene().setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                view.getProfileStage().setX(event.getScreenX() + deltaX[0]);
+                view.getProfileStage().setY(event.getScreenY() + deltaY[0]);
+            }
+        });
+
+        // Handle Create Profile Button
         view.getNewProfileView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //TODO: Sanitize user input before sending it as a message to the server
+                //TODO: Sanitize user input before sending it as a message to the server. Also check that username and password are not null or ""
                 String userName = view.getNewProfileView().getTxtUserName().getText();
                 String password = view.getNewProfileView().getTxtPassword().getText();
                 String passwordRevision = view.getNewProfileView().getTxtPasswordRevision().getText();
@@ -194,19 +216,37 @@ public class AtlantisController {
                     model.sendMessage(new Message(MessageType.CREATEPROFILE, userInfo));
                     view.getProfileStage().close();
                 } else {
+                    // Copied this from the internet. Could be a interesint alert alternative.
+                    // Needs adjustments
+//                    Dialog<Void> dialog = new Dialog<>();
+//                    dialog.initModality(Modality.WINDOW_MODAL);
+//                    dialog.initOwner(view.getProfileStage());//stage here is the stage of your webview
+//                    dialog.initStyle(StageStyle.TRANSPARENT);
+//                    Label loader = new Label("LOADING");
+//                    loader.setContentDisplay(ContentDisplay.BOTTOM);
+//                    loader.setGraphic(new ProgressIndicator());
+//                    dialog.getDialogPane().setGraphic(loader);
+//                    DropShadow ds = new DropShadow();
+//                    ds.setOffsetX(1.3);
+//                    ds.setOffsetY(1.3);
+//                    ds.setColor(Color.DARKGRAY);
+//                    dialog.getDialogPane().setEffect(ds);
+//                    dialog.showAndWait();
+
+                    //Alert Box when the password does not match
                     Alert alert = new Alert(Alert.AlertType.WARNING, "Password does not match", ButtonType.OK);
                     alert.show();
                 }
             }
         });
-
+// Handle Cancel Profile creation Button
         view.getNewProfileView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 view.getProfileStage().close();
             }
 
-            });
+        });
     }
 
     private void closeApplication() {

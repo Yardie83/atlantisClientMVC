@@ -1,9 +1,11 @@
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
  */
 public class AtlantisView {
 
@@ -62,7 +64,7 @@ public class AtlantisView {
         setScene(scene);
     }
 
-    public void createLoginView(){
+    public void createLoginView() {
         this.loginView = new LoginView(this);
         loginStage = new Stage();
         Scene scene = new Scene(loginView);
@@ -74,13 +76,15 @@ public class AtlantisView {
         //TODO: Ask bradley showAndWait()
     }
 
-    public void createNewProfileView(){
+    public void createNewProfileView() {
 
         this.newProfileView = new NewProfileView(this);
-        profileStage = new Stage();
-        Scene scene = new Scene(newProfileView);
         String css = this.getClass().getResource("/res/css_NewProfileView.css").toExternalForm();
+        Scene scene = new Scene(newProfileView);
         scene.getStylesheets().add(css);
+        profileStage = new Stage();
+
+        profileStage.initStyle(StageStyle.TRANSPARENT);
         profileStage.setScene(scene);
         profileStage.setTitle("Atlantis - New Profile");
         profileStage.show();
@@ -104,7 +108,9 @@ public class AtlantisView {
         primaryStage.show();
     }
 
-    public void stop() {primaryStage.hide();}
+    public void stop() {
+        primaryStage.hide();
+    }
 
     public Stage getStage() {
         return primaryStage;
@@ -122,11 +128,13 @@ public class AtlantisView {
         return gameLobbyView;
     }
 
-    public LoginView getLoginView(){
+    public LoginView getLoginView() {
         return this.loginView;
     }
 
-    public Stage getLoginStage() {return loginStage;}
+    public Stage getLoginStage() {
+        return loginStage;
+    }
 
     public NewProfileView getNewProfileView() {
         return newProfileView;

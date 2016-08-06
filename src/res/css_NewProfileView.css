@@ -1,0 +1,93 @@
+/*NEW PROFILE CSS: Consists of root Border Pane,
+a TOP with one label, a CENTER with 3 labels, 3 textfield and a BOTTOM
+with 2 buttons
+*/
+
+/*root is a Border Pane*/
+#root {
+    -fx-padding: 10px;
+    -fx-min-width: 200px;
+    -fx-min-height: 300px;
+    -fx-border-color: black;
+}
+
+/*****************************************/
+/*START TOP*/
+/*****************************************/
+#topPane {
+    -fx-alignment: center;
+    -fx-padding: 30px;
+}
+
+#lblNewProfile {
+    -fx-font-size: 20px;
+}
+
+/*****************************************/
+/*END TOP*/
+/*****************************************/
+
+/*****************************************/
+/*START CENTER*/
+/*****************************************/
+
+.labelsCenter {
+    -fx-min-width: 100px;
+    -fx-text-fill: darkred;
+    -fx-text-alignment: left;
+}
+
+#centerPane {
+
+}
+
+#lblUserName {
+
+}
+
+#lblPassword {
+
+}
+
+#lblPasswordRevision {
+
+}
+
+#txtUserName {
+
+}
+
+#txtPassword {
+
+}
+
+#txtPasswordRevision {
+
+}
+
+/*****************************************/
+/*END CENTER*/
+/*****************************************/
+
+/*****************************************/
+/*START BOTTOM*/
+/*****************************************/
+
+#bottomPane {
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+}
+
+.buttonsBottom {
+
+}
+
+#btnCreateProfile {
+}
+
+#btnCancel {
+}
+
+/*****************************************/
+/*END BOTTOM*/
+/*****************************************/

@@ -160,7 +160,6 @@ public class GameLobbyView extends Parent {
         btnLogin.setId("btnLogin");
         btnCreateProfile.setId("btnCreateProfile");
         btnOptions.setId("btnOptions");
-
     }
 
     public Label getLblInfo() {

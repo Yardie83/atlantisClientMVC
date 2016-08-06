@@ -1,16 +1,19 @@
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 
 /**
  * Created by LorisGrether on 04.08.2016.
  */
 public class NewProfileView extends Parent {
+
 
     private AtlantisView view;
 
@@ -21,41 +24,99 @@ public class NewProfileView extends Parent {
     private Button btnCancel;
     private Button btnCreateProfile;
 
-    public NewProfileView(AtlantisView view){
+    private Label lblNewProfile;
+    private Label lblUsername;
+    private Label lblPassword;
+    private Label lblPasswordRevision;
+    private GridPane centerPane;
+    private HBox bottomPane;
+    private final BorderPane root;
+    private HBox topPane;
+
+    public NewProfileView(AtlantisView view) {
         this.view = view;
 
-        BorderPane root = new BorderPane();
-        root.setTop(new Label("New Profile:"));
+        root = new BorderPane();
+        root.setTop(createTop());
         root.setCenter(createCenter());
         root.setBottom(createBottom());
+
+        defineStyleClass();
 
         this.getChildren().add(root);
     }
 
-    private Node createCenter(){
+    private HBox createTop() {
+        topPane = new HBox();
 
-        GridPane pane = new GridPane();
+        lblNewProfile = new Label("New Profile:");
 
-        pane.add(new Label("Username: "), 0, 0);
-        pane.add(txtUserName = new TextField(), 1, 0);
+        topPane.getChildren().add(lblNewProfile);
 
-        pane.add(new Label("Password: "), 0, 1);
-        pane.add(txtPassword = new TextField(), 1, 1);
-
-        pane.add(new Label("Re-Type Password: "), 0, 2);
-        pane.add(txtPasswordRevision = new TextField(), 1, 2);
-
-        return pane;
+        return topPane;
     }
 
-    private Node createBottom(){
+    private Node createCenter() {
 
-        GridPane pane = new GridPane();
+        centerPane = new GridPane();
 
-        pane.add(btnCreateProfile = new Button("Create Profile"), 0, 0);
-        pane.add(btnCancel = new Button("Cancel"), 1, 0);
+        centerPane.add(lblUsername = new Label("Username: "), 0, 0);
+        centerPane.add(txtUserName = new TextField(), 1, 0);
 
-        return pane;
+        centerPane.add(lblPassword = new Label("Password: "), 0, 1);
+        centerPane.add(txtPassword = new TextField(), 1, 1);
+
+        centerPane.add(lblPasswordRevision = new Label("Re-Type Password: "), 0, 2);
+        centerPane.add(txtPasswordRevision = new TextField(), 1, 2);
+
+        return centerPane;
+    }
+
+    private Node createBottom() {
+
+        bottomPane = new HBox();
+
+        bottomPane.getChildren().add(btnCreateProfile = new Button("Create Profile"));
+        bottomPane.getChildren().add(btnCancel = new Button("Cancel"));
+
+        return bottomPane;
+    }
+
+    private void defineStyleClass() {
+
+        /* Common Style Class for the buttons in the New Profile View*/
+        btnCancel.getStyleClass().add("buttonsBottom");
+        btnCreateProfile.getStyleClass().add("buttonsBottom");
+
+        /*Common Style Class for the Labels and TextFields in the CENTER*/
+        lblUsername.getStyleClass().add("labelsCenter");
+        lblPassword.getStyleClass().add("labelsCenter");
+        lblPasswordRevision.getStyleClass().add("labelsCenter");
+
+        txtUserName.getStyleClass().add("textFieldsCenter");
+        txtPassword.getStyleClass().add("textFieldsCenter");
+        txtPasswordRevision.getStyleClass().add("textFieldsCenter");
+
+        /*Style ID for the root BorderPane */
+        root.setId("root");
+
+
+        /*Style IDs for the controls in the New Profile View*/
+        txtUserName.setId("txtUserName");
+        txtPassword.setId("txtPassword");
+        txtPasswordRevision.setId("txtPasswordRevision");
+
+        btnCancel.setId("btnCancel");
+        btnCreateProfile.setId("btnCreateProfile");
+
+        lblNewProfile.setId("lblNewProfile");
+        lblUsername.setId("lblUsername");
+        lblPassword.setId("lblPassword");
+        lblPasswordRevision.setId("lblPasswordRevision");
+
+        topPane.setId("topPane");
+        centerPane.setId("centerPane");
+        bottomPane.setId("bottomPane");
     }
 
     public TextField getTxtUserName() {
