@@ -141,6 +141,7 @@ public class GameLobbyView extends Parent {
         menuFile.setId("menuFile");
         menuOptions.setId("menuOptions");
         menuHelp.setId("menuHelp");
+        gameRules.setId("gameRules");
         lblWindowTitle.setId("lblWindowTitle");
 
         //  CSS IDs for the BOTTOM part of the game lobby (Status bar)

@@ -1,8 +1,6 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.net.Socket;
-
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  *
@@ -31,6 +29,4 @@ public class AtlantisClient extends Application {
         if (view != null)
             view.stop();
     }
-
-    public void nothing(){}
 }

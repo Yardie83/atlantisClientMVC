@@ -1,0 +1,177 @@
+/*
+/*Created By Hermann Grieder 07.08.2016
+*/
+
+/*LOGIN VIEW CSS: Consists
+*/
+
+/*root is a Border Pane*/
+#root {
+    -fx-alignment: center;
+    -fx-background-color: rgba(74, 74, 72, 1);
+    /* -fx-background-color: white;*/
+}
+
+.buttons {
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+    -fx-background-radius: 5, 5, 4;
+    -fx-padding: 5 20 5 20;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 3, 3);
+    -fx-border-color: transparent;
+    -fx-alignment: center;
+}
+
+.textFields {
+    -fx-font-size: 14px;
+    -fx-min-width: 200px;
+    -fx-spacing: 30px;
+    -fx-font-family: Arial;
+    -fx-font-weight: bold;
+}
+
+.labels {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+    -fx-font-family: Arial;
+    -fx-text-alignment: left;
+}
+
+/*****************************************/
+/*START TOP*/
+/*****************************************/
+
+#lblLogin {
+    -fx-alignment: center;
+    -fx-font-size: 42px;
+    -fx-font-family: "Microsoft Sans Serif";
+    -fx-font-weight: bold;
+    -fx-font-smoothing-type: lcd;
+    -fx-text-fill: aliceblue;
+}
+
+/*****************************************/
+/*END TOP*/
+/*****************************************/
+
+/*****************************************/
+/*START CENTER*/
+/*****************************************/
+
+#centerPane {
+    -fx-vgap: 20px;
+    -fx-hgap: 20px;
+    -fx-spacing: 30px;
+    -fx-alignment: center;
+    -fx-font-smoothing-type: lcd;
+
+}
+
+#lblUserName {
+
+}
+
+#txtUserName {
+}
+
+#lblPassword {
+
+}
+
+#txtPassword {
+
+}
+
+/*****************************************/
+/*END CENTER*/
+/*****************************************/
+
+/*****************************************/
+/*START BOTTOM*/
+/*****************************************/
+
+#bottomPane {
+    -fx-vgap: 30px;
+    -fx-hgap: 15px;
+    -fx-alignment: center;
+    -fx-padding: 30px;
+    -fx-font-size: 32px;
+    -fx-font-family: Arial;
+    -fx-font-smoothing-type: lcd;
+    -fx-text-fill: aliceblue;
+}
+
+#buttonRow1{
+    -fx-alignment: top-center;
+
+}
+
+#buttonRow2{
+    -fx-alignment: top-center;
+
+}
+
+#btnLogin {
+    -fx-background-color: #62d6a8;
+}
+
+#btnLogin:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
+}
+
+#btnLogin:pressed {
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
+}
+
+#btnCancel {
+    -fx-background-color: #f55860;
+}
+
+#btnCancel:hover {
+
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 2, 2);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #f57a80, #f55860);
+}
+
+#btnCancel:pressed {
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #f57a80, #f55860);
+}
+
+#btnCreateProfile {
+    -fx-background-color: #61B0FD;
+
+}
+
+#btnCreateProfile:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
+}
+
+#btnCreateProfile:pressed {
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
+}
+
+#btnPlayAsGuest {
+    -fx-background-color: #61B0FD;
+
+}
+
+#btnPlayAsGuest:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
+}
+
+#btnPlayAsGuest:pressed {
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
+}
+
+/*****************************************/
+/*END BOTTOM*/
+/*****************************************/

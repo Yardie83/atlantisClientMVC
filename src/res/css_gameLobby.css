@@ -3,15 +3,14 @@ a TOP, BOTTOM, RIGHT, CENTER and LEFT part
 */
 
 /*root is a Border Pane*/
-#root{
+#root {
 
 }
-
 
 /*Common style class for the buttons in the left
 part of the border pane in the game lobby
 */
-.leftButtons{
+.leftButtons {
     -fx-pref-width: 100px;
 }
 
@@ -19,25 +18,27 @@ part of the border pane in the game lobby
 /*START TOP*/
 /*****************************************/
 
-#vBoxTop{
+#vBoxTop {
 
 }
 
-#menuBar{
+#menuBar {
 
 }
 
-#menuFile{
+#menuFile {
 
 }
 
-
-#menuOptions{
+#menuOptions {
 
 }
 
+#menuHelp {
 
-#menuRules{
+}
+
+#gameRules {
 
 }
 
@@ -56,15 +57,15 @@ part of the border pane in the game lobby
 /*START BOTTOM*/
 /*****************************************/
 
-#bottomHBox{
+#bottomHBox {
 
 }
 
-#lblStatus{
+#lblStatus {
 
 }
 
-#lblInfo{
+#lblInfo {
 
 }
 
@@ -76,17 +77,18 @@ part of the border pane in the game lobby
 /*START RIGHT*/
 /*****************************************/
 
-#rightVBox{
+#rightVBox {
 
 }
 
-#txtArea{
+#txtArea {
 
 }
 
-#txtField{
+#txtField {
 
 }
+
 /*****************************************/
 /*END RIGHT*/
 /*****************************************/
@@ -95,11 +97,11 @@ part of the border pane in the game lobby
 /*START CENTER*/
 /*****************************************/
 
-#centerVBox{
+#centerVBox {
 
 }
 
-#gameListView{
+#gameListView {
 
 }
 
@@ -111,29 +113,28 @@ part of the border pane in the game lobby
 /*START LEFT*/
 /*****************************************/
 
-#leftVBox{
+#leftVBox {
     -fx-padding: 10px;
--fx-spacing: 10px;
+    -fx-spacing: 10px;
 }
 
-#btnCreateGame{
-
-}
-
-#btnLogin{
+#btnCreateGame {
 
 }
 
-#btnCreateProfile{
+#btnLogin {
 
 }
 
-#btnOptions{
+#btnCreateProfile {
+
+}
+
+#btnOptions {
 
     -fx-background-color: aquamarine;
 
 }
-
 
 /*****************************************/
 /*END LEFT*/

@@ -77,8 +77,6 @@ public class AtlantisController {
             }
         });
 
-
-
         view.getGameLobbyView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -114,27 +112,11 @@ public class AtlantisController {
             }
         });
 
-        //TODO: Better to create a Group node for all the buttons and then create the setOnMouseEntered and setOnMouseExited actions for that group
-
-        // Change the Background color when the user hovers over the options button
-        view.getGameLobbyView().getBtnOptions().setOnMouseEntered(new EventHandler<MouseEvent>() {
+        view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle(MouseEvent event) {
-                view.getGameLobbyView().getBtnOptions().setStyle("-fx-background-color: aqua");
-            }
-        });
-        // Change the Background color when the user moves the mouse off the options button
-        view.getGameLobbyView().getBtnOptions().setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                view.getGameLobbyView().getBtnOptions().setStyle("-fx-background-color: azure");
-            }
-        });
-
-        view.getGameLobbyView().getBtnOptions().setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
+            public void handle(ActionEvent event) {
                 view.createOptionsView();
+                handleOptionsControls();
             }
         });
 
@@ -185,33 +167,13 @@ public class AtlantisController {
                 view.getLoginStage().close();
             }
         });
-
         //TODO: Play as Guest Button needs to be handled. But that means we need a game class and a player object which we don't have yet
     }
+    //END handleLoginViewControls
 
     private void handleNewProfileControls() {
 
-        // Make the Profile Window Draggable
-        final Double[] deltaX = new Double[1];
-        final Double[] deltaY = new Double[1];
-
-        view.getProfileStage().getScene().setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                deltaX[0] = view.getProfileStage().getX() - event.getScreenX();
-                deltaY[0] = view.getProfileStage().getY() - event.getScreenY();
-            }
-        });
-
-        view.getProfileStage().getScene().setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                view.getProfileStage().setX(event.getScreenX() + deltaX[0]);
-                view.getProfileStage().setY(event.getScreenY() + deltaY[0]);
-            }
-        });
-
-        // Handle Create Profile Button
+        // Handle Create Profile Btn Action Event in the create Profile View
         view.getNewProfileView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -248,15 +210,37 @@ public class AtlantisController {
                 }
             }
         });
-// Handle Cancel Profile creation Button
+        // END of "Create Profile Btn" Functionality
+
+        //START "Cancel Btn" Functionality
+        // Handle Cancel Btn Action Event in the create Profile View
         view.getNewProfileView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 view.getProfileStage().close();
             }
-
         });
     }
+    //END "Cancel Btn" Functionality
+    //END handleNewProfileControls
+
+    // Handle Options Controls' Action Events in the Options View
+    private void handleOptionsControls() {
+        view.getOptionsView().getBtnApply().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+//TODO: Options Apply Button needs to be handled
+            }
+        });
+
+        view.getOptionsView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getOptionsStage().close();
+            }
+        });
+    }
+    //END Handle Options Controls
 
     private void closeApplication() {
         model.closeConnection();

@@ -1,8 +1,9 @@
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.awt.*;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -24,6 +25,7 @@ public class AtlantisView {
     private NewProfileView newProfileView;
 
     private Stage profileStage;
+    private Stage optionsStage;
 
     public AtlantisView(Stage primaryStage, AtlantisModel model) {
 
@@ -39,9 +41,11 @@ public class AtlantisView {
         //primaryStage.setWidth(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
         //primaryStage.setMaximized(true);
         primaryStage.setResizable(true);
-        primaryStage.setX(0);
-        primaryStage.setY(0);
 
+        //Start the application in the center of the screen
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        primaryStage.setX(toolkit.getScreenSize().getHeight()/2);
+        primaryStage.setY(toolkit.getScreenSize().getWidth()/8);
     }
 
     public void toggleFullscreen() {
@@ -67,14 +71,11 @@ public class AtlantisView {
 
     public void createLoginView() {
         this.loginView = new LoginView(this);
-        loginStage = new Stage();
-        Scene scene = new Scene(loginView);
         String css = this.getClass().getResource("/res/css_LoginView.css").toExternalForm();
+        Scene scene = new Scene(loginView);
         scene.getStylesheets().add(css);
-        loginStage.setScene(scene);
-        loginStage.setTitle("Atlantis - Login");
-        loginStage.show();
-        //TODO: Ask bradley showAndWait()
+        loginStage = new Stage();
+        setupOverlay(loginStage, scene);
     }
 
     public void createNewProfileView() {
@@ -84,20 +85,30 @@ public class AtlantisView {
         Scene scene = new Scene(newProfileView);
         scene.getStylesheets().add(css);
         profileStage = new Stage();
-
-        profileStage.initStyle(StageStyle.TRANSPARENT);
-        profileStage.setScene(scene);
-        profileStage.setTitle("Atlantis - New Profile");
-        profileStage.show();
+        setupOverlay(profileStage, scene);
     }
 
     //TODO: Finish creating the options view
     public void createOptionsView() {
-        this.optionsView = new OptionsView();
-        Scene scene = new Scene(optionsView);
+        this.optionsView = new OptionsView(this);
         String css = this.getClass().getResource("/res/css_OptionsView.css").toExternalForm();
+        Scene scene = new Scene(optionsView);
         scene.getStylesheets().add(css);
-        setScene(scene);
+        optionsStage = new Stage();
+        setupOverlay(optionsStage, scene);
+    }
+
+    private void setupOverlay(Stage stage, Scene scene){
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setX(primaryStage.getX());
+        stage.setY(primaryStage.getY());
+        stage.setHeight(primaryStage.getHeight());
+        stage.setWidth(primaryStage.getWidth());
+        stage.opacityProperty().setValue(0.8);
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setAlwaysOnTop(true);
+        stage.setScene(scene);
+        stage.show();
     }
 
     private void setScene(Scene scene) {
@@ -129,6 +140,10 @@ public class AtlantisView {
         return gameLobbyView;
     }
 
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     public LoginView getLoginView() {
         return this.loginView;
     }
@@ -145,4 +160,11 @@ public class AtlantisView {
         return profileStage;
     }
 
+    public OptionsView getOptionsView() {
+        return optionsView;
+    }
+
+    public Stage getOptionsStage() {
+        return optionsStage;
+    }
 }

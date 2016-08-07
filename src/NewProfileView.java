@@ -1,21 +1,20 @@
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.InnerShadow;
+import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  * Created by LorisGrether on 04.08.2016.
  */
 public class NewProfileView extends Parent {
-
-
-    private AtlantisView view;
 
     private TextField txtUserName;
     private TextField txtPassword;
@@ -30,30 +29,28 @@ public class NewProfileView extends Parent {
     private Label lblPasswordRevision;
     private GridPane centerPane;
     private HBox bottomPane;
-    private final BorderPane root;
-    private HBox topPane;
+    private final VBox root;
 
     public NewProfileView(AtlantisView view) {
-        this.view = view;
 
-        root = new BorderPane();
-        root.setTop(createTop());
-        root.setCenter(createCenter());
-        root.setBottom(createBottom());
+        root = new VBox(30);
+        root.setMinHeight(view.getPrimaryStage().getHeight());
+        root.setMinWidth(view.getPrimaryStage().getWidth());
+        root.getChildren().add(createTop());
+        root.getChildren().add(createCenter());
+        root.getChildren().add(createBottom());
 
         defineStyleClass();
 
         this.getChildren().add(root);
     }
 
-    private HBox createTop() {
-        topPane = new HBox();
+    private Label createTop() {
 
-        lblNewProfile = new Label("New Profile:");
+        lblNewProfile = new Label("NEW PROFILE");
+        lblNewProfile.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
 
-        topPane.getChildren().add(lblNewProfile);
-
-        return topPane;
+        return lblNewProfile;
     }
 
     private Node createCenter() {
@@ -76,7 +73,7 @@ public class NewProfileView extends Parent {
 
         bottomPane = new HBox();
 
-        bottomPane.getChildren().add(btnCreateProfile = new Button("Create Profile"));
+        bottomPane.getChildren().add(btnCreateProfile = new Button("Create"));
         bottomPane.getChildren().add(btnCancel = new Button("Cancel"));
 
         return bottomPane;
@@ -87,7 +84,6 @@ public class NewProfileView extends Parent {
         /* Common Style Class for the buttons in the New Profile View*/
         btnCancel.getStyleClass().add("buttonsBottom");
         btnCreateProfile.getStyleClass().add("buttonsBottom");
-
         /*Common Style Class for the Labels and TextFields in the CENTER*/
         lblUsername.getStyleClass().add("labelsCenter");
         lblPassword.getStyleClass().add("labelsCenter");
@@ -99,7 +95,6 @@ public class NewProfileView extends Parent {
 
         /*Style ID for the root BorderPane */
         root.setId("root");
-
 
         /*Style IDs for the controls in the New Profile View*/
         txtUserName.setId("txtUserName");
@@ -114,7 +109,6 @@ public class NewProfileView extends Parent {
         lblPassword.setId("lblPassword");
         lblPasswordRevision.setId("lblPasswordRevision");
 
-        topPane.setId("topPane");
         centerPane.setId("centerPane");
         bottomPane.setId("bottomPane");
     }

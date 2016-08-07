@@ -1,26 +1,31 @@
-/*NEW PROFILE CSS: Consists of root Border Pane,
+/*
+/*Created By Hermann Grieder 06.08.2016
+*/
+
+/*NEW PROFILE VIEW CSS: Consists of root Border Pane,
 a TOP with one label, a CENTER with 3 labels, 3 textfield and a BOTTOM
 with 2 buttons
 */
 
 /*root is a Border Pane*/
 #root {
-    -fx-padding: 10px;
-    -fx-min-width: 200px;
-    -fx-min-height: 300px;
-    -fx-border-color: black;
+    -fx-alignment: center;
+    -fx-background-color: rgba(74, 74, 72, 1);
+   /* -fx-background-color: white;*/
 }
+
+
 
 /*****************************************/
 /*START TOP*/
 /*****************************************/
-#topPane {
-    -fx-alignment: center;
-    -fx-padding: 30px;
-}
 
 #lblNewProfile {
-    -fx-font-size: 20px;
+    -fx-alignment: center;
+    -fx-font-size: 40px;
+    -fx-font-family: Arial;
+    -fx-font-smoothing-type: lcd;
+    -fx-text-fill: aliceblue;
 }
 
 /*****************************************/
@@ -31,15 +36,22 @@ with 2 buttons
 /*START CENTER*/
 /*****************************************/
 
-.labelsCenter {
-    -fx-min-width: 100px;
-    -fx-text-fill: darkred;
-    -fx-text-alignment: left;
-}
-
 #centerPane {
-
+    -fx-alignment: top-center;
+    -fx-vgap: 15px;
+    -fx-hgap: 15px;
 }
+
+.labelsCenter {
+    -fx-font-size: 14px;
+    -fx-text-fill: white;
+}
+
+.textFieldsCenter {
+    -fx-spacing: 30px;
+    -fx-font-weight: bold;
+}
+
 
 #lblUserName {
 
@@ -74,18 +86,49 @@ with 2 buttons
 /*****************************************/
 
 #bottomPane {
-    -fx-alignment: center;
+    -fx-alignment: top-center;
     -fx-spacing: 20px;
+    -fx-hgap: 100px;
 }
 
 .buttonsBottom {
-
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+    -fx-background-radius: 5, 5, 4;
+    -fx-padding: 5 20 5 20;
+    -fx-font-family: "Arial";
+    -fx-font-size: 16px;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 3, 3);
+    -fx-border-color: transparent;
 }
 
 #btnCreateProfile {
+    -fx-background-color: #62d6a8;
+}
+
+#btnCreateProfile:hover {
+
+    -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
+}
+
+#btnCreateProfile:pressed {
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
 }
 
 #btnCancel {
+    -fx-background-color: #f55860;
+}
+
+#btnCancel:hover {
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 2, 2);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #f57a80,  #f55860);
+}
+
+#btnCancel:pressed {
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #f57a80, #f55860);
 }
 
 /*****************************************/
