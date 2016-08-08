@@ -27,6 +27,7 @@ public class CreateGameView extends Parent {
     private HBox bottomPane;
     private final VBox root;
     private RadioButton radioButtonTwoPlayers;
+    private RadioButton radioButtonThreePlayers;
     private RadioButton radioButtonFourPlayers;
     private ToggleGroup toggleGroup;
 
@@ -66,10 +67,12 @@ public class CreateGameView extends Parent {
         toggleGroup = new ToggleGroup();
         radioButtonTwoPlayers = new RadioButton("2");
         radioButtonTwoPlayers.setToggleGroup(toggleGroup);
+        radioButtonThreePlayers = new RadioButton("3");
+        radioButtonThreePlayers.setToggleGroup(toggleGroup);
         radioButtonFourPlayers = new RadioButton("4");
         radioButtonFourPlayers.setToggleGroup(toggleGroup);
 
-        noOfPlayerBox.getChildren().addAll(radioButtonTwoPlayers, radioButtonFourPlayers);
+        noOfPlayerBox.getChildren().addAll(radioButtonTwoPlayers, radioButtonThreePlayers, radioButtonFourPlayers);
 
         centerPane.add(noOfPlayerBox, 1, 1);
 
@@ -101,6 +104,7 @@ public class CreateGameView extends Parent {
 
         /* Common Style Class for the RadioButtons in the Create Game View*/
         radioButtonTwoPlayers.getStyleClass().add("radioButtons");
+        radioButtonThreePlayers.getStyleClass().add("radioButtons");
         radioButtonFourPlayers.getStyleClass().add("radioButtons");
 
         /*Style ID for the root BorderPane */

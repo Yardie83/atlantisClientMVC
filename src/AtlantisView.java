@@ -39,14 +39,12 @@ public class AtlantisView {
     private void initStage() {
         primaryStage.setTitle("Atlantis");
         primaryStage.setFullScreenExitHint("");
-        //primaryStage.setHeight(Toolkit.getDefaultToolkit().getScreenSize().getHeight());
-        //primaryStage.setWidth(Toolkit.getDefaultToolkit().getScreenSize().getWidth());
         //primaryStage.setMaximized(true);
         primaryStage.setResizable(true);
 
         //Start the application in the center of the screen
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        primaryStage.setX(toolkit.getScreenSize().getHeight()/2);
+        primaryStage.setX(toolkit.getScreenSize().getHeight()/4);
         primaryStage.setY(toolkit.getScreenSize().getWidth()/8);
     }
 

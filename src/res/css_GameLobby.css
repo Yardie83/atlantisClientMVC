@@ -122,7 +122,23 @@ part of the border pane in the game lobby
 
 }
 
+#btnCreateGame:hover{
+
+}
+
+#btnCreateGame:pressed{
+
+}
+
 #btnLogin {
+
+}
+
+#btnLogin:hover{
+
+}
+
+#btnLogin:pressed{
 
 }
 
@@ -130,9 +146,24 @@ part of the border pane in the game lobby
 
 }
 
-#btnOptions {
+#btnCreateProfile:hover{
 
+}
+
+#btnCreateProfile:pressed{
+
+}
+
+
+#btnOptions {
     -fx-background-color: aquamarine;
+}
+
+#btnOptions:hover{
+
+}
+
+#btnOptions:pressed{
 
 }
 
