@@ -26,7 +26,8 @@ public class GameLobbyView extends Parent {
     private Menu menuHelp;
     private Menu menuOptions;
     private Menu menuFile;
-    private MenuItem gameRules;
+    private MenuItem menuItemExit;
+    private MenuItem menuItemGameRules;
     private HBox bottomHBox;
     private VBox rightVBox;
     private VBox centerVBox;
@@ -57,9 +58,11 @@ public class GameLobbyView extends Parent {
         menuOptions = new Menu("Options");
         menuHelp = new Menu("Help");
 
-        gameRules = new MenuItem("Game Rules");
+        menuItemExit = new MenuItem("Exit");
+        menuItemGameRules = new MenuItem("Game Rules");
 
-        menuHelp.getItems().add(gameRules);
+        menuFile.getItems().add(menuItemExit);
+        menuHelp.getItems().add(menuItemGameRules);
 
         menuBar.getMenus().addAll(menuFile, menuOptions, menuHelp);
 
@@ -141,7 +144,8 @@ public class GameLobbyView extends Parent {
         menuFile.setId("menuFile");
         menuOptions.setId("menuOptions");
         menuHelp.setId("menuHelp");
-        gameRules.setId("gameRules");
+        menuItemExit.setId("menuItemExit");
+        menuItemGameRules.setId("menuItemGameRules");
         lblWindowTitle.setId("lblWindowTitle");
 
         //  CSS IDs for the BOTTOM part of the game lobby (Status bar)
@@ -214,12 +218,20 @@ public class GameLobbyView extends Parent {
         return btnOptions;
     }
 
-    public Label getlblStatus() {
+    public Label getLblStatus() {
         return lblStatus;
     }
 
-    public MenuItem getGameRules() {
-        return this.gameRules;
+    public Menu getMenuOptions() {
+        return menuOptions;
+    }
+
+    public MenuItem getMenuItemExit() {
+        return menuItemExit;
+    }
+
+    public MenuItem getMenuItemGameRules() {
+        return this.menuItemGameRules;
     }
 
     public void setLblStatus(Label lblStatus) {

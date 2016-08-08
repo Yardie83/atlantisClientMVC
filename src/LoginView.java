@@ -1,4 +1,3 @@
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -21,9 +20,9 @@ public class LoginView extends Parent {
     //TOP Element
     private Label lblLogin;
 
-    // CENTER Elements
+    //CENTER Elements
     private GridPane centerPane;
-    private Label lblUsernName;
+    private Label lblUserName;
     private TextField txtUserName;
     private Label lblPassword;
     private TextField txtPassword;
@@ -66,7 +65,7 @@ public class LoginView extends Parent {
 
         centerPane = new GridPane();
 
-        centerPane.add(lblUsernName = new Label("Username: "), 0, 0);
+        centerPane.add(lblUserName = new Label("Username: "), 0, 0);
         centerPane.add(txtUserName = new TextField(), 1, 0);
 
         centerPane.add(lblPassword = new Label("Password: "), 0, 1);
@@ -85,6 +84,7 @@ public class LoginView extends Parent {
         buttonRow1.getChildren().add(btnLogin = new Button("Login"));
         buttonRow1.getChildren().add(btnCancel = new Button("Cancel"));
         buttonRow2.getChildren().add(btnCreateProfile = new Button("Create Profile"));
+        //TODO: Do we really need the Play as Guest button?
         buttonRow2.getChildren().add(btnPlayAsGuest = new Button("Play as Guest"));
 
         bottomPane.getChildren().addAll(buttonRow1,buttonRow2);
@@ -108,7 +108,7 @@ public class LoginView extends Parent {
 
         /* Common Style Class for the Labels in the Login View*/
         lblLogin.getStyleClass().add("labels");
-        lblUsernName.getStyleClass().add("labels");
+        lblUserName.getStyleClass().add("labels");
         lblPassword.getStyleClass().add("labels");
 
         //TOP Element IDs
@@ -116,7 +116,7 @@ public class LoginView extends Parent {
 
         // CENTER Elements IDs
         centerPane.setId("centerPane");
-        lblUsernName.setId("lblUserName");
+        lblUserName.setId("lblUserName");
         txtUserName.setId("txtUserName");
         lblPassword.setId("lblPassword");
         txtPassword.setId("txtPassword");

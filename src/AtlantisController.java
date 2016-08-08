@@ -20,7 +20,7 @@ public class AtlantisController {
     final private AtlantisView view;
 
     //Set debugMode to "true" in order to skip the intro video
-    private boolean debugMode = true;
+    private boolean debugMode = false;
 
     public AtlantisController(AtlantisModel model, AtlantisView view) {
         this.model = model;
@@ -70,10 +70,39 @@ public class AtlantisController {
         view.createGameLobbyView();
         model.connectToServer();
 
-        view.getGameLobbyView().getGameRules().setOnAction(new EventHandler<ActionEvent>() {
+        /*
+         *Menu Bar Controls
+         */
+        view.getGameLobbyView().getMenuItemExit().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                closeApplication();
+            }
+        });
+
+        view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createOptionsView();
+                handleOptionsControls();
+            }
+        });
+
+        view.getGameLobbyView().getMenuItemGameRules().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 model.showGameRules();
+            }
+        });
+
+        /*
+         *Create Game, Login, Create Profile and Options Controls
+         */
+        view.getGameLobbyView().getBtnCreateGame().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createCreateGameView();
+                handleCreateGameControls();
             }
         });
 
@@ -93,8 +122,21 @@ public class AtlantisController {
             }
         });
 
+        view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createOptionsView();
+                handleOptionsControls();
+            }
+        });
+
+
         /*
-         CHAT: When the user presses enter the message is sent to the server
+         * CHAT Application EventHandlers
+         */
+
+        /*
+         * When the user presses enter the message is sent to the server
          */
         view.getGameLobbyView().getTxtField().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -112,14 +154,9 @@ public class AtlantisController {
             }
         });
 
-        view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                view.createOptionsView();
-                handleOptionsControls();
-            }
-        });
-
+        /* Incoming Message is saved in the ChatString. Added this class as the changeListener of the ChatString
+         * in order to update the txtArea with the incoming chat message.
+         */
         //TODO: Ask Bradley if there is a better way instead of a ChangeListener. Because when the user enters the same message twice it does not register as a changed value
         model.getChatString().addListener(new ChangeListener<String>() {
             @Override
@@ -130,13 +167,39 @@ public class AtlantisController {
             }
         });
 
+        /*
+         * STATUS and INFORMATION Bar EventHandlers (Bottom of the Game Lobby)
+         */
         model.getConnectionStatus().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                view.getGameLobbyView().getlblStatus().setText("Status: " + newValue);
+                view.getGameLobbyView().getLblStatus().setText("Status: " + newValue);
             }
         });
     }
+
+    private void handleCreateGameControls() {
+
+
+        // Handle Create Btn Action Event in the Create Game View
+        view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                //TODO: Handle the creation of a game here
+                view.getCreateGameStage().close();
+            }
+        });
+
+        // Handle Cancel Btn Action Event in the Create Game View
+        view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getCreateGameStage().close();
+            }
+        });
+
+    }
+    //END handleCreateGameControls
 
     private void handleLoginViewControls() {
 
@@ -177,34 +240,20 @@ public class AtlantisController {
         view.getNewProfileView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+
                 //TODO: Sanitize user input before sending it as a message to the server. Also check that username and password are not null or ""
                 String userName = view.getNewProfileView().getTxtUserName().getText();
                 String password = view.getNewProfileView().getTxtPassword().getText();
                 String passwordRevision = view.getNewProfileView().getTxtPasswordRevision().getText();
 
+                // Send the UserName and the Password to the server to create the profile
                 if (password.equals(passwordRevision)) {
                     String userInfo = userName + "," + password;
                     model.sendMessage(new Message(MessageType.CREATEPROFILE, userInfo));
                     view.getProfileStage().close();
                 } else {
-                    // Copied this from the internet. Could be a interesint alert alternative.
-                    // Needs adjustments
-//                    Dialog<Void> dialog = new Dialog<>();
-//                    dialog.initModality(Modality.WINDOW_MODAL);
-//                    dialog.initOwner(view.getProfileStage());//stage here is the stage of your webview
-//                    dialog.initStyle(StageStyle.TRANSPARENT);
-//                    Label loader = new Label("LOADING");
-//                    loader.setContentDisplay(ContentDisplay.BOTTOM);
-//                    loader.setGraphic(new ProgressIndicator());
-//                    dialog.getDialogPane().setGraphic(loader);
-//                    DropShadow ds = new DropShadow();
-//                    ds.setOffsetX(1.3);
-//                    ds.setOffsetY(1.3);
-//                    ds.setColor(Color.DARKGRAY);
-//                    dialog.getDialogPane().setEffect(ds);
-//                    dialog.showAndWait();
-
-                    //Alert Box when the password does not match
+                    //Alert Box when the Passwords do not match
+                    //TODO: Should not be an alert box but a Label that shows up in red and tells the user the password or username was wrong.
                     Alert alert = new Alert(Alert.AlertType.WARNING, "Password does not match", ButtonType.OK);
                     alert.show();
                 }
@@ -212,7 +261,6 @@ public class AtlantisController {
         });
         // END of "Create Profile Btn" Functionality
 
-        //START "Cancel Btn" Functionality
         // Handle Cancel Btn Action Event in the create Profile View
         view.getNewProfileView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -222,14 +270,14 @@ public class AtlantisController {
         });
     }
     //END "Cancel Btn" Functionality
-    //END handleNewProfileControls
+    //END handleNewProfileControls method
 
     // Handle Options Controls' Action Events in the Options View
     private void handleOptionsControls() {
         view.getOptionsView().getBtnApply().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-//TODO: Options Apply Button needs to be handled
+            //TODO: Options Apply Button needs to be handled
             }
         });
 

@@ -127,6 +127,8 @@ public class AtlantisModel {
         this.autoConnect = autoConnect;
     }
 
+
+//TODO: Implement the Game Rules
     public void showGameRules() {
         try {
             File file = new File(getClass().getResource("/res/Atlantis_Spielregel.pdf").getFile());

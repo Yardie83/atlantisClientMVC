@@ -18,12 +18,14 @@ public class AtlantisView {
 
     private IntroView introView;
     private GameLobbyView gameLobbyView;
+    private CreateGameView createGameView;
     private OptionsView optionsView;
     private LoginView loginView;
-    private Stage loginStage;
 
     private NewProfileView newProfileView;
 
+    private Stage createGameViewStage;
+    private Stage loginStage;
     private Stage profileStage;
     private Stage optionsStage;
 
@@ -52,6 +54,7 @@ public class AtlantisView {
         primaryStage.setFullScreen(!primaryStage.isFullScreen());
     }
 
+    //TODO: The methods createIntroView, createGameLobbyView, createCreateGameView, createLoginView, createNewProfileView and createOptionsView are all setup the same way. It should be possible to create one method to handle all.
     public void createIntroView() {
         toggleFullscreen();
         this.introView = new IntroView();
@@ -62,11 +65,19 @@ public class AtlantisView {
     public void createGameLobbyView() {
         toggleFullscreen();
         this.gameLobbyView = new GameLobbyView(this);
+        String css = this.getClass().getResource("/res/css_GameLobby.css").toExternalForm();
         Scene scene = new Scene(gameLobbyView);
-        String css = this.getClass().getResource("/res/css_gameLobby.css").toExternalForm();
-        scene.getStylesheets().clear();
         scene.getStylesheets().add(css);
         setScene(scene);
+    }
+
+    public void createCreateGameView() {
+        this.createGameView = new CreateGameView(this);
+        String css = this.getClass().getResource("/res/css_CreateGameView.css").toExternalForm();
+        Scene scene = new Scene(createGameView);
+        scene.getStylesheets().add(css);
+        createGameViewStage = new Stage();
+        setupOverlay(createGameViewStage, scene);
     }
 
     public void createLoginView() {
@@ -88,7 +99,6 @@ public class AtlantisView {
         setupOverlay(profileStage, scene);
     }
 
-    //TODO: Finish creating the options view
     public void createOptionsView() {
         this.optionsView = new OptionsView(this);
         String css = this.getClass().getResource("/res/css_OptionsView.css").toExternalForm();
@@ -104,7 +114,7 @@ public class AtlantisView {
         stage.setY(primaryStage.getY());
         stage.setHeight(primaryStage.getHeight());
         stage.setWidth(primaryStage.getWidth());
-        stage.opacityProperty().setValue(0.8);
+        stage.opacityProperty().setValue(0.9);
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.setAlwaysOnTop(true);
         stage.setScene(scene);
@@ -142,6 +152,14 @@ public class AtlantisView {
 
     public Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    public CreateGameView getCreateGameView() {
+        return createGameView;
+    }
+
+    public Stage getCreateGameStage() {
+        return createGameViewStage;
     }
 
     public LoginView getLoginView() {
