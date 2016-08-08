@@ -20,7 +20,7 @@ public class AtlantisController {
     final private AtlantisView view;
 
     //Set debugMode to "true" in order to skip the intro video
-    private boolean debugMode = false;
+    private boolean debugMode = true;
 
     public AtlantisController(AtlantisModel model, AtlantisView view) {
         this.model = model;
