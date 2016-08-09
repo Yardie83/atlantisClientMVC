@@ -69,6 +69,7 @@ public class AtlantisView {
         setScene(scene);
     }
 
+
     public void createCreateGameView() {
         this.createGameView = new CreateGameView(this);
         String css = this.getClass().getResource("/res/css_CreateGameView.css").toExternalForm();
