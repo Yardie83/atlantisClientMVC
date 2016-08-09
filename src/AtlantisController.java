@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -181,12 +182,16 @@ public class AtlantisController {
 
     private void handleCreateGameControls() {
 
-
         // Handle Create Btn Action Event in the Create Game View
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 //TODO: Handle the creation of a game here
+                //TODO: Sanitize input. Check for no commas in game name
+                String gameName = view.getCreateGameView().getTxtGameName().getText();
+                RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
+                String message = gameName + "," + selectedRadioButton.getText();
+                model.sendMessage(new Message(MessageType.NEWGAME, message ));
                 view.getCreateGameStage().close();
             }
         });
@@ -207,12 +212,14 @@ public class AtlantisController {
         view.getLoginView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                //TODO: Sanitize userInput by checking that username and password are not empty or SQL statements
+                //TODO: Sanitize input. Check for no commas in game name
                 String username = view.getLoginView().getTxtUserName().getText();
                 String password = view.getLoginView().getTxtPassword().getText();
                 String credentials = username + "," + password;
 
                 model.sendMessage(new Message(MessageType.LOGIN, credentials));
+                view.getLoginStage().close();
             }
         });
 
