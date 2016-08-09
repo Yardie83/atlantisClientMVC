@@ -186,7 +186,6 @@ public class AtlantisController {
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //TODO: Handle the creation of a game here
                 //TODO: Sanitize input. Check for no commas in game name
                 String gameName = view.getCreateGameView().getTxtGameName().getText();
                 RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
