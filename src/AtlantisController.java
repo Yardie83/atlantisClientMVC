@@ -80,6 +80,7 @@ public class AtlantisController {
             }
         });
 
+        //TODO: Does not work for some reason
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -144,7 +145,7 @@ public class AtlantisController {
                 if (event.getCode() == KeyCode.ENTER) {
                     model.setAutoConnect(true);
                     TextField txtField = view.getGameLobbyView().getTxtField();
-                    if (txtField.getText().equals("QUIT")) {
+                    if (txtField.getText().equalsIgnoreCase("QUIT")) {
                         model.closeConnection();
                     } else {
                         model.sendMessage(new Message(MessageType.CHAT, txtField.getText()));

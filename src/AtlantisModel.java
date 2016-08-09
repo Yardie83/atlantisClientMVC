@@ -43,8 +43,6 @@ public class AtlantisModel {
                 chatString.setValue("Connection to the server failed. Please check if the server is running");
                 connectionStatus.setValue("Disconnected");
             }
-        } else {
-            return;
         }
     }
 
@@ -67,8 +65,8 @@ public class AtlantisModel {
                                 System.out.println("Server -> " + message.getMessage().toString());
                             }
                         } catch (SocketException e) {
+                            //TODO: Ask Bradley if this is the correct way to solve this problem
                             System.out.println("Connection by server closed");
-                            //TODO: Ask Bradyley if this is the correct way to solve this problem
                             autoConnect = false;
                             //closeConnection();
                         } catch (Exception e) {
@@ -83,11 +81,11 @@ public class AtlantisModel {
     }
 
     public void sendMessage(Message message) {
-        if ((socket == null || socket.isClosed()) && autoConnect == true) {
+        if ((socket == null || socket.isClosed()) && autoConnect) {
             connectToServer();
             autoConnect = false;
             sendMessage(message);
-        } else if ((socket == null || socket.isClosed()) && autoConnect == false) {
+        } else if ((socket == null || socket.isClosed()) && !autoConnect) {
             chatString.setValue("Maximum connection attempts reached.");
         } else {
             try {
