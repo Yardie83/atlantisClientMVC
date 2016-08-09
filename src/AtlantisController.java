@@ -10,8 +10,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
 
-import java.util.ArrayList;
-
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  */
@@ -106,11 +104,6 @@ public class AtlantisController {
             public void handle(ActionEvent event) {
                 view.createCreateGameView();
                 handleCreateGameControls();
-                ArrayList<Integer> testList = new ArrayList<Integer>();
-                testList.add(2);
-                testList.add(5);
-                testList.add(4);
-                model.sendMessage(new Message(MessageType.LOGIN, testList));
             }
         });
 
