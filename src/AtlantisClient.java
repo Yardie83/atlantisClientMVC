@@ -3,7 +3,6 @@ import javafx.stage.Stage;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
  */
 public class AtlantisClient extends Application {
 
@@ -16,17 +15,13 @@ public class AtlantisClient extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage introStage) throws Exception {
         model = new AtlantisModel();
-        view = new AtlantisView(primaryStage, model);
+        view = new AtlantisView(introStage, model);
         new AtlantisController(model, view);
 
-        view.start();
-    }
-
-    @Override
-    public void stop() {
-        if (view != null)
-            view.stop();
+        if (!AtlantisController.debugMode) {
+            view.getIntroStage().show();
+        }
     }
 }

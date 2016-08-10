@@ -5,13 +5,14 @@ import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
  * Created by Hermann Grieder on 08.08.2016.
  */
-public class CreateGameView extends Parent {
+public class CreateGameView extends Pane {
 
     private TextField txtGameName;
 
@@ -31,11 +32,11 @@ public class CreateGameView extends Parent {
     private RadioButton radioButtonFourPlayers;
     private ToggleGroup toggleGroup;
 
-    public CreateGameView(AtlantisView view) {
+    public CreateGameView() {
 
         root = new VBox(30);
-        root.setMinHeight(view.getPrimaryStage().getHeight());
-        root.setMinWidth(view.getPrimaryStage().getWidth());
+        root.setMinHeight(AtlantisView.HEIGHT);
+        root.setMinWidth(AtlantisView.WIDTH);
         root.getChildren().add(createTop());
         root.getChildren().add(createCenter());
         root.getChildren().add(createBottom());

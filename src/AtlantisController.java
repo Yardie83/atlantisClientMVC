@@ -1,3 +1,4 @@
+import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -9,7 +10,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -21,7 +28,7 @@ public class AtlantisController {
     final private AtlantisView view;
 
     //Set debugMode to "true" in order to skip the intro video
-    private boolean debugMode = true;
+    public final static boolean debugMode = true;
 
     public AtlantisController(AtlantisModel model, AtlantisView view) {
         this.model = model;
@@ -29,47 +36,49 @@ public class AtlantisController {
 
         if (debugMode) {
             view.createGameLobbyView();
+            System.out.println("DebugMode is on.\nIntro was skipped");
+            handleGameLobbyControls();
+            view.getGameLobbyView().show();
         } else {
             view.createIntroView();
+            handleIntroViewControls();
         }
+    }
 
-        view.getStage().setOnShowing(new EventHandler<WindowEvent>() {
+    private void handleIntroViewControls() {
+
+        view.getIntroStage().setOnShowing(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                if (debugMode) {
-                    System.out.println("DebugMode is on. Intro was skipped");
-                    createGameLobby();
-                } else {
-                    try {
-                        view.getIntroView().getMediaPlayer().play();
-                    } catch (Exception e) {
-                        System.err.println("Not able to play intro video");
-                    }
+                try {
+                    view.getIntroView().getMediaPlayer().play();
+                } catch (Exception e) {
+                    System.err.println("Not able to play intro video");
                 }
             }
         });
 
-        view.getScene().setOnMousePressed(new EventHandler<MouseEvent>() {
+        view.getIntroStage().getScene().setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 view.getIntroView().getMediaPlayer().stop();
                 view.getIntroView().getMediaPlayer().dispose();
-                createGameLobby();
-            }
-        });
-
-        view.getStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                closeApplication();
+                view.getIntroStage().close();
+                view.createGameLobbyView();
+                handleGameLobbyControls();
+                view.getGameLobbyView().show();
             }
         });
     }
 
-    private void createGameLobby() {
+    private void handleGameLobbyControls() {
 
-        view.createGameLobbyView();
-        model.connectToServer();
+        view.getGameLobbyView().getGameLobbyStage().setOnShowing(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                model.connectToServer();
+            }
+        });
 
         /*
          *Menu Bar Controls
@@ -81,7 +90,7 @@ public class AtlantisController {
             }
         });
 
-        //TODO: Does not work for some reason
+        //TODO: Does not work on top-level Menus. Need to add a submenu.
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -138,7 +147,8 @@ public class AtlantisController {
          */
 
         /*
-         * When the user presses enter the message is sent to the server
+         * When the user presses enter, the message is sent to the server
+         * If the user writes "Quit" the user is being disconnected from the chat
          */
         view.getGameLobbyView().getTxtField().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -156,7 +166,7 @@ public class AtlantisController {
             }
         });
 
-        /* Incoming Message is saved in the ChatString. Added this class as the changeListener of the ChatString
+        /* Incoming Message is saved in the ChatString. Added this class "AtlantisController" as the changeListener of the ChatString
          * in order to update the txtArea with the incoming chat message.
          */
         //TODO: Ask Bradley if there is a better way instead of a ChangeListener. Because when the user enters the same message twice it does not register as a changed value
@@ -164,7 +174,7 @@ public class AtlantisController {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 if (!(newValue.equals(""))) {
-                    view.getGameLobbyView().getTxtArea().appendText("\n" + newValue);
+                    view.getGameLobbyView().getTxtArea().appendText(newValue + "\n");
                 }
             }
         });
@@ -178,7 +188,56 @@ public class AtlantisController {
                 view.getGameLobbyView().getLblStatus().setText("Status: " + newValue);
             }
         });
-    }
+
+
+        view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                Random r = new Random();
+
+                for (int i = 0; i < 6; i++) {
+                    Circle c = new Circle(r.nextInt(7) - 2, Color.LIGHTBLUE);
+                    c.setStyle("-fx-border-color: #7DC6FD");
+                    c.setCenterX(event.getX() + r.nextInt(10) - 5);
+                    c.setCenterY(event.getY());
+
+                    view.getGameLobbyView().getChildren().add(c);
+
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(200) + 1000), c);
+                    translateTransition.setFromX(0);
+                    translateTransition.setToX(r.nextInt(40) - 20);
+                    translateTransition.setFromY(0);
+                    translateTransition.setToY(-r.nextInt(30) - 50);
+                    translateTransition.setAutoReverse(false);
+
+                    FadeTransition ft = new FadeTransition(Duration.millis(1000), c);
+                    ft.setFromValue(1.0);
+                    ft.setToValue(0);
+                    ft.setAutoReverse(false);
+
+                    ParallelTransition parallelTransition = new ParallelTransition();
+                    parallelTransition.getChildren().addAll(ft, translateTransition);
+                    parallelTransition.setCycleCount(1);
+                    parallelTransition.play();
+                }
+            }
+        });
+
+    // When the X Button is clicked, close the Application
+        view.getGameLobbyView().
+
+    getGameLobbyStage().
+
+    setOnCloseRequest(new EventHandler<WindowEvent>() {
+        @Override
+        public void handle (WindowEvent event){
+            closeApplication();
+        }
+    });
+
+
+}
 
     private void handleCreateGameControls() {
 
@@ -190,7 +249,7 @@ public class AtlantisController {
                 String gameName = view.getCreateGameView().getTxtGameName().getText();
                 RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
                 String message = gameName + "," + selectedRadioButton.getText();
-                model.sendMessage(new Message(MessageType.NEWGAME, message ));
+                model.sendMessage(new Message(MessageType.NEWGAME, message));
                 view.getCreateGameStage().close();
             }
         });
@@ -284,7 +343,7 @@ public class AtlantisController {
         view.getOptionsView().getBtnApply().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-            //TODO: Options Apply Button needs to be handled
+                //TODO: Options Apply Button needs to be handled
             }
         });
 
@@ -299,7 +358,6 @@ public class AtlantisController {
 
     private void closeApplication() {
         model.closeConnection();
-        view.stop();
         System.exit(0);
     }
 }

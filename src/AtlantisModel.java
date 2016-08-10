@@ -30,9 +30,9 @@ public class AtlantisModel {
             closeConnection();
         }
         if (autoConnect) {
-            System.out.println("Connecting to Server.");
-            chatString.setValue("Connecting to Server.");
-            connectionStatus.setValue("Connecting");
+            System.out.println("Connecting to Server...");
+            chatString.setValue("Connecting to Server...");
+            connectionStatus.setValue("Connecting...");
             try {
                 socket = new Socket(HOST, PORT);
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -60,9 +60,35 @@ public class AtlantisModel {
                                 connectToServer();
                             } else {
                                 message = (Message) inReader.readObject();
-                                chatString.setValue(message.getMessage().toString());
-                                chatString.setValue("");
-                                System.out.println("Server -> " + message.getMessage().toString());
+
+                                //TODO: Implement here the same switch statement as in the server for each messageType
+
+                                switch (message.getMessageType()) {
+
+                                    case DISCONNECT:
+                                        //Add code here
+                                        break;
+
+                                    case CHAT:
+                                        handleChatMessage(message);
+                                        break;
+
+                                    case CREATEPROFILE:
+                                        //Add code here
+                                        break;
+
+                                    case LOGIN:
+                                        //Add code here
+                                        break;
+
+                                    case NEWGAME:
+                                        //Add code here
+                                        break;
+
+                                    case GAMELIST:
+                                        //Add code here
+                                        break;
+                                }
                             }
                         } catch (SocketException e) {
                             //TODO: Ask Bradley if this is the correct way to solve this problem
@@ -80,7 +106,14 @@ public class AtlantisModel {
         clientTask.start();
     }
 
+    private void handleChatMessage(Message message) {
+        chatString.setValue(message.getMessage().toString());
+        chatString.setValue("");
+        System.out.println("Server -> " + message.getMessage().toString());
+    }
+
     public void sendMessage(Message message) {
+        //TODO: This if statement can maybe be a do-while loop. We have to look into it
         if ((socket == null || socket.isClosed()) && autoConnect) {
             connectToServer();
             autoConnect = false;
@@ -126,7 +159,7 @@ public class AtlantisModel {
     }
 
 
-//TODO: Implement the Game Rules
+//TODO: Make this better-looking instead of a PDF create a view with the rules
     public void showGameRules() {
         try {
             File file = new File(getClass().getResource("/res/Atlantis_Spielregel.pdf").getFile());

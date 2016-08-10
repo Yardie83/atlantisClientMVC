@@ -1,20 +1,19 @@
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.effect.Reflection;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
  * Created by LorisGrether on 04.08.2016.
  */
-public class NewProfileView extends Parent {
+public class NewProfileView extends Pane {
 
     private TextField txtUserName;
     private TextField txtPassword;
@@ -31,11 +30,11 @@ public class NewProfileView extends Parent {
     private HBox bottomPane;
     private final VBox root;
 
-    public NewProfileView(AtlantisView view) {
+    public NewProfileView( ) {
 
         root = new VBox(30);
-        root.setMinHeight(view.getPrimaryStage().getHeight());
-        root.setMinWidth(view.getPrimaryStage().getWidth());
+        root.setMinHeight(AtlantisView.HEIGHT);
+        root.setMinWidth(AtlantisView.WIDTH);
         root.getChildren().add(createTop());
         root.getChildren().add(createCenter());
         root.getChildren().add(createBottom());

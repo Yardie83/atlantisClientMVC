@@ -1,15 +1,21 @@
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
  */
-public class GameLobbyView extends Parent {
-    private AtlantisView view;
+public class GameLobbyView extends Pane {
+
+    private Stage gameLobbyStage;
+    private Scene gameLobbyScene;
+
     private Label lblStatus;
     private Label lblInfo;
     private TextArea txtArea;
@@ -33,8 +39,15 @@ public class GameLobbyView extends Parent {
     private VBox centerVBox;
     private VBox leftVBox;
 
-    public GameLobbyView(AtlantisView view) {
-        this.view = view;
+    public GameLobbyView() {
+
+        String css = this.getClass().getResource("/res/css_GameLobby.css").toExternalForm();
+        gameLobbyScene = new Scene(this);
+        gameLobbyScene.getStylesheets().add(css);
+        gameLobbyStage = new Stage();
+        gameLobbyStage.setHeight(AtlantisView.HEIGHT);
+        gameLobbyStage.setWidth(AtlantisView.WIDTH);
+        gameLobbyStage.setScene(gameLobbyScene);
 
         root = new BorderPane();
 
@@ -168,6 +181,14 @@ public class GameLobbyView extends Parent {
         btnLogin.setId("btnLogin");
         btnCreateProfile.setId("btnCreateProfile");
         btnOptions.setId("btnOptions");
+    }
+
+    public void show(){
+        this.gameLobbyStage.show();
+    }
+
+    public Stage getGameLobbyStage() {
+        return gameLobbyStage;
     }
 
     public Label getLblInfo() {

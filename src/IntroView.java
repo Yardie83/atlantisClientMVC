@@ -1,23 +1,30 @@
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
-import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.nio.file.Paths;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
  */
-public class IntroView extends Parent {
+public class IntroView extends Pane {
 
+    private Scene introScene;
     private MediaPlayer mp;
     private MediaView mediaView;
 
-    public IntroView() {
+    public IntroView(Stage introStage) {
+
+        introScene = new Scene(this);
+        introStage.setScene(introScene);
+        introStage.setFullScreen(true);
+        introStage.setFullScreenExitHint("");
+
         try {
             Media media = new Media(Paths.get("src/res/atlantis.mp4").toUri().toString());
             mp = new MediaPlayer(media);
@@ -41,4 +48,5 @@ public class IntroView extends Parent {
     public MediaPlayer getMediaPlayer() {
         return mp;
     }
+
 }

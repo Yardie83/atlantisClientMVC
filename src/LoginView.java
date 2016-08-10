@@ -1,19 +1,17 @@
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /**
  * Created by Loris Grether on 04.08.2016.
  */
-public class LoginView extends Parent {
-
-    private AtlantisView view;
+public class LoginView extends Pane {
 
     private final VBox root;
 
@@ -38,12 +36,12 @@ public class LoginView extends Parent {
     private Button btnCreateProfile;
     private Button btnPlayAsGuest;
 
-    public LoginView(AtlantisView view) {
-        this.view = view;
+    public LoginView() {
+
 
         root = new VBox(30);
-        root.setMinHeight(view.getPrimaryStage().getHeight());
-        root.setMinWidth(view.getPrimaryStage().getWidth());
+        root.setMinHeight(AtlantisView.HEIGHT);
+        root.setMinWidth(AtlantisView.WIDTH);
         root.getChildren().add(createTop());
         root.getChildren().add(createCenter());
         root.getChildren().add(createBottom());
