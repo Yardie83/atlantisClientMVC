@@ -153,6 +153,8 @@ public class OptionsView extends Pane {
         bottomPane.setId("bottomPane");
     }
 
+
+
     public Button getBtnApply() {
         return btnApply;
     }

@@ -196,10 +196,10 @@ public class AtlantisController {
                 Random r = new Random();
 
                 for (int i = 0; i < 12; i++) {
-                    Circle c = new Circle(r.nextInt(7) - 2, Color.SKYBLUE);
-                    c.setStyle("-fx-border-color: #7DC6FD;" +
+                    Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
+                    c.setStyle("-fx-border-color: WHITE;" +
                             "-fx-border-width: 1px;" +
-                            "-fx-effect: dropshadow(gaussian, LIGHTBLUE, 1, 0.3, 0, 0)");
+                            "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
                     c.setCenterX(event.getX() + r.nextInt(10) - 5);
                     c.setCenterY(event.getY() + r.nextInt(10));
 
@@ -310,8 +310,6 @@ public class AtlantisController {
                 view.getLoginStage().close();
             }
         });
-
-        //TODO: Play as Guest Button needs to be handled. But that means we need a game class and a player object which we don't have yet
     }
     //END handleLoginViewControls
 
@@ -322,7 +320,7 @@ public class AtlantisController {
             @Override
             public void handle(ActionEvent event) {
 
-                //TODO: Sanitize user input before sending it as a message to the server.
+                //TODO: Sanitize user input before sending it to the server.
                 String userName = view.getNewProfileView().getTxtUserName().getText();
                 String password = view.getNewProfileView().getTxtPassword().getText();
                 String passwordRevision = view.getNewProfileView().getTxtPasswordRevision().getText();
@@ -358,6 +356,7 @@ public class AtlantisController {
 
     // Handle Options Controls' Action Events in the Options View
     private void handleOptionsControls() {
+
         view.getOptionsView().getBtnApply().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

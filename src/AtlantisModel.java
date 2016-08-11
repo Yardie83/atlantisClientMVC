@@ -1,7 +1,10 @@
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 
@@ -39,8 +42,8 @@ public class AtlantisModel {
                 inReader = new ObjectInputStream(socket.getInputStream());
                 receiveMessage();
             } catch (IOException e) {
-                System.err.println("Connection to the server failed. Please check if the server is running");
-                chatString.setValue("Connection to the server failed. Please check if the server is running");
+                System.err.println("Connection to the server failed!\nPlease check if the server is running");
+                chatString.setValue("Connection to the server failed!\nPlease check if the server is running");
                 connectionStatus.setValue("Disconnected");
             }
         }
