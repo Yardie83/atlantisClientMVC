@@ -11,10 +11,8 @@ with 2 buttons
 #root {
     -fx-alignment: center;
     -fx-background-color: rgba(74, 74, 72, 1);
-   /* -fx-background-color: white;*/
+    /* -fx-background-color: white;*/
 }
-
-
 
 /*****************************************/
 /*START TOP*/
@@ -52,7 +50,6 @@ with 2 buttons
     -fx-font-weight: bold;
 }
 
-
 #lblUserName {
 
 }
@@ -63,6 +60,10 @@ with 2 buttons
 
 #lblPasswordRevision {
 
+}
+
+#lblError {
+    -fx-text-fill: #ff5558;
 }
 
 #txtUserName {
@@ -123,7 +124,7 @@ with 2 buttons
 
 #btnCancel:hover {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 2, 2);
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #f57a80,  #f55860);
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #f57a80, #f55860);
 }
 
 #btnCancel:pressed {

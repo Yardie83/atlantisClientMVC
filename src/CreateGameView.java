@@ -1,5 +1,4 @@
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
@@ -22,6 +21,7 @@ public class CreateGameView extends Pane {
     private Label lblNewGame;
     private Label lblGameName;
     private Label lblNoOfPlayers;
+    private Label lblError;
 
     private GridPane centerPane;
 
@@ -63,10 +63,12 @@ public class CreateGameView extends Pane {
 
         centerPane.add(lblNoOfPlayers = new Label("Number of Players: "), 0, 1);
 
+        //Create a RadioButton Group and add it to the GridPane
         HBox noOfPlayerBox = new HBox(20);
 
         toggleGroup = new ToggleGroup();
         radioButtonTwoPlayers = new RadioButton("2");
+        radioButtonTwoPlayers.setSelected(true);
         radioButtonTwoPlayers.setToggleGroup(toggleGroup);
         radioButtonThreePlayers = new RadioButton("3");
         radioButtonThreePlayers.setToggleGroup(toggleGroup);
@@ -76,6 +78,7 @@ public class CreateGameView extends Pane {
         noOfPlayerBox.getChildren().addAll(radioButtonTwoPlayers, radioButtonThreePlayers, radioButtonFourPlayers);
 
         centerPane.add(noOfPlayerBox, 1, 1);
+        centerPane.add(lblError = new Label(""), 0,2,2,1);
 
         return centerPane;
     }
@@ -95,6 +98,8 @@ public class CreateGameView extends Pane {
         /*Common Style Class for the Labels and TextFields in the CENTER*/
         lblGameName.getStyleClass().add("labelsCenter");
         lblNoOfPlayers.getStyleClass().add("labelsCenter");
+        lblError.getStyleClass().add("labelsCenter");
+        lblError.setVisible(false);
 
         /* Common Style Class for the buttons in the Create Game View*/
         btnCancel.getStyleClass().add("buttonsBottom");
@@ -121,6 +126,7 @@ public class CreateGameView extends Pane {
         lblNewGame.setId("lblNewGame");
         lblGameName.setId("lblGameName");
         lblNoOfPlayers.setId("lblNoOfPlayers");
+        lblError.setId("lblError");
 
         //BOTTOM elements
         bottomPane.setId("bottomPane");
@@ -134,6 +140,10 @@ public class CreateGameView extends Pane {
 
     public ToggleGroup getTgNoOfPlayers() {
         return toggleGroup;
+    }
+
+    public Label getLblError() {
+        return lblError;
     }
 
     public Button getBtnCancel() {

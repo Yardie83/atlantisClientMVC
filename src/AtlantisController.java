@@ -1,10 +1,10 @@
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -15,7 +15,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -189,30 +188,32 @@ public class AtlantisController {
             }
         });
 
-
+        // BUBBLES!!
         view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
 
                 Random r = new Random();
 
-                for (int i = 0; i < 6; i++) {
-                    Circle c = new Circle(r.nextInt(7) - 2, Color.LIGHTBLUE);
-                    c.setStyle("-fx-border-color: #7DC6FD");
+                for (int i = 0; i < 12; i++) {
+                    Circle c = new Circle(r.nextInt(7) - 2, Color.SKYBLUE);
+                    c.setStyle("-fx-border-color: #7DC6FD;" +
+                            "-fx-border-width: 1px;" +
+                            "-fx-effect: dropshadow(gaussian, LIGHTBLUE, 1, 0.3, 0, 0)");
                     c.setCenterX(event.getX() + r.nextInt(10) - 5);
-                    c.setCenterY(event.getY());
+                    c.setCenterY(event.getY() + r.nextInt(10));
 
                     view.getGameLobbyView().getChildren().add(c);
 
-                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(200) + 1000), c);
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1300), c);
                     translateTransition.setFromX(0);
                     translateTransition.setToX(r.nextInt(40) - 20);
                     translateTransition.setFromY(0);
-                    translateTransition.setToY(-r.nextInt(30) - 50);
+                    translateTransition.setToY(-r.nextInt(70) - 50);
                     translateTransition.setAutoReverse(false);
 
-                    FadeTransition ft = new FadeTransition(Duration.millis(1000), c);
-                    ft.setFromValue(1.0);
+                    FadeTransition ft = new FadeTransition(Duration.millis(r.nextInt(600) + 1300), c);
+                    ft.setFromValue(1);
                     ft.setToValue(0);
                     ft.setAutoReverse(false);
 
@@ -224,24 +225,24 @@ public class AtlantisController {
             }
         });
 
-    // When the X Button is clicked, close the Application
+        // When the X Button is clicked, close the Application
         view.getGameLobbyView().
 
-    getGameLobbyStage().
+                getGameLobbyStage().
 
-    setOnCloseRequest(new EventHandler<WindowEvent>() {
-        @Override
-        public void handle (WindowEvent event){
-            closeApplication();
-        }
-    });
+                setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+                        closeApplication();
+                    }
+                });
 
 
-}
+    }
 
     private void handleCreateGameControls() {
 
-        // Handle Create Btn Action Event in the Create Game View
+        // Handle "Create" Btn Action Event in the Create Game View
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -249,12 +250,18 @@ public class AtlantisController {
                 String gameName = view.getCreateGameView().getTxtGameName().getText();
                 RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
                 String message = gameName + "," + selectedRadioButton.getText();
-                model.sendMessage(new Message(MessageType.NEWGAME, message));
-                view.getCreateGameStage().close();
+
+                if (gameName.equals("")) {
+                    view.getCreateGameView().getLblError().setText("Please give your game a name");
+                    view.getCreateGameView().getLblError().setVisible(true);
+                } else {
+                    model.sendMessage(new Message(MessageType.NEWGAME, message));
+                    view.getCreateGameStage().close();
+                }
             }
         });
 
-        // Handle Cancel Btn Action Event in the Create Game View
+        // Handle "Cancel" Btn Action Event in the Create Game View
         view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -270,24 +277,24 @@ public class AtlantisController {
         view.getLoginView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //TODO: Sanitize userInput by checking that username and password are not empty or SQL statements
+                //TODO: Sanitize userInput by checking that username and password are not SQL statements
                 //TODO: Sanitize input. Check for no commas in game name
                 String username = view.getLoginView().getTxtUserName().getText();
                 String password = view.getLoginView().getTxtPassword().getText();
                 String credentials = username + "," + password;
 
-                model.sendMessage(new Message(MessageType.LOGIN, credentials));
-                view.getLoginStage().close();
+                //Show the Error label when fields are left empty
+                if (username.equals("") || password.equals("")) {
+                    view.getLoginView().getLblError().setText("Please fill in all fields");
+                    view.getLoginView().getLblError().setVisible(true);
+                } else {
+                    //Send the login credentials to the server
+                    model.sendMessage(new Message(MessageType.LOGIN, credentials));
+                    view.getLoginStage().close();
+                }
             }
         });
-
-        view.getLoginView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                view.getLoginStage().close();
-            }
-        });
-
+        // Handle "Create Profile" Btn Action Event in the Login View
         view.getLoginView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -296,6 +303,14 @@ public class AtlantisController {
                 view.getLoginStage().close();
             }
         });
+        // Handle "Cancel" Btn Action Event in the Login View
+        view.getLoginView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getLoginStage().close();
+            }
+        });
+
         //TODO: Play as Guest Button needs to be handled. But that means we need a game class and a player object which we don't have yet
     }
     //END handleLoginViewControls
@@ -307,21 +322,24 @@ public class AtlantisController {
             @Override
             public void handle(ActionEvent event) {
 
-                //TODO: Sanitize user input before sending it as a message to the server. Also check that username and password are not null or ""
+                //TODO: Sanitize user input before sending it as a message to the server.
                 String userName = view.getNewProfileView().getTxtUserName().getText();
                 String password = view.getNewProfileView().getTxtPassword().getText();
                 String passwordRevision = view.getNewProfileView().getTxtPasswordRevision().getText();
 
-                // Send the UserName and the Password to the server to create the profile
-                if (password.equals(passwordRevision)) {
+                if (userName.equals("") || password.equals("") || passwordRevision.equals("")) {
+                    //Show the Error label when fields are left empty
+                    view.getNewProfileView().getLblError().setText("Please fill in all fields");
+                    view.getNewProfileView().getLblError().setVisible(true);
+                } else if (!password.equals(passwordRevision)) {
+                    //Show the Error label when the passwords do not match
+                    view.getNewProfileView().getLblError().setText("Passwords do not match!");
+                    view.getNewProfileView().getLblError().setVisible(true);
+                } else {
+                    // Send the UserName and the Password to the server to create the profile
                     String userInfo = userName + "," + password;
                     model.sendMessage(new Message(MessageType.CREATEPROFILE, userInfo));
                     view.getProfileStage().close();
-                } else {
-                    //Alert Box when the Passwords do not match
-                    //TODO: Should not be an alert box but a Label that shows up in red and tells the user the password or username was wrong.
-                    Alert alert = new Alert(Alert.AlertType.WARNING, "Password does not match", ButtonType.OK);
-                    alert.show();
                 }
             }
         });

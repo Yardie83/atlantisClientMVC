@@ -61,8 +61,8 @@
 /*****************************************/
 
 #centerPane {
-    -fx-vgap: 20px;
-    -fx-hgap: 20px;
+    -fx-vgap: 15px;
+    -fx-hgap: 15px;
     -fx-spacing: 30px;
     -fx-alignment: center;
     -fx-font-smoothing-type: lcd;
@@ -84,6 +84,10 @@
 
 }
 
+#lblError{
+    -fx-text-fill: #ff5558;
+}
+
 /*****************************************/
 /*END CENTER*/
 /*****************************************/
@@ -103,12 +107,7 @@
     -fx-text-fill: aliceblue;
 }
 
-#buttonRow1{
-    -fx-alignment: top-center;
-
-}
-
-#buttonRow2{
+#buttonRow{
     -fx-alignment: top-center;
 
 }
@@ -157,20 +156,6 @@
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
 }
 
-#btnPlayAsGuest {
-    -fx-background-color: #61B0FD;
-
-}
-
-#btnPlayAsGuest:hover {
-    -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
-}
-
-#btnPlayAsGuest:pressed {
-    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
-}
 
 /*****************************************/
 /*END BOTTOM*/

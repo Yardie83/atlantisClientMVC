@@ -24,17 +24,17 @@ public class LoginView extends Pane {
     private TextField txtUserName;
     private Label lblPassword;
     private TextField txtPassword;
+    private Label lblError;
 
     //BOTTOM Elements
     private VBox bottomPane;
 
-    private HBox buttonRow1;
+    private HBox buttonRow;
     private Button btnLogin;
     private Button btnCancel;
 
-    private HBox buttonRow2;
+
     private Button btnCreateProfile;
-    private Button btnPlayAsGuest;
 
     public LoginView() {
 
@@ -68,6 +68,7 @@ public class LoginView extends Pane {
 
         centerPane.add(lblPassword = new Label("Password: "), 0, 1);
         centerPane.add(txtPassword = new PasswordField(), 1, 1);
+        centerPane.add(lblError = new Label(""),0,2,2,1);
 
         return centerPane;
     }
@@ -76,16 +77,13 @@ public class LoginView extends Pane {
 
         bottomPane = new VBox(50);
 
-        buttonRow1 = new HBox(20);
-        buttonRow2 = new HBox(20);
+        buttonRow = new HBox(20);
 
-        buttonRow1.getChildren().add(btnLogin = new Button("Login"));
-        buttonRow1.getChildren().add(btnCancel = new Button("Cancel"));
-        buttonRow2.getChildren().add(btnCreateProfile = new Button("Create Profile"));
-        //TODO: Do we really need the Play as Guest button?
-        buttonRow2.getChildren().add(btnPlayAsGuest = new Button("Play as Guest"));
+        buttonRow.getChildren().add(btnLogin = new Button("Login"));
+        buttonRow.getChildren().add(btnCreateProfile = new Button("Create Profile"));
+        buttonRow.getChildren().add(btnCancel = new Button("Cancel"));
 
-        bottomPane.getChildren().addAll(buttonRow1,buttonRow2);
+        bottomPane.getChildren().addAll(buttonRow);
 
         return bottomPane;
     }
@@ -98,7 +96,6 @@ public class LoginView extends Pane {
         btnCancel.getStyleClass().add("buttons");
         btnLogin.getStyleClass().add("buttons");
         btnCreateProfile.getStyleClass().add("buttons");
-        btnPlayAsGuest.getStyleClass().add("buttons");
 
         /* Common Style Class for the TextFields in the Login View*/
         txtUserName.getStyleClass().add("textFields");
@@ -108,6 +105,8 @@ public class LoginView extends Pane {
         lblLogin.getStyleClass().add("labels");
         lblUserName.getStyleClass().add("labels");
         lblPassword.getStyleClass().add("labels");
+        lblError.getStyleClass().add("labels");
+        lblError.setVisible(false);
 
         //TOP Element IDs
         lblLogin.setId("lblLogin");
@@ -118,15 +117,14 @@ public class LoginView extends Pane {
         txtUserName.setId("txtUserName");
         lblPassword.setId("lblPassword");
         txtPassword.setId("txtPassword");
+        lblError.setId("lblError");
 
         //BOTTOM Elements IDs
         bottomPane.setId("bottomPane");
-        buttonRow1.setId("buttonRow1");
+        buttonRow.setId("buttonRow");
         btnLogin.setId("btnLogin");
         btnCancel.setId("btnCancel");
-        buttonRow2.setId("buttonRow2");
         btnCreateProfile.setId("btnCreateProfile");
-        btnPlayAsGuest.setId("btnPlayAsGuest");
     }
 
     public Button getBtnCancel() {
@@ -141,15 +139,15 @@ public class LoginView extends Pane {
         return btnCreateProfile;
     }
 
-    public Button getBtnPlayAsGuest() {
-        return btnPlayAsGuest;
-    }
-
     public TextField getTxtUserName() {
         return txtUserName;
     }
 
     public TextField getTxtPassword() {
         return txtPassword;
+    }
+
+    public Label getLblError() {
+        return lblError;
     }
 }

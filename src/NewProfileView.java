@@ -26,6 +26,7 @@ public class NewProfileView extends Pane {
     private Label lblUsername;
     private Label lblPassword;
     private Label lblPasswordRevision;
+    private Label lblError;
     private GridPane centerPane;
     private HBox bottomPane;
     private final VBox root;
@@ -65,6 +66,8 @@ public class NewProfileView extends Pane {
         centerPane.add(lblPasswordRevision = new Label("Re-Type Password: "), 0, 2);
         centerPane.add(txtPasswordRevision = new TextField(), 1, 2);
 
+        centerPane.add(lblError = new Label(""), 0,3,2,1);
+
         return centerPane;
     }
 
@@ -87,6 +90,8 @@ public class NewProfileView extends Pane {
         lblUsername.getStyleClass().add("labelsCenter");
         lblPassword.getStyleClass().add("labelsCenter");
         lblPasswordRevision.getStyleClass().add("labelsCenter");
+        lblError.getStyleClass().add("labelsCenter");
+        lblError.setVisible(false);
 
         txtUserName.getStyleClass().add("textFieldsCenter");
         txtPassword.getStyleClass().add("textFieldsCenter");
@@ -107,6 +112,7 @@ public class NewProfileView extends Pane {
         lblUsername.setId("lblUsername");
         lblPassword.setId("lblPassword");
         lblPasswordRevision.setId("lblPasswordRevision");
+        lblError.setId("lblError");
 
         centerPane.setId("centerPane");
         bottomPane.setId("bottomPane");
@@ -122,6 +128,10 @@ public class NewProfileView extends Pane {
 
     public TextField getTxtPasswordRevision() {
         return txtPasswordRevision;
+    }
+
+    public Label getLblError() {
+        return lblError;
     }
 
     public Button getBtnCancel() {
