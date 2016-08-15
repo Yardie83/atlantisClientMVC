@@ -2,11 +2,23 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.*;
+import javafx.scene.image.*;
+
+import java.awt.*;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
@@ -48,6 +60,9 @@ public class GameLobbyView extends Pane {
         gameLobbyStage.setHeight(AtlantisView.HEIGHT);
         gameLobbyStage.setWidth(AtlantisView.WIDTH);
         gameLobbyStage.setScene(gameLobbyScene);
+
+        Image image = new Image("/res/Fishi.png");
+        gameLobbyScene.setCursor(new ImageCursor(image));
 
         root = new BorderPane();
 
@@ -258,5 +273,4 @@ public class GameLobbyView extends Pane {
     public void setLblStatus(Label lblStatus) {
         this.lblStatus = lblStatus;
     }
-
 }
