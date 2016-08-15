@@ -3,8 +3,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.awt.*;
-
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  */
@@ -29,6 +27,7 @@ public class AtlantisView {
     private OptionsView optionsView;
     private Stage optionsStage;
 
+    //TODO: WIDTH and HEIGHT need to be dynamic depending on the stage width and height
     public static final int WIDTH = 1020;
     public static final int HEIGHT = 600;
 
