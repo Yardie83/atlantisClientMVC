@@ -120,16 +120,24 @@ public class AtlantisModel {
     private void handleCreateProfile(Message message) {
         if (message.getMessageObject().equals(true)) {
             createProfileSuccess.set(true);
+            System.out.println("Server -> " + message.getMessageObject().toString());
+
         } else {
             createProfileSuccess.set(false);
+            System.out.println("Server -> " + message.getMessageObject().toString());
+
         }
     }
 
     private void handleLogin(Message message) {
         if (message.getMessageObject().equals(true)) {
             loginSuccess.set(true);
+            System.out.println("Server -> " + message.getMessageObject().toString());
+
         } else {
             loginSuccess.set(false);
+            System.out.println("Server -> " + message.getMessageObject().toString());
+
         }
     }
 

@@ -362,9 +362,10 @@ public class AtlantisController {
                if (model.createProfileSuccessProperty().getValue().equals(true)){
                     //TODO Add Username Label and StatusBar change Information bar and create popup in gamelobby
                    view.getProfileStage().close();
-               }else{
+               }else if(model.createProfileSuccessProperty().getValue().equals(false)){
                    view.getNewProfileView().getLblError().setText("Username already exists");
                    view.getNewProfileView().getLblError().setVisible(true);
+                   model.createProfileSuccessProperty().setValue(null);
                }
             }
         });
