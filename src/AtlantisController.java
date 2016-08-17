@@ -1,6 +1,7 @@
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -298,32 +299,46 @@ public class AtlantisController {
         model.loginSuccessProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (model.loginSuccessProperty().getValue().equals(true)){
-                    //TODO Update Information statur bar, show popup and show username in label
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (model.loginSuccessProperty().getValue().equals(true)) {
+                            //TODO Update Information statur bar, show popup and show username in label
 
-                    view.getLoginStage().close();
-                } else {
-                    view.getLoginView().getLblError().setText("Username or Password are wrong");
-                    view.getLoginView().getLblError().setVisible(true);
-                }
+                            view.getLoginStage().close();
+                        } else if (model.loginSuccessProperty().getValue().equals(false)){
+                            view.getLoginView().getLblError().setText("Username or Password are wrong");
+                            view.getLoginView().getLblError().setVisible(true);
+                        }
+                    }
+                });
             }
+
         });
         // Handle "Create Profile" Btn Action Event in the Login View
-        view.getLoginView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                view.createNewProfileView();
-                handleNewProfileControls();
-                view.getLoginStage().close();
-            }
-        });
+        view.getLoginView().
+
+                getBtnCreateProfile().
+
+                setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        view.createNewProfileView();
+                        handleNewProfileControls();
+                        view.getLoginStage().close();
+                    }
+                });
         // Handle "Cancel" Btn Action Event in the Login View
-        view.getLoginView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                view.getLoginStage().close();
-            }
-        });
+        view.getLoginView().
+
+                getBtnCancel().
+
+                setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        view.getLoginStage().close();
+                    }
+                });
     }
     //END handleLoginViewControls
 
@@ -359,14 +374,20 @@ public class AtlantisController {
         model.createProfileSuccessProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-               if (model.createProfileSuccessProperty().getValue().equals(true)){
-                    //TODO Add Username Label and StatusBar change Information bar and create popup in gamelobby
-                   view.getProfileStage().close();
-               }else if(model.createProfileSuccessProperty().getValue().equals(false)){
-                   view.getNewProfileView().getLblError().setText("Username already exists");
-                   view.getNewProfileView().getLblError().setVisible(true);
-                   model.createProfileSuccessProperty().setValue(null);
-               }
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (model.createProfileSuccessProperty().getValue().equals(true)) {
+                            //TODO Add Username Label and StatusBar change Information bar and create popup in gamelobby
+                            view.getProfileStage().close();
+                        } else if (model.createProfileSuccessProperty().getValue()) {
+                            view.getNewProfileView().getLblError().setText("Username already exists");
+                            view.getNewProfileView().getLblError().setVisible(true);
+                            model.createProfileSuccessProperty().setValue(null);
+                        }
+                    }
+                });
             }
         });
 
