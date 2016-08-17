@@ -304,11 +304,13 @@ public class AtlantisController {
                     public void run() {
                         if (model.loginSuccessProperty().getValue().equals(true)) {
                             //TODO Update Information statur bar, show popup and show username in label
+                            //TODO Does not work properly. same reason as with the chat, because there is no change initially.
 
                             view.getLoginStage().close();
                         } else if (model.loginSuccessProperty().getValue().equals(false)){
                             view.getLoginView().getLblError().setText("Username or Password are wrong");
                             view.getLoginView().getLblError().setVisible(true);
+                            model.loginSuccessProperty().setValue(null);
                         }
                     }
                 });
@@ -380,6 +382,7 @@ public class AtlantisController {
                     public void run() {
                         if (model.createProfileSuccessProperty().getValue().equals(true)) {
                             //TODO Add Username Label and StatusBar change Information bar and create popup in gamelobby
+                            //TODO Does not work properly. same reason as with the chat, because there is no change initially.
                             view.getProfileStage().close();
                         } else if (model.createProfileSuccessProperty().getValue()) {
                             view.getNewProfileView().getLblError().setText("Username already exists");
