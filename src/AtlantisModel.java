@@ -1,3 +1,4 @@
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 
@@ -19,12 +20,19 @@ public class AtlantisModel {
     private Socket socket;
     private final String HOST = "127.0.0.1";
     private final int PORT = 9000;
-    private SimpleStringProperty chatString = new SimpleStringProperty();
-    private SimpleStringProperty connectionStatus = new SimpleStringProperty();
+    private SimpleStringProperty chatString;
+    private SimpleStringProperty connectionStatus;
+    private SimpleBooleanProperty createProfileSuccess;
+    private SimpleBooleanProperty loginSuccess;
     private boolean autoConnect = true;
     private Thread clientTask;
 
     public AtlantisModel() {
+        chatString = new SimpleStringProperty();
+        connectionStatus = new SimpleStringProperty();
+        createProfileSuccess = new SimpleBooleanProperty();
+        loginSuccess = new SimpleBooleanProperty();
+
     }
 
     public void connectToServer() {
@@ -77,11 +85,11 @@ public class AtlantisModel {
                                     break;
 
                                 case CREATEPROFILE:
-                                    //Add code here
+                                    handleCreateProfile(message);
                                     break;
 
                                 case LOGIN:
-                                    //Add code here
+                                    handleLogin(message);
                                     break;
 
                                 case NEWGAME:
@@ -109,10 +117,26 @@ public class AtlantisModel {
         clientTask.start();
     }
 
+    private void handleCreateProfile(Message message) {
+        if (message.getMessageObject().equals(true)) {
+            createProfileSuccess.set(true);
+        } else {
+            createProfileSuccess.set(false);
+        }
+    }
+
+    private void handleLogin(Message message) {
+        if (message.getMessageObject().equals(true)) {
+            loginSuccess.set(true);
+        } else {
+            loginSuccess.set(false);
+        }
+    }
+
     private void handleChatMessage(Message message) {
-        chatString.setValue(message.getMessage().toString());
+        chatString.setValue(message.getMessageObject().toString());
         chatString.setValue("");
-        System.out.println("Server -> " + message.getMessage().toString());
+        System.out.println("Server -> " + message.getMessageObject().toString());
     }
 
     public void sendMessage(Message message) {
@@ -125,7 +149,7 @@ public class AtlantisModel {
             chatString.setValue("Maximum connection attempts reached.");
         } else {
             try {
-                System.out.println("Sending to Server -> " + message.getMessage());
+                System.out.println("Sending to Server -> " + message.getMessageObject());
                 outputStream.writeObject(message);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -155,6 +179,13 @@ public class AtlantisModel {
 
     public SimpleStringProperty getConnectionStatus() {
         return connectionStatus;
+    }
+
+    public SimpleBooleanProperty createProfileSuccessProperty() {
+        return createProfileSuccess;
+    }
+    public SimpleBooleanProperty loginSuccessProperty() {
+        return loginSuccess;
     }
 
     public void setAutoConnect(boolean autoConnect) {

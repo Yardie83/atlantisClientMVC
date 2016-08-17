@@ -5,7 +5,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Cursor;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -15,9 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
-import javafx.scene.Cursor;
 
-import java.awt.*;
 import java.util.Random;
 
 /**
@@ -293,7 +290,21 @@ public class AtlantisController {
                 } else {
                     //Send the login credentials to the server
                     model.sendMessage(new Message(MessageType.LOGIN, credentials));
+
+                }
+            }
+        });
+
+        model.loginSuccessProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (model.loginSuccessProperty().getValue().equals(true)){
+                    //TODO Update Information statur bar, show popup and show username in label
+
                     view.getLoginStage().close();
+                } else {
+                    view.getLoginView().getLblError().setText("Username or Password are wrong");
+                    view.getLoginView().getLblError().setVisible(true);
                 }
             }
         });
@@ -340,11 +351,24 @@ public class AtlantisController {
                     // Send the UserName and the Password to the server to create the profile
                     String userInfo = userName + "," + password;
                     model.sendMessage(new Message(MessageType.CREATEPROFILE, userInfo));
-                    view.getProfileStage().close();
                 }
             }
         });
         // END of "Create Profile Btn" Functionality
+
+        model.createProfileSuccessProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+               if (model.createProfileSuccessProperty().getValue().equals(true)){
+                    //TODO Add Username Label and StatusBar change Information bar and create popup in gamelobby
+                   view.getProfileStage().close();
+               }else{
+                   view.getNewProfileView().getLblError().setText("Username already exists");
+                   view.getNewProfileView().getLblError().setVisible(true);
+               }
+            }
+        });
+
 
         // Handle Cancel Btn Action Event in the create Profile View
         view.getNewProfileView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
