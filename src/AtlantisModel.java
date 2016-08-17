@@ -1,4 +1,4 @@
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 
@@ -22,16 +22,18 @@ public class AtlantisModel {
     private final int PORT = 9000;
     private SimpleStringProperty chatString;
     private SimpleStringProperty connectionStatus;
-    private SimpleBooleanProperty createProfileSuccess;
-    private SimpleBooleanProperty loginSuccess;
+    private SimpleIntegerProperty createProfileSuccess;
+    private SimpleIntegerProperty loginSuccess;
+    private SimpleStringProperty userName;
     private boolean autoConnect = true;
     private Thread clientTask;
 
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
         connectionStatus = new SimpleStringProperty();
-        createProfileSuccess = new SimpleBooleanProperty();
-        loginSuccess = new SimpleBooleanProperty();
+        createProfileSuccess = new SimpleIntegerProperty(0);
+        loginSuccess = new SimpleIntegerProperty(0);
+        userName = new SimpleStringProperty();
     }
 
     public void connectToServer() {
@@ -71,8 +73,6 @@ public class AtlantisModel {
                         } else {
                             message = (Message) inReader.readObject();
 
-                            //TODO: Implement here the same switch statement as in the server for each messageType
-
                             switch (message.getMessageType()) {
 
                                 case DISCONNECT:
@@ -110,6 +110,8 @@ public class AtlantisModel {
                         //closeConnection();
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }finally {
+                        System.out.println("Server -> " + message.getMessageObject().toString());
                     }
                 }
                 return null;
@@ -120,31 +122,30 @@ public class AtlantisModel {
     }
 
     private void handleUserName(Message message) {
-        String userName = "Guest" + message.getMessageObject().toString();
-        //TODO Update Label somewhere
-
+        String guestName = "Guest" + message.getMessageObject().toString();
+        userName.setValue(guestName);
     }
 
     private void handleCreateProfile(Message message) {
+        System.out.println();
         if (message.getMessageObject().equals(Boolean.TRUE)) {
-            createProfileSuccess.set(true);
+            createProfileSuccess.setValue(1);
         } else {
-            createProfileSuccess.set(false);
+            createProfileSuccess.setValue(2);
         }
     }
 
     private void handleLogin(Message message) {
         if (message.getMessageObject().equals(Boolean.TRUE)) {
-            loginSuccess.set(true);
+            loginSuccess.setValue(1);
         } else {
-            loginSuccess.set(false);
+            loginSuccess.setValue(2);
         }
     }
 
     private void handleChatMessage(Message message) {
         chatString.setValue(message.getMessageObject().toString());
         chatString.setValue("");
-        System.out.println("Server -> " + message.getMessageObject().toString());
     }
 
     public void sendMessage(Message message) {
@@ -168,7 +169,7 @@ public class AtlantisModel {
     public void closeConnection() {
         try {
             if (socket != null && !socket.isClosed()) {
-                sendMessage(new Message(MessageType.DISCONNECT, "Closing"));
+                sendMessage(new Message(MessageType.DISCONNECT, "Closing connection"));
                 autoConnect = false;
                 clientTask.interrupt();
                 inReader.close();
@@ -189,13 +190,15 @@ public class AtlantisModel {
         return connectionStatus;
     }
 
-    public SimpleBooleanProperty createProfileSuccessProperty() {
+    public SimpleIntegerProperty createProfileSuccessProperty() {
         return createProfileSuccess;
     }
 
-    public SimpleBooleanProperty loginSuccessProperty() {
+    public SimpleIntegerProperty loginSuccessProperty() {
         return loginSuccess;
     }
+
+    public SimpleStringProperty userNameProperty(){ return userName;}
 
     public void setAutoConnect(boolean autoConnect) {
         this.autoConnect = autoConnect;

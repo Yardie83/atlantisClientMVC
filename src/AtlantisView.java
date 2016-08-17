@@ -35,8 +35,8 @@ public class AtlantisView {
 
         this.model = model;
         this.introStage = introStage;
-        width = new SimpleIntegerProperty(1020);
-        height = new SimpleIntegerProperty(600);
+        width = new SimpleIntegerProperty(1200);
+        height = new SimpleIntegerProperty(800);
     }
 
 
@@ -95,7 +95,7 @@ public class AtlantisView {
         stage.setMinHeight(height.getValue());
         stage.setMinWidth(width.getValue());
         //Set opacity for the overlays
-        stage.opacityProperty().setValue(0.9);
+        stage.opacityProperty().setValue(0.95);
         //Remove the Window decorations minimize, maximize and close button and the frame
         stage.initStyle(StageStyle.TRANSPARENT);
         //Make it so that the overlays are always on top of the other windows

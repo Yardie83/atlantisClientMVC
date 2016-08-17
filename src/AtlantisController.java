@@ -27,6 +27,8 @@ public class AtlantisController {
     final private AtlantisModel model;
     final private AtlantisView view;
 
+    private String userName;
+
     //Set debugMode to "true" in order to skip the intro video
     public final static boolean debugMode = true;
 
@@ -185,7 +187,23 @@ public class AtlantisController {
         model.getConnectionStatus().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                view.getGameLobbyView().getLblStatus().setText("Status: " + newValue);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.getGameLobbyView().getLblStatus().setText("Status: " + newValue);
+                    }
+                });
+
+            }
+        });
+
+        /*
+         * UserName to be displayed. If the user is not logged in, Guest + a number will be displayed as the name
+         */
+        model.userNameProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                view.getGameLobbyView().getLblWindowTitle().setText("Hi " + newValue + ", Welcome to Atlantis");
             }
         });
 
@@ -227,18 +245,12 @@ public class AtlantisController {
         });
 
         // When the X Button is clicked, close the Application
-        view.getGameLobbyView().
-
-                getGameLobbyStage().
-
-                setOnCloseRequest(new EventHandler<WindowEvent>() {
-                    @Override
-                    public void handle(WindowEvent event) {
-                        closeApplication();
-                    }
-                });
-
-
+        view.getGameLobbyView().getGameLobbyStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                closeApplication();
+            }
+        });
     }
 
     private void handleCreateGameControls() {
@@ -280,12 +292,12 @@ public class AtlantisController {
             public void handle(ActionEvent event) {
                 //TODO: Sanitize userInput by checking that username and password are not SQL statements
                 //TODO: Sanitize input. Check for no commas in game name
-                String username = view.getLoginView().getTxtUserName().getText();
+                userName = view.getLoginView().getTxtUserName().getText();
                 String password = view.getLoginView().getTxtPassword().getText();
-                String credentials = username + "," + password;
+                String credentials = userName + "," + password;
 
                 //Show the Error label when fields are left empty
-                if (username.equals("") || password.equals("")) {
+                if (userName.equals("") || password.equals("")) {
                     view.getLoginView().getLblError().setText("Please fill in all fields");
                     view.getLoginView().getLblError().setVisible(true);
                 } else {
@@ -296,21 +308,23 @@ public class AtlantisController {
             }
         });
 
-        model.loginSuccessProperty().addListener(new ChangeListener<Boolean>() {
+        model.loginSuccessProperty().addListener(new ChangeListener<Number>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        if (model.loginSuccessProperty().getValue().equals(true)) {
-                            //TODO Update Information statur bar, show popup and show username in label
-                            //TODO Does not work properly. same reason as with the chat, because there is no change initially.
-
+                        if (model.loginSuccessProperty().getValue().equals(1)) {
+                            view.getGameLobbyView().createPopUp("You're logged in!");
+                            view.getGameLobbyView().getLblInfo().setText("Logged in as " + userName);
+                            view.getGameLobbyView().getLblWindowTitle().setText("Hi " + userName + ", Welcome to Atlantis");
+                            view.getGameLobbyView().removeLoginBtn();
                             view.getLoginStage().close();
-                        } else if (model.loginSuccessProperty().getValue().equals(false)){
+                            model.loginSuccessProperty().setValue(0);
+                        } else if (model.loginSuccessProperty().getValue().equals(2)) {
                             view.getLoginView().getLblError().setText("Username or Password are wrong");
                             view.getLoginView().getLblError().setVisible(true);
-                            model.loginSuccessProperty().setValue(null);
+                            model.loginSuccessProperty().setValue(0);
                         }
                     }
                 });
@@ -318,29 +332,21 @@ public class AtlantisController {
 
         });
         // Handle "Create Profile" Btn Action Event in the Login View
-        view.getLoginView().
-
-                getBtnCreateProfile().
-
-                setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        view.createNewProfileView();
-                        handleNewProfileControls();
-                        view.getLoginStage().close();
-                    }
-                });
+        view.getLoginView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createNewProfileView();
+                handleNewProfileControls();
+                view.getLoginStage().close();
+            }
+        });
         // Handle "Cancel" Btn Action Event in the Login View
-        view.getLoginView().
-
-                getBtnCancel().
-
-                setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        view.getLoginStage().close();
-                    }
-                });
+        view.getLoginView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getLoginStage().close();
+            }
+        });
     }
     //END handleLoginViewControls
 
@@ -352,7 +358,7 @@ public class AtlantisController {
             public void handle(ActionEvent event) {
 
                 //TODO: Sanitize user input before sending it to the server.
-                String userName = view.getNewProfileView().getTxtUserName().getText();
+                userName = view.getNewProfileView().getTxtUserName().getText();
                 String password = view.getNewProfileView().getTxtPassword().getText();
                 String passwordRevision = view.getNewProfileView().getTxtPasswordRevision().getText();
 
@@ -373,21 +379,22 @@ public class AtlantisController {
         });
         // END of "Create Profile Btn" Functionality
 
-        model.createProfileSuccessProperty().addListener(new ChangeListener<Boolean>() {
+        model.createProfileSuccessProperty().addListener(new ChangeListener<Number>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        if (model.createProfileSuccessProperty().getValue().equals(true)) {
-                            //TODO Add Username Label and StatusBar change Information bar and create popup in gamelobby
-                            //TODO Does not work properly. same reason as with the chat, because there is no change initially.
+                        if (model.createProfileSuccessProperty().getValue().equals(1)) {
+                            view.getGameLobbyView().createPopUp("Profile Created!");
+                            view.getGameLobbyView().getLblInfo().setText("Logged in as " + userName);
                             view.getProfileStage().close();
-                        } else if (model.createProfileSuccessProperty().getValue()) {
+                            model.createProfileSuccessProperty().setValue(0);
+                        } else if (model.createProfileSuccessProperty().getValue().equals(2)) {
                             view.getNewProfileView().getLblError().setText("Username already exists");
                             view.getNewProfileView().getLblError().setVisible(true);
-                            model.createProfileSuccessProperty().setValue(null);
+                            model.createProfileSuccessProperty().setValue(0);
                         }
                     }
                 });

@@ -6,7 +6,10 @@
 a TOP with one label, a CENTER with 3 labels, 3 textfield and a BOTTOM
 with 2 buttons
 */
-
+.root{
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-smoothing-type: lcd;
+}
 /*root is a Border Pane*/
 #root {
     -fx-alignment: center;
@@ -21,7 +24,6 @@ with 2 buttons
 #lblNewProfile {
     -fx-alignment: center;
     -fx-font-size: 40px;
-    -fx-font-family: Arial;
     -fx-font-smoothing-type: lcd;
     -fx-text-fill: aliceblue;
 }
@@ -96,7 +98,6 @@ with 2 buttons
     -fx-background-insets: 0 0 -1 0, 0, 1;
     -fx-background-radius: 5, 5, 4;
     -fx-padding: 5 20 5 20;
-    -fx-font-family: "Arial";
     -fx-font-size: 16px;
     -fx-text-fill: #ffffff;
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 3, 3);

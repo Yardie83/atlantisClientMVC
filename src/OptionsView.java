@@ -2,10 +2,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  * Created by Hermann Grieder on 21.07.2016.
@@ -59,6 +62,7 @@ public class OptionsView extends Pane {
     private Label createTop() {
 
         lblOptions = new Label("OPTIONS");
+        lblOptions.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
 
         return lblOptions;
 

@@ -6,6 +6,8 @@ a TOP, BOTTOM, RIGHT, CENTER and LEFT part
     -fx-background-color: #61B0FD;
     -fx-background-image: url("background.jpg");
     -fx-background-size: stretch;
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-smoothing-type: lcd;
 }
 
 /*root is a Border Pane*/
@@ -23,7 +25,6 @@ part of the border pane in the game lobby
     -fx-text-alignment: center;
     -fx-background-insets: 0 0 -1 0, 0, 1;
     /*-fx-padding: 5 20 5 20;*/
-    -fx-font-family: "Arial";
     -fx-font-size: 24px;
     -fx-text-fill: #bde4ff;
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 3, 4);
@@ -37,11 +38,12 @@ part of the border pane in the game lobby
     -fx-font-size: 32px;
     -fx-text-fill: #7DC6FD;
 }
-#leftButtons:pressed {
+
+.leftButtons:pressed {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
 }
 
-.leftButtons > text{
+.leftButtons > text {
     -fx-effect: dropshadow(three-pass-box, white, 5, 0.1, 3, 4);
 }
 
@@ -81,6 +83,9 @@ part of the border pane in the game lobby
     -fx-text-alignment: center;
     -fx-font-size: 48px;
     -fx-padding: 0px 0px 10px 0px;
+    -fx-border-insets: 0 0 -1 0, 0, 1;
+    -fx-border-radius: 5;
+    -fx-border-width: 1px;
 }
 
 /*****************************************/
@@ -97,10 +102,19 @@ part of the border pane in the game lobby
 
 #txtArea {
     -fx-alignment: center-left;
+    -fx-min-height: 300px;
+    -fx-max-height: 300px;
+    -fx-max-width: 300px;
+    -fx-min-width: 300px;
+    -fx-text-fill: #ffffff;
+}
+
+.text-area .content{
+    -fx-background-color: #308eff;
 }
 
 #txtArea:focused {
-
+    -fx-display-caret: false;
 }
 
 #txtField {
@@ -146,7 +160,9 @@ part of the border pane in the game lobby
 /*****************************************/
 
 #leftVBox {
--fx-padding: 20px;
+    -fx-padding: 20px;
+    -fx-max-width: 350px;
+    -fx-min-width: 350px;
 }
 
 #btnCreateGame {
@@ -197,6 +213,8 @@ part of the border pane in the game lobby
 
 }
 
+
+
 /*****************************************/
 /*END LEFT*/
 /*****************************************/
@@ -206,15 +224,67 @@ part of the border pane in the game lobby
 /*****************************************/
 
 #centerVBox {
-    -fx-min-width: 200px;
-    -fx-max-width: 200px;
+    -fx-alignment: top-center;
+    -fx-padding: 20px 0px 300px 0px;
+    -fx-min-width: 500px;
+    -fx-max-width: 500px;
+
+}
+
+#lblGameTitles {
+    -fx-alignment: top-center;
+    -fx-effect: dropshadow(three-pass-box, black, 3, 0.1, 3, 3);
+    -fx-text-fill: white;
+    -fx-font-size: 36px;
 }
 
 #gameListView {
-    -fx-alignment: top-left;
+    -fx-alignment: top-center;
+    -fx-background-color: transparent;
+    -fx-min-height: 200px;
+    -fx-max-height: 200px;
+    -fx-min-width: 500px;
+    -fx-max-width: 500px;
+}
+
+.list-cell {
+    /*-fx-background-color: ;*/
+    -fx-font-size: 18px;
+}
+
+.list-cell:focused {
+    /*-fx-background-color: ;*/
 }
 
 /*****************************************/
 /*END CENTER*/
+/*****************************************/
+
+/*****************************************/
+/*START POPUP*/
+/*****************************************/
+
+#panePopup {
+    -fx-min-width: 300px;
+    -fx-min-height: 40px;
+    -fx-max-width: 300px;
+    -fx-max-height: 40px;
+    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 4, 3);
+    -fx-background-radius: 5;
+}
+
+#lblPopup {
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-padding: 7px 0px 10px 15px;
+    -fx-font-size: 20px;
+    -fx-alignment: center-left;
+    -fx-text-alignment: left;
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 4, 3);
+}
+
+/*****************************************/
+/*END POPUP*/
 /*****************************************/
 

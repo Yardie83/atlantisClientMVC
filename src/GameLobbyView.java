@@ -1,12 +1,22 @@
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
@@ -37,10 +47,13 @@ public class GameLobbyView extends Pane {
     private VBox rightVBox;
     private VBox centerVBox;
     private VBox leftVBox;
+    private Pane popup;
+    private Separator s0;
+    private Label lblGameTitles;
 
     public GameLobbyView(int height, int width) {
 
-        String css = this.getClass().getResource("/res/css_GameLobby.css").toExternalForm();
+        String css = this.getClass().getResource("/res/css_GameLobbyView.css").toExternalForm();
         Scene gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
@@ -63,10 +76,9 @@ public class GameLobbyView extends Pane {
         root.minHeightProperty().bind(gameLobbyStage.heightProperty().subtract(40));
         root.minWidthProperty().bind(gameLobbyStage.widthProperty().subtract(10));
 
-
         defineStyleClass();
 
-        this.getChildren().add(root);
+        this.getChildren().addAll(root);
     }
 
     private Node createTop() {
@@ -87,7 +99,7 @@ public class GameLobbyView extends Pane {
 
         menuBar.getMenus().addAll(menuFile, menuOptions, menuHelp);
 
-        lblWindowTitle = new Label("Welcome to Atlantis");
+        lblWindowTitle = new Label("");
 
         vBoxTop.getChildren().addAll(menuBar, lblWindowTitle);
 
@@ -101,7 +113,7 @@ public class GameLobbyView extends Pane {
         lblStatus = new Label("Status: Disconnected");
         Separator s = new Separator();
         s.setOrientation(Orientation.VERTICAL);
-        lblInfo = new Label("Information");
+        lblInfo = new Label("");
         bottomHBox.getChildren().addAll(lblStatus,s, lblInfo);
 
         return bottomHBox;
@@ -114,7 +126,6 @@ public class GameLobbyView extends Pane {
         txtArea = new TextArea();
         txtArea.setEditable(false);
         txtArea.setWrapText(true);
-        txtArea.setMouseTransparent(true);
         txtField = new TextField();
         rightVBox.getChildren().addAll(txtArea, txtField);
 
@@ -124,7 +135,8 @@ public class GameLobbyView extends Pane {
     private Node createCenter() {
 
         centerVBox = new VBox(20);
-        Label lblGameTitles = new Label("Games");
+        lblGameTitles = new Label("Games");
+        lblGameTitles.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
         gameList = new ListView();
         gameList.getItems().add("Hallo");
         centerVBox.getChildren().addAll(lblGameTitles, gameList);
@@ -139,14 +151,41 @@ public class GameLobbyView extends Pane {
         btnLogin = new Button("Login");
         btnCreateProfile = new Button("Create Profile");
         btnOptions = new Button("Options");
-        Separator s0 = new Separator();
+        s0 = new Separator();
         Separator s1 = new Separator();
         Separator s2 = new Separator();
         Separator s3 = new Separator();
 
 
-        leftVBox.getChildren().addAll(btnCreateGame,s0, btnLogin,s1, btnCreateProfile,s2, btnOptions,s3);
+        leftVBox.getChildren().addAll(btnCreateGame, s0, btnLogin, s1, btnCreateProfile, s2, btnOptions, s3);
         return leftVBox;
+    }
+
+    public void createPopUp(String message) {
+        popup = new Pane();
+        popup.setTranslateX(gameLobbyStage.getWidth());
+        popup.setTranslateY(gameLobbyStage.getHeight()-150);
+        Label lblPopup = new Label(message);
+
+        // CSS ID for the PopUp
+        popup.setId("panePopup");
+        lblPopup.setId("lblPopup");
+
+        popup.getChildren().add(lblPopup);
+        this.getChildren().add(popup);
+
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(1200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth()-200, Interpolator.TANGENT(Duration.millis(3000), 500))));
+        timeline.setAutoReverse(true);
+        timeline.setCycleCount(2);
+        timeline.setDelay(Duration.millis(200));
+        timeline.play();
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                popup.setVisible(false);
+            }
+        });
     }
 
     private void defineStyleClass() {
@@ -188,6 +227,7 @@ public class GameLobbyView extends Pane {
 
         //  CSS IDs for the CENTER part of the game lobby (small title and Game list)
         centerVBox.setId("centerVBox");
+        lblGameTitles.setId("lblGameTitles");
         gameList.setId("gameListView");
 
         //  CSS IDs for the LEFT part of the game lobby (Game Lobby buttons)
@@ -196,6 +236,7 @@ public class GameLobbyView extends Pane {
         btnLogin.setId("btnLogin");
         btnCreateProfile.setId("btnCreateProfile");
         btnOptions.setId("btnOptions");
+
     }
 
     public void show(){
@@ -218,20 +259,12 @@ public class GameLobbyView extends Pane {
         return txtArea;
     }
 
-    public void setTxtArea(TextArea txtArea) {
-        this.txtArea = txtArea;
-    }
-
     public TextField getTxtField() {
         return txtField;
     }
 
     public ListView getGameList() {
         return gameList;
-    }
-
-    public void setGameList(ListView gameList) {
-        this.gameList = gameList;
     }
 
     public Button getBtnCreateGame() {
@@ -254,6 +287,10 @@ public class GameLobbyView extends Pane {
         return lblStatus;
     }
 
+    public Label getLblWindowTitle() {
+        return lblWindowTitle;
+    }
+
     public Menu getMenuOptions() {
         return menuOptions;
     }
@@ -266,4 +303,7 @@ public class GameLobbyView extends Pane {
         return this.menuItemGameRules;
     }
 
+    public void removeLoginBtn() {
+        leftVBox.getChildren().removeAll(btnLogin, s0);
+    }
 }

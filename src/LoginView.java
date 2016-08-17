@@ -3,10 +3,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 /**
  * Created by Loris Grether on 04.08.2016.
@@ -55,6 +58,7 @@ public class LoginView extends Pane {
     private Node createTop() {
 
         lblLogin = new Label("LOGIN");
+        lblLogin.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
 
         return lblLogin;
     }
