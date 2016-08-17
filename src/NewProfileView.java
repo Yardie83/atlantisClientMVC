@@ -31,11 +31,11 @@ public class NewProfileView extends Pane {
     private HBox bottomPane;
     private final VBox root;
 
-    public NewProfileView( ) {
+    public NewProfileView(int height, int width) {
 
         root = new VBox(30);
-        root.setMinHeight(AtlantisView.HEIGHT);
-        root.setMinWidth(AtlantisView.WIDTH);
+        root.setMinHeight(height);
+        root.setMinWidth(width);
         root.getChildren().add(createTop());
         root.getChildren().add(createCenter());
         root.getChildren().add(createBottom());

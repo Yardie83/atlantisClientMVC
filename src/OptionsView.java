@@ -40,11 +40,11 @@ public class OptionsView extends Pane {
     private Button btnCancel;
 
 
-    public OptionsView() {
+    public OptionsView(int height, int width) {
 
         root = new VBox(30);
-        root.setMinHeight(AtlantisView.HEIGHT);
-        root.setMinWidth(AtlantisView.WIDTH);
+        root.setMinHeight(height);
+        root.setMinWidth(width);
 
         root.getChildren().add(createTop());
         root.getChildren().add(createContent());

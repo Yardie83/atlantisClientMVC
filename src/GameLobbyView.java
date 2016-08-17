@@ -1,24 +1,12 @@
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.*;
-import javafx.scene.image.*;
-
-import java.awt.*;
 
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
@@ -26,13 +14,12 @@ import java.awt.*;
 public class GameLobbyView extends Pane {
 
     private Stage gameLobbyStage;
-    private Scene gameLobbyScene;
 
     private Label lblStatus;
     private Label lblInfo;
     private TextArea txtArea;
     private TextField txtField;
-    private ListView gameList;
+    private ListView<String> gameList;
     private Button btnCreateGame;
     private Button btnLogin;
     private Button btnCreateProfile;
@@ -51,18 +38,19 @@ public class GameLobbyView extends Pane {
     private VBox centerVBox;
     private VBox leftVBox;
 
-    public GameLobbyView() {
+    public GameLobbyView(int height, int width) {
 
         String css = this.getClass().getResource("/res/css_GameLobby.css").toExternalForm();
-        gameLobbyScene = new Scene(this);
+        Scene gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
-        gameLobbyStage.setHeight(AtlantisView.HEIGHT);
-        gameLobbyStage.setWidth(AtlantisView.WIDTH);
+        gameLobbyStage.setHeight(height);
+        gameLobbyStage.setWidth(width);
         gameLobbyStage.setScene(gameLobbyScene);
 
-        Image image = new Image("/res/Fishi.png");
-        gameLobbyScene.setCursor(new ImageCursor(image));
+//        //Set Mouse Cursor Image
+//        Image image = new Image("/res/Fishi.png");
+//        gameLobbyScene.setCursor(new ImageCursor(image));
 
         root = new BorderPane();
 
@@ -71,6 +59,10 @@ public class GameLobbyView extends Pane {
         root.setCenter(createCenter());
         root.setRight(createRight());
         root.setBottom(createBottom());
+
+        root.minHeightProperty().bind(gameLobbyStage.heightProperty().subtract(40));
+        root.minWidthProperty().bind(gameLobbyStage.widthProperty().subtract(10));
+
 
         defineStyleClass();
 
@@ -82,6 +74,7 @@ public class GameLobbyView extends Pane {
         vBoxTop = new VBox();
 
         menuBar = new MenuBar();
+
         menuFile = new Menu("File");
         menuOptions = new Menu("Options");
         menuHelp = new Menu("Help");
@@ -106,8 +99,10 @@ public class GameLobbyView extends Pane {
         bottomHBox = new HBox(10);
 
         lblStatus = new Label("Status: Disconnected");
+        Separator s = new Separator();
+        s.setOrientation(Orientation.VERTICAL);
         lblInfo = new Label("Information");
-        bottomHBox.getChildren().addAll(lblStatus, lblInfo);
+        bottomHBox.getChildren().addAll(lblStatus,s, lblInfo);
 
         return bottomHBox;
     }
@@ -119,6 +114,7 @@ public class GameLobbyView extends Pane {
         txtArea = new TextArea();
         txtArea.setEditable(false);
         txtArea.setWrapText(true);
+        txtArea.setMouseTransparent(true);
         txtField = new TextField();
         rightVBox.getChildren().addAll(txtArea, txtField);
 
@@ -127,32 +123,36 @@ public class GameLobbyView extends Pane {
 
     private Node createCenter() {
 
-        centerVBox = new VBox();
-
+        centerVBox = new VBox(20);
         Label lblGameTitles = new Label("Games");
         gameList = new ListView();
-        gameList.getItems().add(0, "Hallo");
+        gameList.getItems().add("Hallo");
         centerVBox.getChildren().addAll(lblGameTitles, gameList);
         return centerVBox;
     }
 
     private Node createLeft() {
 
-        leftVBox = new VBox();
-
+        leftVBox = new VBox(10);
+       // leftVBox.setTranslateX(-150);
         btnCreateGame = new Button("Create Game");
         btnLogin = new Button("Login");
         btnCreateProfile = new Button("Create Profile");
         btnOptions = new Button("Options");
+        Separator s0 = new Separator();
+        Separator s1 = new Separator();
+        Separator s2 = new Separator();
+        Separator s3 = new Separator();
 
-        leftVBox.getChildren().addAll(btnCreateGame, btnLogin, btnCreateProfile, btnOptions);
+
+        leftVBox.getChildren().addAll(btnCreateGame,s0, btnLogin,s1, btnCreateProfile,s2, btnOptions,s3);
         return leftVBox;
     }
 
     private void defineStyleClass() {
 
         /*
-        CSS Classes for the buttons in the LEFT part of the Border Pane
+         *CSS Classes for the buttons in the LEFT part of the Border Pane
          */
 
         btnCreateGame.getStyleClass().add("leftButtons");
@@ -161,9 +161,9 @@ public class GameLobbyView extends Pane {
         btnOptions.getStyleClass().add("leftButtons");
 
         /*
-            CSS IDs for the ROOT border pane of the game lobby.
-            Contains all the other elements of the game lobby.
-        */
+         *CSS ID for the ROOT border pane of the game lobby.
+         *Contains all the other elements of the game lobby.
+         */
         root.setId("root");
 
         //  CSS IDs for the TOP part of the game lobby (menuBar and Title)
@@ -206,12 +206,12 @@ public class GameLobbyView extends Pane {
         return gameLobbyStage;
     }
 
-    public Label getLblInfo() {
-        return lblInfo;
+    public MenuBar getMenuBar(){
+        return menuBar;
     }
 
-    public void setLblInfo(Label lblInfo) {
-        this.lblInfo = lblInfo;
+    public Label getLblInfo() {
+        return lblInfo;
     }
 
     public TextArea getTxtArea() {
@@ -242,10 +242,6 @@ public class GameLobbyView extends Pane {
         return btnLogin;
     }
 
-    public void setBtnLogin(Button btnLogin) {
-        this.btnLogin = btnLogin;
-    }
-
     public Button getBtnCreateProfile() {
         return btnCreateProfile;
     }
@@ -270,7 +266,4 @@ public class GameLobbyView extends Pane {
         return this.menuItemGameRules;
     }
 
-    public void setLblStatus(Label lblStatus) {
-        this.lblStatus = lblStatus;
-    }
 }

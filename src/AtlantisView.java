@@ -1,3 +1,4 @@
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -27,14 +28,15 @@ public class AtlantisView {
     private OptionsView optionsView;
     private Stage optionsStage;
 
-    //TODO: WIDTH and HEIGHT need to be dynamic depending on the stage width and height
-    public static final int WIDTH = 1020;
-    public static final int HEIGHT = 600;
+    private SimpleIntegerProperty height;
+    private SimpleIntegerProperty width;
 
     public AtlantisView(Stage introStage, AtlantisModel model) {
 
         this.model = model;
         this.introStage = introStage;
+        width = new SimpleIntegerProperty(1020);
+        height = new SimpleIntegerProperty(600);
     }
 
 
@@ -43,37 +45,42 @@ public class AtlantisView {
     }
 
     public void createGameLobbyView() {
-        this.gameLobbyView = new GameLobbyView();
+        this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue());
+
+        //Bind the width and the height to the GameLobby Stage to ensure that
+        // the overlays have the right dimensions when they get invoked
+        width.bind(gameLobbyView.getGameLobbyStage().widthProperty());
+        height.bind(gameLobbyView.getGameLobbyStage().heightProperty());
     }
 
-
     public void createCreateGameView() {
-        this.createGameView = new CreateGameView();
+        this.createGameView = new CreateGameView(height.getValue(), width.getValue());
         Scene scene = new Scene(createGameView);
         createGameViewStage = new Stage();
         setupOverlay(createGameViewStage, scene, "CreateGameView");
     }
 
     public void createLoginView() {
-        this.loginView = new LoginView();
+        this.loginView = new LoginView(height.getValue(), width.getValue());
         Scene scene = new Scene(loginView);
         loginStage = new Stage();
         setupOverlay(loginStage, scene, "LoginView");
     }
 
     public void createNewProfileView() {
-        this.newProfileView = new NewProfileView();
+        this.newProfileView = new NewProfileView(height.getValue(), width.getValue());
         Scene scene = new Scene(newProfileView);
         profileStage = new Stage();
         setupOverlay(profileStage, scene, "NewProfileView");
     }
 
     public void createOptionsView() {
-        this.optionsView = new OptionsView();
+        this.optionsView = new OptionsView(height.getValue(), width.getValue());
         Scene scene = new Scene(optionsView);
         optionsStage = new Stage();
         setupOverlay(optionsStage, scene, "OptionsView");
     }
+
 
     private void setupOverlay(Stage stage, Scene scene, String cssString) {
         //Get the css files and add them to the scene
@@ -81,12 +88,12 @@ public class AtlantisView {
         scene.getStylesheets().add(css);
         // Make it so that the overlays block the GameLobby
         stage.initModality(Modality.APPLICATION_MODAL);
-        //Start the application in the center of the screen
+        //Match the X and Y to the Game Lobby's X and Y coordinates
         stage.setX(gameLobbyView.getGameLobbyStage().getX());
         stage.setY(gameLobbyView.getGameLobbyStage().getY());
         //Set the dimensions of the Stage
-        stage.setHeight(HEIGHT);
-        stage.setWidth(WIDTH);
+        stage.setMinHeight(height.getValue());
+        stage.setMinWidth(width.getValue());
         //Set opacity for the overlays
         stage.opacityProperty().setValue(0.9);
         //Remove the Window decorations minimize, maximize and close button and the frame

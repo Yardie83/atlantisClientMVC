@@ -4,7 +4,8 @@
 
 /*LOGIN VIEW CSS: Consists
 */
-
+.root{
+}
 /*root is a Border Pane*/
 #root {
     -fx-alignment: center;
@@ -109,7 +110,6 @@
 
 #buttonRow{
     -fx-alignment: top-center;
-
 }
 
 #btnLogin {

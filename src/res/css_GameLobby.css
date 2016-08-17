@@ -2,16 +2,47 @@
 a TOP, BOTTOM, RIGHT, CENTER and LEFT part
 */
 
+.root {
+    -fx-background-color: #61B0FD;
+    -fx-background-image: url("background.jpg");
+    -fx-background-size: stretch;
+}
+
 /*root is a Border Pane*/
 #root {
-
 }
 
 /*Common style class for the buttons in the left
 part of the border pane in the game lobby
 */
 .leftButtons {
-    -fx-pref-width: 100px;
+    -fx-pref-width: 300px;
+    -fx-min-height: 65px;
+    -fx-max-height: 65px;
+    /*-fx-pref-height: 100px;*/
+    -fx-text-alignment: center;
+    -fx-background-insets: 0 0 -1 0, 0, 1;
+    /*-fx-padding: 5 20 5 20;*/
+    -fx-font-family: "Arial";
+    -fx-font-size: 24px;
+    -fx-text-fill: #bde4ff;
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 3, 4);
+    -fx-border-color: transparent;
+    -fx-alignment: center;
+    -fx-background-color: transparent;
+}
+
+.leftButtons:hover {
+    -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 3);
+    -fx-font-size: 32px;
+    -fx-text-fill: #7DC6FD;
+}
+#leftButtons:pressed {
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
+}
+
+.leftButtons > text{
+    -fx-effect: dropshadow(three-pass-box, white, 5, 0.1, 3, 4);
 }
 
 /*****************************************/
@@ -20,6 +51,9 @@ part of the border pane in the game lobby
 
 #vBoxTop {
 
+    -fx-background-color: #292828;
+    -fx-opacity: 0.8;
+    -fx-alignment: top-center;
 }
 
 #menuBar {
@@ -43,10 +77,10 @@ part of the border pane in the game lobby
 }
 
 #lblWindowTitle {
-    -fx-font-size: 24px;
-    -fx-background-color: aqua;
-    -fx-padding: 20px;
-    -fx-min-width: 800px;
+    -fx-text-fill: #7af5c4;
+    -fx-text-alignment: center;
+    -fx-font-size: 48px;
+    -fx-padding: 0px 0px 10px 0px;
 }
 
 /*****************************************/
@@ -54,39 +88,23 @@ part of the border pane in the game lobby
 /*****************************************/
 
 /*****************************************/
-/*START BOTTOM*/
-/*****************************************/
-
-#bottomHBox {
-
-}
-
-#lblStatus {
-
-}
-
-#lblInfo {
-
-}
-
-/*****************************************/
-/*END BOTTOM*/
-/*****************************************/
-
-/*****************************************/
 /*START RIGHT*/
 /*****************************************/
 
 #rightVBox {
-
+    -fx-padding: 10px 40px;
 }
 
 #txtArea {
+    -fx-alignment: center-left;
+}
+
+#txtArea:focused {
 
 }
 
 #txtField {
-
+    -fx-alignment: baseline-left;
 }
 
 /*****************************************/
@@ -94,19 +112,33 @@ part of the border pane in the game lobby
 /*****************************************/
 
 /*****************************************/
-/*START CENTER*/
+/*START BOTTOM*/
 /*****************************************/
 
-#centerVBox {
+#bottomHBox {
+    -fx-min-height: 30px;
+    -fx-max-height: 30px;
+    -fx-pref-height: 30px;
+    -fx-background-color: #292828;
+    -fx-opacity: 0.8;
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, -2, 5);
+}
+
+#lblStatus {
+    -fx-alignment: center-left;
+    -fx-padding: 7px 10px 10px 10px;;
+    -fx-text-fill: whitesmoke;
 
 }
 
-#gameListView {
-
+#lblInfo {
+    -fx-alignment: center-left;
+    -fx-padding: 7px 10px 10px 5px;
+    -fx-text-fill: whitesmoke;
 }
 
 /*****************************************/
-/*END CENTER*/
+/*END BOTTOM*/
 /*****************************************/
 
 /*****************************************/
@@ -114,19 +146,18 @@ part of the border pane in the game lobby
 /*****************************************/
 
 #leftVBox {
-    -fx-padding: 10px;
-    -fx-spacing: 10px;
+-fx-padding: 20px;
 }
 
 #btnCreateGame {
 
 }
 
-#btnCreateGame:hover{
+#btnCreateGame:hover {
 
 }
 
-#btnCreateGame:pressed{
+#btnCreateGame:pressed {
 
 }
 
@@ -134,11 +165,11 @@ part of the border pane in the game lobby
 
 }
 
-#btnLogin:hover{
+#btnLogin:hover {
 
 }
 
-#btnLogin:pressed{
+#btnLogin:pressed {
 
 }
 
@@ -146,27 +177,44 @@ part of the border pane in the game lobby
 
 }
 
-#btnCreateProfile:hover{
+#btnCreateProfile:hover {
 
 }
 
-#btnCreateProfile:pressed{
+#btnCreateProfile:pressed {
 
 }
-
 
 #btnOptions {
-    -fx-background-color: aquamarine;
-}
-
-#btnOptions:hover{
 
 }
 
-#btnOptions:pressed{
+#btnOptions:hover {
+
+}
+
+#btnOptions:pressed {
 
 }
 
 /*****************************************/
 /*END LEFT*/
 /*****************************************/
+
+/*****************************************/
+/*START CENTER*/
+/*****************************************/
+
+#centerVBox {
+    -fx-min-width: 200px;
+    -fx-max-width: 200px;
+}
+
+#gameListView {
+    -fx-alignment: top-left;
+}
+
+/*****************************************/
+/*END CENTER*/
+/*****************************************/
+
