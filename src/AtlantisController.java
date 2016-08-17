@@ -208,7 +208,7 @@ public class AtlantisController {
 
                     view.getGameLobbyView().getChildren().add(c);
 
-                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1300), c);
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1400), c);
                     translateTransition.setFromX(0);
                     translateTransition.setToX(r.nextInt(40) - 20);
                     translateTransition.setFromY(0);

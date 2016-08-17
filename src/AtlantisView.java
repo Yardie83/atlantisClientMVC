@@ -109,6 +109,7 @@ public class AtlantisView {
     public IntroView getIntroView() {
         return introView;
     }
+
     public Stage getIntroStage() {
         return introStage;
     }

@@ -54,54 +54,54 @@ public class AtlantisModel {
         Task receiveMessageTask = new Task() {
             @Override
             protected Object call() throws Exception {
-                    System.out.println("Connected to Server\nWaiting for incoming messages");
-                    chatString.setValue("Connected to Server\nWaiting for incoming messages");
-                    connectionStatus.setValue("Connected");
-                    while (autoConnect) {
-                        try {
-                            if ((socket == null || socket.isClosed())) {
-                                connectToServer();
-                            } else {
-                                message = (Message) inReader.readObject();
+                System.out.println("Connected to Server\nWaiting for incoming messages");
+                chatString.setValue("Connected to Server\nWaiting for incoming messages");
+                connectionStatus.setValue("Connected");
+                while (autoConnect) {
+                    try {
+                        if ((socket == null || socket.isClosed())) {
+                            connectToServer();
+                        } else {
+                            message = (Message) inReader.readObject();
 
-                                //TODO: Implement here the same switch statement as in the server for each messageType
+                            //TODO: Implement here the same switch statement as in the server for each messageType
 
-                                switch (message.getMessageType()) {
+                            switch (message.getMessageType()) {
 
-                                    case DISCONNECT:
-                                        //Add code here
-                                        break;
+                                case DISCONNECT:
+                                    //Add code here
+                                    break;
 
-                                    case CHAT:
-                                        handleChatMessage(message);
-                                        break;
+                                case CHAT:
+                                    handleChatMessage(message);
+                                    break;
 
-                                    case CREATEPROFILE:
-                                        //Add code here
-                                        break;
+                                case CREATEPROFILE:
+                                    //Add code here
+                                    break;
 
-                                    case LOGIN:
-                                        //Add code here
-                                        break;
+                                case LOGIN:
+                                    //Add code here
+                                    break;
 
-                                    case NEWGAME:
-                                        //Add code here
-                                        break;
+                                case NEWGAME:
+                                    //Add code here
+                                    break;
 
-                                    case GAMELIST:
-                                        //Add code here
-                                        break;
-                                }
+                                case GAMELIST:
+                                    //Add code here
+                                    break;
                             }
-                        } catch (SocketException e) {
-                            //TODO: Ask Bradley if this is the correct way to solve this problem
-                            System.out.println("Connection by server closed");
-                            autoConnect = false;
-                            //closeConnection();
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                    } catch (SocketException e) {
+                        //TODO: Ask Bradley if this is the correct way to solve this problem
+                        System.out.println("Connection by server closed");
+                        autoConnect = false;
+                        //closeConnection();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+                }
                 return null;
             }
         };
@@ -162,12 +162,12 @@ public class AtlantisModel {
     }
 
 
-//TODO: Make this better-looking instead of a PDF create a view with the rules
+    //TODO: Make this better-looking instead of a PDF create a view with the rules
     public void showGameRules() {
         try {
             File file = new File(getClass().getResource("/res/Atlantis_Spielregel.pdf").getFile());
 
-            if (file.exists()){
+            if (file.exists()) {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
             }
 
