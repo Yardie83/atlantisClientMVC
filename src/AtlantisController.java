@@ -394,6 +394,7 @@ public class AtlantisController {
                         if (model.createProfileSuccessProperty().getValue().equals(1)) {
                             view.getGameLobbyView().createPopUp("Profile Created!");
                             view.getGameLobbyView().getLblInfo().setText("Logged in as " + userName);
+                            view.getGameLobbyView().getLblWindowTitle().setText("Hi " + userName + ", Welcome to Atlantis");
                             view.getProfileStage().close();
                             model.createProfileSuccessProperty().setValue(0);
                         } else if (model.createProfileSuccessProperty().getValue().equals(2)) {
