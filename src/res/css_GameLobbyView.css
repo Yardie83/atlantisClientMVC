@@ -18,15 +18,14 @@ a TOP, BOTTOM, RIGHT, CENTER and LEFT part
 part of the border pane in the game lobby
 */
 .leftButtons {
-    -fx-pref-width: 300px;
     -fx-min-height: 65px;
     -fx-max-height: 65px;
     /*-fx-pref-height: 100px;*/
     -fx-text-alignment: center;
     -fx-background-insets: 0 0 -1 0, 0, 1;
     /*-fx-padding: 5 20 5 20;*/
-    -fx-font-size: 24px;
-    -fx-text-fill: #bde4ff;
+    -fx-font-size: 18px;
+    -fx-text-fill: beige;
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 3, 4);
     -fx-border-color: transparent;
     -fx-alignment: center;
@@ -35,8 +34,8 @@ part of the border pane in the game lobby
 
 .leftButtons:hover {
     -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 3);
-    -fx-font-size: 32px;
-    -fx-text-fill: #7DC6FD;
+    -fx-font-size: 24px;
+    -fx-text-fill: azure;
 }
 
 .leftButtons:pressed {
@@ -161,8 +160,8 @@ part of the border pane in the game lobby
 
 #leftVBox {
     -fx-padding: 20px;
-    -fx-max-width: 350px;
-    -fx-min-width: 350px;
+    -fx-min-width: 250px;
+    -fx-background-size: cover;
 }
 
 #btnCreateGame {
@@ -213,6 +212,10 @@ part of the border pane in the game lobby
 
 }
 
+.separator{
+    -fx-max-width: 200px;
+}
+
 
 
 /*****************************************/
@@ -225,9 +228,11 @@ part of the border pane in the game lobby
 
 #centerVBox {
     -fx-alignment: top-center;
-    -fx-padding: 20px 0px 300px 0px;
-    -fx-min-width: 500px;
-    -fx-max-width: 500px;
+    -fx-padding: 50px 0px 0px 0px;
+    -fx-min-width: 650px;
+    -fx-background-image: url("/res/paper_scroll.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
 
 }
 
@@ -239,21 +244,37 @@ part of the border pane in the game lobby
 }
 
 #gameListView {
-    -fx-alignment: top-center;
+    -fx-padding: 70px 0px 0px 0px;
     -fx-background-color: transparent;
-    -fx-min-height: 200px;
-    -fx-max-height: 200px;
-    -fx-min-width: 500px;
-    -fx-max-width: 500px;
+    -fx-min-height: 300px;
+    -fx-max-height: 350px;
+    -fx-min-width: 400px;
+    -fx-pref-width: 400px;
+    -fx-max-width: 400px;
 }
 
 .list-cell {
-    /*-fx-background-color: ;*/
+    -fx-text-fill: dimgrey;
     -fx-font-size: 18px;
+    -fx-background-color: transparent;
+}
+.list-cell:hover{
+    -fx-text-fill: #303030;
+    -fx-font-size: 18px;
+    -fx-background-color: transparent;
 }
 
-.list-cell:focused {
-    /*-fx-background-color: ;*/
+.list-cell:selected{
+    -fx-background-color: transparent ;
+    -fx-text-fill:black;
+}
+.list-cell:selected:hover{
+    -fx-background-color:transparent ;
+    -fx-text-fill: black;
+}
+
+.list-cell:hover {
+    -fx-background-color:transparent ;
 }
 
 /*****************************************/
@@ -269,7 +290,7 @@ part of the border pane in the game lobby
     -fx-min-height: 40px;
     -fx-max-width: 300px;
     -fx-max-height: 40px;
-    -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
+    -fx-background-image: url("/res/bg_popup.png");
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 4, 3);
     -fx-background-radius: 5;
 }

@@ -211,36 +211,41 @@ public class AtlantisController {
         view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
 
-                Random r = new Random();
+                        Random r = new Random();
 
-                for (int i = 0; i < 12; i++) {
-                    Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
-                    c.setStyle("-fx-border-color: WHITE;" +
-                            "-fx-border-width: 1px;" +
-                            "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
-                    c.setCenterX(event.getX() + r.nextInt(10) - 5);
-                    c.setCenterY(event.getY() + r.nextInt(10));
+                        for (int i = 0; i < 12; i++) {
+                            Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
+                            c.setStyle("-fx-border-color: WHITE;" +
+                                    "-fx-border-width: 1px;" +
+                                    "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
+                            c.setCenterX(event.getX() + r.nextInt(10) - 5);
+                            c.setCenterY(event.getY() + r.nextInt(10));
 
-                    view.getGameLobbyView().getChildren().add(c);
+                            view.getGameLobbyView().getChildren().add(c);
 
-                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1400), c);
-                    translateTransition.setFromX(0);
-                    translateTransition.setToX(r.nextInt(40) - 20);
-                    translateTransition.setFromY(0);
-                    translateTransition.setToY(-r.nextInt(70) - 50);
-                    translateTransition.setAutoReverse(false);
+                            TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1400), c);
+                            translateTransition.setFromX(0);
+                            translateTransition.setToX(r.nextInt(40) - 20);
+                            translateTransition.setFromY(0);
+                            translateTransition.setToY(-r.nextInt(70) - 50);
+                            translateTransition.setAutoReverse(false);
 
-                    FadeTransition ft = new FadeTransition(Duration.millis(r.nextInt(600) + 1300), c);
-                    ft.setFromValue(1);
-                    ft.setToValue(0);
-                    ft.setAutoReverse(false);
+                            FadeTransition ft = new FadeTransition(Duration.millis(r.nextInt(600) + 1300), c);
+                            ft.setFromValue(1);
+                            ft.setToValue(0);
+                            ft.setAutoReverse(false);
 
-                    ParallelTransition parallelTransition = new ParallelTransition();
-                    parallelTransition.getChildren().addAll(ft, translateTransition);
-                    parallelTransition.setCycleCount(1);
-                    parallelTransition.play();
-                }
+                            ParallelTransition parallelTransition = new ParallelTransition();
+                            parallelTransition.getChildren().addAll(ft, translateTransition);
+                            parallelTransition.setCycleCount(1);
+                            parallelTransition.play();
+                        }
+                    }
+                });
             }
         });
 

@@ -35,7 +35,7 @@ public class AtlantisView {
 
         this.model = model;
         this.introStage = introStage;
-        width = new SimpleIntegerProperty(1200);
+        width = new SimpleIntegerProperty(1300);
         height = new SimpleIntegerProperty(800);
     }
 

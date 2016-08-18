@@ -99,7 +99,7 @@ public class GameLobbyView extends Pane {
 
         menuBar.getMenus().addAll(menuFile, menuOptions, menuHelp);
 
-        lblWindowTitle = new Label("");
+        lblWindowTitle = new Label("Welcome to Atlantis");
 
         vBoxTop.getChildren().addAll(menuBar, lblWindowTitle);
 
@@ -134,11 +134,11 @@ public class GameLobbyView extends Pane {
 
     private Node createCenter() {
 
-        centerVBox = new VBox(20);
+        centerVBox = new VBox(30);
         lblGameTitles = new Label("Games");
         lblGameTitles.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
         gameList = new ListView();
-        gameList.getItems().add("Hallo");
+        gameList.getItems().addAll("Hallo", "Game #2 Hallo","My Game 12.1.16", "Game #6 Doodle","Hallo", "Game #5 Lol","Hallo", "Game #2");
         centerVBox.getChildren().addAll(lblGameTitles, gameList);
         return centerVBox;
     }
@@ -164,7 +164,7 @@ public class GameLobbyView extends Pane {
     public void createPopUp(String message) {
         popup = new Pane();
         popup.setTranslateX(gameLobbyStage.getWidth());
-        popup.setTranslateY(gameLobbyStage.getHeight()-150);
+        popup.setTranslateY(gameLobbyStage.getHeight()-110);
         Label lblPopup = new Label(message);
 
         // CSS ID for the PopUp
