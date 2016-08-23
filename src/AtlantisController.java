@@ -286,7 +286,6 @@ public class AtlantisController {
                 view.getCreateGameStage().close();
             }
         });
-
     }
     //END handleCreateGameControls
 
