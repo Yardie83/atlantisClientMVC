@@ -96,7 +96,7 @@ public class AtlantisModel {
                                     break;
 
                                 case GAMELIST:
-                                    //Add code here
+                                    handleGameList(message);
                                     break;
                                 case USERNAME:
                                     handleUserName(message);
@@ -119,6 +119,10 @@ public class AtlantisModel {
         };
         clientTask = new Thread(receiveMessageTask);
         clientTask.start();
+    }
+
+    private void handleGameList(Message message) {
+
     }
 
     private void handleUserName(Message message) {

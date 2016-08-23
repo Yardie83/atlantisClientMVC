@@ -143,6 +143,13 @@ public class AtlantisController {
             }
         });
 
+        view.getGameLobbyView().getGameList().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+               // view.getGameLobbyView().getGameList().getSelectionModel().getSelectedItem().
+            }
+        });
+
 
         /*
          * CHAT Application EventHandlers
