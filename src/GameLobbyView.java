@@ -176,7 +176,7 @@ public class GameLobbyView extends Pane {
         this.getChildren().add(popup);
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(1200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth()-inset, Interpolator.TANGENT(Duration.millis(3000), 500))));
+                new KeyFrame(Duration.millis(2200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth()-inset, Interpolator.EASE_BOTH)));
         timeline.setAutoReverse(true);
         timeline.setCycleCount(2);
         timeline.setDelay(Duration.millis(200));

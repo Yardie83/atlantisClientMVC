@@ -4,6 +4,7 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,6 +18,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 
@@ -217,15 +219,25 @@ public class AtlantisController {
         });
 
         //Update the GameList in the GameLobby with the List received from the Server
-        model.getGameList().addListener(new MapChangeListener<String, Integer>() {
+        model.getGameList().addListener(new ListChangeListener<String>() {
             @Override
-            public void onChanged(Change<? extends String, ? extends Integer> change) {
+            public void onChanged(Change<? extends String> c) {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        view.getGameLobbyView().getGameListView().getItems().clear();
-                        for (Map.Entry<String, Integer> entry : model.getGameList().entrySet()) {
-                            view.getGameLobbyView().getGameListView().getItems().add(entry.getKey() + ": " + entry.getValue());
+                        if (model.getGameList().size() != 0) {
+                            view.getGameLobbyView().getGameListView().getItems().clear();
+                            Collections.reverse(model.getGameList());
+                            for (String s : model.getGameList()) {
+                                String[] gameInfo = s.split(",");
+                                if (!gameInfo[0].equalsIgnoreCase("")) {
+                                    String gameName = gameInfo[0];
+                                    Integer nrPlayers = Integer.parseInt(gameInfo[1]);
+                                    view.getGameLobbyView().getGameListView().getItems().add(gameName + ": " + nrPlayers);
+                                }
+                            }
+                            model.getGameList().clear();
+                            view.getGameLobbyView().createPopUp("Game Created!", 200);
                         }
                     }
                 });
@@ -289,27 +301,39 @@ public class AtlantisController {
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //TODO: Sanitize input. Check for no commas in game name
-                String gameName = view.getCreateGameView().getTxtGameName().getText();
-                RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
-                String message = gameName + "," + selectedRadioButton.getText();
-                if (gameName.equals("")) {
-                    view.getCreateGameView().getLblError().setText("Please give your game a name");
-                    view.getCreateGameView().getLblError().setVisible(true);
-                } else {
-                    model.sendMessage(new Message(MessageType.NEWGAME, message));
-                    view.getCreateGameStage().close();
-                }
+                createGameEntry();
             }
         });
 
-        // Handle "Cancel" Btn Action Event in the Create Game View
-        view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+        view.getCreateGameView().getTxtGameName().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(ActionEvent event) {
-                view.getCreateGameStage().close();
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER) {
+                    createGameEntry();
+                }
             }
         });
+    }
+
+    private void createGameEntry() {
+        String gameName = view.getCreateGameView().getTxtGameName().getText();
+        RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
+        String message = gameName + "," + selectedRadioButton.getText();
+        if (gameName.equals("")) {
+            view.getCreateGameView().getLblError().setText("Please give your game a name");
+            view.getCreateGameView().getLblError().setVisible(true);
+        } else {
+            model.sendMessage(new Message(MessageType.NEWGAME, message));
+            view.getCreateGameStage().close();
+        }
+
+        // Handle "Cancel" Btn Action Event in the Create Game View
+        view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        view.getCreateGameStage().close();
+                    }
+                });
     }
     //END handleCreateGameControls
 

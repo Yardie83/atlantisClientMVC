@@ -1,6 +1,7 @@
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 
@@ -29,7 +30,7 @@ public class AtlantisModel {
     private SimpleStringProperty userName;
     private boolean autoConnect = true;
     private Thread clientTask;
-    private ObservableMap<String, Integer> gameList;
+    private ObservableList<String> gameList;
 
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
@@ -37,7 +38,7 @@ public class AtlantisModel {
         createProfileSuccess = new SimpleIntegerProperty(0);
         loginSuccess = new SimpleIntegerProperty(0);
         userName = new SimpleStringProperty();
-        gameList = FXCollections.observableHashMap();
+        gameList = FXCollections.observableArrayList();
     }
 
     public void connectToServer() {
@@ -102,6 +103,7 @@ public class AtlantisModel {
                                 case GAMELIST:
                                     handleGameList(message);
                                     break;
+
                                 case USERNAME:
                                     handleUserName(message);
                                     break;
@@ -126,11 +128,7 @@ public class AtlantisModel {
     }
 
     private void handleGameList(Message message) {
-        String[] gameInformation = message.getMessageObject().toString().split(",");
-        String gameName = gameInformation[0];
-        Integer nrOfPlayers = Integer.parseInt(gameInformation[1]);
-        gameList.put(gameName, nrOfPlayers);
-
+        gameList.add(message.getMessageObject().toString());
     }
 
     private void handleUserName(Message message) {
@@ -214,7 +212,7 @@ public class AtlantisModel {
         return userName;
     }
 
-    public ObservableMap<String, Integer> getGameList() {
+    public ObservableList<String> getGameList() {
         return gameList;
     }
 
