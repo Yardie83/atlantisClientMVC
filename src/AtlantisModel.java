@@ -1,5 +1,7 @@
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 
 import java.io.File;
@@ -27,6 +29,7 @@ public class AtlantisModel {
     private SimpleStringProperty userName;
     private boolean autoConnect = true;
     private Thread clientTask;
+    private ObservableMap<String, Integer> gameList;
 
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
@@ -34,6 +37,7 @@ public class AtlantisModel {
         createProfileSuccess = new SimpleIntegerProperty(0);
         loginSuccess = new SimpleIntegerProperty(0);
         userName = new SimpleStringProperty();
+        gameList = FXCollections.observableHashMap();
     }
 
     public void connectToServer() {
@@ -110,8 +114,8 @@ public class AtlantisModel {
                         //closeConnection();
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }finally {
-                        System.out.println("Server -> " + message.getMessageObject().toString());
+                    } finally {
+                        System.out.println("Server -> " + message.getMessageObject());
                     }
                 }
                 return null;
@@ -122,6 +126,10 @@ public class AtlantisModel {
     }
 
     private void handleGameList(Message message) {
+        String[] gameInformation = message.getMessageObject().toString().split(",");
+        String gameName = gameInformation[0];
+        Integer nrOfPlayers = Integer.parseInt(gameInformation[1]);
+        gameList.put(gameName, nrOfPlayers);
 
     }
 
@@ -202,7 +210,13 @@ public class AtlantisModel {
         return loginSuccess;
     }
 
-    public SimpleStringProperty userNameProperty(){ return userName;}
+    public SimpleStringProperty userNameProperty() {
+        return userName;
+    }
+
+    public ObservableMap<String, Integer> getGameList() {
+        return gameList;
+    }
 
     public void setAutoConnect(boolean autoConnect) {
         this.autoConnect = autoConnect;

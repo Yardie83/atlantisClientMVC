@@ -81,7 +81,6 @@ public class AtlantisView {
         setupOverlay(optionsStage, scene, "OptionsView");
     }
 
-
     private void setupOverlay(Stage stage, Scene scene, String cssString) {
         //Get the css files and add them to the scene
         String css = this.getClass().getResource("/res/css_" + cssString + ".css").toExternalForm();
@@ -149,4 +148,6 @@ public class AtlantisView {
     public Stage getOptionsStage() {
         return optionsStage;
     }
+
+
 }

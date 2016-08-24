@@ -4,6 +4,7 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.MapChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.RadioButton;
@@ -16,6 +17,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -143,10 +145,10 @@ public class AtlantisController {
             }
         });
 
-        view.getGameLobbyView().getGameList().setOnMouseClicked(new EventHandler<MouseEvent>() {
+        view.getGameLobbyView().getGameListView().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-               // view.getGameLobbyView().getGameList().getSelectionModel().getSelectedItem().
+
             }
         });
 
@@ -205,12 +207,28 @@ public class AtlantisController {
         });
 
         /*
-         * UserName to be displayed. If the user is not logged in, Guest + a number will be displayed as the name
+         * UserName to be displayed. If the user is not logged in, Guest + number will be displayed as the name
          */
         model.userNameProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 view.getGameLobbyView().getLblWindowTitle().setText("Hi " + newValue + ", Welcome to Atlantis");
+            }
+        });
+
+        //Update the GameList in the GameLobby with the List received from the Server
+        model.getGameList().addListener(new MapChangeListener<String, Integer>() {
+            @Override
+            public void onChanged(Change<? extends String, ? extends Integer> change) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.getGameLobbyView().getGameListView().getItems().clear();
+                        for (Map.Entry<String, Integer> entry : model.getGameList().entrySet()) {
+                            view.getGameLobbyView().getGameListView().getItems().add(entry.getKey() + ": " + entry.getValue());
+                        }
+                    }
+                });
             }
         });
 
@@ -275,7 +293,6 @@ public class AtlantisController {
                 String gameName = view.getCreateGameView().getTxtGameName().getText();
                 RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
                 String message = gameName + "," + selectedRadioButton.getText();
-
                 if (gameName.equals("")) {
                     view.getCreateGameView().getLblError().setText("Please give your game a name");
                     view.getCreateGameView().getLblError().setVisible(true);
@@ -314,7 +331,6 @@ public class AtlantisController {
                 } else {
                     //Send the login credentials to the server
                     model.sendMessage(new Message(MessageType.LOGIN, credentials));
-
                 }
             }
         });
@@ -326,7 +342,7 @@ public class AtlantisController {
                     @Override
                     public void run() {
                         if (model.loginSuccessProperty().getValue().equals(1)) {
-                            view.getGameLobbyView().createPopUp("You're logged in!");
+                            view.getGameLobbyView().createPopUp("You're logged in!", 200);
                             view.getGameLobbyView().getLblInfo().setText("Logged in as " + userName);
                             view.getGameLobbyView().getLblWindowTitle().setText("Hi " + userName + ", Welcome to Atlantis");
                             view.getGameLobbyView().removeLoginBtn();
@@ -398,7 +414,7 @@ public class AtlantisController {
                     @Override
                     public void run() {
                         if (model.createProfileSuccessProperty().getValue().equals(1)) {
-                            view.getGameLobbyView().createPopUp("Profile Created!");
+                            view.getGameLobbyView().createPopUp("Profile Created!", 200);
                             view.getGameLobbyView().getLblInfo().setText("Logged in as " + userName);
                             view.getGameLobbyView().getLblWindowTitle().setText("Hi " + userName + ", Welcome to Atlantis");
                             view.getGameLobbyView().removeLoginBtn();

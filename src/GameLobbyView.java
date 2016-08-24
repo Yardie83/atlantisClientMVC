@@ -29,7 +29,7 @@ public class GameLobbyView extends Pane {
     private Label lblInfo;
     private TextArea txtArea;
     private TextField txtField;
-    private ListView<String> gameList;
+    private ListView<String> gameListView;
     private Button btnCreateGame;
     private Button btnLogin;
     private Button btnCreateProfile;
@@ -50,6 +50,7 @@ public class GameLobbyView extends Pane {
     private Pane popup;
     private Separator s0;
     private Label lblGameTitles;
+    private Button btnStartGame;
 
     public GameLobbyView(int height, int width) {
 
@@ -137,9 +138,8 @@ public class GameLobbyView extends Pane {
         centerVBox = new VBox(30);
         lblGameTitles = new Label("Games");
         lblGameTitles.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
-        gameList = new ListView();
-        gameList.getItems().addAll("Hallo", "Game #2 Hallo","My Game 12.1.16", "Game #6 Doodle","Hallo", "Game #5 Lol","Hallo", "Game #2");
-        centerVBox.getChildren().addAll(lblGameTitles, gameList);
+        gameListView = new ListView();
+        centerVBox.getChildren().addAll(lblGameTitles, gameListView);
         return centerVBox;
     }
 
@@ -155,13 +155,14 @@ public class GameLobbyView extends Pane {
         Separator s1 = new Separator();
         Separator s2 = new Separator();
         Separator s3 = new Separator();
+        btnStartGame = new Button("Start Game");
 
 
-        leftVBox.getChildren().addAll(btnCreateGame, s0, btnLogin, s1, btnCreateProfile, s2, btnOptions, s3);
+        leftVBox.getChildren().addAll(btnCreateGame, s0, btnLogin, s1, btnCreateProfile, s2, btnOptions, s3, btnStartGame);
         return leftVBox;
     }
 
-    public void createPopUp(String message) {
+    public void createPopUp(String message, int inset) {
         popup = new Pane();
         popup.setTranslateX(gameLobbyStage.getWidth());
         popup.setTranslateY(gameLobbyStage.getHeight()-110);
@@ -175,7 +176,7 @@ public class GameLobbyView extends Pane {
         this.getChildren().add(popup);
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(1200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth()-200, Interpolator.TANGENT(Duration.millis(3000), 500))));
+                new KeyFrame(Duration.millis(1200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth()-inset, Interpolator.TANGENT(Duration.millis(3000), 500))));
         timeline.setAutoReverse(true);
         timeline.setCycleCount(2);
         timeline.setDelay(Duration.millis(200));
@@ -228,7 +229,7 @@ public class GameLobbyView extends Pane {
         //  CSS IDs for the CENTER part of the game lobby (small title and Game list)
         centerVBox.setId("centerVBox");
         lblGameTitles.setId("lblGameTitles");
-        gameList.setId("gameListView");
+        gameListView.setId("gameListView");
 
         //  CSS IDs for the LEFT part of the game lobby (Game Lobby buttons)
         leftVBox.setId("leftVBox");
@@ -263,8 +264,8 @@ public class GameLobbyView extends Pane {
         return txtField;
     }
 
-    public ListView getGameList() {
-        return gameList;
+    public ListView getGameListView() {
+        return gameListView;
     }
 
     public Button getBtnCreateGame() {
@@ -281,6 +282,10 @@ public class GameLobbyView extends Pane {
 
     public Button getBtnOptions() {
         return btnOptions;
+    }
+
+    public Button getBtnStartGame(){
+        return btnStartGame;
     }
 
     public Label getLblStatus() {
