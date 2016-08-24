@@ -305,6 +305,14 @@ public class AtlantisController {
             }
         });
 
+        // Handle "Cancel" Btn Action Event in the Create Game View
+        view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.getCreateGameStage().close();
+            }
+        });
+
         view.getCreateGameView().getTxtGameName().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -327,14 +335,8 @@ public class AtlantisController {
             view.getCreateGameStage().close();
         }
 
-        // Handle "Cancel" Btn Action Event in the Create Game View
-        view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        view.getCreateGameStage().close();
-                    }
-                });
     }
+
     //END handleCreateGameControls
 
     private void handleLoginViewControls() {
