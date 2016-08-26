@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -107,6 +108,9 @@ public class AtlantisModel {
                                 case USERNAME:
                                     handleUserName(message);
                                     break;
+                                case LANGUAGELIST:
+                                    handleLanguages(message);
+                                    break;
                             }
                         }
                     } catch (SocketException e) {
@@ -129,6 +133,16 @@ public class AtlantisModel {
 
     private void handleGameList(Message message) {
         gameList.add(message.getMessageObject().toString());
+    }
+
+    private void handleLanguages(Message message) {
+
+        ArrayList<Language> languages = (ArrayList<Language>) message.getMessageObject();
+
+        Language testlanguage = languages.get(0);
+
+        System.out.println(testlanguage.getLanguageTable().values());
+
     }
 
     private void handleUserName(Message message) {

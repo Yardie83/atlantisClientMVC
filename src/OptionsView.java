@@ -157,7 +157,13 @@ public class OptionsView extends Pane {
         bottomPane.setId("bottomPane");
     }
 
+    public RadioButton getRadioBtnEnglish() {
+        return radioBtnEnglish;
+    }
 
+    public RadioButton getRadioBtnGerman() {
+        return radioBtnGerman;
+    }
 
     public Button getBtnApply() {
         return btnApply;

@@ -72,6 +72,11 @@ public class AtlantisController {
                 view.getIntroStage().close();
                 view.createGameLobbyView();
                 handleGameLobbyControls();
+
+                //Load and show the languages
+
+
+
                 view.getGameLobbyView().show();
             }
         });
@@ -474,7 +479,17 @@ public class AtlantisController {
         view.getOptionsView().getBtnApply().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //TODO: Options Apply Button needs to be handled
+
+                if (view.getOptionsView().getRadioBtnGerman().isSelected()){
+
+                    //TODO: change language to german
+
+                }
+                else if (view.getOptionsView().getRadioBtnEnglish().isSelected()){
+
+                    //TODO: change language to english
+
+                }
             }
         });
 

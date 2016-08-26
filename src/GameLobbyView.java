@@ -18,6 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+
 /**
  * Created by LorisGrether and Hermann Grieder on 17.07.2016.
  */
@@ -50,6 +52,7 @@ public class GameLobbyView extends Pane {
     private Pane popup;
     private Separator s0;
     private Label lblGameTitles;
+    private ArrayList<Node> gameLobbyControls = new ArrayList<>();
     private Button btnStartGame;
 
     public GameLobbyView(int height, int width) {
@@ -80,6 +83,17 @@ public class GameLobbyView extends Pane {
         defineStyleClass();
 
         this.getChildren().addAll(root);
+        this.getControls(root);
+    }
+
+    private void getControls(Pane pane) {
+
+        for (Node node : pane.getChildren()) {
+            if (node instanceof Pane) {
+                getControls((Pane) node);
+            } else if (node instanceof Control)
+                gameLobbyControls.add(node);
+        }
     }
 
     private Node createTop() {
@@ -115,7 +129,7 @@ public class GameLobbyView extends Pane {
         Separator s = new Separator();
         s.setOrientation(Orientation.VERTICAL);
         lblInfo = new Label("");
-        bottomHBox.getChildren().addAll(lblStatus,s, lblInfo);
+        bottomHBox.getChildren().addAll(lblStatus, s, lblInfo);
 
         return bottomHBox;
     }
@@ -139,6 +153,9 @@ public class GameLobbyView extends Pane {
         lblGameTitles = new Label("Games");
         lblGameTitles.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
         gameListView = new ListView();
+        gameListView.getItems().addAll("Hallo", "Game #2 Hallo", "My Game 12.1.16", "Game #6 Doodle", "Hallo", "Game #5 Lol", "Hallo", "Game #2");
+        centerVBox.getChildren().addAll(lblGameTitles, gameListView);
+        gameListView = new ListView();
         centerVBox.getChildren().addAll(lblGameTitles, gameListView);
         return centerVBox;
     }
@@ -146,7 +163,7 @@ public class GameLobbyView extends Pane {
     private Node createLeft() {
 
         leftVBox = new VBox(10);
-       // leftVBox.setTranslateX(-150);
+        // leftVBox.setTranslateX(-150);
         btnCreateGame = new Button("Create Game");
         btnLogin = new Button("Login");
         btnCreateProfile = new Button("Create Profile");
@@ -165,7 +182,7 @@ public class GameLobbyView extends Pane {
     public void createPopUp(String message, int inset) {
         popup = new Pane();
         popup.setTranslateX(gameLobbyStage.getWidth());
-        popup.setTranslateY(gameLobbyStage.getHeight()-110);
+        popup.setTranslateY(gameLobbyStage.getHeight() - 110);
         Label lblPopup = new Label(message);
 
         // CSS ID for the PopUp
@@ -176,7 +193,7 @@ public class GameLobbyView extends Pane {
         this.getChildren().add(popup);
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(2200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth()-inset, Interpolator.EASE_BOTH)));
+                new KeyFrame(Duration.millis(1200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth() - 200, Interpolator.TANGENT(Duration.millis(3000), 500))));
         timeline.setAutoReverse(true);
         timeline.setCycleCount(2);
         timeline.setDelay(Duration.millis(200));
@@ -240,7 +257,7 @@ public class GameLobbyView extends Pane {
 
     }
 
-    public void show(){
+    public void show() {
         this.gameLobbyStage.show();
     }
 
@@ -248,7 +265,7 @@ public class GameLobbyView extends Pane {
         return gameLobbyStage;
     }
 
-    public MenuBar getMenuBar(){
+    public MenuBar getMenuBar() {
         return menuBar;
     }
 
@@ -310,5 +327,9 @@ public class GameLobbyView extends Pane {
 
     public void removeLoginBtn() {
         leftVBox.getChildren().removeAll(btnLogin, s0);
+    }
+
+    public ArrayList<Node> getGameLobbyControls() {
+        return gameLobbyControls;
     }
 }
