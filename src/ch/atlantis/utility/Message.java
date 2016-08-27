@@ -1,3 +1,5 @@
+package ch.atlantis.utility;
+
 import java.io.Serializable;
 
 /**

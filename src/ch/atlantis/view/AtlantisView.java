@@ -1,3 +1,6 @@
+package ch.atlantis.view;
+
+import ch.atlantis.model.AtlantisModel;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -57,28 +60,28 @@ public class AtlantisView {
         this.createGameView = new CreateGameView(height.getValue(), width.getValue());
         Scene scene = new Scene(createGameView);
         createGameViewStage = new Stage();
-        setupOverlay(createGameViewStage, scene, "CreateGameView");
+        setupOverlay(createGameViewStage, scene, "ch.atlantis.view.CreateGameView");
     }
 
     public void createLoginView() {
         this.loginView = new LoginView(height.getValue(), width.getValue());
         Scene scene = new Scene(loginView);
         loginStage = new Stage();
-        setupOverlay(loginStage, scene, "LoginView");
+        setupOverlay(loginStage, scene, "ch.atlantis.view.LoginView");
     }
 
     public void createNewProfileView() {
         this.newProfileView = new NewProfileView(height.getValue(), width.getValue());
         Scene scene = new Scene(newProfileView);
         profileStage = new Stage();
-        setupOverlay(profileStage, scene, "NewProfileView");
+        setupOverlay(profileStage, scene, "ch.atlantis.view.NewProfileView");
     }
 
     public void createOptionsView() {
         this.optionsView = new OptionsView(height.getValue(), width.getValue());
         Scene scene = new Scene(optionsView);
         optionsStage = new Stage();
-        setupOverlay(optionsStage, scene, "OptionsView");
+        setupOverlay(optionsStage, scene, "ch.atlantis.view.OptionsView");
     }
 
     private void setupOverlay(Stage stage, Scene scene, String cssString) {
@@ -87,7 +90,7 @@ public class AtlantisView {
         scene.getStylesheets().add(css);
         // Make it so that the overlays block the GameLobby
         stage.initModality(Modality.APPLICATION_MODAL);
-        //Match the X and Y to the Game Lobby's X and Y coordinates
+        //Match the X and Y to the ch.atlantis.game.Game Lobby's X and Y coordinates
         stage.setX(gameLobbyView.getGameLobbyStage().getX());
         stage.setY(gameLobbyView.getGameLobbyStage().getY());
         //Set the dimensions of the Stage

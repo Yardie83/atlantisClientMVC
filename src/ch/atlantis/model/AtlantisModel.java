@@ -1,8 +1,12 @@
+package ch.atlantis.model;
+
+import ch.atlantis.utility.Language;
+import ch.atlantis.utility.Message;
+import ch.atlantis.utility.MessageType;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 
 import java.io.File;
@@ -84,27 +88,21 @@ public class AtlantisModel {
                                 case DISCONNECT:
                                     //Add code here
                                     break;
-
                                 case CHAT:
                                     handleChatMessage(message);
                                     break;
-
                                 case CREATEPROFILE:
                                     handleCreateProfile(message);
                                     break;
-
                                 case LOGIN:
                                     handleLogin(message);
                                     break;
-
                                 case NEWGAME:
                                     //Add code here
                                     break;
-
                                 case GAMELIST:
                                     handleGameList(message);
                                     break;
-
                                 case USERNAME:
                                     handleUserName(message);
                                     break;

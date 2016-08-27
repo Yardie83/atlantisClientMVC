@@ -1,3 +1,5 @@
+package ch.atlantis.view;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -107,7 +109,7 @@ public class GameLobbyView extends Pane {
         menuHelp = new Menu("Help");
 
         menuItemExit = new MenuItem("Exit");
-        menuItemGameRules = new MenuItem("Game Rules");
+        menuItemGameRules = new MenuItem("ch.atlantis.game.Game Rules");
 
         menuFile.getItems().add(menuItemExit);
         menuHelp.getItems().add(menuItemGameRules);
@@ -153,7 +155,7 @@ public class GameLobbyView extends Pane {
         lblGameTitles = new Label("Games");
         lblGameTitles.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
         gameListView = new ListView();
-        gameListView.getItems().addAll("Hallo", "Game #2 Hallo", "My Game 12.1.16", "Game #6 Doodle", "Hallo", "Game #5 Lol", "Hallo", "Game #2");
+        gameListView.getItems().addAll("Hallo", "ch.atlantis.game.Game #2 Hallo", "My ch.atlantis.game.Game 12.1.16", "ch.atlantis.game.Game #6 Doodle", "Hallo", "ch.atlantis.game.Game #5 Lol", "Hallo", "ch.atlantis.game.Game #2");
         centerVBox.getChildren().addAll(lblGameTitles, gameListView);
         gameListView = new ListView();
         centerVBox.getChildren().addAll(lblGameTitles, gameListView);
@@ -164,7 +166,7 @@ public class GameLobbyView extends Pane {
 
         leftVBox = new VBox(10);
         // leftVBox.setTranslateX(-150);
-        btnCreateGame = new Button("Create Game");
+        btnCreateGame = new Button("Create ch.atlantis.game.Game");
         btnLogin = new Button("Login");
         btnCreateProfile = new Button("Create Profile");
         btnOptions = new Button("Options");
@@ -172,7 +174,7 @@ public class GameLobbyView extends Pane {
         Separator s1 = new Separator();
         Separator s2 = new Separator();
         Separator s3 = new Separator();
-        btnStartGame = new Button("Start Game");
+        btnStartGame = new Button("Start ch.atlantis.game.Game");
 
 
         leftVBox.getChildren().addAll(btnCreateGame, s0, btnLogin, s1, btnCreateProfile, s2, btnOptions, s3, btnStartGame);
@@ -243,12 +245,12 @@ public class GameLobbyView extends Pane {
         txtArea.setId("txtArea");
         txtField.setId("txtField");
 
-        //  CSS IDs for the CENTER part of the game lobby (small title and Game list)
+        //  CSS IDs for the CENTER part of the game lobby (small title and ch.atlantis.game.Game list)
         centerVBox.setId("centerVBox");
         lblGameTitles.setId("lblGameTitles");
         gameListView.setId("gameListView");
 
-        //  CSS IDs for the LEFT part of the game lobby (Game Lobby buttons)
+        //  CSS IDs for the LEFT part of the game lobby (ch.atlantis.game.Game Lobby buttons)
         leftVBox.setId("leftVBox");
         btnCreateGame.setId("btnCreateGame");
         btnLogin.setId("btnLogin");

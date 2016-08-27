@@ -1,3 +1,5 @@
+package ch.atlantis.utility;
+
 /**
  * Created by Hermann Grieder on 19.07.2016.
  */
