@@ -230,7 +230,7 @@ part of the border pane in the game lobby
     -fx-alignment: top-center;
     -fx-padding: 50px 0px 0px 0px;
     -fx-min-width: 650px;
-    -fx-background-image: url("/res/paper_scroll.png");
+    -fx-background-image: url("/ch/atlantis/res/paper_scroll.png");
     -fx-background-size: contain;
     -fx-background-repeat: no-repeat;
 
@@ -290,7 +290,7 @@ part of the border pane in the game lobby
     -fx-min-height: 40px;
     -fx-max-width: 300px;
     -fx-max-height: 40px;
-    -fx-background-image: url("/res/bg_popup.png");
+    -fx-background-image: url("/ch/atlantis/res/bg_popup.png");
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 4, 3);
     -fx-background-radius: 5;
 }

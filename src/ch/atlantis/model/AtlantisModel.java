@@ -1,3 +1,8 @@
+package ch.atlantis.model;
+
+import ch.atlantis.util.Language;
+import ch.atlantis.util.Message;
+import ch.atlantis.util.MessageType;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -231,7 +236,7 @@ public class AtlantisModel {
     //TODO: Make this better-looking instead of a PDF create a view with the rules
     public void showGameRules() {
         try {
-            File file = new File(getClass().getResource("/res/Atlantis_Spielregel.pdf").getFile());
+            File file = new File(getClass().getResource("/ch/atlantis/res/Atlantis_Spielregel.pdf").getFile());
 
             if (file.exists()) {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());

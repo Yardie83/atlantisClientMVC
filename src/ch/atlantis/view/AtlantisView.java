@@ -1,3 +1,5 @@
+package ch.atlantis.view;
+
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -8,8 +10,6 @@ import javafx.stage.StageStyle;
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  */
 public class AtlantisView {
-
-    private AtlantisModel model;
 
     private IntroView introView;
     private Stage introStage;
@@ -31,9 +31,8 @@ public class AtlantisView {
     private SimpleIntegerProperty height;
     private SimpleIntegerProperty width;
 
-    public AtlantisView(Stage introStage, AtlantisModel model) {
+    public AtlantisView(Stage introStage) {
 
-        this.model = model;
         this.introStage = introStage;
         width = new SimpleIntegerProperty(1300);
         height = new SimpleIntegerProperty(800);
@@ -83,11 +82,11 @@ public class AtlantisView {
 
     private void setupOverlay(Stage stage, Scene scene, String cssString) {
         //Get the css files and add them to the scene
-        String css = this.getClass().getResource("/res/css_" + cssString + ".css").toExternalForm();
+        String css = this.getClass().getResource("../res/css_" + cssString + ".css").toExternalForm();
         scene.getStylesheets().add(css);
         // Make it so that the overlays block the GameLobby
         stage.initModality(Modality.APPLICATION_MODAL);
-        //Match the X and Y to the Game Lobby's X and Y coordinates
+        //Match the X and Y to the ch.atlantis.game.Game Lobby's X and Y coordinates
         stage.setX(gameLobbyView.getGameLobbyStage().getX());
         stage.setY(gameLobbyView.getGameLobbyStage().getY());
         //Set the dimensions of the Stage

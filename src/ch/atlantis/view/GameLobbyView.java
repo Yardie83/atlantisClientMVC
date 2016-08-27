@@ -1,3 +1,5 @@
+package ch.atlantis.view;
+
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -57,7 +59,7 @@ public class GameLobbyView extends Pane {
 
     public GameLobbyView(int height, int width) {
 
-        String css = this.getClass().getResource("/res/css_GameLobbyView.css").toExternalForm();
+        String css = this.getClass().getResource("../res/css_GameLobbyView.css").toExternalForm();
         Scene gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
@@ -66,7 +68,7 @@ public class GameLobbyView extends Pane {
         gameLobbyStage.setScene(gameLobbyScene);
 
 //        //Set Mouse Cursor Image
-//        Image image = new Image("/res/Fishi.png");
+//        Image image = new Image("/ch.atlantis.res/Fishi.png");
 //        gameLobbyScene.setCursor(new ImageCursor(image));
 
         root = new BorderPane();
@@ -240,12 +242,12 @@ public class GameLobbyView extends Pane {
         txtArea.setId("txtArea");
         txtField.setId("txtField");
 
-        //  CSS IDs for the CENTER part of the game lobby (small title and Game list)
+        //  CSS IDs for the CENTER part of the game lobby (small title and ch.atlantis.game.Game list)
         centerVBox.setId("centerVBox");
         lblGameTitles.setId("lblGameTitles");
         gameListView.setId("gameListView");
 
-        //  CSS IDs for the LEFT part of the game lobby (Game Lobby buttons)
+        //  CSS IDs for the LEFT part of the game lobby (ch.atlantis.game.Game Lobby buttons)
         leftVBox.setId("leftVBox");
         btnCreateGame.setId("btnCreateGame");
         btnLogin.setId("btnLogin");

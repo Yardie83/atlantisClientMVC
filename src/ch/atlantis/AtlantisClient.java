@@ -1,3 +1,8 @@
+package ch.atlantis;
+
+import ch.atlantis.controller.AtlantisController;
+import ch.atlantis.model.AtlantisModel;
+import ch.atlantis.view.AtlantisView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -17,7 +22,7 @@ public class AtlantisClient extends Application {
     @Override
     public void start(Stage introStage) throws Exception {
         model = new AtlantisModel();
-        view = new AtlantisView(introStage, model);
+        view = new AtlantisView(introStage);
         new AtlantisController(model, view);
 
         if (!AtlantisController.debugMode) {

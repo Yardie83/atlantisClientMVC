@@ -1,3 +1,9 @@
+package ch.atlantis.controller;
+
+import ch.atlantis.model.AtlantisModel;
+import ch.atlantis.view.AtlantisView;
+import ch.atlantis.util.Message;
+import ch.atlantis.util.MessageType;
 import javafx.animation.FadeTransition;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
@@ -116,7 +122,7 @@ public class AtlantisController {
         });
 
         /*
-         *Create Game, Login, Create Profile and Options Controls
+         *Create ch.atlantis.game.Game, Login, Create Profile and Options Controls
          */
         view.getGameLobbyView().getBtnCreateGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -182,7 +188,7 @@ public class AtlantisController {
             }
         });
 
-        /* Incoming Message is saved in the ChatString. Added this class "AtlantisController" as the changeListener of the ChatString
+        /* Incoming ch.atlantis.util.Message is saved in the ChatString. Added this class "ch.atlantis.AtlantisController" as the changeListener of the ChatString
          * in order to update the txtArea with the incoming chat message.
          */
         //TODO: Ask Bradley if there is a better way instead of a ChangeListener. Because when the user enters the same message twice it does not register as a changed value
@@ -196,7 +202,7 @@ public class AtlantisController {
         });
 
         /*
-         * STATUS and INFORMATION Bar EventHandlers (Bottom of the Game Lobby)
+         * STATUS and INFORMATION Bar EventHandlers (Bottom of the ch.atlantis.game.Game Lobby)
          */
         model.getConnectionStatus().addListener(new ChangeListener<String>() {
             @Override
@@ -300,7 +306,7 @@ public class AtlantisController {
 
     private void handleCreateGameControls() {
 
-        // Handle "Create" Btn Action Event in the Create Game View
+        // Handle "Create" Btn Action Event in the Create ch.atlantis.game.Game View
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -308,7 +314,7 @@ public class AtlantisController {
             }
         });
 
-        // Handle "Cancel" Btn Action Event in the Create Game View
+        // Handle "Cancel" Btn Action Event in the Create ch.atlantis.game.Game View
         view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
