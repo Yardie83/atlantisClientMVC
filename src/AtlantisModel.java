@@ -1,8 +1,3 @@
-package ch.atlantis.model;
-
-import ch.atlantis.utility.Language;
-import ch.atlantis.utility.Message;
-import ch.atlantis.utility.MessageType;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;

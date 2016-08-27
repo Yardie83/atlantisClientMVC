@@ -1,5 +1,3 @@
-package ch.atlantis.view;
-
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -88,7 +86,7 @@ public class OptionsView extends Pane {
         radioBtnSoundOff = new RadioButton("Off");
         radioBtnGroupSound.getToggles().addAll(radioBtnSoundOn, radioBtnSoundOff);
 
-        lblLanguage = new Label("ch.atlantis.utility.Language");
+        lblLanguage = new Label("Language");
         ToggleGroup radioBtnGroupLanguage = new ToggleGroup();
         radioBtnEnglish = new RadioButton("English");
         radioBtnEnglish.setSelected(true);

@@ -1,7 +1,3 @@
-package ch.atlantis.game;
-
-import ch.atlantis.model.AtlantisModel;
-
 import java.util.ArrayList;
 
 /**

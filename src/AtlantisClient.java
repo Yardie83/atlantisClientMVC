@@ -1,8 +1,3 @@
-package ch.atlantis;
-
-import ch.atlantis.controller.AtlantisController;
-import ch.atlantis.model.AtlantisModel;
-import ch.atlantis.view.AtlantisView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

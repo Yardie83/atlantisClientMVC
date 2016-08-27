@@ -1,5 +1,3 @@
-package ch.atlantis.view;
-
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Scene;

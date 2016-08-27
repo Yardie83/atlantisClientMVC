@@ -1,5 +1,3 @@
-package ch.atlantis.game;
-
 import javafx.scene.layout.Pane;
 
 /**

@@ -1,5 +1,3 @@
-package ch.atlantis.view;
-
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
@@ -60,7 +58,7 @@ public class CreateGameView extends Pane {
 
         centerPane = new GridPane();
 
-        centerPane.add(lblGameName = new Label("ch.atlantis.game.Game name: "), 0, 0);
+        centerPane.add(lblGameName = new Label("Game name: "), 0, 0);
         centerPane.add(txtGameName = new TextField(), 1, 0);
 
         centerPane.add(lblNoOfPlayers = new Label("Number of Players: "), 0, 1);
@@ -103,14 +101,14 @@ public class CreateGameView extends Pane {
         lblError.getStyleClass().add("labelsCenter");
         lblError.setVisible(false);
 
-        /* Common Style Class for the buttons in the Create ch.atlantis.game.Game View*/
+        /* Common Style Class for the buttons in the Create Game View*/
         btnCancel.getStyleClass().add("buttonsBottom");
         btnCreateNewGame.getStyleClass().add("buttonsBottom");
 
-        /* Common Style Class for the textField in the Create ch.atlantis.game.Game View*/
+        /* Common Style Class for the textField in the Create Game View*/
         txtGameName.getStyleClass().add("textFieldsCenter");
 
-        /* Common Style Class for the RadioButtons in the Create ch.atlantis.game.Game View*/
+        /* Common Style Class for the RadioButtons in the Create Game View*/
         radioButtonTwoPlayers.getStyleClass().add("radioButtons");
         radioButtonThreePlayers.getStyleClass().add("radioButtons");
         radioButtonFourPlayers.getStyleClass().add("radioButtons");
@@ -118,7 +116,7 @@ public class CreateGameView extends Pane {
         /*Style ID for the root BorderPane */
         root.setId("root");
 
-        /*Style IDs for the controls in the Create ch.atlantis.game.Game View*/
+        /*Style IDs for the controls in the Create Game View*/
 
         //TOP element
         txtGameName.setId("txtGameName");

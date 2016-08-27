@@ -1,5 +1,3 @@
-package ch.atlantis.utility;
-
 import java.io.Serializable;
 import java.util.Hashtable;
 
