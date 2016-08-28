@@ -60,7 +60,7 @@ public class CreateGameView extends Pane {
 
         centerPane = new GridPane();
 
-        centerPane.add(lblGameName = new Label("ch.atlantis.game.Game name: "), 0, 0);
+        centerPane.add(lblGameName = new Label("Game name: "), 0, 0);
         centerPane.add(txtGameName = new TextField(), 1, 0);
 
         centerPane.add(lblNoOfPlayers = new Label("Number of Players: "), 0, 1);

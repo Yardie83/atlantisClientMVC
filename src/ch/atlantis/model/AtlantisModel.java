@@ -8,7 +8,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -144,8 +143,7 @@ public class AtlantisModel {
     }
 
     private void handleUserName(Message message) {
-        String guestName = "Guest" + message.getMessageObject().toString();
-        userName.setValue(guestName);
+        userName.setValue(message.getMessageObject().toString());
     }
 
     private void handleCreateProfile(Message message) {

@@ -1,0 +1,273 @@
+package ch.atlantis.controller;
+
+import ch.atlantis.model.AtlantisModel;
+import ch.atlantis.util.Message;
+import ch.atlantis.util.MessageType;
+import ch.atlantis.view.AtlantisView;
+import javafx.animation.FadeTransition;
+import javafx.animation.ParallelTransition;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.stage.WindowEvent;
+import javafx.util.Duration;
+
+import java.util.Collections;
+import java.util.Random;
+
+/**
+ * Created by Hermann Grieder on 28.08.2016.
+ */
+public class GameLobbyController {
+
+    final private AtlantisModel model;
+    final private AtlantisView view;
+
+    public GameLobbyController(AtlantisModel model, AtlantisView view) {
+        this.model = model;
+        this.view = view;
+        handleGameLobbyControls();
+    }
+
+    private void handleGameLobbyControls() {
+
+        view.getGameLobbyView().getGameLobbyStage().setOnShowing(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                model.connectToServer();
+            }
+        });
+
+        /*
+         *Menu Bar Controls
+         */
+        view.getGameLobbyView().getMenuItemExit().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                closeApplication();
+            }
+        });
+
+        //TODO: Does not work on top-level Menus. Need to add a submenu.
+        view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createOptionsView();
+                new OptionsController(model, view);
+            }
+        });
+
+        view.getGameLobbyView().getMenuItemGameRules().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                model.showGameRules();
+            }
+        });
+
+        /*
+         *Create ch.atlantis.game.Game, Login, Create Profile and Options Controls
+         */
+        view.getGameLobbyView().getBtnCreateGame().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createCreateGameView();
+                new CreateGameController(model, view);
+            }
+        });
+
+        view.getGameLobbyView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createLoginView();
+                new LoginController(model, view);
+            }
+        });
+
+        view.getGameLobbyView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createNewProfileView();
+                new NewProfileController(model, view);
+            }
+        });
+
+        view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createOptionsView();
+                new OptionsController(model, view);
+            }
+        });
+
+        view.getGameLobbyView().getGameListView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+            }
+        });
+
+
+        /*
+         * CHAT Application EventHandlers
+         */
+
+        /*
+         * When the user presses enter, the message is sent to the server
+         * If the user writes "Quit" the user is being disconnected from the chat
+         */
+        view.getGameLobbyView().getTxtField().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ENTER) {
+                    model.setAutoConnect(true);
+                    TextField txtField = view.getGameLobbyView().getTxtField();
+                    if (txtField.getText().equalsIgnoreCase("QUIT")) {
+                        model.closeConnection();
+                    } else {
+                        String username = model.userNameProperty().getValue();
+                        String chatMessage = txtField.getText();
+                        model.sendMessage(new Message(MessageType.CHAT, username + ": " + chatMessage));
+                    }
+                    txtField.clear();
+                }
+            }
+        });
+
+        /* Incoming ch.atlantis.util.Message is saved in the ChatString. Added this class "ch.atlantis.AtlantisController" as the changeListener of the ChatString
+         * in order to update the txtArea with the incoming chat message.
+         */
+        //TODO: Ask Bradley if there is a better way instead of a ChangeListener. Because when the user enters the same message twice it does not register as a changed value
+        model.getChatString().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if (!(newValue.equals(""))) {
+                    view.getGameLobbyView().getTxtArea().appendText(newValue + "\n");
+                }
+            }
+        });
+
+        /*
+         * STATUS and INFORMATION Bar EventHandlers (Bottom of the ch.atlantis.game.Game Lobby)
+         */
+        model.getConnectionStatus().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.getGameLobbyView().getLblStatus().setText("Status: " + newValue);
+                    }
+                });
+
+            }
+        });
+
+        /*
+         * UserName to be displayed. If the user is not logged in, Guest + number will be displayed as the name
+         */
+        model.userNameProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.getGameLobbyView().getLblWindowTitle().setText("Hi " + newValue + ", Welcome to Atlantis");
+                        view.getGameLobbyView().getLblInfo().setText("Logged in as " + newValue);
+                    }
+                });
+
+            }
+        });
+
+        //Update the GameList in the GameLobby with the List received from the Server
+        model.getGameList().addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> c) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (model.getGameList().size() != 0) {
+                            view.getGameLobbyView().getGameListView().getItems().clear();
+                            Collections.reverse(model.getGameList());
+                            for (String s : model.getGameList()) {
+                                String[] gameInfo = s.split(",");
+                                if (!gameInfo[0].equalsIgnoreCase("")) {
+                                    String gameName = gameInfo[0];
+                                    Integer nrPlayers = Integer.parseInt(gameInfo[1]);
+                                    view.getGameLobbyView().getGameListView().getItems().add(gameName + ": " + nrPlayers);
+                                }
+                            }
+                            model.getGameList().clear();
+                            view.getGameLobbyView().createPopUp("Game Created!", 200);
+                        }
+                    }
+                });
+            }
+        });
+
+        // BUBBLES!!
+        view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        Random r = new Random();
+
+                        for (int i = 0; i < 12; i++) {
+                            Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
+                            c.setStyle("-fx-border-color: WHITE;" +
+                                    "-fx-border-width: 1px;" +
+                                    "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
+                            c.setCenterX(event.getX() + r.nextInt(10) - 5);
+                            c.setCenterY(event.getY() + r.nextInt(10));
+
+                            view.getGameLobbyView().getChildren().add(c);
+
+                            TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1400), c);
+                            translateTransition.setFromX(0);
+                            translateTransition.setToX(r.nextInt(40) - 20);
+                            translateTransition.setFromY(0);
+                            translateTransition.setToY(-r.nextInt(70) - 50);
+                            translateTransition.setAutoReverse(false);
+
+                            FadeTransition ft = new FadeTransition(Duration.millis(r.nextInt(600) + 1300), c);
+                            ft.setFromValue(1);
+                            ft.setToValue(0);
+                            ft.setAutoReverse(false);
+
+                            ParallelTransition parallelTransition = new ParallelTransition();
+                            parallelTransition.getChildren().addAll(ft, translateTransition);
+                            parallelTransition.setCycleCount(1);
+                            parallelTransition.play();
+                        }
+                    }
+                });
+            }
+        });
+
+        // When the X Button is clicked, close the Application
+        view.getGameLobbyView().getGameLobbyStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                closeApplication();
+            }
+        });
+    }
+
+    private void closeApplication() {
+        model.closeConnection();
+        System.exit(0);
+    }
+}
