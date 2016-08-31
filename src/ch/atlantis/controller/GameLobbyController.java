@@ -1,5 +1,7 @@
 package ch.atlantis.controller;
 
+import ch.atlantis.game.Game;
+import ch.atlantis.game.GameController;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.Message;
 import ch.atlantis.util.MessageType;
@@ -48,6 +50,17 @@ public class GameLobbyController {
             }
         });
 
+        view.getGameLobbyView().getGameLobbyStage().fullScreenProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                view.setFullscreen(false);
+                view.getGameLobbyView().getGameLobbyStage().setHeight(800);
+                view.getGameLobbyView().getGameLobbyStage().setWidth(1300);
+                view.bindSizeToStage();
+                view.getGameLobbyView().bindSizeToStage();
+            }
+        });
+
         /*
          *Menu Bar Controls
          */
@@ -75,8 +88,10 @@ public class GameLobbyController {
         });
 
         /*
-         *Create ch.atlantis.game.Game, Login, Create Profile and Options Controls
+         * Create Game, Login, Create Profile and Options Controls
          */
+
+        // CREATE GAME Overlay
         view.getGameLobbyView().getBtnCreateGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -84,7 +99,7 @@ public class GameLobbyController {
                 new CreateGameController(model, view);
             }
         });
-
+        // LOGIN Overlay
         view.getGameLobbyView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -92,7 +107,7 @@ public class GameLobbyController {
                 new LoginController(model, view);
             }
         });
-
+        // CREATE PROFILE Overlay
         view.getGameLobbyView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -100,7 +115,7 @@ public class GameLobbyController {
                 new NewProfileController(model, view);
             }
         });
-
+        // OPTIONS Overlay
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -113,6 +128,15 @@ public class GameLobbyController {
             @Override
             public void handle(MouseEvent event) {
 
+            }
+        });
+
+        //  GAME Overlay
+        view.getGameLobbyView().getBtnStartGame().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                view.createGameView();
+                new GameController(model, view);
             }
         });
 
@@ -143,7 +167,7 @@ public class GameLobbyController {
             }
         });
 
-        /* Incoming ch.atlantis.util.Message is saved in the ChatString. Added this class "ch.atlantis.AtlantisController" as the changeListener of the ChatString
+        /* Incoming Message is saved in the ChatString. The changeListener listens to the ChatString
          * in order to update the txtArea with the incoming chat message.
          */
         //TODO: Ask Bradley if there is a better way instead of a ChangeListener. Because when the user enters the same message twice it does not register as a changed value
@@ -157,7 +181,7 @@ public class GameLobbyController {
         });
 
         /*
-         * STATUS and INFORMATION Bar EventHandlers (Bottom of the ch.atlantis.game.Game Lobby)
+         * STATUS and INFORMATION Bar EventHandlers (Bottom of the Game Lobby)
          */
         model.getConnectionStatus().addListener(new ChangeListener<String>() {
             @Override

@@ -8,5 +8,10 @@ import javafx.scene.layout.Pane;
 public class GameBoard extends Pane {
 
     public GameBoard() {
+
+    }
+
+    public GameBoard(int heightValue, int widthValue) {
+
     }
 }

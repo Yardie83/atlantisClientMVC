@@ -15,9 +15,6 @@ public class Game {
     public Game(AtlantisModel model, String userName) {
         this.userName = userName;
         players = new ArrayList<>();
-
-        new GameBoard();
-
     }
 
 }

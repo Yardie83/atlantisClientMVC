@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import org.scenicview.ScenicView;
 
 import java.util.Collections;
 import java.util.Random;
@@ -38,7 +39,8 @@ public class AtlantisController {
     public AtlantisController(AtlantisModel model, AtlantisView view) {
 
         if (debugMode) {
-            view.createGameLobbyView();
+
+            view.createGameLobbyView(false);
             System.out.println("DebugMode is on.\nIntro was skipped");
             new GameLobbyController(model, view);
             view.getGameLobbyView().show();

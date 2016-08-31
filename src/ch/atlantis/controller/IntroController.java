@@ -39,7 +39,7 @@ public class IntroController {
                 view.getIntroView().getMediaPlayer().stop();
                 view.getIntroView().getMediaPlayer().dispose();
                 view.getIntroStage().close();
-                view.createGameLobbyView();
+                view.createGameLobbyView(true);
                 new GameLobbyController(model, view);
 
                 //Load and show the languages

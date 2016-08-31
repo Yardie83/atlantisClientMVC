@@ -4,7 +4,7 @@ a TOP, BOTTOM, RIGHT, CENTER and LEFT part
 
 .root {
     -fx-background-color: #61B0FD;
-    -fx-background-image: url("background.jpg");
+    -fx-background-image: url("../background.jpg");
     -fx-background-size: stretch;
     -fx-font-family: "Arial Rounded MT Bold";
     -fx-font-smoothing-type: lcd;
@@ -229,10 +229,13 @@ part of the border pane in the game lobby
 #centerVBox {
     -fx-alignment: top-center;
     -fx-padding: 50px 0px 0px 0px;
-    -fx-min-width: 650px;
+    -fx-pref-width: 650px;
     -fx-background-image: url("/ch/atlantis/res/paper_scroll.png");
     -fx-background-size: contain;
+    -fx-background-position: center;
     -fx-background-repeat: no-repeat;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
 
 }
 

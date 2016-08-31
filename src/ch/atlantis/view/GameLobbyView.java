@@ -17,13 +17,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 /**
- * Created by LorisGrether and Hermann Grieder on 17.07.2016.
+ * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  */
 public class GameLobbyView extends Pane {
 
@@ -39,7 +40,7 @@ public class GameLobbyView extends Pane {
     private Button btnCreateProfile;
     private Button btnOptions;
     private Label lblWindowTitle;
-    private final BorderPane root;
+    private BorderPane root;
     private VBox vBoxTop;
     private MenuBar menuBar;
     private Menu menuHelp;
@@ -57,17 +58,24 @@ public class GameLobbyView extends Pane {
     private ArrayList<Node> gameLobbyControls = new ArrayList<>();
     private Button btnStartGame;
 
-    public GameLobbyView(int height, int width) {
+    public GameLobbyView(int height, int width, Boolean fullscreen) {
 
-        String css = this.getClass().getResource("../res/css_GameLobbyView.css").toExternalForm();
+        String css = this.getClass().getResource("../res/css/css_GameLobbyView.css").toExternalForm();
         Scene gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
-        gameLobbyStage.setHeight(height);
-        gameLobbyStage.setWidth(width);
+
+        if (fullscreen) {
+            gameLobbyStage.setFullScreen(true);
+            gameLobbyStage.setFullScreenExitHint("");
+        } else {
+            gameLobbyStage.setHeight(height);
+            gameLobbyStage.setWidth(width);
+        }
         gameLobbyStage.setScene(gameLobbyScene);
 
-//        //Set Mouse Cursor Image
+
+//        // Set Mouse Cursor Image
 //        Image image = new Image("/ch.atlantis.res/Fishi.png");
 //        gameLobbyScene.setCursor(new ImageCursor(image));
 
@@ -79,13 +87,25 @@ public class GameLobbyView extends Pane {
         root.setRight(createRight());
         root.setBottom(createBottom());
 
-        root.minHeightProperty().bind(gameLobbyStage.heightProperty().subtract(40));
-        root.minWidthProperty().bind(gameLobbyStage.widthProperty().subtract(10));
+        if (fullscreen) {
+            root.setMinHeight(Screen.getPrimary().getBounds().getHeight());
+            root.setMinWidth(Screen.getPrimary().getBounds().getWidth());
+        } else {
+            bindSizeToStage();
+        }
 
         defineStyleClass();
 
         this.getChildren().addAll(root);
         this.getControls(root);
+    }
+
+    public void bindSizeToStage() {
+        /* Workaround: There seems to be a padding or margin of sorts on the stage,
+         * that's why we subtract a couple pixels of the width and the height.
+         */
+        root.minHeightProperty().bind(gameLobbyStage.heightProperty().subtract(40));
+        root.minWidthProperty().bind(gameLobbyStage.widthProperty().subtract(10));
     }
 
     private void getControls(Pane pane) {
@@ -208,7 +228,8 @@ public class GameLobbyView extends Pane {
     private void defineStyleClass() {
 
         /*
-         *CSS Classes for the buttons in the LEFT part of the Border Pane
+         * CSS Classes for the buttons in the
+         * LEFT part of the Border Pane.
          */
 
         btnCreateGame.getStyleClass().add("leftButtons");
@@ -217,8 +238,8 @@ public class GameLobbyView extends Pane {
         btnOptions.getStyleClass().add("leftButtons");
 
         /*
-         *CSS ID for the ROOT border pane of the game lobby.
-         *Contains all the other elements of the game lobby.
+         * CSS ID for the ROOT border pane of the game lobby.
+         * Contains all the other elements of the game lobby.
          */
         root.setId("root");
 
@@ -300,7 +321,7 @@ public class GameLobbyView extends Pane {
         return btnOptions;
     }
 
-    public Button getBtnStartGame(){
+    public Button getBtnStartGame() {
         return btnStartGame;
     }
 
@@ -330,5 +351,9 @@ public class GameLobbyView extends Pane {
 
     public ArrayList<Node> getGameLobbyControls() {
         return gameLobbyControls;
+    }
+
+    public BorderPane getRoot() {
+        return root;
     }
 }

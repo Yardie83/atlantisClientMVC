@@ -28,7 +28,7 @@ public class IntroView extends Pane {
         introStage.setFullScreenExitHint("");
 
         try {
-            Media media = new Media(Paths.get("src/ch.atlantis.res/atlantis.mp4").toUri().toString());
+            Media media = new Media(Paths.get("src/ch/atlantis/res/atlantis.mp4").toUri().toString());
             mp = new MediaPlayer(media);
             mediaView = new MediaView(mp);
             DoubleProperty width = mediaView.fitWidthProperty();

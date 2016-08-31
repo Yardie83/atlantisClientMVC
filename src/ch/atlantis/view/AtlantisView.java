@@ -1,10 +1,13 @@
 package ch.atlantis.view;
 
+import ch.atlantis.game.GameBoard;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.scenicview.ScenicView;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -28,8 +31,14 @@ public class AtlantisView {
     private OptionsView optionsView;
     private Stage optionsStage;
 
+    private GameBoard gameBoard;
+    private Stage gameStage;
+
     private SimpleIntegerProperty height;
     private SimpleIntegerProperty width;
+
+    private boolean fullscreen;
+
 
     public AtlantisView(Stage introStage) {
 
@@ -43,13 +52,31 @@ public class AtlantisView {
         this.introView = new IntroView(introStage);
     }
 
-    public void createGameLobbyView() {
-        this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue());
+    public void createGameLobbyView(Boolean fullscreen) {
 
-        //Bind the width and the height to the GameLobby Stage to ensure that
-        // the overlays have the right dimensions when they get invoked
-        width.bind(gameLobbyView.getGameLobbyStage().widthProperty());
-        height.bind(gameLobbyView.getGameLobbyStage().heightProperty());
+        this.fullscreen = fullscreen;
+
+        if (fullscreen) {
+            width.setValue(Screen.getPrimary().getBounds().getWidth());
+            height.setValue(Screen.getPrimary().getBounds().getHeight());
+            this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), true);
+            //ScenicView.show(gameLobbyView);
+        } else {
+            this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), false);
+            ScenicView.show(gameLobbyView);
+            bindSizeToStage();
+        }
+    }
+
+    public void bindSizeToStage() {
+        /*Bind the width and the height to the GameLobby Stage to ensure that
+         * the overlays have the same dimensions as the game lobby stage
+         *
+         * Workaround: There seems to be a padding or margin of sorts on the stage,
+         * that's why we subtract a couple pixels of the width and the height.
+         */
+        width.bind(gameLobbyView.getGameLobbyStage().widthProperty().subtract(8));
+        height.bind(gameLobbyView.getGameLobbyStage().heightProperty().subtract(8));
     }
 
     public void createCreateGameView() {
@@ -80,13 +107,20 @@ public class AtlantisView {
         setupOverlay(optionsStage, scene, "OptionsView");
     }
 
+    public void createGameView() {
+        this.gameBoard = new GameBoard(height.getValue(), width.getValue());
+        Scene scene = new Scene(gameBoard);
+        gameStage = new Stage();
+        setupOverlay(gameStage, scene, "Game");
+    }
+
     private void setupOverlay(Stage stage, Scene scene, String cssString) {
         //Get the css files and add them to the scene
-        String css = this.getClass().getResource("../res/css_" + cssString + ".css").toExternalForm();
+        String css = this.getClass().getResource("../res/css/css_" + cssString + ".css").toExternalForm();
         scene.getStylesheets().add(css);
         // Make it so that the overlays block the GameLobby
         stage.initModality(Modality.APPLICATION_MODAL);
-        //Match the X and Y to the ch.atlantis.game.Game Lobby's X and Y coordinates
+        //Match the X and Y to the Game Lobby's X and Y coordinates
         stage.setX(gameLobbyView.getGameLobbyStage().getX());
         stage.setY(gameLobbyView.getGameLobbyStage().getY());
         //Set the dimensions of the Stage
@@ -146,6 +180,38 @@ public class AtlantisView {
 
     public Stage getOptionsStage() {
         return optionsStage;
+    }
+
+    public int getHeight() {
+        return height.get();
+    }
+
+    public SimpleIntegerProperty heightProperty() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height.set(height);
+    }
+
+    public int getWidth() {
+        return width.get();
+    }
+
+    public SimpleIntegerProperty widthProperty() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width.set(width);
+    }
+
+    public boolean isFullscreen() {
+        return fullscreen;
+    }
+
+    public void setFullscreen(boolean fullscreen) {
+        this.fullscreen = fullscreen;
     }
 
 
