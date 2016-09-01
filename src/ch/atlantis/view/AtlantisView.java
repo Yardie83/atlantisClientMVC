@@ -7,7 +7,6 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import org.scenicview.ScenicView;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -43,7 +42,7 @@ public class AtlantisView {
     public AtlantisView(Stage introStage) {
 
         this.introStage = introStage;
-        width = new SimpleIntegerProperty(1300);
+        width = new SimpleIntegerProperty(1280);
         height = new SimpleIntegerProperty(800);
     }
 
@@ -63,7 +62,6 @@ public class AtlantisView {
             //ScenicView.show(gameLobbyView);
         } else {
             this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), false);
-            ScenicView.show(gameLobbyView);
             bindSizeToStage();
         }
     }
