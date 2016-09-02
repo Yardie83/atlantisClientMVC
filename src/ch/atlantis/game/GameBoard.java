@@ -16,7 +16,7 @@ import java.util.Random;
 public class GameBoard extends Pane {
 
     private int columnCount = 15;
-    private int rowCount = 10;
+    private int rowCount = 11;
     private Tile[][] tiles;
 
     public GameBoard(int heightValue, int widthValue) {
@@ -27,14 +27,14 @@ public class GameBoard extends Pane {
         int[][] tileTypeCode = readLayout();
 
         Tiletype tiletype;
-        Color c = Color.ANTIQUEWHITE;
+        Color c = Color.WHITE;
 
         for (int x = 0; x < columnCount; x++) {
             for (int y = 0; y < rowCount; y++) {
                 switch (tileTypeCode[x][y]) {
                     case 0:
                         tiletype = Tiletype.EMPTY;
-                        c = Color.ANTIQUEWHITE;
+                        c = Color.WHITE;
                         break;
                     case 1:
                         tiletype = Tiletype.PATH;
@@ -54,6 +54,7 @@ public class GameBoard extends Pane {
                         break;
                     case 5:
                         tiletype = Tiletype.CARD;
+                        c = Color.DEEPSKYBLUE;
                         break;
                     case 6:
                         tiletype = Tiletype.BRIDGE;
@@ -61,7 +62,7 @@ public class GameBoard extends Pane {
                         break;
                     default:
                         tiletype = Tiletype.EMPTY;
-                        c = Color.ANTIQUEWHITE;
+                        c = Color.BLACK;
                         break;
                 }
 
@@ -69,10 +70,6 @@ public class GameBoard extends Pane {
                 Rectangle rect = new Rectangle();
                 rect.setWidth(side);
                 rect.setHeight(side);
-
-
-
-
                 rect.setFill(c);
                 rect.setX(x * side);
                 rect.setY(y * side);
@@ -82,18 +79,23 @@ public class GameBoard extends Pane {
     }
 
     private int[][] readLayout() {
+
+        //rowCount = 10
+        //columnCount = 15
         int[][] tileTypeCodes = new int[columnCount][rowCount];
         try {
             BufferedReader bf = new BufferedReader(new FileReader("src/ch/atlantis/res/GameBoardLayout.txt"));
 
             String currentLine;
+            int y = -1;
+
             try {
                 while ((currentLine = bf.readLine()) != null) {
+                    y++;
+                    System.out.println(currentLine);
                     String[] values = currentLine.trim().split(" ");
-                    for (int x = 0; x < rowCount; x++) {
-                        for (int y = 0; y < values.length; y++) {
-                            tileTypeCodes[x][y] = Integer.parseInt(values[y]);
-                        }
+                    for (int x = 0; x < values.length; x++) {
+                        tileTypeCodes[x][y] = Integer.parseInt(values[x]);
                     }
                 }
             } catch (IOException e) {
