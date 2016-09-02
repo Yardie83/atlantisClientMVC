@@ -4,6 +4,10 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -11,50 +15,93 @@ import java.util.Random;
  */
 public class GameBoard extends Pane {
 
-    private int gridCount = 12;
+    private int columnCount = 15;
+    private int rowCount = 10;
     private Tile[][] tiles;
 
     public GameBoard(int heightValue, int widthValue) {
 
-        int side = widthValue / (widthValue / (heightValue / gridCount));
-        int columnCount = widthValue / side;
+        int side = widthValue / (widthValue / (heightValue / rowCount));
         Random rand = new Random();
-        tiles = new Tile[columnCount][gridCount];
+        tiles = new Tile[columnCount][rowCount];
+        int[][] tileTypeCode = readLayout();
+
+        Tiletype tiletype;
+        Color c = Color.ANTIQUEWHITE;
 
         for (int x = 0; x < columnCount; x++) {
-            for (int y = 0; y < gridCount; y++) {
-                tiles[x][y] = new Tile(x * side, y * side, side, Tiletype.EMPTY);
-                System.out.println("X: " + x + " " + "Y: " + y);
+            for (int y = 0; y < rowCount; y++) {
+                switch (tileTypeCode[x][y]) {
+                    case 0:
+                        tiletype = Tiletype.EMPTY;
+                        c = Color.ANTIQUEWHITE;
+                        break;
+                    case 1:
+                        tiletype = Tiletype.PATH;
+                        c = Color.BROWN;
+                        break;
+                    case 2:
+                        tiletype = Tiletype.WATER;
+                        c = Color.DARKBLUE;
+                        break;
+                    case 3:
+                        tiletype = Tiletype.START;
+                        c = Color.GRAY;
+                        break;
+                    case 4:
+                        tiletype = Tiletype.END;
+                        c = Color.GRAY;
+                        break;
+                    case 5:
+                        tiletype = Tiletype.CARD;
+                        break;
+                    case 6:
+                        tiletype = Tiletype.BRIDGE;
+                        c = Color.BISQUE;
+                        break;
+                    default:
+                        tiletype = Tiletype.EMPTY;
+                        c = Color.ANTIQUEWHITE;
+                        break;
+                }
+
+                tiles[x][y] = new Tile(x * side, y * side, side, tiletype);
                 Rectangle rect = new Rectangle();
                 rect.setWidth(side);
                 rect.setHeight(side);
-                rect.setFill(Color.rgb((int) (rand.nextFloat() * 255), (int) (rand.nextFloat() * 255), (int) (rand.nextFloat() * 255)));
+
+
+
+
+                rect.setFill(c);
                 rect.setX(x * side);
                 rect.setY(y * side);
                 this.getChildren().add(rect);
             }
         }
+    }
 
-//        for (int i = 0; i < gridCount; i++) {
-//            Line horizontalLine = new Line();
-//            horizontalLine.setStartX(0);
-//            horizontalLine.setEndX(widthValue);
-//            horizontalLine.setStartY(i * side);
-//            horizontalLine.setEndY(i * side);
-//            horizontalLine.setStroke(Color.BLACK);
-//
-//            this.getChildren().addAll(horizontalLine);
-//        }
-//
-//        for (int i = 0; i * side < widthValue; i++) {
-//            Line verticalLine = new Line();
-//            verticalLine.setStartY(0);
-//            verticalLine.setEndY(heightValue);
-//            verticalLine.setStartX(i * side);
-//            verticalLine.setEndX(i * side);
-//            verticalLine.setStroke(Color.BLACK);
-//
-//            this.getChildren().addAll(verticalLine);
-//        }
+    private int[][] readLayout() {
+        int[][] tileTypeCodes = new int[columnCount][rowCount];
+        try {
+            BufferedReader bf = new BufferedReader(new FileReader("src/ch/atlantis/res/GameBoardLayout.txt"));
+
+            String currentLine;
+            try {
+                while ((currentLine = bf.readLine()) != null) {
+                    String[] values = currentLine.trim().split(" ");
+                    for (int x = 0; x < rowCount; x++) {
+                        for (int y = 0; y < values.length; y++) {
+                            tileTypeCodes[x][y] = Integer.parseInt(values[y]);
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                System.out.println("Empty Line!");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File \"GameBoardLayout.txt\" not found!");
+        }
+        return tileTypeCodes;
     }
 }

@@ -5,7 +5,8 @@ package ch.atlantis.game;
  */
 
 enum Tiletype {
-    EMPTY, WATER, PATH, START, END
+    //EMPTY = 0, PATH = 1, WATER = 2, START = 3, END = 4, CARD = 5, BRIDGE = 6
+    EMPTY, PATH, WATER, START, END, CARD, BRIDGE
 }
 
 public class Tile {
@@ -21,6 +22,19 @@ public class Tile {
         this.tiletype = tiletype;
     }
 
+    public Tiletype getTiletype() {
+        return tiletype;
+    }
 
+    public int getX() {
+        return x;
+    }
 
+    public int getY() {
+        return y;
+    }
+
+    public int getSide() {
+        return side;
+    }
 }
