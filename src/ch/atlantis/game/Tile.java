@@ -1,29 +1,35 @@
 package ch.atlantis.game;
 
+import javafx.scene.paint.Color;
+
 /**
  * Created by Hermann Grieder on 31.08.2016.
  */
 
-enum Tiletype {
-    //EMPTY = 0, PATH = 1, WATER = 2, START = 3, END = 4, CARD = 5, BRIDGE = 6
-    EMPTY, PATH, WATER, START, END, CARD, BRIDGE
+enum TileType {
+    //EMPTY = 0, PATH = 1, WATER = 2, START = 3, END = 4, HANDCARD = 5, BRIDGE = 6
+    EMPTY, PATH, WATER, START, END, HANDCARD, BRIDGE
 }
 
 public class Tile {
     private int x;
     private int y;
     private int side;
-    private Tiletype tiletype;
+    private TileType tileType;
+    private int pathId;
+    private Color c;
 
-    public Tile(int x, int y, int side, Tiletype tiletype) {
+    public Tile(int x, int y, int side, TileType tileType, int pathId, Color c) {
         this.x = x;
         this.y = y;
         this.side = side;
-        this.tiletype = tiletype;
+        this.tileType = tileType;
+        this.pathId = pathId;
+        this.c = c;
     }
 
-    public Tiletype getTiletype() {
-        return tiletype;
+    public TileType getTileType() {
+        return tileType;
     }
 
     public int getX() {
@@ -36,5 +42,13 @@ public class Tile {
 
     public int getSide() {
         return side;
+    }
+
+    public int getPathId() {
+        return pathId;
+    }
+
+    public Color getColor() {
+        return c;
     }
 }

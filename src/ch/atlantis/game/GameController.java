@@ -1,7 +1,6 @@
 package ch.atlantis.game;
 
 import ch.atlantis.model.AtlantisModel;
-import ch.atlantis.view.AtlantisView;
 
 /**
  * Created by Hermann Grieder on 31.08.2016.
@@ -9,13 +8,13 @@ import ch.atlantis.view.AtlantisView;
 public class GameController {
 
 
-    private AtlantisView view;
+    private GameBoard gameBoard;
 
-    AtlantisModel model;
+    private AtlantisModel model;
 
-    public GameController(AtlantisModel model, AtlantisView view) {
+    public GameController(AtlantisModel model, GameBoard gameBoard) {
 
-        this.model = model;
-        this.view = view;
+            this.model = model;
+            this.gameBoard = gameBoard;
     }
 }

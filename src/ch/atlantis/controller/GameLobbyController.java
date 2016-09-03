@@ -135,8 +135,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnStartGame().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                view.createGameView();
-                new GameController(model, view);
+                new Game(model, view);
             }
         });
 

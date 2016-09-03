@@ -30,9 +30,6 @@ public class AtlantisView {
     private OptionsView optionsView;
     private Stage optionsStage;
 
-    private GameBoard gameBoard;
-    private Stage gameStage;
-
     private SimpleIntegerProperty height;
     private SimpleIntegerProperty width;
 
@@ -105,12 +102,6 @@ public class AtlantisView {
         setupOverlay(optionsStage, scene, "OptionsView");
     }
 
-    public void createGameView() {
-        this.gameBoard = new GameBoard(height.getValue(), width.getValue());
-        Scene scene = new Scene(gameBoard);
-        gameStage = new Stage();
-        setupOverlay(gameStage, scene, "Game");
-    }
 
     private void setupOverlay(Stage stage, Scene scene, String cssString) {
         //Get the css files and add them to the scene

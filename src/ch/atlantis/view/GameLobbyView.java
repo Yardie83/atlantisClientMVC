@@ -57,11 +57,12 @@ public class GameLobbyView extends Pane {
     private Label lblGameTitles;
     private ArrayList<Node> gameLobbyControls = new ArrayList<>();
     private Button btnStartGame;
+    private final Scene gameLobbyScene;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
 
         String css = this.getClass().getResource("../res/css/css_GameLobbyView.css").toExternalForm();
-        Scene gameLobbyScene = new Scene(this);
+        gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
 
@@ -355,5 +356,9 @@ public class GameLobbyView extends Pane {
 
     public BorderPane getRoot() {
         return root;
+    }
+
+    public Scene getGameLobbyScene() {
+        return gameLobbyScene;
     }
 }
