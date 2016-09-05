@@ -1,12 +1,14 @@
 package ch.atlantis.view;
 
-import ch.atlantis.game.GameBoard;
+import ch.atlantis.util.Language;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.util.ArrayList;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -95,8 +97,8 @@ public class AtlantisView {
         setupOverlay(profileStage, scene, "NewProfileView");
     }
 
-    public void createOptionsView() {
-        this.optionsView = new OptionsView(height.getValue(), width.getValue());
+    public void createOptionsView(ArrayList<Language> languageList) {
+        this.optionsView = new OptionsView(height.getValue(), width.getValue(), languageList);
         Scene scene = new Scene(optionsView);
         optionsStage = new Stage();
         setupOverlay(optionsStage, scene, "OptionsView");

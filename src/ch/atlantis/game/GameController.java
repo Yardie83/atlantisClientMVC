@@ -8,13 +8,15 @@ import ch.atlantis.model.AtlantisModel;
 public class GameController {
 
 
-    private GameBoard gameBoard;
+    private GameBoardView gameBoardView;
 
+    private GameModel gameModel;
     private AtlantisModel model;
 
-    public GameController(AtlantisModel model, GameBoard gameBoard) {
+    public GameController(GameModel gameModel, AtlantisModel model, GameBoardView gameBoardView) {
+        this.gameModel = gameModel;
 
-            this.model = model;
-            this.gameBoard = gameBoard;
+        this.model = model;
+        this.gameBoardView = gameBoardView;
     }
 }

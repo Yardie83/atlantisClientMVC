@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -35,6 +36,8 @@ public class AtlantisModel {
     private boolean autoConnect = true;
     private Thread clientTask;
     private ObservableList<String> gameList;
+    private ArrayList<Language> languageList;
+    private String selectedLanguage;
 
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
@@ -134,12 +137,15 @@ public class AtlantisModel {
 
     private void handleLanguages(Message message) {
 
-        ArrayList<Language> languages = (ArrayList<Language>) message.getMessageObject();
+        languageList = (ArrayList<Language>) message.getMessageObject();
 
-        Language testlanguage = languages.get(0);
-
-        System.out.println(testlanguage.getLanguageTable().values());
-
+        if (languageList == null && languageList.size() == 0) {
+            System.out.println("Error no language could be found");
+            return;
+        }
+        else {
+            selectedLanguage = languageList.get(0).getCulture();
+        }
     }
 
     private void handleUserName(Message message) {
@@ -202,6 +208,20 @@ public class AtlantisModel {
         }
     }
 
+    //TODO: Make this better-looking instead of a PDF create a view with the rules
+    public void showGameRules() {
+        try {
+            File file = new File(getClass().getResource("/ch/atlantis/res/Atlantis_Spielregel.pdf").getFile());
+
+            if (file.exists()) {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public SimpleStringProperty getChatString() {
         return chatString;
     }
@@ -230,18 +250,16 @@ public class AtlantisModel {
         this.autoConnect = autoConnect;
     }
 
+    //Language Getters and Setters
+    public ArrayList<Language> getLanguageList() {
+        return languageList;
+    }
 
-    //TODO: Make this better-looking instead of a PDF create a view with the rules
-    public void showGameRules() {
-        try {
-            File file = new File(getClass().getResource("/ch/atlantis/res/Atlantis_Spielregel.pdf").getFile());
+    public String getSelectedLanguage() {
+        return selectedLanguage;
+    }
 
-            if (file.exists()) {
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setSelectedLanguage(String selectedLanguage) {
+        this.selectedLanguage = selectedLanguage;
     }
 }

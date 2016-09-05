@@ -7,11 +7,20 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -20,7 +29,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import jdk.internal.util.xml.impl.Input;
 
+import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Arc2D;
+import java.awt.image.AffineTransformOp;
 import java.util.ArrayList;
 
 /**
@@ -55,14 +69,13 @@ public class GameLobbyView extends Pane {
     private Pane popup;
     private Separator s0;
     private Label lblGameTitles;
-    private ArrayList<Node> gameLobbyControls = new ArrayList<>();
+    private ArrayList<Control> gameLobbyControls = new ArrayList<>();
     private Button btnStartGame;
-    private final Scene gameLobbyScene;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
 
         String css = this.getClass().getResource("../res/css/css_GameLobbyView.css").toExternalForm();
-        gameLobbyScene = new Scene(this);
+        Scene gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
 
@@ -75,10 +88,13 @@ public class GameLobbyView extends Pane {
         }
         gameLobbyStage.setScene(gameLobbyScene);
 
-
-//        // Set Mouse Cursor Image
+        //Set Mouse Cursor Image
 //        Image image = new Image("/ch.atlantis.res/Fishi.png");
 //        gameLobbyScene.setCursor(new ImageCursor(image));
+//
+//        double x = MouseInfo.getPointerInfo().getLocation().getX();
+//        double y = MouseInfo.getPointerInfo().getLocation().getY();
+//        double angleToTurn = Math.toDegrees(Math.atan2(y, x));
 
         root = new BorderPane();
 
@@ -114,8 +130,10 @@ public class GameLobbyView extends Pane {
         for (Node node : pane.getChildren()) {
             if (node instanceof Pane) {
                 getControls((Pane) node);
-            } else if (node instanceof Control)
-                gameLobbyControls.add(node);
+            } else if (node instanceof Control) {
+                Control c = (Control) node;
+                gameLobbyControls.add(c);
+            }
         }
     }
 
@@ -350,15 +368,15 @@ public class GameLobbyView extends Pane {
         leftVBox.getChildren().removeAll(btnLogin, s0);
     }
 
-    public ArrayList<Node> getGameLobbyControls() {
+    public ArrayList<Control> getGameLobbyControls() {
         return gameLobbyControls;
+    }
+
+    public void setGameLobbyControls(ArrayList<Control> gameLobbyControls) {
+        this.gameLobbyControls = gameLobbyControls;
     }
 
     public BorderPane getRoot() {
         return root;
-    }
-
-    public Scene getGameLobbyScene() {
-        return gameLobbyScene;
     }
 }

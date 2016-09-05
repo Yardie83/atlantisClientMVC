@@ -1,5 +1,6 @@
 package ch.atlantis.game;
 
+import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -14,8 +15,9 @@ enum CardType{
 
 public class Card extends Rectangle{
 
-    int value;
-    CardType cardType;
+    private int value;
+    private CardType cardType;
+    private int pathID;
 
 
     // Constructor for Start, End, Bridge and Water Cards
@@ -23,7 +25,7 @@ public class Card extends Rectangle{
         this.cardType = cardType;
 
         if (cardType == CardType.WATER){
-            super.setFill(Color.BLUE);
+            super.setFill(Color.BLACK);
         }
         if (cardType == CardType.START){
             super.setFill(Color.GREEN);
@@ -46,6 +48,7 @@ public class Card extends Rectangle{
         this.value = value;
         this.cardType = cardType;
         applyColorSet(colorSet);
+        this.setStroke(Color.BLACK);
     }
 
     private void applyColorSet(int colorSet) {
@@ -82,4 +85,7 @@ public class Card extends Rectangle{
         return cardType;
     }
 
+    public void addPathID(int pathID){
+        this.pathID = pathID;
+    }
 }

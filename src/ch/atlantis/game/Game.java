@@ -2,8 +2,6 @@ package ch.atlantis.game;
 
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.view.AtlantisView;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -12,15 +10,15 @@ import java.util.ArrayList;
  */
 public class Game {
 
-    private GameBoard gameBoard;
+    private GameBoardView gameBoardView;
     private ArrayList<Player> players = new ArrayList<>(4);
 
     public Game(AtlantisModel model, AtlantisView view) {
 
-        this.gameBoard = new GameBoard(view.heightProperty().getValue(), view.widthProperty().getValue(), players, view);
+        gameBoardView = new GameBoardView(players, view);
 
-        new GameController(model, gameBoard);
+        new GameController(new GameModel(), model, gameBoardView);
 
-        gameBoard.show();
+        gameBoardView.show();
     }
 }

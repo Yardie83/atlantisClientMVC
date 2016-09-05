@@ -1,9 +1,7 @@
 package ch.atlantis.view;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.ToggleGroup;
+import ch.atlantis.util.Language;
+import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.GridPane;
@@ -11,6 +9,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 
 /**
  * Created by Hermann Grieder on 21.07.2016.
@@ -35,9 +35,7 @@ public class OptionsView extends Pane {
     private RadioButton radioBtnSoundOn;
     private RadioButton radioBtnSoundOff;
 
-    private RadioButton radioBtnEnglish;
-    private RadioButton radioBtnGerman;
-
+    private ComboBox<String> comboBoxLanguages;
 
     //BOTTOM elements
     private HBox bottomPane;
@@ -45,14 +43,14 @@ public class OptionsView extends Pane {
     private Button btnCancel;
 
 
-    public OptionsView(int height, int width) {
+    public OptionsView(int height, int width, ArrayList<Language> languageList) {
 
         root = new VBox(30);
         root.setMinHeight(height);
         root.setMinWidth(width);
 
         root.getChildren().add(createTop());
-        root.getChildren().add(createContent());
+        root.getChildren().add(createContent(languageList));
         root.getChildren().add(createBottom());
 
         defineStyleClass();
@@ -70,7 +68,7 @@ public class OptionsView extends Pane {
 
     }
 
-    private GridPane createContent() {
+    private GridPane createContent(ArrayList<Language> languageList) {
 
         centerPane = new GridPane();
 
@@ -89,23 +87,29 @@ public class OptionsView extends Pane {
         radioBtnGroupSound.getToggles().addAll(radioBtnSoundOn, radioBtnSoundOff);
 
         lblLanguage = new Label("Language");
-        ToggleGroup radioBtnGroupLanguage = new ToggleGroup();
-        radioBtnEnglish = new RadioButton("English");
-        radioBtnEnglish.setSelected(true);
-        radioBtnGerman = new RadioButton("German");
-        radioBtnGroupLanguage.getToggles().addAll(radioBtnEnglish, radioBtnGerman);
+
+        comboBoxLanguages = new ComboBox<String>();
+        comboBoxLanguages.setTooltip(new Tooltip("select a lanugage"));
+
+        for (Language language : languageList){
+
+            comboBoxLanguages.getItems().add(language.getCulture());
+
+        }
+
+        comboBoxLanguages.getSelectionModel().selectFirst();
 
         centerPane.add(lblFullScreen, 0, 0);
         centerPane.add(radioBtnFullScreenOn, 1, 0);
         centerPane.add(radioBtnFullScreenOff, 2, 0);
 
-        centerPane.add(lblSoundToggle, 0, 2);
-        centerPane.add(radioBtnSoundOn, 1, 2);
-        centerPane.add(radioBtnSoundOff, 2, 2);
+        centerPane.add(lblSoundToggle, 0, 1);
+        centerPane.add(radioBtnSoundOn, 1, 1);
+        centerPane.add(radioBtnSoundOff, 2, 1);
 
-        centerPane.add(lblLanguage, 0, 1);
-        centerPane.add(radioBtnEnglish, 1, 1);
-        centerPane.add(radioBtnGerman, 2, 1);
+        centerPane.add(lblLanguage, 0, 2);
+
+        centerPane.add(comboBoxLanguages, 1, 2);
 
         return centerPane;
     }
@@ -148,10 +152,6 @@ public class OptionsView extends Pane {
         radioBtnSoundOn.getStyleClass().add("radioButtons");
         radioBtnSoundOff.getStyleClass().add("radioButtons");
 
-        radioBtnEnglish.getStyleClass().add("radioButtons");
-        radioBtnGerman.getStyleClass().add("radioButtons");
-
-
         btnApply.setId("btnApply");
         btnCancel.setId("btnCancel");
 
@@ -159,12 +159,9 @@ public class OptionsView extends Pane {
         bottomPane.setId("bottomPane");
     }
 
-    public RadioButton getRadioBtnEnglish() {
-        return radioBtnEnglish;
-    }
-
-    public RadioButton getRadioBtnGerman() {
-        return radioBtnGerman;
+    public String getSelectedComboBoxLanguage() {
+        System.out.println(comboBoxLanguages.getSelectionModel().getSelectedItem().toString());
+        return comboBoxLanguages.getSelectionModel().getSelectedItem().toString();
     }
 
     public Button getBtnApply() {

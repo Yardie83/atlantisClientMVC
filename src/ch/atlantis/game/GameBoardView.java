@@ -2,10 +2,12 @@ package ch.atlantis.game;
 
 import ch.atlantis.view.AtlantisView;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -16,7 +18,7 @@ import java.util.Iterator;
 /**
  * Created by Hermann Grieder on 23.08.2016.
  */
-public class GameBoard extends Pane {
+public class GameBoardView extends Pane {
 
     private int columnCount = 20;
     private int rowCount = 11;
@@ -30,20 +32,20 @@ public class GameBoard extends Pane {
     private ArrayList<Card> movementCards;
     private ArrayList<Card> waterCards;
     private ArrayList<Card> bridges;
-    private Card startField;
-    private Card endField;
+    private ArrayList<Card> pathArray;
+    private Stage gameStage;
 
-    public GameBoard(int height, int width, ArrayList<Player> players, AtlantisView view) {
+    public GameBoardView(ArrayList<Player> players, AtlantisView view) {
 
         this.players = players;
         this.view = view;
 
-        super.setMinHeight(height);
-        super.setMinWidth(width);
+        super.setMinHeight(view.heightProperty().getValue());
+        super.setMinWidth(view.widthProperty().getValue());
 
 
         readLayout();
-        createTiles(height);
+        createTiles(view.heightProperty().getValue());
         addPlayers();
         addPlayerPieces();
         createPathCardSets();
@@ -179,8 +181,19 @@ public class GameBoard extends Pane {
                     for (int x = 0; x < values.length; x++) {
                         int value = Integer.parseInt(values[x]);
                         if ((value / 100) == 1) {
-                            pathId[x][y] = value % 100;
+                            pathId[x][y] = value;
                             value = 1;
+                        } else if (value / 100 == 2) {
+                            pathId[x][y] = value;
+                            value = 2;
+                        } else if (value / 100 == 3) {
+                            pathId[x][y] = value;
+                            value = 3;
+                        } else if (value / 100 == 4) {
+                            pathId[x][y] = value;
+                            value = 4;
+                        } else if (value / 100 == 5) {
+                            pathId[x][y] = value;
                         } else {
                             pathId[x][y] = 0;
                             value = value / 100;
@@ -196,65 +209,93 @@ public class GameBoard extends Pane {
         }
     }
 
+    private void createGameConsole(Tile tile) {
+
+        VBox console = new VBox();
+
+        console.setStyle("-fx-border-width: 1px");
+
+
+        Label label1 = new Label("hallo");
+
+        HBox top = new HBox();
+
+        top.getChildren().addAll(label1);
+
+        HBox bottom = new HBox();
+
+        console.getChildren().addAll(top, bottom);
+
+        console.setLayoutX(tile.getX());
+        console.setLayoutY(tile.getY());
+        console.setMinHeight(200);
+        console.setMinWidth(200);
+
+        this.getChildren().add(console);
+    }
+
     public void drawBoard() {
-        Card card;
+        Card card = null;
         Iterator<Card> iterWater = waterCards.iterator();
         Iterator<Card> iterA = pathCardsSetA.iterator();
         Iterator<Card> iterB = pathCardsSetB.iterator();
 
+        pathArray = new ArrayList<>();
+
         for (Tile tile : tiles) {
-            if (tile.getPathId() != 0) {
-                switch (tile.getTileType()) {
-                    case PATH:
-                        createPath(tile, iterA, iterB);
-                        break;
-                    case WATER:
-                        card = iterWater.next();
-                        drawCard(card, tile);
-                        break;
-                    case START:
-                        startField = new Card(CardType.START);
-                        drawCard(startField, tile);
-                        break;
-                    case END:
-                        endField = new Card(CardType.END);
-                        drawCard(endField, tile);
-                        break;
-                    case HANDCARD:
-                        break;
+
+            int pathId = tile.getPathId();
+
+            if (pathId != 0) {
+
+                // Place two cards from 1 to 10 and from 17 to 27 from Card set A
+                if ((pathId <= 110 || pathId >= 121) && pathId <= 126) {
+                    for (int i = 0; i < 2; i++) {
+                        card = iterA.next();
+                    }
                 }
-            }
-        }
-    }
+                // Place only one card from 11 to 20 from Card set A
+                if (pathId >= 111 && pathId <= 120) {
+                    card = iterA.next();
+                }
 
-    private void createPath(Tile tile, Iterator<Card> iterA, Iterator<Card> iterB) {
-        Card card;
+                //Water card at path id 227 in the middle of the board
+                if (pathId == 227) {
+                    card = iterWater.next();
+                }
 
-        // Place two cards from 1 to 10 and from 17 to 27 from Card set A
-        if ((tile.getPathId() <= 10 || tile.getPathId() >= 21) && tile.getPathId() < 28) {
-            for (int i = 0; i < 2; i++) {
-                card = iterA.next();
+                //Start card
+                if (pathId == 300) {
+                    card = new Card(CardType.START);
+                }
+
+                //End card
+                if (pathId == 400) {
+                    card = new Card(CardType.END);
+                }
+
+                //End card
+                if (pathId == 500) {
+                    createGameConsole(tile);
+                    System.out.println("call");;
+                }
+
+                // Card 27 is water. Place two cards from 28 to 33 and from 44 to 53 from Card set B
+                if ((pathId >= 128 && (pathId <= 133) || (pathId >= 144)) && pathId <= 200) {
+                    for (int i = 0; i < 2; i++) {
+                        card = iterB.next();
+                    }
+                }
+                // Place only one card from 34 to 43 from Card set B
+                if (pathId >= 134 && pathId <= 143) {
+                    card = iterB.next();
+                }
+
+                card.addPathID(pathId);
                 drawCard(card, tile);
+                pathArray.add(card);
             }
         }
-        // Place only one card from 11 to 20 from Card set A
-        if (tile.getPathId() > 10 && tile.getPathId() < 21) {
-            card = iterA.next();
-            drawCard(card, tile);
-        }
-        // Card 27 is water. Place two cards from 28 to 33 and from 44 to 53 from Card set B
-        if (tile.getPathId() >= 28 && (tile.getPathId() < 34 || tile.getPathId() >= 44)) {
-            for (int i = 0; i < 2; i++) {
-                card = iterB.next();
-                drawCard(card, tile);
-            }
-        }
-        // Place only one card from 34 to 43 from Card set A
-        if (tile.getPathId() >= 34 && tile.getPathId() < 44) {
-            card = iterB.next();
-            drawCard(card, tile);
-        }
-
     }
 
     private void drawCard(Card card, Tile tile) {
@@ -267,7 +308,7 @@ public class GameBoard extends Pane {
 
     public void show() {
         Scene scene = new Scene(this);
-        Stage gameStage = view.getGameLobbyView().getGameLobbyStage();
+        gameStage = view.getGameLobbyView().getGameLobbyStage();
         gameStage.setScene(scene);
     }
 }

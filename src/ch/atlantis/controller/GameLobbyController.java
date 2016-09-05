@@ -75,7 +75,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView();
+                view.createOptionsView(model.getLanguageList());
                 new OptionsController(model, view);
             }
         });
@@ -119,7 +119,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView();
+                view.createOptionsView(model.getLanguageList());
                 new OptionsController(model, view);
             }
         });
