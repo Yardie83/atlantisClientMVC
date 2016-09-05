@@ -21,6 +21,16 @@ public class Card extends Rectangle{
     // Constructor for Start, End, Bridge and Water Cards
     public Card(CardType cardType) {
         this.cardType = cardType;
+
+        if (cardType == CardType.WATER){
+            super.setFill(Color.BLUE);
+        }
+        if (cardType == CardType.START){
+            super.setFill(Color.GREEN);
+        }
+        if (cardType == CardType.END){
+            super.setFill(Color.GREEN);
+        }
     }
 
     // Constructor for Movement Cards. They do not have a value associated.

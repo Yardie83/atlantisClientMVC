@@ -17,15 +17,13 @@ public class Tile {
     private int side;
     private TileType tileType;
     private int pathId;
-    private Color c;
 
-    public Tile(int x, int y, int side, TileType tileType, int pathId, Color c) {
+    public Tile(int x, int y, int side, TileType tileType, int pathId) {
         this.x = x;
         this.y = y;
         this.side = side;
         this.tileType = tileType;
         this.pathId = pathId;
-        this.c = c;
     }
 
     public TileType getTileType() {
@@ -48,7 +46,4 @@ public class Tile {
         return pathId;
     }
 
-    public Color getColor() {
-        return c;
-    }
 }

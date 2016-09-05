@@ -41,6 +41,7 @@ public class GameBoard extends Pane {
         super.setMinHeight(height);
         super.setMinWidth(width);
 
+
         readLayout();
         createTiles(height);
         addPlayers();
@@ -49,21 +50,12 @@ public class GameBoard extends Pane {
         createMovementCards();
         createWaterCards();
         createBridges();
-        createStartField();
-        createEndField();
         addHandCards();
         drawBoard();
     }
 
-    private void createEndField() {
-        endField = new Card(CardType.END);
-    }
-
-    private void createStartField() {
-        startField = new Card(CardType.START);
-    }
-
     private void createBridges() {
+        this.bridges = new ArrayList<>(4);
         for (Player player : players) {
             Card bridge = new Card(CardType.BRIDGE);
             player.addBridge(bridge);
@@ -73,7 +65,7 @@ public class GameBoard extends Pane {
 
     private void createWaterCards() {
         this.waterCards = new ArrayList<>();
-        for (int i = 0; i < 24; i++){
+        for (int i = 0; i < 24; i++) {
             waterCards.add(new Card(CardType.WATER));
         }
     }
@@ -116,7 +108,6 @@ public class GameBoard extends Pane {
             for (int i = 0; i < 3; i++) {
                 GamePiece gamePiece = new GamePiece(i, player);
                 player.addGamePiece(gamePiece);
-
             }
         }
     }
@@ -131,7 +122,7 @@ public class GameBoard extends Pane {
 
         tiles = new ArrayList<>(columnCount * rowCount);
         TileType tileType;
-        Color c;
+
 
         for (int x = 0; x < columnCount; x++) {
             for (int y = 0; y < rowCount; y++) {
@@ -142,38 +133,30 @@ public class GameBoard extends Pane {
                 switch (tileTypeCodes[x][y]) {
                     case 0:
                         tileType = TileType.EMPTY;
-                        c = Color.WHITE;
                         break;
                     case 1:
                         tileType = TileType.PATH;
-                        c = Color.BROWN;
                         break;
                     case 2:
                         tileType = TileType.WATER;
-                        c = Color.DARKBLUE;
                         break;
                     case 3:
                         tileType = TileType.START;
-                        c = Color.GRAY;
                         break;
                     case 4:
                         tileType = TileType.END;
-                        c = Color.GRAY;
                         break;
                     case 5:
                         tileType = TileType.HANDCARD;
-                        c = Color.DEEPSKYBLUE;
                         break;
                     case 6:
                         tileType = TileType.BRIDGE;
-                        c = Color.BISQUE;
                         break;
                     default:
                         tileType = TileType.EMPTY;
-                        c = Color.BLACK;
                         break;
                 }
-                tiles.add(new Tile(xPos, yPos, side, tileType, pathId[x][y], c));
+                tiles.add(new Tile(xPos, yPos, side, tileType, pathId[x][y]));
             }
         }
     }
@@ -215,33 +198,63 @@ public class GameBoard extends Pane {
 
     public void drawBoard() {
         Card card;
+        Iterator<Card> iterWater = waterCards.iterator();
         Iterator<Card> iterA = pathCardsSetA.iterator();
         Iterator<Card> iterB = pathCardsSetB.iterator();
 
         for (Tile tile : tiles) {
-            switch (tile.getTileType()){
-                case PATH:
-                    if (tile.getPathId() != 0 && tile.getPathId() < 28){
-                        card = iterA.next();
+            if (tile.getPathId() != 0) {
+                switch (tile.getTileType()) {
+                    case PATH:
+                        createPath(tile, iterA, iterB);
+                        break;
+                    case WATER:
+                        card = iterWater.next();
                         drawCard(card, tile);
-                    }
-                    if (tile.getPathId() != 0 && tile.getPathId() > 27){
-                        card = iterB.next();
-                        drawCard(card, tile);
-                    }
-                    break;
-                case WATER:
-                    break;
-                case BRIDGE:
-                    break;
-                case START:
-                    break;
-                case END:
-                    break;
-                case HANDCARD:
-                    break;
+                        break;
+                    case START:
+                        startField = new Card(CardType.START);
+                        drawCard(startField, tile);
+                        break;
+                    case END:
+                        endField = new Card(CardType.END);
+                        drawCard(endField, tile);
+                        break;
+                    case HANDCARD:
+                        break;
+                }
             }
         }
+    }
+
+    private void createPath(Tile tile, Iterator<Card> iterA, Iterator<Card> iterB) {
+        Card card;
+
+        // Place two cards from 1 to 10 and from 17 to 27 from Card set A
+        if ((tile.getPathId() <= 10 || tile.getPathId() >= 21) && tile.getPathId() < 28) {
+            for (int i = 0; i < 2; i++) {
+                card = iterA.next();
+                drawCard(card, tile);
+            }
+        }
+        // Place only one card from 11 to 20 from Card set A
+        if (tile.getPathId() > 10 && tile.getPathId() < 21) {
+            card = iterA.next();
+            drawCard(card, tile);
+        }
+        // Card 27 is water. Place two cards from 28 to 33 and from 44 to 53 from Card set B
+        if (tile.getPathId() >= 28 && (tile.getPathId() < 34 || tile.getPathId() >= 44)) {
+            for (int i = 0; i < 2; i++) {
+                card = iterB.next();
+                drawCard(card, tile);
+            }
+        }
+        // Place only one card from 34 to 43 from Card set A
+        if (tile.getPathId() >= 34 && tile.getPathId() < 44) {
+            card = iterB.next();
+            drawCard(card, tile);
+        }
+
     }
 
     private void drawCard(Card card, Tile tile) {
