@@ -1,6 +1,5 @@
 package ch.atlantis.game;
 
-import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -9,8 +8,8 @@ import javafx.scene.shape.Rectangle;
  */
 
 enum CardType{
-    //EMPTY = 0, PATH = 1, WATER = 2, START = 3, END = 4, HANDCARD = 5, BRIDGE = 6, HAND = 7, DECK = 8; MOVEMENT = 9;
-    EMPTY, PATH, WATER, START, END, CARD, BRIDGE, HAND, DECK, MOVEMENT
+    //EMPTY = 0, PATH = 1, WATER = 2, START = 3, END = 4, HANDCARD = 5, BRIDGE = 6, DECK = 7; MOVEMENT = 8;
+    EMPTY, PATH, WATER, START, END, HANDCARD, BRIDGE, DECK, MOVEMENT
 }
 
 public class Card extends Rectangle{
@@ -19,21 +18,6 @@ public class Card extends Rectangle{
     private CardType cardType;
     private int pathID;
 
-
-    // Constructor for Start, End, Bridge and Water Cards
-    public Card(CardType cardType) {
-        this.cardType = cardType;
-
-        if (cardType == CardType.WATER){
-            super.setFill(Color.BLACK);
-        }
-        if (cardType == CardType.START){
-            super.setFill(Color.GREEN);
-        }
-        if (cardType == CardType.END){
-            super.setFill(Color.GREEN);
-        }
-    }
 
     // Constructor for Movement Cards. They do not have a value associated.
     public Card(int colorSet, CardType cardType){
@@ -74,6 +58,11 @@ public class Card extends Rectangle{
             case 6:
                 super.setFill(Color.WHITE);
                 break;
+            case 7:
+                super.setFill(null);
+                break;
+            default:
+                super.setFill(null);
         }
     }
 
@@ -85,7 +74,11 @@ public class Card extends Rectangle{
         return cardType;
     }
 
-    public void addPathID(int pathID){
+    public void setPathId(int pathID){
         this.pathID = pathID;
+    }
+
+    public int getpathId() {
+        return this.pathID;
     }
 }

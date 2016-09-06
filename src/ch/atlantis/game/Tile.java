@@ -1,7 +1,5 @@
 package ch.atlantis.game;
 
-import javafx.scene.paint.Color;
-
 /**
  * Created by Hermann Grieder on 31.08.2016.
  */
@@ -18,11 +16,10 @@ public class Tile {
     private TileType tileType;
     private int pathId;
 
-    public Tile(int x, int y, int side, TileType tileType, int pathId) {
+    public Tile(int x, int y, int side, int pathId) {
         this.x = x;
         this.y = y;
         this.side = side;
-        this.tileType = tileType;
         this.pathId = pathId;
     }
 

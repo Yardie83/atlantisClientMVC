@@ -18,7 +18,5 @@ public class Game {
         gameBoardView = new GameBoardView(players, view);
 
         new GameController(new GameModel(), model, gameBoardView);
-
-        gameBoardView.show();
     }
 }

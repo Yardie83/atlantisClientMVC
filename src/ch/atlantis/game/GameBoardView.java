@@ -3,11 +3,10 @@ package ch.atlantis.game;
 import ch.atlantis.view.AtlantisView;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,13 +16,11 @@ import java.util.Iterator;
 
 /**
  * Created by Hermann Grieder on 23.08.2016.
+ *
  */
 public class GameBoardView extends Pane {
 
-    private int columnCount = 20;
     private int rowCount = 11;
-    private int[][] pathId;
-    private int[][] tileTypeCodes;
     private AtlantisView view;
     private ArrayList<Tile> tiles;
     private ArrayList<Player> players;
@@ -34,18 +31,27 @@ public class GameBoardView extends Pane {
     private ArrayList<Card> bridges;
     private ArrayList<Card> pathArray;
     private Stage gameStage;
+    private Scene gameScene;
 
     public GameBoardView(ArrayList<Player> players, AtlantisView view) {
 
         this.players = players;
         this.view = view;
 
-        super.setMinHeight(view.heightProperty().getValue());
-        super.setMinWidth(view.widthProperty().getValue());
+        int height = view.heightProperty().getValue();
+        int width = view.widthProperty().getValue();
 
+        super.setMinHeight(height);
+        super.setMinWidth(width);
 
-        readLayout();
-        createTiles(view.heightProperty().getValue());
+        super.setBackground(new Background(new BackgroundImage(
+                new Image("ch/atlantis/res/gameboardbg.jpg"),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                BackgroundSize.DEFAULT)));
+
+        readLayout(height);
         addPlayers();
         addPlayerPieces();
         createPathCardSets();
@@ -59,7 +65,7 @@ public class GameBoardView extends Pane {
     private void createBridges() {
         this.bridges = new ArrayList<>(4);
         for (Player player : players) {
-            Card bridge = new Card(CardType.BRIDGE);
+            Card bridge = new Card(7,CardType.BRIDGE);
             player.addBridge(bridge);
             bridges.add(bridge);
         }
@@ -68,7 +74,7 @@ public class GameBoardView extends Pane {
     private void createWaterCards() {
         this.waterCards = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
-            waterCards.add(new Card(CardType.WATER));
+            waterCards.add(new Card(5,CardType.WATER));
         }
     }
 
@@ -97,7 +103,7 @@ public class GameBoardView extends Pane {
                     if (i == 0) {
                         pathCardsSetA.add(new Card(j, k, CardType.PATH));
                     }
-                    if (i == 1) {
+                    else{
                         pathCardsSetB.add(new Card(j, k, CardType.PATH));
                     }
                 }
@@ -114,91 +120,36 @@ public class GameBoardView extends Pane {
         }
     }
 
-    private void removePlayerPiece(Player player, int pieceId) {
+    private void readLayout(int height) {
 
-    }
-
-
-    private void createTiles(int height) {
+        int pathId;
         int side = (height / rowCount);
 
-        tiles = new ArrayList<>(columnCount * rowCount);
-        TileType tileType;
+        tiles = new ArrayList<>();
 
-
-        for (int x = 0; x < columnCount; x++) {
-            for (int y = 0; y < rowCount; y++) {
-
-                int xPos = x * side;
-                int yPos = y * side;
-
-                switch (tileTypeCodes[x][y]) {
-                    case 0:
-                        tileType = TileType.EMPTY;
-                        break;
-                    case 1:
-                        tileType = TileType.PATH;
-                        break;
-                    case 2:
-                        tileType = TileType.WATER;
-                        break;
-                    case 3:
-                        tileType = TileType.START;
-                        break;
-                    case 4:
-                        tileType = TileType.END;
-                        break;
-                    case 5:
-                        tileType = TileType.HANDCARD;
-                        break;
-                    case 6:
-                        tileType = TileType.BRIDGE;
-                        break;
-                    default:
-                        tileType = TileType.EMPTY;
-                        break;
-                }
-                tiles.add(new Tile(xPos, yPos, side, tileType, pathId[x][y]));
-            }
-        }
-    }
-
-    private void readLayout() {
-
-        pathId = new int[columnCount][rowCount];
-
-        //columnCount = 15; rowCount = 10
-        tileTypeCodes = new int[columnCount][rowCount];
         try {
             BufferedReader bf = new BufferedReader(new FileReader("src/ch/atlantis/res/GameBoardLayout.txt"));
 
             String currentLine;
             int y = -1;
+
             try {
                 while ((currentLine = bf.readLine()) != null) {
                     y++;
                     String[] values = currentLine.trim().split(" ");
                     for (int x = 0; x < values.length; x++) {
+
+                        int xPos = x * side;
+                        int yPos = y * side;
+
                         int value = Integer.parseInt(values[x]);
-                        if ((value / 100) == 1) {
-                            pathId[x][y] = value;
-                            value = 1;
-                        } else if (value / 100 == 2) {
-                            pathId[x][y] = value;
-                            value = 2;
-                        } else if (value / 100 == 3) {
-                            pathId[x][y] = value;
-                            value = 3;
-                        } else if (value / 100 == 4) {
-                            pathId[x][y] = value;
-                            value = 4;
-                        } else if (value / 100 == 5) {
-                            pathId[x][y] = value;
+
+                        if ((value / 100) >= 1 && (value / 100) <= 5) {
+                            pathId = value;
                         } else {
-                            pathId[x][y] = 0;
-                            value = value / 100;
+                            pathId = 0;
                         }
-                        tileTypeCodes[x][y] = value;
+                        tiles.add(new Tile(xPos, yPos, side, pathId));
                     }
                 }
             } catch (IOException e) {
@@ -207,31 +158,6 @@ public class GameBoardView extends Pane {
         } catch (FileNotFoundException e) {
             System.out.println("File \"GameBoardLayout.txt\" not found!");
         }
-    }
-
-    private void createGameConsole(Tile tile) {
-
-        VBox console = new VBox();
-
-        console.setStyle("-fx-border-width: 1px");
-
-
-        Label label1 = new Label("hallo");
-
-        HBox top = new HBox();
-
-        top.getChildren().addAll(label1);
-
-        HBox bottom = new HBox();
-
-        console.getChildren().addAll(top, bottom);
-
-        console.setLayoutX(tile.getX());
-        console.setLayoutY(tile.getY());
-        console.setMinHeight(200);
-        console.setMinWidth(200);
-
-        this.getChildren().add(console);
     }
 
     public void drawBoard() {
@@ -246,54 +172,53 @@ public class GameBoardView extends Pane {
 
             int pathId = tile.getPathId();
 
-            if (pathId != 0) {
+            if (pathId != 0 && pathId != 500) {
 
-                // Place two cards from 1 to 10 and from 17 to 27 from Card set A
+                // Place two cards from 101 to 110 and from 120 to 126 from Card set A
                 if ((pathId <= 110 || pathId >= 121) && pathId <= 126) {
                     for (int i = 0; i < 2; i++) {
                         card = iterA.next();
                     }
                 }
-                // Place only one card from 11 to 20 from Card set A
-                if (pathId >= 111 && pathId <= 120) {
+                // Place only one card from 111 to 120 from Card set A
+                else if (pathId >= 111 && pathId <= 120) {
                     card = iterA.next();
                 }
 
                 //Water card at path id 227 in the middle of the board
-                if (pathId == 227) {
+                else if (pathId == 227) {
                     card = iterWater.next();
                 }
 
                 //Start card
-                if (pathId == 300) {
-                    card = new Card(CardType.START);
+                else if (pathId == 300) {
+                    card = new Card(3,CardType.START);
                 }
 
                 //End card
-                if (pathId == 400) {
-                    card = new Card(CardType.END);
+                else if (pathId == 400) {
+                    card = new Card(4,CardType.END);
                 }
 
-                //End card
-                if (pathId == 500) {
-                    createGameConsole(tile);
-                    System.out.println("call");;
-                }
-
-                // Card 27 is water. Place two cards from 28 to 33 and from 44 to 53 from Card set B
-                if ((pathId >= 128 && (pathId <= 133) || (pathId >= 144)) && pathId <= 200) {
+                // Card 127 is water. Place two cards from 128 to 133 and from 144 to 153 from Card set B
+                else if ((pathId >= 128 && (pathId <= 133) || (pathId >= 144)) && pathId <= 200) {
                     for (int i = 0; i < 2; i++) {
                         card = iterB.next();
                     }
                 }
-                // Place only one card from 34 to 43 from Card set B
-                if (pathId >= 134 && pathId <= 143) {
+                // Place only one card from 134 to 143 from Card set B
+                else if (pathId >= 134 && pathId <= 143) {
                     card = iterB.next();
                 }
 
-                card.addPathID(pathId);
+                card.setPathId(pathId);
                 drawCard(card, tile);
                 pathArray.add(card);
+            }
+
+            //Console will be placed at these X and Y coordinates
+            if (pathId == 500) {
+                createGameConsole(tile);
             }
         }
     }
@@ -306,9 +231,45 @@ public class GameBoardView extends Pane {
         this.getChildren().add(card);
     }
 
-    public void show() {
-        Scene scene = new Scene(this);
-        gameStage = view.getGameLobbyView().getGameLobbyStage();
-        gameStage.setScene(scene);
+    private void createGameConsole(Tile tile) {
+
+        VBox console = new VBox();
+
+        console.setStyle("-fx-border-width: 1px; -fx-background-color: #7af5c4;" +
+                "-fx-border-color: black");
+
+
+        Label label1 = new Label("hallo");
+
+        HBox top = new HBox();
+
+        top.getChildren().add(label1);
+
+        HBox bottom = new HBox();
+
+        console.getChildren().addAll(top, bottom);
+
+        console.setLayoutX(tile.getX());
+        console.setLayoutY(tile.getY()+20);
+        console.setMinHeight(200);
+        console.setMinWidth(tile.getSide()*7);
+
+        this.getChildren().add(console);
     }
+
+    public void show() {
+        gameScene = new Scene(this);
+        gameStage = view.getGameLobbyView().getGameLobbyStage();
+        gameStage.setScene(gameScene);
+    }
+
+    public ArrayList<Card> getPathArray() {
+        return pathArray;
+    }
+
+    public Stage getGameStage() {
+        return gameStage;
+    }
+
+
 }
