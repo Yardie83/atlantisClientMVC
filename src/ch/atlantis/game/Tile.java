@@ -13,8 +13,8 @@ public class Tile {
     private int x;
     private int y;
     private int side;
-    private TileType tileType;
     private int pathId;
+
 
     public Tile(int x, int y, int side, int pathId) {
         this.x = x;
@@ -23,9 +23,6 @@ public class Tile {
         this.pathId = pathId;
     }
 
-    public TileType getTileType() {
-        return tileType;
-    }
 
     public int getX() {
         return x;
@@ -42,5 +39,7 @@ public class Tile {
     public int getPathId() {
         return pathId;
     }
+
+
 
 }

@@ -14,6 +14,8 @@ public class GamePiece extends Rectangle {
         this.pieceId = pieceId;
         this.player = player;
         this.setFill(player.getPlayerColor());
+        this.setWidth(10);
+        this.setHeight(10);
     }
 
     public int getPieceId() {
@@ -23,4 +25,11 @@ public class GamePiece extends Rectangle {
     public Player getPlayer() {
         return player;
     }
+
+    public void moveGamePiece(double x, double y) {
+        this.setLayoutX(x);
+        this.setLayoutY(y);
+    }
+
+
 }

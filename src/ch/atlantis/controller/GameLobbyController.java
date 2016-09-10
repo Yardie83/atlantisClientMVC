@@ -64,6 +64,7 @@ public class GameLobbyController {
         /*
          *Menu Bar Controls
          */
+
         view.getGameLobbyView().getMenuItemExit().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -146,7 +147,6 @@ public class GameLobbyController {
 
         /*
          * When the user presses enter, the message is sent to the server
-         * If the user writes "Quit" the user is being disconnected from the chat
          */
         view.getGameLobbyView().getTxtField().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -154,13 +154,9 @@ public class GameLobbyController {
                 if (event.getCode() == KeyCode.ENTER) {
                     model.setAutoConnect(true);
                     TextField txtField = view.getGameLobbyView().getTxtField();
-                    if (txtField.getText().equalsIgnoreCase("QUIT")) {
-                        model.closeConnection();
-                    } else {
-                        String username = model.userNameProperty().getValue();
-                        String chatMessage = txtField.getText();
-                        model.sendMessage(new Message(MessageType.CHAT, username + ": " + chatMessage));
-                    }
+                    String username = model.userNameProperty().getValue();
+                    String chatMessage = txtField.getText();
+                    model.sendMessage(new Message(MessageType.CHAT, username + ": " + chatMessage));
                     txtField.clear();
                 }
             }

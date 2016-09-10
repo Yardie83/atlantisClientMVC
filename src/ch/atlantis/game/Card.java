@@ -14,6 +14,7 @@ enum CardType{
 
 public class Card extends Rectangle{
 
+    private boolean isOnTop;
     private int value;
     private CardType cardType;
     private int pathID;
@@ -31,8 +32,8 @@ public class Card extends Rectangle{
 
         this.value = value;
         this.cardType = cardType;
-        applyColorSet(colorSet);
         this.setStroke(Color.BLACK);
+        applyColorSet(colorSet);
     }
 
     private void applyColorSet(int colorSet) {
@@ -80,5 +81,13 @@ public class Card extends Rectangle{
 
     public int getpathId() {
         return this.pathID;
+    }
+
+    public void setIsOnTop(boolean isOnTop){
+        this.isOnTop = isOnTop;
+    }
+
+    public boolean isOnTop(){
+        return this.isOnTop;
     }
 }
