@@ -1,7 +1,6 @@
 package ch.atlantis.controller;
 
 import ch.atlantis.game.Game;
-import ch.atlantis.game.GameController;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.Message;
 import ch.atlantis.util.MessageType;
@@ -29,11 +28,14 @@ import java.util.Random;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
+ *
  */
 public class GameLobbyController {
 
     final private AtlantisModel model;
     final private AtlantisView view;
+    private final int HEIGHT = 800;
+    private final int WIDTH = 1300;
 
     public GameLobbyController(AtlantisModel model, AtlantisView view) {
         this.model = model;
@@ -54,8 +56,8 @@ public class GameLobbyController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 view.setFullscreen(false);
-                view.getGameLobbyView().getGameLobbyStage().setHeight(800);
-                view.getGameLobbyView().getGameLobbyStage().setWidth(1300);
+                view.getGameLobbyView().getGameLobbyStage().setHeight(HEIGHT);
+                view.getGameLobbyView().getGameLobbyStage().setWidth(WIDTH);
                 view.bindSizeToStage();
                 view.getGameLobbyView().bindSizeToStage();
             }
@@ -243,8 +245,9 @@ public class GameLobbyController {
                     public void run() {
 
                         Random r = new Random();
+                        int numberOfBubbles = 12;
 
-                        for (int i = 0; i < 12; i++) {
+                        for (int i = 0; i < numberOfBubbles; i++) {
                             Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
                             c.setStyle("-fx-border-color: WHITE;" +
                                     "-fx-border-width: 1px;" +

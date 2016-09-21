@@ -2,7 +2,6 @@ package ch.atlantis.model;
 
 import ch.atlantis.util.Language;
 import ch.atlantis.util.Message;
-import ch.atlantis.util.MessageType;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -116,6 +115,7 @@ public class AtlantisModel {
                     } catch (SocketException e) {
                         //TODO: Ask Bradley if this is the correct way to solve this problem
                         System.out.println("Connection by server closed");
+                        closeConnection();
                         autoConnect = false;
                         //closeConnection();
                     } catch (Exception e) {
@@ -195,9 +195,9 @@ public class AtlantisModel {
     public void closeConnection() {
         try {
             if (socket != null && !socket.isClosed()) {
-                sendMessage(new Message(MessageType.DISCONNECT, "Closing connection"));
+               // sendMessage(new Message(MessageType.DISCONNECT, "Closing connection"));
                 autoConnect = false;
-                clientTask.interrupt();
+                //clientTask.interrupt();
                 inReader.close();
                 outputStream.close();
                 socket.close();
