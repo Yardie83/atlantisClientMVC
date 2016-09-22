@@ -24,8 +24,6 @@ public class GameController {
         this.model = model;
         this.gameBoardView = gameBoardView;
         gameBoardView.show();
-
-        handleUserInput();
     }
 
     private void handleUserInput() {
