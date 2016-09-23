@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
- * Created by LorisGrether on 04.08.2016.
+ * Created by Loris Grether on 04.08.2016.
  */
 public class NewProfileView extends Pane {
 

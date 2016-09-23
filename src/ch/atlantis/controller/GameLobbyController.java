@@ -5,9 +5,6 @@ import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.Message;
 import ch.atlantis.util.MessageType;
 import ch.atlantis.view.AtlantisView;
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -18,13 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.WindowEvent;
-import javafx.util.Duration;
 
 import java.util.Collections;
-import java.util.Random;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
@@ -40,26 +33,20 @@ public class GameLobbyController {
     public GameLobbyController(AtlantisModel model, AtlantisView view) {
         this.model = model;
         this.view = view;
+
         handleGameLobbyControls();
+        addListeners();
     }
 
+    /**
+     * Handles all the input events for the controls in the GameLobby.
+     */
     private void handleGameLobbyControls() {
 
         view.getGameLobbyView().getGameLobbyStage().setOnShowing(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
                 model.connectToServer();
-            }
-        });
-
-        view.getGameLobbyView().getGameLobbyStage().fullScreenProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                view.setFullscreen(false);
-                view.getGameLobbyView().getGameLobbyStage().setHeight(HEIGHT);
-                view.getGameLobbyView().getGameLobbyStage().setWidth(WIDTH);
-                view.bindSizeToStage();
-                view.getGameLobbyView().bindSizeToStage();
             }
         });
 
@@ -164,9 +151,43 @@ public class GameLobbyController {
             }
         });
 
-        /* Incoming Message is saved in the ChatString. The changeListener listens to the ChatString
-         * in order to update the txtArea with the incoming chat message.
-         */
+
+        // BUBBLES!!
+        view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                view.getGameLobbyView().createBubbles(event);
+
+            }
+        });
+
+        // When the X Button is clicked, close the Application
+        view.getGameLobbyView().getGameLobbyStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                closeApplication();
+            }
+        });
+    }
+
+    /**
+     * Registers the different listeners to the gameLobbyController
+     */
+    private void addListeners() {
+
+        view.getGameLobbyView().getGameLobbyStage().fullScreenProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                view.setFullscreen(false);
+                view.getGameLobbyView().getGameLobbyStage().setHeight(HEIGHT);
+                view.getGameLobbyView().getGameLobbyStage().setWidth(WIDTH);
+                view.bindSizeToStage();
+                view.getGameLobbyView().bindSizeToStage();
+            }
+        });
+    /* Incoming Message is saved in the ChatString. The changeListener listens to the ChatString
+     * in order to update the txtArea with the incoming chat message.
+     */
         //TODO: Ask Bradley if there is a better way instead of a ChangeListener. Because when the user enters the same message twice it does not register as a changed value
         model.getChatString().addListener(new ChangeListener<String>() {
             @Override
@@ -193,9 +214,7 @@ public class GameLobbyController {
             }
         });
 
-        /*
-         * UserName to be displayed. If the user is not logged in, Guest + number will be displayed as the name
-         */
+        //UserName to be displayed. If the user is not logged in, Guest + number will be displayed as the name
         model.userNameProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -206,7 +225,6 @@ public class GameLobbyController {
                         view.getGameLobbyView().getLblInfo().setText("Logged in as " + newValue);
                     }
                 });
-
             }
         });
 
@@ -235,59 +253,11 @@ public class GameLobbyController {
                 });
             }
         });
-
-        // BUBBLES!!
-        view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        Random r = new Random();
-                        int numberOfBubbles = 12;
-
-                        for (int i = 0; i < numberOfBubbles; i++) {
-                            Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
-                            c.setStyle("-fx-border-color: WHITE;" +
-                                    "-fx-border-width: 1px;" +
-                                    "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
-                            c.setCenterX(event.getX() + r.nextInt(10) - 5);
-                            c.setCenterY(event.getY() + r.nextInt(10));
-
-                            view.getGameLobbyView().getChildren().add(c);
-
-                            TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1400), c);
-                            translateTransition.setFromX(0);
-                            translateTransition.setToX(r.nextInt(40) - 20);
-                            translateTransition.setFromY(0);
-                            translateTransition.setToY(-r.nextInt(70) - 50);
-                            translateTransition.setAutoReverse(false);
-
-                            FadeTransition ft = new FadeTransition(Duration.millis(r.nextInt(600) + 1300), c);
-                            ft.setFromValue(1);
-                            ft.setToValue(0);
-                            ft.setAutoReverse(false);
-
-                            ParallelTransition parallelTransition = new ParallelTransition();
-                            parallelTransition.getChildren().addAll(ft, translateTransition);
-                            parallelTransition.setCycleCount(1);
-                            parallelTransition.play();
-                        }
-                    }
-                });
-            }
-        });
-
-        // When the X Button is clicked, close the Application
-        view.getGameLobbyView().getGameLobbyStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                closeApplication();
-            }
-        });
     }
 
+    /**
+     * Closes the application, disconnects the client from the server and closes all the resources
+     */
     private void closeApplication() {
         model.closeConnection();
         System.exit(0);

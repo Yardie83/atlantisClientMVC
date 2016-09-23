@@ -64,7 +64,7 @@ public class GameBoardView extends Pane {
         createWaterCards();
 
         createBridges();
-        // Currently Emtpy
+        // Currently Empty
         addHandCards();
 
         drawBoard();
@@ -105,7 +105,7 @@ public class GameBoardView extends Pane {
             }
         }
     }
-
+    // TODO: We need 49 cards and then only place 42 per set. Right now we create 42 cards without white cards
     private void createPathCardSets() {
         this.pathCardsSetA = new ArrayList<>();
         this.pathCardsSetB = new ArrayList<>();
@@ -216,7 +216,7 @@ public class GameBoardView extends Pane {
                     placeSpecialCard(4, CardType.END, tile);
                 }
             }
-            //Console will be placed at these X and Y coordinates
+            //Console will be placed at X and Y coordinates of the tile with the pathId 500
             if (pathId == 500) {
                 createGameConsole(tile);
             }

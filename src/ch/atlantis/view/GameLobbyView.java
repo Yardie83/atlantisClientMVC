@@ -1,41 +1,28 @@
 package ch.atlantis.view;
 
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
-import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
-import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import jdk.internal.util.xml.impl.Input;
 
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Arc2D;
-import java.awt.image.AffineTransformOp;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -111,7 +98,7 @@ public class GameLobbyView extends Pane {
             bindSizeToStage();
         }
 
-        defineStyleClass();
+        addCSSIdentifiers();
 
         this.getChildren().addAll(root);
         this.getControls(root);
@@ -217,6 +204,11 @@ public class GameLobbyView extends Pane {
         return leftVBox;
     }
 
+    /**
+     * Creates an animated PopUp Box in the bottom right corner of the GameLobby
+     * @param message The text to be displayed
+     * @param inset The amount of pixels the box should move into the screen from the right
+     */
     public void createPopUp(String message, int inset) {
         popup = new Pane();
         popup.setTranslateX(gameLobbyStage.getWidth());
@@ -231,7 +223,7 @@ public class GameLobbyView extends Pane {
         this.getChildren().add(popup);
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(1200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth() - 200, Interpolator.TANGENT(Duration.millis(3000), 500))));
+                new KeyFrame(Duration.millis(1200), new KeyValue(popup.translateXProperty(), gameLobbyStage.getWidth() - inset, Interpolator.TANGENT(Duration.millis(3000), 500))));
         timeline.setAutoReverse(true);
         timeline.setCycleCount(2);
         timeline.setDelay(Duration.millis(200));
@@ -244,7 +236,10 @@ public class GameLobbyView extends Pane {
         });
     }
 
-    private void defineStyleClass() {
+    /**
+     * Adds CSS identifiers for all the controls in the GameLobby.
+     */
+    private void addCSSIdentifiers() {
 
         /*
          * CSS Classes for the buttons in the
@@ -378,5 +373,45 @@ public class GameLobbyView extends Pane {
 
     public BorderPane getRoot() {
         return root;
+    }
+
+    public void createBubbles(MouseEvent event) {
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+
+                Random r = new Random();
+                int numberOfBubbles = 12;
+
+                for (int i = 0; i < numberOfBubbles; i++) {
+                    Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
+                    c.setStyle("-fx-border-color: WHITE;" +
+                            "-fx-border-width: 1px;" +
+                            "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
+                    c.setCenterX(event.getX() + r.nextInt(10) - 5);
+                    c.setCenterY(event.getY() + r.nextInt(10));
+
+                    getChildren().add(c);
+
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1400), c);
+                    translateTransition.setFromX(0);
+                    translateTransition.setToX(r.nextInt(40) - 20);
+                    translateTransition.setFromY(0);
+                    translateTransition.setToY(-r.nextInt(70) - 50);
+                    translateTransition.setAutoReverse(false);
+
+                    FadeTransition ft = new FadeTransition(Duration.millis(r.nextInt(600) + 1300), c);
+                    ft.setFromValue(1);
+                    ft.setToValue(0);
+                    ft.setAutoReverse(false);
+
+                    ParallelTransition parallelTransition = new ParallelTransition();
+                    parallelTransition.getChildren().addAll(ft, translateTransition);
+                    parallelTransition.setCycleCount(1);
+                    parallelTransition.play();
+                }
+            }
+        });
     }
 }

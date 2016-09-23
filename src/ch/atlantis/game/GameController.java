@@ -45,7 +45,6 @@ public class GameController {
             });
         }
 
-
         for (Player player : gameBoardView.getPlayers()) {
             for (GamePiece gamePiece : player.getGamePieces()) {
                 gamePiece.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -68,9 +67,6 @@ public class GameController {
                 });
             }
         }
-
-
-
 
     }
 }

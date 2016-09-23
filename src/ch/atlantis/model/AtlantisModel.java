@@ -47,6 +47,12 @@ public class AtlantisModel {
         gameList = FXCollections.observableArrayList();
     }
 
+    /**
+     * Tries to connect to the server. If a connection could be established
+     * the program then waits for incoming messages from the server.
+     * In case of an error the user is informed in the Chat text area and the Status Bar
+     */
+
     public void connectToServer() {
 
         if (socket != null && !socket.isClosed()) {
@@ -192,12 +198,13 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Closes the InputStreamReader, OutputStreamReader and the Socket.
+     */
     public void closeConnection() {
         try {
             if (socket != null && !socket.isClosed()) {
-               // sendMessage(new Message(MessageType.DISCONNECT, "Closing connection"));
                 autoConnect = false;
-                //clientTask.interrupt();
                 inReader.close();
                 outputStream.close();
                 socket.close();
