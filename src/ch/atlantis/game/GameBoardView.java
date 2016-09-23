@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -110,16 +112,68 @@ public class GameBoardView extends Pane {
         this.pathCardsSetA = new ArrayList<>();
         this.pathCardsSetB = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 6; j++) {
+            for (int j = 0; j < 7; j++) {
                 for (int k = 1; k <= 7; k++) {
                     if (i == 0) {
                         pathCardsSetA.add(new Card(j, k, CardType.PATH));
+                        pathCardsSetA = cleanCardSetA(pathCardsSetA);
+                        Collections.shuffle(pathCardsSetA);
                     } else {
                         pathCardsSetB.add(new Card(j, k, CardType.PATH));
+                        pathCardsSetB = cleanCardSetB(pathCardsSetB);
+                        Collections.shuffle(pathCardsSetB);
                     }
                 }
             }
         }
+    }
+
+    private ArrayList<Card> cleanCardSetA(ArrayList<Card> pathCardsSetA) {
+
+        for (int i = 0; i < pathCardsSetA.size(); i++) {
+            Card card = pathCardsSetA.get(i);
+            int value = card.getValue();
+            int colorSet = card.getColorSet();
+            int index;
+            if (value == 7) {
+                if (colorSet == 2 || colorSet == 3 || colorSet == 5 || colorSet == 6) {
+                    index = pathCardsSetA.indexOf(card);
+                    pathCardsSetA.remove(index);
+                }
+            } else if (value == 6) {
+                if (colorSet == 0 || colorSet == 1 || colorSet == 4) {
+                    index = pathCardsSetA.indexOf(card);
+                    pathCardsSetA.remove(index);
+                }
+            }
+        }
+
+        return pathCardsSetA;
+
+    }
+
+    private ArrayList<Card> cleanCardSetB(ArrayList<Card> pathCardsSetB) {
+
+        for (int i = 0; i < pathCardsSetB.size(); i++) {
+            Card card = pathCardsSetB.get(i);
+            int value = card.getValue();
+            int colorSet = card.getColorSet();
+            int index;
+            if (value == 7) {
+                if (colorSet == 0 || colorSet == 1 || colorSet == 4) {
+                    index = pathCardsSetB.indexOf(card);
+                    pathCardsSetB.remove(index);
+                }
+            } else if (value == 6) {
+                if (colorSet == 2 || colorSet == 3 || colorSet == 5 || colorSet == 6) {
+                    index = pathCardsSetB.indexOf(card);
+                    pathCardsSetB.remove(index);
+                }
+            }
+        }
+
+        return pathCardsSetB;
+
     }
 
     private void addPlayerPieces() {
@@ -155,11 +209,12 @@ public class GameBoardView extends Pane {
 
                         int value = Integer.parseInt(values[x]);
 
-                        if ((value / 100) >= 1 && (value / 100) <= 5) {
+                        if (value != 000) {
                             pathId = value;
                         } else {
                             pathId = 0;
                         }
+
                         tiles.add(new Tile(xPos, yPos, side, pathId));
                     }
                 }

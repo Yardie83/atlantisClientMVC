@@ -25,6 +25,12 @@ public class Player {
         this.gamePieces = new ArrayList<>(4);
     }
 
+    public boolean playersTurn() {
+
+        return true;
+
+    }
+
     public Color getPlayerColor() {
         return playerColor;
     }

@@ -16,6 +16,7 @@ public class Card extends Rectangle{
 
     private boolean isOnTop;
     private int value;
+    private int colorSet;
     private CardType cardType;
     private int pathID;
 
@@ -31,6 +32,7 @@ public class Card extends Rectangle{
     public Card(int colorSet, int value, CardType cardType) {
 
         this.value = value;
+        this.colorSet = colorSet;
         this.cardType = cardType;
         this.setStroke(Color.BLACK);
         applyColorSet(colorSet);
@@ -70,6 +72,8 @@ public class Card extends Rectangle{
     public int getValue() {
         return value;
     }
+
+    public int getColorSet() { return colorSet; }
 
     public CardType getCardType() {
         return cardType;
