@@ -24,6 +24,7 @@ public class GameController {
         this.model = model;
         this.gameBoardView = gameBoardView;
         gameBoardView.show();
+        handleUserInput();
     }
 
     private void handleUserInput() {
@@ -50,7 +51,7 @@ public class GameController {
                     public void handle(MouseEvent event) {
 
                         if (selectedCard.getCardType() != CardType.START) {
-                            gamePiece.moveGamePiece(selectedCard.getLayoutX(), selectedCard.getLayoutY());
+                            gamePiece.moveGamePiece(selectedCard.getLayoutX() + (selectedCard.getWidth()/2) - (gamePiece.getWidth()/2), selectedCard.getLayoutY() + (selectedCard.getHeight() /2) - (gamePiece.getHeight()/2));
                         }
 
                         for (Card card : pathCards){

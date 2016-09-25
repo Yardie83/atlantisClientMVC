@@ -17,6 +17,13 @@ public class Card extends Rectangle{
     private boolean isOnTop;
     private int value;
     private int colorSet;
+    public final static int BROWN  = 0;
+    public final static int PINK   = 1;
+    public final static int GREY   = 2;
+    public final static int YELLOW = 3;
+    public final static int GREEN  = 4;
+    public final static int BLUE   = 5;
+    public final static int WHITE  = 6;
     private CardType cardType;
     private int pathID;
 
@@ -40,25 +47,25 @@ public class Card extends Rectangle{
 
     private void applyColorSet(int colorSet) {
         switch (colorSet) {
-            case 0:
+            case BROWN:
                 super.setFill(Color.BROWN);
                 break;
-            case 1:
+            case PINK:
                 super.setFill(Color.PINK);
                 break;
-            case 2:
+            case GREY:
                 super.setFill(Color.GREY);
                 break;
-            case 3:
+            case YELLOW:
                 super.setFill(Color.YELLOW);
                 break;
-            case 4:
+            case GREEN:
                 super.setFill(Color.GREEN);
                 break;
-            case 5:
+            case BLUE:
                 super.setFill(Color.BLUE);
                 break;
-            case 6:
+            case WHITE:
                 super.setFill(Color.WHITE);
                 break;
             case 7:

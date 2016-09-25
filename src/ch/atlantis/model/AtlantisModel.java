@@ -25,7 +25,8 @@ public class AtlantisModel {
     private ObjectOutputStream outputStream;
     private Message message;
     private Socket socket;
-    private final String HOST = "127.0.0.1";
+    // for real server connection use IP: 138.68.77.135
+    private final String HOST = "localhost";
     private final int PORT = 9000;
     private SimpleStringProperty chatString;
     private SimpleStringProperty connectionStatus;
@@ -51,6 +52,8 @@ public class AtlantisModel {
      * Tries to connect to the server. If a connection could be established
      * the program then waits for incoming messages from the server.
      * In case of an error the user is informed in the Chat text area and the Status Bar
+     *
+     * Hermann Grieder
      */
 
     public void connectToServer() {
@@ -75,6 +78,12 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Starts a new Task that receives messages from the server and sends them
+     * according to their MessageType to a method that handles the message.
+     *
+     * Hermann Grieder
+     */
     private void receiveMessage() {
 
         Task receiveMessageTask = new Task() {
@@ -119,7 +128,6 @@ public class AtlantisModel {
                             }
                         }
                     } catch (SocketException e) {
-                        //TODO: Ask Bradley if this is the correct way to solve this problem
                         System.out.println("Connection by server closed");
                         closeConnection();
                         autoConnect = false;

@@ -12,7 +12,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -45,7 +44,7 @@ public class GameBoardView extends Pane {
         super.setMinHeight(height);
         super.setMinWidth(width);
 
-        //TODO: Put background into css stylesheet
+        //TODO: Put background into css stylesheet and fix position
         super.setBackground(new Background(new BackgroundImage(
                 new Image("ch/atlantis/res/gameboardbg.jpg"),
                 BackgroundRepeat.NO_REPEAT,
@@ -59,7 +58,16 @@ public class GameBoardView extends Pane {
 
         addPlayerPieces();
 
-        createPathCardSets();
+        this.pathCardsSetA = new ArrayList<>();
+        createPathCardSet(pathCardsSetA);
+        cleanCardSetA(pathCardsSetA);
+        Collections.shuffle(pathCardsSetA);
+
+        this.pathCardsSetB = new ArrayList<>();
+        createPathCardSet(pathCardsSetB);
+        cleanCardSetB(pathCardsSetB);
+        Collections.shuffle(pathCardsSetB);
+
 
         createMovementCards();
 
@@ -76,6 +84,11 @@ public class GameBoardView extends Pane {
         System.out.println(pathCards.size());
     }
 
+    /**
+     * Creates and adds a bridge for each player in the players list
+     * <p>
+     * Hermann Grieder
+     */
     private void createBridges() {
         this.bridges = new ArrayList<>(4);
         for (Player player : players) {
@@ -85,6 +98,11 @@ public class GameBoardView extends Pane {
         }
     }
 
+    /**
+     * Creates 24 water cards and adds it to the water cards ArrayList
+     * <p>
+     * Hermann Grieder
+     */
     private void createWaterCards() {
         this.waterCards = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
@@ -99,6 +117,11 @@ public class GameBoardView extends Pane {
 
     }
 
+    /**
+     * Hermann Grieder
+     * <p>
+     * Creates the 105 movement cards and adds it to the movementCards ArrayList
+     */
     private void createMovementCards() {
         this.movementCards = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
@@ -107,28 +130,29 @@ public class GameBoardView extends Pane {
             }
         }
     }
-    // TODO: We need 49 cards and then only place 42 per set. Right now we create 42 cards without white cards
-    private void createPathCardSets() {
-        this.pathCardsSetA = new ArrayList<>();
-        this.pathCardsSetB = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 7; j++) {
-                for (int k = 1; k <= 7; k++) {
-                    if (i == 0) {
-                        pathCardsSetA.add(new Card(j, k, CardType.PATH));
-                        pathCardsSetA = cleanCardSetA(pathCardsSetA);
-                        Collections.shuffle(pathCardsSetA);
-                    } else {
-                        pathCardsSetB.add(new Card(j, k, CardType.PATH));
-                        pathCardsSetB = cleanCardSetB(pathCardsSetB);
-                        Collections.shuffle(pathCardsSetB);
-                    }
-                }
+
+    /**
+     * Creates the two Card Sets A and B.
+     * <p>
+     * Author: Hermann Grieder
+     * @param pathCardsSet The ArrayList to store the cards in
+     */
+    private void createPathCardSet(ArrayList<Card> pathCardsSet) {
+        for (int j = 0; j < 7; j++) {
+            for (int k = 1; k <= 7; k++) {
+                pathCardsSet.add(new Card(j, k, CardType.PATH));
             }
         }
     }
 
-    private ArrayList<Card> cleanCardSetA(ArrayList<Card> pathCardsSetA) {
+    /**
+     * Fabian Witschi
+     * <p>
+     * Removes the unneeded cards from the pathCardSetA List
+     *
+     * @param pathCardsSetA
+     */
+    private void cleanCardSetA(ArrayList<Card> pathCardsSetA) {
 
         for (int i = 0; i < pathCardsSetA.size(); i++) {
             Card card = pathCardsSetA.get(i);
@@ -136,23 +160,27 @@ public class GameBoardView extends Pane {
             int colorSet = card.getColorSet();
             int index;
             if (value == 7) {
-                if (colorSet == 2 || colorSet == 3 || colorSet == 5 || colorSet == 6) {
+                if (colorSet == Card.GREY || colorSet == Card.YELLOW || colorSet == Card.BLUE || colorSet == Card.WHITE) {
                     index = pathCardsSetA.indexOf(card);
                     pathCardsSetA.remove(index);
                 }
             } else if (value == 6) {
-                if (colorSet == 0 || colorSet == 1 || colorSet == 4) {
+                if (colorSet == Card.BROWN || colorSet == Card.PINK || colorSet == Card.GREEN) {
                     index = pathCardsSetA.indexOf(card);
                     pathCardsSetA.remove(index);
                 }
             }
         }
-
-        return pathCardsSetA;
-
     }
 
-    private ArrayList<Card> cleanCardSetB(ArrayList<Card> pathCardsSetB) {
+    /**
+     * Fabian Witschi
+     * <p>
+     * Removes the unneeded cards from the pathCardSetB List
+     *
+     * @param pathCardsSetB
+     */
+    private void cleanCardSetB(ArrayList<Card> pathCardsSetB) {
 
         for (int i = 0; i < pathCardsSetB.size(); i++) {
             Card card = pathCardsSetB.get(i);
@@ -160,22 +188,25 @@ public class GameBoardView extends Pane {
             int colorSet = card.getColorSet();
             int index;
             if (value == 7) {
-                if (colorSet == 0 || colorSet == 1 || colorSet == 4) {
+                if (colorSet == Card.BROWN || colorSet == Card.PINK || colorSet == Card.GREEN) {
                     index = pathCardsSetB.indexOf(card);
                     pathCardsSetB.remove(index);
                 }
             } else if (value == 6) {
-                if (colorSet == 2 || colorSet == 3 || colorSet == 5 || colorSet == 6) {
+                if (colorSet == Card.GREY || colorSet == Card.YELLOW || colorSet == Card.BLUE || colorSet == Card.WHITE) {
                     index = pathCardsSetB.indexOf(card);
                     pathCardsSetB.remove(index);
                 }
             }
         }
-
-        return pathCardsSetB;
-
     }
 
+    /**
+     * Adds 3 GamePieces to each Player in the players list
+     * <p>
+     * Author: Hermann Grieder
+     *
+     */
     private void addPlayerPieces() {
         for (Player player : players) {
             for (int i = 0; i < 3; i++) {
@@ -185,6 +216,12 @@ public class GameBoardView extends Pane {
         }
     }
 
+    /**
+     * Reads the GameBoardLayout.txt file and transfers the values into the values array
+     * <p>
+     * Author: Hermann Grieder
+     * @param height
+     */
     private void readLayout(int height) {
 
         int pathId;
@@ -225,6 +262,7 @@ public class GameBoardView extends Pane {
             System.out.println("File \"GameBoardLayout.txt\" not found!");
         }
     }
+
 
     private void drawBoard() {
 
