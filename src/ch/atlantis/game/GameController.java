@@ -39,7 +39,7 @@ public class GameController {
                 @Override
                 public void handle(MouseEvent event) {
                     selectedCard = card;
-                    cardBehindPathId = selectedCard.getpathId()-1;
+                    cardBehindPathId = selectedCard.getPathId()-1;
                 }
             });
         }
@@ -49,16 +49,19 @@ public class GameController {
                 gamePiece.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent event) {
-
+                        // Place the player game piece in the middle of the card that corresponds
+                        // with the card that was played
                         if (selectedCard.getCardType() != CardType.START) {
-                            gamePiece.moveGamePiece(selectedCard.getLayoutX() + (selectedCard.getWidth()/2) - (gamePiece.getWidth()/2), selectedCard.getLayoutY() + (selectedCard.getHeight() /2) - (gamePiece.getHeight()/2));
+                            gamePiece.moveGamePiece(selectedCard.getLayoutX() + (selectedCard.getWidth()/2) - (gamePiece.getWidth()/2),
+                                    selectedCard.getLayoutY() + (selectedCard.getHeight() /2) - (gamePiece.getHeight()/2));
                         }
-
+                        // Find the card behind the player which is on top
+                        // and remove it, but leave the card if it is already a water card
                         for (Card card : pathCards){
-                            if (card.getpathId() == cardBehindPathId && card.isOnTop()){
+                            if (card.getPathId() == cardBehindPathId && card.isOnTop() && card.getCardType() != CardType.WATER){
                                 gameBoardView.removePathCard(card);
                             }
-                            if (card.getpathId() == cardBehindPathId && !card.isOnTop()){
+                            if (card.getPathId() == cardBehindPathId && !card.isOnTop() && card.getCardType() != CardType.WATER){
                                 card.setIsOnTop(true);
                             }
                         }

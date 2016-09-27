@@ -33,6 +33,8 @@ public class Card extends Rectangle{
     public Card(int colorSet, CardType cardType){
 
         this.cardType = cardType;
+        this.colorSet = colorSet;
+        this.setStroke(Color.BLACK);
         applyColorSet(colorSet);
     }
 
@@ -91,7 +93,7 @@ public class Card extends Rectangle{
         this.pathID = pathID;
     }
 
-    public int getpathId() {
+    public int getPathId() {
         return this.pathID;
     }
 

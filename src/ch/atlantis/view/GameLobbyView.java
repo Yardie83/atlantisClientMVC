@@ -58,7 +58,7 @@ public class GameLobbyView extends Pane {
     private Pane popup;
     private Separator s0;
     private Label lblGameTitles;
-    private ArrayList<Control> gameLobbyControls = new ArrayList<>();
+    private ArrayList<Control> gameLobbyControls;
     private Button btnStartGame;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
@@ -67,6 +67,8 @@ public class GameLobbyView extends Pane {
         Scene gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
+
+        gameLobbyControls = new ArrayList<>();
 
         if (fullscreen) {
             gameLobbyStage.setFullScreen(true);

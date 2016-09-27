@@ -16,6 +16,7 @@ import java.util.ArrayList;
  * <p>
  * This class acts as a hub from where the different views,
  * like the GameLobby, the Options etc. get instantiated.
+ *
  */
 
 public class AtlantisView {

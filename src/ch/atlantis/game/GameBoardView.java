@@ -3,8 +3,9 @@ package ch.atlantis.game;
 import ch.atlantis.view.AtlantisView;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -29,7 +30,6 @@ public class GameBoardView extends Pane {
     private ArrayList<Card> pathCardsSetA;
     private ArrayList<Card> pathCardsSetB;
     private ArrayList<Card> movementCards;
-    private ArrayList<Card> waterCards;
     private ArrayList<Card> bridges;
     private ArrayList<Card> pathCards;
     private Stage gameStage;
@@ -46,13 +46,13 @@ public class GameBoardView extends Pane {
         super.setMinHeight(height);
         super.setMinWidth(width);
 
-        //TODO: Put background into css stylesheet and fix position
-        super.setBackground(new Background(new BackgroundImage(
-                new Image("ch/atlantis/res/gameboardbg.jpg"),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                BackgroundSize.DEFAULT)));
+//        //TODO: Put background into css stylesheet and fix position
+//        super.setBackground(new Background(new BackgroundImage(
+//                new Image("ch/atlantis/res/gameboardbg.jpg"),
+//                BackgroundRepeat.NO_REPEAT,
+//                BackgroundRepeat.NO_REPEAT,
+//                BackgroundPosition.CENTER,
+//                BackgroundSize.DEFAULT)));
 
         readLayout(height);
         //Currently Emtpy
@@ -61,19 +61,17 @@ public class GameBoardView extends Pane {
         addPlayerPieces();
 
         this.pathCardsSetA = new ArrayList<>();
-        createPathCardSet(pathCardsSetA);
+        createPathCards(pathCardsSetA);
         cleanCardSetA(pathCardsSetA);
         Collections.shuffle(pathCardsSetA);
 
         this.pathCardsSetB = new ArrayList<>();
-        createPathCardSet(pathCardsSetB);
+        createPathCards(pathCardsSetB);
         cleanCardSetB(pathCardsSetB);
         Collections.shuffle(pathCardsSetB);
 
 
         createMovementCards();
-
-        createWaterCards();
 
         createBridges();
         // Currently Empty
@@ -82,8 +80,6 @@ public class GameBoardView extends Pane {
         drawBoard();
 
         drawGamePieces();
-
-        System.out.println(pathCards.size());
     }
 
     /**
@@ -97,18 +93,6 @@ public class GameBoardView extends Pane {
             Card bridge = new Card(7, CardType.BRIDGE);
             player.addBridge(bridge);
             bridges.add(bridge);
-        }
-    }
-
-    /**
-     * Creates 24 water cards and adds it to the water cards ArrayList
-     * <p>
-     * Hermann Grieder
-     */
-    private void createWaterCards() {
-        this.waterCards = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            waterCards.add(new Card(5, CardType.WATER));
         }
     }
 
@@ -134,13 +118,13 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Creates the two Card Sets A and B.
+     * Creates and adds 49 path cards to the card set
      * <p>
      * Author: Hermann Grieder
      *
      * @param pathCardsSet The ArrayList to store the cards in
      */
-    private void createPathCardSet(ArrayList<Card> pathCardsSet) {
+    private void createPathCards(ArrayList<Card> pathCardsSet) {
         for (int j = 0; j < 7; j++) {
             for (int k = 1; k <= 7; k++) {
                 pathCardsSet.add(new Card(j, k, CardType.PATH));
@@ -151,7 +135,7 @@ public class GameBoardView extends Pane {
     /**
      * Removes the unneeded cards from the pathCardSetA List
      * The cards to be removed in A are different than in set B
-
+     * <p>
      * <p>
      * Author: Fabian Witschi
      *
@@ -226,7 +210,7 @@ public class GameBoardView extends Pane {
      * <p>
      * Author: Hermann Grieder
      *
-     * @param height
+     * @param height Height of the stage
      */
     private void readLayout(int height) {
 
@@ -276,7 +260,6 @@ public class GameBoardView extends Pane {
      */
     private void drawBoard() {
 
-        Iterator<Card> iteratorWater = waterCards.iterator();
         Iterator<Card> iteratorA = pathCardsSetA.iterator();
         Iterator<Card> iteratorB = pathCardsSetB.iterator();
 
@@ -285,6 +268,11 @@ public class GameBoardView extends Pane {
         for (Tile tile : tiles) {
 
             int pathId = tile.getPathId();
+
+            //Fill the path with water cards before adding the pathCards
+            if (pathId >= 101 && pathId <= 153) {
+                placeSpecialCard(Card.BLUE, CardType.WATER, tile);
+            }
 
             if (pathId != 0 && pathId != 500) {
 
@@ -297,10 +285,7 @@ public class GameBoardView extends Pane {
                         placeOneCard(iteratorA, tile);
                     }
                 }
-                //Water card at path id 227 in the middle of the board
-                else if (pathId == 227) {
-                    placeOneCard(iteratorWater, tile);
-                }
+
                 // Place two cards from 128 to 133 and from 144 to 153
                 // Place one card from 134 to 143 from Card set B
                 else if (pathId >= 128 && pathId <= 154) {
@@ -312,11 +297,11 @@ public class GameBoardView extends Pane {
                 }
                 //Start card
                 else if (pathId == 300) {
-                    placeSpecialCard(3, CardType.START, tile);
+                    placeSpecialCard(Card.YELLOW, CardType.START, tile);
                 }
                 //End card
                 else if (pathId == 400) {
-                    placeSpecialCard(4, CardType.END, tile);
+                    placeSpecialCard(Card.GREEN, CardType.END, tile);
                 }
             }
             //Console will be placed at X and Y coordinates of the tile with the pathId 500
@@ -327,18 +312,15 @@ public class GameBoardView extends Pane {
     }
 
     private void placeSpecialCard(int colorSet, CardType cardType, Tile tile) {
-        Card card;
-        card = new Card(colorSet, cardType);
+        Card card = new Card(colorSet, cardType);
         card.setIsOnTop(true);
         drawCard(card, tile);
     }
 
     private void placeOneCard(Iterator<Card> iterator, Tile tile) {
-        Card card;
-        card = iterator.next();
+        Card card = iterator.next();
         card.setIsOnTop(true);
         drawCard(card, tile);
-
     }
 
     private void placeTwoCards(Iterator<Card> iterator, Tile tile) {
@@ -389,7 +371,8 @@ public class GameBoardView extends Pane {
 
         VBox console = new VBox();
 
-        console.setStyle("-fx-border-width: 1px; -fx-background-color: #7af5c4;" +
+        console.setStyle("-fx-border-width: 1px; " +
+                "-fx-background-color: #7af5c4;" +
                 "-fx-border-color: black");
 
 

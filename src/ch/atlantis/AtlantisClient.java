@@ -14,12 +14,15 @@ import javafx.stage.Stage;
  */
 public class AtlantisClient extends Application {
 
+    public static final String LOGGER_NAME = AtlantisClient.class.getSimpleName();
+
     public static void main(String[] args) {
         launch();
     }
 
     @Override
     public void start(Stage introStage) throws Exception {
+
         AtlantisModel model = new AtlantisModel();
         AtlantisView view = new AtlantisView(introStage);
         new AtlantisController(model, view);

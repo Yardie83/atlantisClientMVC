@@ -111,7 +111,7 @@ public class AtlantisModel {
                             connectToServer();
                         } else {
                             message = (Message) inReader.readObject();
-
+                            System.out.println("Server -> " + message.getMessageObject());
                             switch (message.getMessageType()) {
 
                                 case DISCONNECT:
@@ -145,9 +145,9 @@ public class AtlantisModel {
                         closeConnection();
                         autoConnect = false;
                     } catch (Exception e) {
+                        System.out.println("AtlantisModel: Error reading message");
                         e.printStackTrace();
-                    } finally {
-                        System.out.println("Server -> " + message.getMessageObject());
+                        closeConnection();
                     }
                 }
                 return null;
@@ -163,14 +163,14 @@ public class AtlantisModel {
 
     private void handleLanguages(Message message) {
 
-        languageList = (ArrayList<Language>) message.getMessageObject();
-
-        if (languageList == null && languageList.size() == 0) {
-            System.out.println("Error no language could be found");
-            return;
-        } else {
-            selectedLanguage = languageList.get(0).getCulture();
-        }
+//        languageList = (ArrayList<Language>) message.getMessageObject();
+//
+//        if (languageList == null && languageList.size() == 0) {
+//            System.out.println("Error no language could be found");
+//            return;
+//        } else {
+//            selectedLanguage = languageList.get(0).getCulture();
+//        }
     }
 
     private void handleUserName(Message message) {
