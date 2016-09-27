@@ -48,7 +48,7 @@ public class LoginController {
         view.getLoginView().getBtnCreateProfile().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                view.createNewProfileView();
+                view.createNewProfileView(view.getGameLobbyView().getGameLobbyStage());
                 new NewProfileController(model, view);
                 view.getLoginStage().close();
             }

@@ -63,7 +63,7 @@ public class NewProfileController {
                         if (model.createProfileSuccessProperty().getValue().equals(1)) {
                             view.getGameLobbyView().createPopUp("Profile Created!", 200);
                             view.getGameLobbyView().removeLoginBtn();
-                            view.getProfileStage().close();
+                            view.closeActiveOverlay();
                             model.createProfileSuccessProperty().setValue(0);
                         } else if (model.createProfileSuccessProperty().getValue().equals(2)) {
                             view.getNewProfileView().getLblError().setText("Username already exists");

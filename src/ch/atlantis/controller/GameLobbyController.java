@@ -21,8 +21,12 @@ import java.util.Collections;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
- *
+ * <p>
+ * Controller for the GameLobby.
+ * Handles all events performed on the controls in the GameLobby
+ * Registers itself to certain variables and listens to changed values
  */
+
 public class GameLobbyController {
 
     final private AtlantisModel model;
@@ -31,6 +35,7 @@ public class GameLobbyController {
     private final int WIDTH = 1300;
 
     public GameLobbyController(AtlantisModel model, AtlantisView view) {
+
         this.model = model;
         this.view = view;
 
@@ -40,18 +45,16 @@ public class GameLobbyController {
 
     /**
      * Handles all the input events for the controls in the GameLobby.
+     * <p>
+     * Hermann Grieder
      */
+
     private void handleGameLobbyControls() {
 
-        view.getGameLobbyView().getGameLobbyStage().setOnShowing(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-                model.connectToServer();
-            }
-        });
-
         /*
-         *Menu Bar Controls
+         * *******************************
+         * Menu Bar Controls EventHandlers
+         * *******************************
          */
 
         view.getGameLobbyView().getMenuItemExit().setOnAction(new EventHandler<ActionEvent>() {
@@ -61,12 +64,13 @@ public class GameLobbyController {
             }
         });
 
-        //TODO: Does not work on top-level Menus. Need to add a submenu.
+        //TODO: Does not work on top-level Menus. Need to add a submenu or delete the whole thing
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList());
+                view.createOptionsView(model.getLanguageList(), view.getGameLobbyView().getGameLobbyStage());
                 new OptionsController(model, view);
+                view.getOptionsStage().show();
             }
         });
 
@@ -78,42 +82,48 @@ public class GameLobbyController {
         });
 
         /*
-         * Create Game, Login, Create Profile and Options Controls
+         * *********************************************************************
+         * Create Game, Login, Create Profile and Options Controls EventHandlers
+         * *********************************************************************
          */
 
-        // CREATE GAME Overlay
+        // Create and show GAME Overlay
         view.getGameLobbyView().getBtnCreateGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createCreateGameView();
+                view.createCreateGameView(view.getGameLobbyView().getGameLobbyStage());
                 new CreateGameController(model, view);
+                view.getCreateGameStage().show();
             }
         });
-        // LOGIN Overlay
+        // Create and show LOGIN Overlay
         view.getGameLobbyView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createLoginView();
+                view.createLoginView(view.getGameLobbyView().getGameLobbyStage());
                 new LoginController(model, view);
+                view.getLoginStage().show();
             }
         });
-        // CREATE PROFILE Overlay
+        // Create and Show PROFILE Overlay
         view.getGameLobbyView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createNewProfileView();
+                view.createNewProfileView(view.getGameLobbyView().getGameLobbyStage());
                 new NewProfileController(model, view);
+                view.getProfileStage().show();
             }
         });
-        // OPTIONS Overlay
+        // Create and show OPTIONS Overlay
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList());
+                view.createOptionsView(model.getLanguageList(), view.getGameLobbyView().getGameLobbyStage());
                 new OptionsController(model, view);
+                view.getOptionsStage().show();
             }
         });
-
+        // Adds the user to an existing game in the gameList on double-click
         view.getGameLobbyView().getGameListView().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -121,7 +131,7 @@ public class GameLobbyController {
             }
         });
 
-        //  GAME Overlay
+        //  Create and show GAME Overlay
         view.getGameLobbyView().getBtnStartGame().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -131,11 +141,15 @@ public class GameLobbyController {
 
 
         /*
+         * ******************************
          * CHAT Application EventHandlers
+         * ******************************
          */
 
         /*
          * When the user presses enter, the message is sent to the server
+         *
+         * Hermann Grieder
          */
         view.getGameLobbyView().getTxtField().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -151,13 +165,16 @@ public class GameLobbyController {
             }
         });
 
-
-        // BUBBLES!!
+        /*
+         * ******************************************************************
+         * BUBBLES!! It creates bubbles(!!) when you click in the gameLobby!!
+         * ******************************************************************
+         * Hermann Grieder
+         */
         view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                view.getGameLobbyView().createBubbles(event);
-
+                view.getGameLobbyView().createBubbles(event, 12);
             }
         });
 
@@ -171,36 +188,68 @@ public class GameLobbyController {
     }
 
     /**
-     * Registers the different listeners to the gameLobbyController
+     * Registers the different listeners
+     * <p>
+     * Hermann Grieder
      */
+
     private void addListeners() {
+
+        /*
+         * We have to listen for the change in the fullscreen property because when the
+         * fullscreen flag gets set to true a stage does not have any width and height
+         * values anymore for mysterious reasons.
+         *
+         * Hermann Grieder
+         */
 
         view.getGameLobbyView().getGameLobbyStage().fullScreenProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                view.setFullscreen(false);
-                view.getGameLobbyView().getGameLobbyStage().setHeight(HEIGHT);
-                view.getGameLobbyView().getGameLobbyStage().setWidth(WIDTH);
-                view.bindSizeToStage();
-                view.getGameLobbyView().bindSizeToStage();
-            }
-        });
-    /* Incoming Message is saved in the ChatString. The changeListener listens to the ChatString
-     * in order to update the txtArea with the incoming chat message.
-     */
-        //TODO: Ask Bradley if there is a better way instead of a ChangeListener. Because when the user enters the same message twice it does not register as a changed value
-        model.getChatString().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if (!(newValue.equals(""))) {
-                    view.getGameLobbyView().getTxtArea().appendText(newValue + "\n");
+                if (newValue) {
+                    view.setFullscreen(false);
+                    view.getGameLobbyView().getGameLobbyStage().setHeight(HEIGHT);
+                    view.getGameLobbyView().getGameLobbyStage().setWidth(WIDTH);
+                    view.bindSizeToStage();
+                    view.getGameLobbyView().bindSizeToStage();
                 }
             }
         });
 
         /*
-         * STATUS and INFORMATION Bar EventHandlers (Bottom of the Game Lobby)
+         * The incoming message is saved in the ChatString in the AtlantisModel class.
+         * The changeListener listens to the ChatString in order to update the txtArea
+         * with the incoming chat message.
+         *
+         * Hermann Grieder
          */
+
+        model.getChatString().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+
+                /*
+                 * We have to remove the LocalDateTime substring which makes this string unique. The LocalDateTime
+                 * has 23 characters and a space, so we want to show the message that starts after the 24th character.
+                 * This is necessary because if we did not add a unique identifier like the LocalDateTime a user could
+                 * not type the same message twice, since this changeListener would not register the second message as a
+                 * newValue compared to the oldValue.
+                 *
+                 * Hermann Grieder
+                 */
+
+                String chatMessage = newValue.substring(24);
+                view.getGameLobbyView().getTxtArea().appendText(chatMessage + "\n");
+            }
+        });
+
+        /*
+         * Sets the Status Label to either Connected or Disconnected, depending if the client
+         * was able to connect to the server successfully
+         *
+         * Hermann Grieder
+         */
+
         model.getConnectionStatus().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -214,7 +263,13 @@ public class GameLobbyController {
             }
         });
 
-        //UserName to be displayed. If the user is not logged in, Guest + number will be displayed as the name
+        /*
+         * UserName to be displayed. If the user is not logged in,
+         * Guest + number will be displayed as the name.
+         *
+         *  Hermann Grieder
+         */
+
         model.userNameProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -228,7 +283,13 @@ public class GameLobbyController {
             }
         });
 
-        //Update the GameList in the GameLobby with the List received from the Server
+        /*
+         * Updates the GameList ListView in the GameLobby with
+         * the List received from the Server
+         *
+         * Hermann Grieder
+         */
+
         model.getGameList().addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(Change<? extends String> c) {
@@ -243,7 +304,7 @@ public class GameLobbyController {
                                 if (!gameInfo[0].equalsIgnoreCase("")) {
                                     String gameName = gameInfo[0];
                                     Integer nrPlayers = Integer.parseInt(gameInfo[1]);
-                                    view.getGameLobbyView().getGameListView().getItems().add(gameName + ": " + nrPlayers);
+                                    view.getGameLobbyView().getGameListView().getItems().add(gameName + " : " + nrPlayers);
                                 }
                             }
                             model.getGameList().clear();
@@ -256,8 +317,11 @@ public class GameLobbyController {
     }
 
     /**
-     * Closes the application, disconnects the client from the server and closes all the resources
+     * Closes the application, disconnects the client from the server and closes all resources
+     * <p>
+     * Hermann Grieder
      */
+
     private void closeApplication() {
         model.closeConnection();
         System.exit(0);

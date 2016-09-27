@@ -61,7 +61,7 @@ public class CreateGameController {
             view.getCreateGameView().getLblError().setVisible(true);
         } else {
             model.sendMessage(new Message(MessageType.NEWGAME, message));
-            view.getCreateGameStage().close();
+            view.closeActiveOverlay();
         }
     }
 }

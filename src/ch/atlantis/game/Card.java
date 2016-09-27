@@ -4,12 +4,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Created by Fabian on 15/08/16.
+ * Created by Hermann Grieder on 15/08/16.
+ *
+ * Card class that defines sets the color and the image for the individual card
  */
 
 enum CardType{
-    //EMPTY = 0, PATH = 1, WATER = 2, START = 3, END = 4, HANDCARD = 5, BRIDGE = 6, DECK = 7; MOVEMENT = 8;
-    EMPTY, PATH, WATER, START, END, HANDCARD, BRIDGE, DECK, MOVEMENT
+    PATH, WATER, START, END, BRIDGE, MOVEMENT
 }
 
 public class Card extends Rectangle{
@@ -17,6 +18,9 @@ public class Card extends Rectangle{
     private boolean isOnTop;
     private int value;
     private int colorSet;
+    private CardType cardType;
+    private int pathID;
+
     public final static int BROWN  = 0;
     public final static int PINK   = 1;
     public final static int GREY   = 2;
@@ -24,9 +28,6 @@ public class Card extends Rectangle{
     public final static int GREEN  = 4;
     public final static int BLUE   = 5;
     public final static int WHITE  = 6;
-    private CardType cardType;
-    private int pathID;
-
 
     // Constructor for Movement Cards. They do not have a value associated.
     public Card(int colorSet, CardType cardType){

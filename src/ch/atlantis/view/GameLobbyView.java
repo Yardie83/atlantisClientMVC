@@ -26,6 +26,8 @@ import java.util.Random;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
+ *
+ * The GameLobbyView. Also creates the bubbles on mouseClick.
  */
 public class GameLobbyView extends Pane {
 
@@ -69,6 +71,7 @@ public class GameLobbyView extends Pane {
         if (fullscreen) {
             gameLobbyStage.setFullScreen(true);
             gameLobbyStage.setFullScreenExitHint("");
+            gameLobbyStage.setAlwaysOnTop(true);
         } else {
             gameLobbyStage.setHeight(height);
             gameLobbyStage.setWidth(width);
@@ -105,7 +108,8 @@ public class GameLobbyView extends Pane {
     }
 
     public void bindSizeToStage() {
-        /* Workaround: There seems to be a padding or margin of sorts on the stage,
+        /*
+         * Workaround: There seems to be a padding or margin of sorts on the stage,
          * that's why we subtract a couple pixels of the width and the height.
          */
         root.minHeightProperty().bind(gameLobbyStage.heightProperty().subtract(40));
@@ -206,6 +210,9 @@ public class GameLobbyView extends Pane {
 
     /**
      * Creates an animated PopUp Box in the bottom right corner of the GameLobby
+     *
+     * Hermann Grieder
+     *
      * @param message The text to be displayed
      * @param inset The amount of pixels the box should move into the screen from the right
      */
@@ -238,6 +245,8 @@ public class GameLobbyView extends Pane {
 
     /**
      * Adds CSS identifiers for all the controls in the GameLobby.
+     *
+     * Hermann Grieder
      */
     private void addCSSIdentifiers() {
 
@@ -289,6 +298,52 @@ public class GameLobbyView extends Pane {
         btnCreateProfile.setId("btnCreateProfile");
         btnOptions.setId("btnOptions");
 
+    }
+
+    /**
+     * Creates the bubbles coming from the tip of the mouse pointer on mouse click.
+     * The bubbles spawn location and upwards movement are randomized for each bubble.
+     *
+     * Hermann Grieder
+     *
+     * @param event The MouseEvent that was fired
+     * @param bubbleCount Number of bubbles to be produced
+     */
+    public void createBubbles(MouseEvent event, int bubbleCount) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                Random r = new Random();
+                int numberOfBubbles = bubbleCount;
+                for (int i = 0; i < numberOfBubbles; i++) {
+                    Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
+                    c.setStyle("-fx-border-color: WHITE;" +
+                            "-fx-border-width: 1px;" +
+                            "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
+                    c.setCenterX(event.getX() + r.nextInt(10) - 5);
+                    c.setCenterY(event.getY() + r.nextInt(10));
+
+                    getChildren().add(c);
+
+                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1400), c);
+                    translateTransition.setFromX(0);
+                    translateTransition.setToX(r.nextInt(40) - 20);
+                    translateTransition.setFromY(0);
+                    translateTransition.setToY(-r.nextInt(70) - 50);
+                    translateTransition.setAutoReverse(false);
+
+                    FadeTransition ft = new FadeTransition(Duration.millis(r.nextInt(600) + 1300), c);
+                    ft.setFromValue(1);
+                    ft.setToValue(0);
+                    ft.setAutoReverse(false);
+
+                    ParallelTransition parallelTransition = new ParallelTransition();
+                    parallelTransition.getChildren().addAll(ft, translateTransition);
+                    parallelTransition.setCycleCount(1);
+                    parallelTransition.play();
+                }
+            }
+        });
     }
 
     public void show() {
@@ -375,43 +430,5 @@ public class GameLobbyView extends Pane {
         return root;
     }
 
-    public void createBubbles(MouseEvent event) {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-                Random r = new Random();
-                int numberOfBubbles = 12;
-
-                for (int i = 0; i < numberOfBubbles; i++) {
-                    Circle c = new Circle(r.nextInt(3) + 3, Color.SKYBLUE);
-                    c.setStyle("-fx-border-color: WHITE;" +
-                            "-fx-border-width: 1px;" +
-                            "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
-                    c.setCenterX(event.getX() + r.nextInt(10) - 5);
-                    c.setCenterY(event.getY() + r.nextInt(10));
-
-                    getChildren().add(c);
-
-                    TranslateTransition translateTransition = new TranslateTransition(Duration.millis(r.nextInt(600) + 1400), c);
-                    translateTransition.setFromX(0);
-                    translateTransition.setToX(r.nextInt(40) - 20);
-                    translateTransition.setFromY(0);
-                    translateTransition.setToY(-r.nextInt(70) - 50);
-                    translateTransition.setAutoReverse(false);
-
-                    FadeTransition ft = new FadeTransition(Duration.millis(r.nextInt(600) + 1300), c);
-                    ft.setFromValue(1);
-                    ft.setToValue(0);
-                    ft.setAutoReverse(false);
-
-                    ParallelTransition parallelTransition = new ParallelTransition();
-                    parallelTransition.getChildren().addAll(ft, translateTransition);
-                    parallelTransition.setCycleCount(1);
-                    parallelTransition.play();
-                }
-            }
-        });
-    }
 }

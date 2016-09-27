@@ -8,6 +8,9 @@ import javafx.stage.WindowEvent;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
+ *
+ * Plays the introVideo on startup and switches to the GameLobby
+ * on mouseClick on the video
  */
 public class IntroController {
 

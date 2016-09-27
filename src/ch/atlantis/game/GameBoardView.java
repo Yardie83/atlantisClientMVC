@@ -17,6 +17,8 @@ import java.util.Iterator;
 
 /**
  * Created by Hermann Grieder on 23.08.2016.
+ * <p>
+ * The gameBoard that will be shown on game start.
  */
 public class GameBoardView extends Pane {
 
@@ -135,6 +137,7 @@ public class GameBoardView extends Pane {
      * Creates the two Card Sets A and B.
      * <p>
      * Author: Hermann Grieder
+     *
      * @param pathCardsSet The ArrayList to store the cards in
      */
     private void createPathCardSet(ArrayList<Card> pathCardsSet) {
@@ -146,11 +149,13 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Fabian Witschi
-     * <p>
      * Removes the unneeded cards from the pathCardSetA List
+     * The cards to be removed in A are different than in set B
+
+     * <p>
+     * Author: Fabian Witschi
      *
-     * @param pathCardsSetA
+     * @param pathCardsSetA The first path card set
      */
     private void cleanCardSetA(ArrayList<Card> pathCardsSetA) {
 
@@ -174,11 +179,12 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Fabian Witschi
+     * Removes the unneeded cards from the pathCardSetB List.
+     * The cards to be removed in B are different than in set A
      * <p>
-     * Removes the unneeded cards from the pathCardSetB List
+     * Fabian Witschi
      *
-     * @param pathCardsSetB
+     * @param pathCardsSetB The second path card set
      */
     private void cleanCardSetB(ArrayList<Card> pathCardsSetB) {
 
@@ -205,7 +211,6 @@ public class GameBoardView extends Pane {
      * Adds 3 GamePieces to each Player in the players list
      * <p>
      * Author: Hermann Grieder
-     *
      */
     private void addPlayerPieces() {
         for (Player player : players) {
@@ -220,6 +225,7 @@ public class GameBoardView extends Pane {
      * Reads the GameBoardLayout.txt file and transfers the values into the values array
      * <p>
      * Author: Hermann Grieder
+     *
      * @param height
      */
     private void readLayout(int height) {
@@ -263,7 +269,11 @@ public class GameBoardView extends Pane {
         }
     }
 
-
+    /**
+     * Draws the GameBoard by placing the cards on the corresponding tile
+     * <p>
+     * Hermann Grieder
+     */
     private void drawBoard() {
 
         Iterator<Card> iteratorWater = waterCards.iterator();
