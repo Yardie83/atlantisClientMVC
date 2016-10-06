@@ -19,10 +19,10 @@ public class Game {
 
         players = new ArrayList<>(4);
 
-        players.add(new Player("A", Color.RED));
-        players.add(new Player("B", Color.BLACK));
-        players.add(new Player("C", Color.GREEN));
-        players.add(new Player("D", Color.BLUE));
+        players.add(new Player("Hermann", Color.RED));
+        players.add(new Player("Loris", Color.BLACK));
+        players.add(new Player("Heval", Color.GREEN));
+        players.add(new Player("Fabian", Color.BLUE));
 
         gameBoardView = new GameBoardView(players, view);
 

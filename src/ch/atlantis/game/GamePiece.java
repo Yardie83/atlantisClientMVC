@@ -9,6 +9,8 @@ public class GamePiece extends Rectangle {
 
     private int pieceId;
     private Player player;
+    private double x;
+    private double y;
 
     public GamePiece(int pieceId, Player player) {
         this.pieceId = pieceId;
@@ -29,7 +31,11 @@ public class GamePiece extends Rectangle {
     public void moveGamePiece(double x, double y) {
         this.setLayoutX(x);
         this.setLayoutY(y);
+        this.x = x;
+        this.y = y;
     }
 
+    public double getGamePieceX() { return x; }
+    public double getGamePieceY() { return y; }
 
 }

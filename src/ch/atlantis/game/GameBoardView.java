@@ -1,11 +1,13 @@
 package ch.atlantis.game;
 
 import ch.atlantis.view.AtlantisView;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -70,11 +72,14 @@ public class GameBoardView extends Pane {
         cleanCardSetB(pathCardsSetB);
         Collections.shuffle(pathCardsSetB);
 
+        this.movementCards = new ArrayList<>();
+        createMovementCards(movementCards);
+        Collections.shuffle(movementCards);
 
-        createMovementCards();
+        this.bridges = new ArrayList<>();
+        createBridges(bridges);
 
-        createBridges();
-        // Currently Empty
+
         addHandCards();
 
         drawBoard();
@@ -86,13 +91,14 @@ public class GameBoardView extends Pane {
      * Creates and adds a bridge for each player in the players list
      * <p>
      * Hermann Grieder
+     * @param bridges
      */
-    private void createBridges() {
+    private void createBridges(ArrayList<Card> bridges) {
         this.bridges = new ArrayList<>(4);
         for (Player player : players) {
             Card bridge = new Card(7, CardType.BRIDGE);
             player.addBridge(bridge);
-            bridges.add(bridge);
+            this.bridges.add(bridge);
         }
     }
 
@@ -107,12 +113,13 @@ public class GameBoardView extends Pane {
      * Hermann Grieder
      * <p>
      * Creates the 105 movement cards and adds it to the movementCards ArrayList
+     * @param movementCards
      */
-    private void createMovementCards() {
+    private void createMovementCards(ArrayList<Card> movementCards) {
         this.movementCards = new ArrayList<>();
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 15; j++) {
-                movementCards.add(new Card(i, CardType.MOVEMENT));
+                this.movementCards.add(new Card(i, CardType.MOVEMENT));
             }
         }
     }
@@ -308,7 +315,163 @@ public class GameBoardView extends Pane {
             if (pathId == 500) {
                 createGameConsole(tile);
             }
+            if (pathId == 601) {
+                if (players.size() != 0) {
+                    createPlayerA(tile);
+                }
+            }
+            if (pathId == 602) {
+                if (players.size() > 1) {
+                    createPlayerB(tile);
+                }
+            }
+            if (pathId == 603) {
+                if (players.size() > 2) {
+                    createPlayerC(tile);
+                }
+            }
+            if (pathId == 604) {
+                if (players.size() > 3) {
+                    createPlayerD(tile);
+                }
+            }
+            if (pathId == 701) {
+                createDeck(tile);
+            }
         }
+    }
+
+    private void createDeck(Tile tile) {
+        VBox deck = new VBox();
+
+        deck.setStyle("-fx-border-width: 1px; " +
+                "-fx-background-color: #F0F8FF;" +
+                "-fx-border-color: black");
+
+
+        Label label1 = new Label("Deck");
+
+        deck.getChildren().add(label1);
+
+        deck.setLayoutX(tile.getX());
+        deck.setLayoutY(tile.getY());
+        deck.setMinHeight(100);
+        deck.setMinWidth(tile.getSide() * 2);
+
+        this.getChildren().add(deck);
+    }
+
+    private void createPlayerA(Tile tile) {
+        VBox playerAConsole = new VBox(10);
+        HBox top = new HBox(10);
+        top.setAlignment(Pos.CENTER);
+        HBox bottom = new HBox(10);
+
+        playerAConsole.getChildren().addAll(top, bottom);
+
+        playerAConsole.setStyle("-fx-border-width: 1px; " +
+                "-fx-background-color: #7af5c4;" +
+                "-fx-border-color: black");
+
+        Player player = players.get(0);
+        String score = Integer.toString(player.getScore());
+        Label label1 = new Label(player.getPlayerName().toString());
+        Label label2 = new Label("Score: " + score);
+        Label label3 = new Label("|");
+
+        top.getChildren().addAll(label1, label3, label2);
+
+        playerAConsole.setLayoutX(tile.getX());
+        playerAConsole.setLayoutY(tile.getY());
+        playerAConsole.setMinHeight(100);
+        playerAConsole.setMinWidth(tile.getSide() * 2);
+
+        this.getChildren().add(playerAConsole);
+    }
+
+    private void createPlayerB(Tile tile) {
+        VBox playerBConsole = new VBox(10);
+        HBox top = new HBox(10);
+        top.setAlignment(Pos.CENTER);
+        HBox bottom = new HBox(10);
+
+        playerBConsole.getChildren().addAll(top, bottom);
+
+        playerBConsole.setStyle("-fx-border-width: 1px; " +
+                "-fx-background-color: #7af5c4;" +
+                "-fx-border-color: black");
+
+        Player player = players.get(1);
+        String score = Integer.toString(player.getScore());
+        Label label1 = new Label(player.getPlayerName().toString());
+        Label label2 = new Label("Score: " + score);
+        Label label3 = new Label("|");
+
+        top.getChildren().addAll(label1, label3, label2);
+
+        playerBConsole.setLayoutX(tile.getX());
+        playerBConsole.setLayoutY(tile.getY());
+        playerBConsole.setMinHeight(100);
+        playerBConsole.setMinWidth(tile.getSide() * 2);
+
+        this.getChildren().add(playerBConsole);
+    }
+
+    private void createPlayerC(Tile tile) {
+        VBox playerCConsole = new VBox(10);
+        HBox top = new HBox(10);
+        top.setAlignment(Pos.CENTER);
+        HBox bottom = new HBox(10);
+
+        playerCConsole.getChildren().addAll(top, bottom);
+
+        playerCConsole.setStyle("-fx-border-width: 1px; " +
+                "-fx-background-color: #7af5c4;" +
+                "-fx-border-color: black");
+
+        Player player = players.get(2);
+        String score = Integer.toString(player.getScore());
+        Label label1 = new Label(player.getPlayerName());
+        Label label2 = new Label("Score: " + score);
+        Label label3 = new Label("|");
+
+        top.getChildren().addAll(label1, label3, label2);
+
+        playerCConsole.setLayoutX(tile.getX());
+        playerCConsole.setLayoutY(tile.getY());
+        playerCConsole.setMinHeight(100);
+        playerCConsole.setMinWidth(tile.getSide() * 2);
+
+        this.getChildren().add(playerCConsole);
+    }
+
+
+    private void createPlayerD(Tile tile) {
+        VBox playerDConsole = new VBox(10);
+        HBox top = new HBox(10);
+        top.setAlignment(Pos.CENTER);
+        HBox bottom = new HBox(10);
+
+        playerDConsole.getChildren().addAll(top, bottom);
+
+        playerDConsole.setStyle("-fx-border-width: 1px; " +
+                "-fx-background-color: #7af5c4;" +
+                "-fx-border-color: black");
+
+        Player player = players.get(3);
+        String score = Integer.toString(player.getScore());
+        Label label1 = new Label(player.getPlayerName().toString());
+        Label label2 = new Label("Score: " + score);
+        Label label3 = new Label("|");
+
+        top.getChildren().addAll(label1, label3, label2);
+
+        playerDConsole.setLayoutX(tile.getX());
+        playerDConsole.setLayoutY(tile.getY());
+        playerDConsole.setMinHeight(100);
+        playerDConsole.setMinWidth(tile.getSide() * 2);
+
+        this.getChildren().add(playerDConsole);
     }
 
     private void placeSpecialCard(int colorSet, CardType cardType, Tile tile) {

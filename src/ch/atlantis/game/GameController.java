@@ -18,6 +18,7 @@ public class GameController {
     private AtlantisModel model;
     private Card selectedCard;
     private int cardBehindPathId;
+    private int cardBeforePathId;
 
     public GameController(GameModel gameModel, AtlantisModel model, GameBoardView gameBoardView) {
         this.gameModel = gameModel;
@@ -32,14 +33,15 @@ public class GameController {
         ArrayList<Card> pathCards = gameBoardView.getPathCards();
 
         for (Card card : pathCards) {
-            if (card.getCardType() == CardType.START){
+            if (card.getCardType() == CardType.START) {
                 selectedCard = card;
             }
             card.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     selectedCard = card;
-                    cardBehindPathId = selectedCard.getPathId()-1;
+                    cardBehindPathId = selectedCard.getPathId() - 1;
+                    cardBeforePathId = selectedCard.getPathId() + 1;
                 }
             });
         }
@@ -52,23 +54,62 @@ public class GameController {
                         // Place the player game piece in the middle of the card that corresponds
                         // with the card that was played
                         if (selectedCard.getCardType() != CardType.START) {
-                            gamePiece.moveGamePiece(selectedCard.getLayoutX() + (selectedCard.getWidth()/2) - (gamePiece.getWidth()/2),
-                                    selectedCard.getLayoutY() + (selectedCard.getHeight() /2) - (gamePiece.getHeight()/2));
+                            if (isOccupied(selectedCard)) {
+                                while (isOccupied(selectedCard)) {
+                                    selectedCard = getNextCard();
+                                    cardBeforePathId++;
+                                }
+                            } else {
+                                gamePiece.moveGamePiece(selectedCard.getLayoutX() + (selectedCard.getWidth() / 2) - (gamePiece.getWidth() / 2),
+                                        selectedCard.getLayoutY() + (selectedCard.getHeight() / 2) - (gamePiece.getHeight() / 2));
+                            }
                         }
                         // Find the card behind the player which is on top
                         // and remove it, but leave the card if it is already a water card
-                        for (Card card : pathCards){
-                            if (card.getPathId() == cardBehindPathId && card.isOnTop() && card.getCardType() != CardType.WATER){
+                        for (Card card : pathCards) {
+                            /*if (isOccupied(card)) {
+                                while (isOccupied(card)) {
+                                    cardBehindPathId--;
+                                }
+                            } else {*/
+                            if (card.getPathId() == cardBehindPathId && card.isOnTop() && card.getCardType() != CardType.WATER) {
                                 gameBoardView.removePathCard(card);
                             }
-                            if (card.getPathId() == cardBehindPathId && !card.isOnTop() && card.getCardType() != CardType.WATER){
+                            if (card.getPathId() == cardBehindPathId && !card.isOnTop() && card.getCardType() != CardType.WATER) {
                                 card.setIsOnTop(true);
                             }
                         }
+                        //}
                     }
                 });
             }
         }
 
     }
+
+    private Card getNextCard() {
+        ArrayList<Card> pathCards = gameBoardView.getPathCards();
+        for (Card card : pathCards) {
+            if (card.getPathId() == cardBeforePathId) {
+                Card newCard;
+                return newCard = card;
+            }
+        }
+        return null;
+    }
+
+    private boolean isOccupied(Card selectedCard) {
+
+        for (Player player : gameBoardView.getPlayers()) {
+            for (GamePiece gamePiece : player.getGamePieces()) {
+                if (gamePiece.getGamePieceX() == selectedCard.getLayoutX() + (selectedCard.getWidth() / 2) - (gamePiece.getWidth() / 2) && gamePiece.getGamePieceY() ==
+                        selectedCard.getLayoutY() + (selectedCard.getHeight() / 2) - (gamePiece.getHeight() / 2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
+
 }

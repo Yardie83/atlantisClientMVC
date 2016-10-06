@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by Fabian on 15/08/16.
  */
 public class Player {
-    private int score;
+    private int score = 0;
     private int playerID;
     private String playerName;
     private Color playerColor;
@@ -25,11 +25,7 @@ public class Player {
         this.gamePieces = new ArrayList<>(4);
     }
 
-    public boolean playersTurn() {
-
-        return true;
-
-    }
+    public String getPlayerName() { return playerName; }
 
     public Color getPlayerColor() {
         return playerColor;
@@ -39,7 +35,9 @@ public class Player {
         this.score += score;
     }
 
-    public void subtractScore(int score) {this.score -= score;}
+    public void subtractScore(int score) { this.score -= score; }
+
+    public int getScore() { return score; }
 
     public void addGamePiece(GamePiece gamePiece) {
         this.gamePieces.add(gamePiece);
