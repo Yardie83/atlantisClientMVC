@@ -126,10 +126,11 @@ public class AtlantisView {
     public void createCreateGameView( Stage parentStage ) {
         if ( this.createGameView == null ) {
             this.createGameView = new CreateGameView( height.getValue(), width.getValue() );
-            new Scene( createGameView );
+            createGameStage = new Stage();
+            createGameStage.setScene( new Scene( createGameView ) );
+            setupOverlay( createGameStage, parentStage, "css_CreateGameView" );
         }
-        createGameStage = new Stage();
-        setupOverlay( createGameStage, createGameView.getScene(), parentStage, "css_CreateGameView" );
+
         activeOverlayStage = createGameStage;
     }
 
@@ -139,12 +140,12 @@ public class AtlantisView {
      * Hermann Grieder
      */
     public void createLoginView( Stage parentStage ) {
-        if ( this.loginView == null ) {
-            this.loginView = new LoginView( height.getValue(), width.getValue() );
-            new Scene( loginView );
+        if ( loginView == null ) {
+            loginView = new LoginView( height.getValue(), width.getValue() );
+            loginStage = new Stage();
+            loginStage.setScene( new Scene( loginView ) );
+            setupOverlay( loginStage, parentStage, "css_LoginView" );
         }
-        loginStage = new Stage();
-        setupOverlay( loginStage, loginView.getScene(), parentStage, "css_LoginView" );
         activeOverlayStage = loginStage;
     }
 
@@ -154,14 +155,15 @@ public class AtlantisView {
      * Hermann Grieder
      */
     public void createNewProfileView( Stage parentStage ) {
-        if ( this.newProfileView == null ) {
-            this.newProfileView = new NewProfileView( height.getValue(), width.getValue() );
-            new Scene( newProfileView );
+        if ( newProfileView == null ) {
+            newProfileView = new NewProfileView( height.getValue(), width.getValue() );
+            profileStage = new Stage();
+            profileStage.setScene( new Scene( newProfileView ) );
+            setupOverlay( profileStage, parentStage, "css_NewProfileView" );
         }
-        getControls( this.newProfileView );
+        getControls( newProfileView );
         setControlText( controls );
-        profileStage = new Stage();
-        setupOverlay( profileStage, newProfileView.getScene(), parentStage, "css_NewProfileView" );
+
         activeOverlayStage = profileStage;
     }
 
@@ -174,15 +176,15 @@ public class AtlantisView {
     public void createOptionsView( ArrayList<Language> languageList, String culture, Stage parentStage ) {
         if ( this.optionsView == null ) {
             this.optionsView = new OptionsView( height.getValue(), width.getValue(), languageList, culture );
-            new Scene( optionsView );
+            optionsStage = new Stage();
+            optionsStage.setScene( new Scene( optionsView ) );
+            setupOverlay( optionsStage, parentStage, "css_OptionsView" );
         }
-        optionsStage = new Stage();
-        setupOverlay( optionsStage, optionsView.getScene(), parentStage, "css_OptionsView" );
         activeOverlayStage = optionsStage;
     }
 
-    private void getControls( Pane pane ) {
 
+    private void getControls( Pane pane ) {
         for ( Node node : pane.getChildren() ) {
             if ( node instanceof Pane ) {
                 getControls( (Pane) node );
@@ -265,11 +267,11 @@ public class AtlantisView {
      * @param overlayStage The stage of the overlay to set up
      */
 
-    private void setupOverlay( Stage overlayStage, Scene scene, Stage parentStage, String cssString ) {
+    private void setupOverlay( Stage overlayStage, Stage parentStage, String cssString ) {
 
         if ( cssString != null ) {
             String css = this.getClass().getResource( "../res/css/" + cssString + ".css" ).toExternalForm();
-            scene.getStylesheets().add( css );
+            overlayStage.getScene().getStylesheets().add( css );
         }
         // Make it so that the overlays block access to the parentStage
         overlayStage.initModality( Modality.WINDOW_MODAL );

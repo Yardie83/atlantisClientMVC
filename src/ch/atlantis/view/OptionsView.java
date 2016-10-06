@@ -91,10 +91,11 @@ public class OptionsView extends Pane {
         comboBoxLanguages = new ComboBox<String>();
         comboBoxLanguages.setTooltip(new Tooltip("select a lanugage"));
 
-//        for (Language language : languageList){
-//
-//            comboBoxLanguages.getItems().add(language.getCulture());
-//        }
+        for (Language language : languageList){
+
+            comboBoxLanguages.getItems().add(language.getCulture());
+
+        }
 
         //comboBoxLanguages.getSelectionModel().selectFirst();
         comboBoxLanguages.getSelectionModel().select(culture);

@@ -31,7 +31,7 @@ public class OptionsController {
 
                 if (culture != model.getCurrentLanguage()) {
 
-                    if (view.setSelectedLanguage(model.getSelectetLanguage(culture))) {
+                    if (view.setSelectedLanguage(model.getSelectedLanguage(culture))) {
 
                         view.createGameLobbyView(false);
 

@@ -51,6 +51,7 @@ public class LoginController {
                 view.createNewProfileView(view.getGameLobbyView().getGameLobbyStage());
                 new NewProfileController(model, view);
                 view.getLoginStage().close();
+                view.getProfileStage().show();
             }
         });
         // Handle Cancel Button MouseClick Event in the Login View

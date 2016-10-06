@@ -59,7 +59,7 @@ public class AtlantisModel {
         userName = new SimpleStringProperty();
         gameList = FXCollections.observableArrayList();
         //TODO: (loris) read the config file here
-        soundControler();
+        soundController();
     }
 
     /**
@@ -252,7 +252,7 @@ public class AtlantisModel {
         }
     }
 
-    private void soundControler() {
+    private void soundController() {
 
         Media backgroundMusic = new Media(Paths.get("src/ch/atlantis/res/Maid with the Flaxen Hair.mp3").toUri().toString());
 
@@ -260,7 +260,7 @@ public class AtlantisModel {
         myPlayer.play();
     }
 
-    public Language getSelectetLanguage(String culture) {
+    public Language getSelectedLanguage( String culture) {
 
         for (Language language : this.getLanguageList()) {
 
