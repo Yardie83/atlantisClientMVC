@@ -2,7 +2,6 @@ package ch.atlantis.model;
 
 import ch.atlantis.util.Language;
 import ch.atlantis.util.Message;
-import ch.atlantis.util.MessageType;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -18,10 +17,19 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
+ *
+ * Main model class of the Atlantis client program.
+ *
+ * Handles the connection to the server.
+ * Sends messages from the client to the server.
+ * Receives messages from the server.
+ * Handles them according to their MessageType.
+ * Closes the connection on close of the application.
  */
 public class AtlantisModel {
 
@@ -29,8 +37,14 @@ public class AtlantisModel {
     private ObjectOutputStream outputStream;
     private Message message;
     private Socket socket;
-    private final String HOST = "127.0.0.1";
-    private final int PORT = 9000;
+
+    private ObservableList<String> gameList;
+
+    private ArrayList<Language> languageList;
+    private String selectedLanguage;
+
+    private boolean autoConnect = true;
+
     private SimpleStringProperty chatString;
     private SimpleStringProperty connectionStatus;
     private SimpleIntegerProperty createProfileSuccess;
@@ -53,15 +67,25 @@ public class AtlantisModel {
         soundControler();
     }
 
+    /**
+     * Tries to connect to the server. If a connection could be established
+     * the program then waits for incoming messages from the server.
+     * In case of an error the user is informed in the Chat text area and the Status Bar
+     * <p>
+     * Hermann Grieder
+     */
+
     public void connectToServer() {
+
+        // For real server connection use IP: 138.68.77.135
+        final String HOST = "127.0.0.1";
+        final int PORT = 9000;
 
         if (socket != null && !socket.isClosed()) {
             closeConnection();
         }
         if (autoConnect) {
-            System.out.println("Connecting to Server...");
-            chatString.setValue("Connecting to Server...");
-            connectionStatus.setValue("Connecting...");
+            chatString.setValue(LocalDateTime.now()+" Connecting to Server...");
             try {
                 socket = new Socket(HOST, PORT);
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -69,19 +93,25 @@ public class AtlantisModel {
                 receiveMessage();
             } catch (IOException e) {
                 System.err.println("Connection to the server failed!\nPlease check if the server is running");
-                chatString.setValue("Connection to the server failed!\nPlease check if the server is running");
+                chatString.setValue(LocalDateTime.now()+ " Connection to the server failed!\nPlease check if the server is running");
                 connectionStatus.setValue("Disconnected");
             }
         }
     }
 
+    /**
+     * Starts a new Task that receives messages from the server and
+     * handles them according to their MessageType.
+     * <p>
+     * Hermann Grieder
+     */
     private void receiveMessage() {
 
         Task receiveMessageTask = new Task() {
             @Override
             protected Object call() throws Exception {
                 System.out.println("Connected to Server\nWaiting for incoming messages");
-                chatString.setValue("Connected to Server\nWaiting for incoming messages");
+                chatString.setValue(LocalDateTime.now()+" Connected to Server\nWaiting for incoming messages");
                 connectionStatus.setValue("Connected");
                 while (autoConnect) {
                     try {
@@ -89,7 +119,7 @@ public class AtlantisModel {
                             connectToServer();
                         } else {
                             message = (Message) inReader.readObject();
-
+                            System.out.println("Server -> " + message.getMessageObject());
                             switch (message.getMessageType()) {
 
                                 case DISCONNECT:
@@ -119,20 +149,19 @@ public class AtlantisModel {
                             }
                         }
                     } catch (SocketException e) {
-                        //TODO: Ask Bradley if this is the correct way to solve this problem
-                        System.out.println("Connection by server closed");
+                        System.out.println("Connection closed by server");
+                        closeConnection();
                         autoConnect = false;
-                        //closeConnection();
                     } catch (Exception e) {
+                        System.out.println("AtlantisModel: Error reading message");
                         e.printStackTrace();
-                    } finally {
-                        System.out.println("Server -> " + message.getMessageObject());
+                        closeConnection();
                     }
                 }
                 return null;
             }
         };
-        clientTask = new Thread(receiveMessageTask);
+        Thread clientTask = new Thread(receiveMessageTask);
         clientTask.start();
     }
 
@@ -178,17 +207,15 @@ public class AtlantisModel {
 
     private void handleChatMessage(Message message) {
         chatString.setValue(message.getMessageObject().toString());
-        chatString.setValue("");
     }
 
     public void sendMessage(Message message) {
-        //TODO: This if statement can maybe be a do-while loop. We have to look into it
         if ((socket == null || socket.isClosed()) && autoConnect) {
             connectToServer();
             autoConnect = false;
             sendMessage(message);
-        } else if ((socket == null || socket.isClosed()) && !autoConnect) {
-            chatString.setValue("Maximum connection attempts reached.");
+        } else if (!autoConnect) {
+            chatString.setValue(LocalDateTime.now()+" Maximum connection attempts reached.");
         } else {
             try {
                 System.out.println("Sending to Server -> " + message.getMessageObject());
@@ -199,12 +226,15 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Closes the InputStreamReader, OutputStreamReader and the Socket.
+     *
+     * Hermann Grieder
+     */
     public void closeConnection() {
         try {
             if (socket != null && !socket.isClosed()) {
-                sendMessage(new Message(MessageType.DISCONNECT, "Closing connection"));
                 autoConnect = false;
-                clientTask.interrupt();
                 inReader.close();
                 outputStream.close();
                 socket.close();
@@ -219,11 +249,9 @@ public class AtlantisModel {
     public void showGameRules() {
         try {
             File file = new File(getClass().getResource("/ch/atlantis/res/Atlantis_Spielregel.pdf").getFile());
-
             if (file.exists()) {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

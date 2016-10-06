@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 /**
- * Created by LorisGrether on 04.08.2016.
+ * Created by Loris Grether on 04.08.2016.
  */
 public class NewProfileView extends Pane {
 

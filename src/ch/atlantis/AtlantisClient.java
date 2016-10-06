@@ -8,11 +8,11 @@ import javafx.stage.Stage;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
+ *
+ * Start of the Application.
+ * Creates the model, the view and the controller.
  */
 public class AtlantisClient extends Application {
-
-    private AtlantisView view;
-    private AtlantisModel model;
 
 
     public static void main(String[] args) {
@@ -21,12 +21,9 @@ public class AtlantisClient extends Application {
 
     @Override
     public void start(Stage introStage) throws Exception {
-        model = new AtlantisModel();
-        view = new AtlantisView(introStage);
-        new AtlantisController(model, view);
 
-        if (!AtlantisController.debugMode) {
-            view.getIntroStage().show();
-        }
+        AtlantisModel model = new AtlantisModel();
+        AtlantisView view = new AtlantisView(introStage);
+        new AtlantisController(model, view);
     }
 }

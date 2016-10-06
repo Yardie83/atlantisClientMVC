@@ -1,44 +1,40 @@
 package ch.atlantis.game;
 
-import javafx.scene.control.Label;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /**
- * Created by Fabian on 15/08/16.
+ * Created by Hermann Grieder on 15/08/16.
+ *
+ * Card class that defines sets the color and the image for the individual card
  */
 
 enum CardType{
-    //EMPTY = 0, PATH = 1, WATER = 2, START = 3, END = 4, HANDCARD = 5, BRIDGE = 6, HAND = 7, DECK = 8; MOVEMENT = 9;
-    EMPTY, PATH, WATER, START, END, CARD, BRIDGE, HAND, DECK, MOVEMENT
+    PATH, WATER, START, END, BRIDGE, MOVEMENT
 }
 
 public class Card extends Rectangle{
 
+    private boolean isOnTop;
     private int value;
+    private int colorSet;
     private CardType cardType;
     private int pathID;
 
-
-    // Constructor for Start, End, Bridge and Water Cards
-    public Card(CardType cardType) {
-        this.cardType = cardType;
-
-        if (cardType == CardType.WATER){
-            super.setFill(Color.BLACK);
-        }
-        if (cardType == CardType.START){
-            super.setFill(Color.GREEN);
-        }
-        if (cardType == CardType.END){
-            super.setFill(Color.GREEN);
-        }
-    }
+    public final static int BROWN  = 0;
+    public final static int PINK   = 1;
+    public final static int GREY   = 2;
+    public final static int YELLOW = 3;
+    public final static int GREEN  = 4;
+    public final static int BLUE   = 5;
+    public final static int WHITE  = 6;
 
     // Constructor for Movement Cards. They do not have a value associated.
     public Card(int colorSet, CardType cardType){
 
         this.cardType = cardType;
+        this.colorSet = colorSet;
+        this.setStroke(Color.BLACK);
         applyColorSet(colorSet);
     }
 
@@ -46,34 +42,40 @@ public class Card extends Rectangle{
     public Card(int colorSet, int value, CardType cardType) {
 
         this.value = value;
+        this.colorSet = colorSet;
         this.cardType = cardType;
-        applyColorSet(colorSet);
         this.setStroke(Color.BLACK);
+        applyColorSet(colorSet);
     }
 
     private void applyColorSet(int colorSet) {
         switch (colorSet) {
-            case 0:
+            case BROWN:
                 super.setFill(Color.BROWN);
                 break;
-            case 1:
+            case PINK:
                 super.setFill(Color.PINK);
                 break;
-            case 2:
+            case GREY:
                 super.setFill(Color.GREY);
                 break;
-            case 3:
+            case YELLOW:
                 super.setFill(Color.YELLOW);
                 break;
-            case 4:
+            case GREEN:
                 super.setFill(Color.GREEN);
                 break;
-            case 5:
+            case BLUE:
                 super.setFill(Color.BLUE);
                 break;
-            case 6:
+            case WHITE:
                 super.setFill(Color.WHITE);
                 break;
+            case 7:
+                super.setFill(null);
+                break;
+            default:
+                super.setFill(null);
         }
     }
 
@@ -81,11 +83,25 @@ public class Card extends Rectangle{
         return value;
     }
 
+    public int getColorSet() { return colorSet; }
+
     public CardType getCardType() {
         return cardType;
     }
 
-    public void addPathID(int pathID){
+    public void setPathId(int pathID){
         this.pathID = pathID;
+    }
+
+    public int getPathId() {
+        return this.pathID;
+    }
+
+    public void setIsOnTop(boolean isOnTop){
+        this.isOnTop = isOnTop;
+    }
+
+    public boolean isOnTop(){
+        return this.isOnTop;
     }
 }

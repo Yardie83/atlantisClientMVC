@@ -7,14 +7,4 @@ public class GameModel {
 
 
 
-
-
-
-
-
-
-
-
-
-
 }
