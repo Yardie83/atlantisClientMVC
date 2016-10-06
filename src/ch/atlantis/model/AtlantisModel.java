@@ -8,6 +8,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +17,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -37,7 +40,7 @@ public class AtlantisModel {
     private Thread clientTask;
     private ObservableList<String> gameList;
     private ArrayList<Language> languageList;
-    private String selectedLanguage;
+    private String currentLanguage;
 
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
@@ -46,6 +49,8 @@ public class AtlantisModel {
         loginSuccess = new SimpleIntegerProperty(0);
         userName = new SimpleStringProperty();
         gameList = FXCollections.observableArrayList();
+        //TODO: (loris) read the config file here
+        soundControler();
     }
 
     public void connectToServer() {
@@ -144,7 +149,9 @@ public class AtlantisModel {
             return;
         }
         else {
-            selectedLanguage = languageList.get(0).getCulture();
+            //TODO: (Loris) Config file stuff
+            currentLanguage = languageList.get(0).getCulture();
+            System.out.println("THE SELECTED LANGUAGE IS: " + currentLanguage);
         }
     }
 
@@ -222,6 +229,26 @@ public class AtlantisModel {
         }
     }
 
+    private void soundControler() {
+
+        Media backgroundMusic = new Media(Paths.get("src/ch/atlantis/res/Maid with the Flaxen Hair.mp3").toUri().toString());
+
+        MediaPlayer myPlayer = new MediaPlayer(backgroundMusic);
+        myPlayer.play();
+    }
+
+    public Language getSelectetLanguage(String culture) {
+
+        for (Language language : this.getLanguageList()) {
+
+            if (language.getCulture().equals(culture)) {
+
+                return language;
+            }
+        }
+        return null;
+    }
+
     public SimpleStringProperty getChatString() {
         return chatString;
     }
@@ -255,11 +282,12 @@ public class AtlantisModel {
         return languageList;
     }
 
-    public String getSelectedLanguage() {
-        return selectedLanguage;
+    public String getCurrentLanguage() {
+        return currentLanguage;
     }
 
-    public void setSelectedLanguage(String selectedLanguage) {
-        this.selectedLanguage = selectedLanguage;
+    public void setCurrentLanguage(String currentLanguage) {
+        this.currentLanguage = currentLanguage;
     }
+
 }

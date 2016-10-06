@@ -1,14 +1,9 @@
 package ch.atlantis.controller;
 
 import ch.atlantis.model.AtlantisModel;
-import ch.atlantis.util.Language;
 import ch.atlantis.view.AtlantisView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-
-import java.lang.reflect.Method;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
@@ -31,19 +26,23 @@ public class OptionsController {
             @Override
             public void handle(ActionEvent event) {
 
-                System.out.println("do bini");
-
                 String culture = view.getOptionsView().getSelectedComboBoxLanguage();
-                System.out.println(culture);
+                //System.out.println(culture);
 
-                if (culture != model.getSelectedLanguage()) {
+                if (culture != model.getCurrentLanguage()) {
 
-                    if (changeLanguage(culture)) {
-                        model.setSelectedLanguage(culture);
+                    if (view.setSelectedLanguage(model.getSelectetLanguage(culture))) {
+
+                        view.createGameLobbyView(false);
+
+                        model.setCurrentLanguage(culture);
+                        view.getOptionsView().setSelectedComboboxLanguage(culture);
                         view.getOptionsStage().close();
                     } else {
-                        //TODO: Error message
+                        //TODO: (Loris) Error message
                     }
+                } else {
+                    view.getOptionsStage().close();
                 }
             }
         });
@@ -54,56 +53,6 @@ public class OptionsController {
                 view.getOptionsStage().close();
             }
         });
-    }
-
-    private boolean changeLanguage(String culture) {
-
-        System.out.println("change language");
-
-        Language language = getSelectetLanguage(culture);
-
-        if (language != null) {
-
-            for (Control control : view.getGameLobbyView().getGameLobbyControls()) {
-
-                if (control instanceof Button) {
-
-                    Button button = (Button) control;
-
-                    for (String id : language.getLanguageTable().values()) {
-
-                        System.out.println(id);
-
-                        button.setText("hallo");
-
-                        if (button.getId() != null) {
-
-                            //if (button.getId().toString().equals(value)) {}
-
-                            System.out.println(button.getId().toString());
-                        }
-                    }
-                }
-            }
-        } else {
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private Language getSelectetLanguage(String culture) {
-
-        for (Language language : model.getLanguageList()) {
-
-            if (language.getCulture() == culture) ;
-
-            return language;
-        }
-
-        return null;
-
     }
     //END Handle Options Controls
 }

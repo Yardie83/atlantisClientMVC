@@ -1,7 +1,6 @@
 package ch.atlantis.controller;
 
 import ch.atlantis.game.Game;
-import ch.atlantis.game.GameController;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.Message;
 import ch.atlantis.util.MessageType;
@@ -75,7 +74,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList());
+                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage());
                 new OptionsController(model, view);
             }
         });
@@ -119,7 +118,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList());
+                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage());
                 new OptionsController(model, view);
             }
         });

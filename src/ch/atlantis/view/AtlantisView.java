@@ -2,7 +2,12 @@ package ch.atlantis.view;
 
 import ch.atlantis.util.Language;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -35,7 +40,11 @@ public class AtlantisView {
     private SimpleIntegerProperty height;
     private SimpleIntegerProperty width;
 
+    private ArrayList<Control> controls;
+
     private boolean fullscreen;
+
+    private Language selectedLanguage;
 
 
     public AtlantisView(Stage introStage) {
@@ -43,6 +52,8 @@ public class AtlantisView {
         this.introStage = introStage;
         width = new SimpleIntegerProperty(1280);
         height = new SimpleIntegerProperty(800);
+
+        controls = new ArrayList<>();
     }
 
 
@@ -54,15 +65,21 @@ public class AtlantisView {
 
         this.fullscreen = fullscreen;
 
-        if (fullscreen) {
-            width.setValue(Screen.getPrimary().getBounds().getWidth());
-            height.setValue(Screen.getPrimary().getBounds().getHeight());
-            this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), true);
-            //ScenicView.show(gameLobbyView);
-        } else {
-            this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), false);
-            bindSizeToStage();
+        if (gameLobbyView == null) {
+
+            if (fullscreen) {
+                width.setValue(Screen.getPrimary().getBounds().getWidth());
+                height.setValue(Screen.getPrimary().getBounds().getHeight());
+                this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), true);
+                //ScenicView.show(gameLobbyView);
+            } else {
+                this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), false);
+                bindSizeToStage();
+            }
         }
+
+            getControls(this.gameLobbyView);
+            setControlText(controls);
     }
 
     public void bindSizeToStage() {
@@ -84,26 +101,106 @@ public class AtlantisView {
     }
 
     public void createLoginView() {
-        this.loginView = new LoginView(height.getValue(), width.getValue());
-        Scene scene = new Scene(loginView);
-        loginStage = new Stage();
-        setupOverlay(loginStage, scene, "LoginView");
+        if (this.loginView == null) {
+            this.loginView = new LoginView(height.getValue(), width.getValue());
+            Scene scene = new Scene(loginView);
+        }
+            loginStage = new Stage();
+            setupOverlay(loginStage, loginView.getScene(), "LoginView");
     }
 
     public void createNewProfileView() {
+
+        if (this.newProfileView == null){
         this.newProfileView = new NewProfileView(height.getValue(), width.getValue());
-        Scene scene = new Scene(newProfileView);
+            Scene scene = new Scene(newProfileView);
+        }
+        getControls(this.newProfileView);
+        setControlText(controls);
         profileStage = new Stage();
-        setupOverlay(profileStage, scene, "NewProfileView");
+        setupOverlay(profileStage, newProfileView.getScene(), "NewProfileView");
     }
 
-    public void createOptionsView(ArrayList<Language> languageList) {
-        this.optionsView = new OptionsView(height.getValue(), width.getValue(), languageList);
+    public void createOptionsView(ArrayList<Language> languageList, String culture) {
+        this.optionsView = new OptionsView(height.getValue(), width.getValue(), languageList, culture);
         Scene scene = new Scene(optionsView);
         optionsStage = new Stage();
         setupOverlay(optionsStage, scene, "OptionsView");
     }
 
+    private void getControls(Pane pane) {
+
+        for (Node node : pane.getChildren()) {
+            if (node instanceof Pane) {
+                getControls((Pane) node);
+            } else if (node instanceof Control) {
+                Control c = (Control) node;
+                controls.add(c);
+            }
+        }
+    }
+
+    private void setControlText(ArrayList<Control> controls){
+
+        for (Control control : controls) {
+
+            if (control instanceof Button) {
+
+                Button button = (Button) control;
+                addLanguageTextToButtonControl(button);
+            }
+
+            if (control instanceof Label) {
+
+                Label label = (Label) control;
+                addLanguageTextToLabelControl(label);
+            }
+        }
+
+        controls.clear();
+    }
+
+    private void addLanguageTextToButtonControl(Button button) {
+
+        if (selectedLanguage != null) {
+
+            for (String id : selectedLanguage.getLanguageTable().keySet()) {
+
+                if (button.getId() != null) {
+
+                    if (button.getId().equals(id)) {
+
+                        //System.out.println("!!! LADIES AND GENTLEMEN WE HAVE A MATCH !!!");
+
+                        //System.out.println("LE TEXT: " + language.getLanguageTable().get(id));
+
+                        button.setText(selectedLanguage.getLanguageTable().get(id));
+                    }
+                }
+            }
+        }
+    }
+
+    private void addLanguageTextToLabelControl(Label label) {
+
+        if (selectedLanguage != null) {
+
+            for (String id : selectedLanguage.getLanguageTable().keySet()) {
+
+                if (label.getId() != null) {
+
+                    if (label.getId().equals(id)) {
+
+                        //System.out.println("!!! LADIES AND GENTLEMEN WE HAVE A MATCH !!!");
+
+                        //System.out.println("LE TEXT: " + language.getLanguageTable().get(id));
+
+                        label.setText(selectedLanguage.getLanguageTable().get(id));
+                    }
+                }
+            }
+        }
+    }
 
     private void setupOverlay(Stage stage, Scene scene, String cssString) {
         //Get the css files and add them to the scene
@@ -205,5 +302,13 @@ public class AtlantisView {
         this.fullscreen = fullscreen;
     }
 
+    public boolean setSelectedLanguage(Language selectedLanguage) {
 
+        if (selectedLanguage != null) {
+
+            this.selectedLanguage = selectedLanguage;
+            return true;
+        }
+        return false;
+    }
 }

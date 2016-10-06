@@ -43,14 +43,14 @@ public class OptionsView extends Pane {
     private Button btnCancel;
 
 
-    public OptionsView(int height, int width, ArrayList<Language> languageList) {
+    public OptionsView(int height, int width, ArrayList<Language> languageList, String culture) {
 
         root = new VBox(30);
         root.setMinHeight(height);
         root.setMinWidth(width);
 
         root.getChildren().add(createTop());
-        root.getChildren().add(createContent(languageList));
+        root.getChildren().add(createContent(languageList, culture));
         root.getChildren().add(createBottom());
 
         defineStyleClass();
@@ -68,7 +68,7 @@ public class OptionsView extends Pane {
 
     }
 
-    private GridPane createContent(ArrayList<Language> languageList) {
+    private GridPane createContent(ArrayList<Language> languageList, String culture) {
 
         centerPane = new GridPane();
 
@@ -97,7 +97,8 @@ public class OptionsView extends Pane {
 
         }
 
-        comboBoxLanguages.getSelectionModel().selectFirst();
+        //comboBoxLanguages.getSelectionModel().selectFirst();
+        comboBoxLanguages.getSelectionModel().select(culture);
 
         centerPane.add(lblFullScreen, 0, 0);
         centerPane.add(radioBtnFullScreenOn, 1, 0);
@@ -160,8 +161,12 @@ public class OptionsView extends Pane {
     }
 
     public String getSelectedComboBoxLanguage() {
-        System.out.println(comboBoxLanguages.getSelectionModel().getSelectedItem().toString());
         return comboBoxLanguages.getSelectionModel().getSelectedItem().toString();
+    }
+
+    public void setSelectedComboboxLanguage(String culture){
+        System.out.println("!!! LADIES AND GENTLEMEN NOW WE SHOULD CHANGE THE SELECTED LANGUAGE TO: " + culture);
+        comboBoxLanguages.getSelectionModel().select(culture);
     }
 
     public Button getBtnApply() {

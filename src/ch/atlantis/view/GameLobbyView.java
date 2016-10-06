@@ -69,7 +69,6 @@ public class GameLobbyView extends Pane {
     private Pane popup;
     private Separator s0;
     private Label lblGameTitles;
-    private ArrayList<Control> gameLobbyControls = new ArrayList<>();
     private Button btnStartGame;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
@@ -114,7 +113,6 @@ public class GameLobbyView extends Pane {
         defineStyleClass();
 
         this.getChildren().addAll(root);
-        this.getControls(root);
     }
 
     public void bindSizeToStage() {
@@ -123,18 +121,6 @@ public class GameLobbyView extends Pane {
          */
         root.minHeightProperty().bind(gameLobbyStage.heightProperty().subtract(40));
         root.minWidthProperty().bind(gameLobbyStage.widthProperty().subtract(10));
-    }
-
-    private void getControls(Pane pane) {
-
-        for (Node node : pane.getChildren()) {
-            if (node instanceof Pane) {
-                getControls((Pane) node);
-            } else if (node instanceof Control) {
-                Control c = (Control) node;
-                gameLobbyControls.add(c);
-            }
-        }
     }
 
     private Node createTop() {
@@ -366,14 +352,6 @@ public class GameLobbyView extends Pane {
 
     public void removeLoginBtn() {
         leftVBox.getChildren().removeAll(btnLogin, s0);
-    }
-
-    public ArrayList<Control> getGameLobbyControls() {
-        return gameLobbyControls;
-    }
-
-    public void setGameLobbyControls(ArrayList<Control> gameLobbyControls) {
-        this.gameLobbyControls = gameLobbyControls;
     }
 
     public BorderPane getRoot() {
