@@ -38,12 +38,8 @@ public class AtlantisModel {
     private Message message;
     private Socket socket;
 
-    private ObservableList<String> gameList;
-
-    private ArrayList<Language> languageList;
     private String selectedLanguage;
 
-    private boolean autoConnect = true;
 
     private SimpleStringProperty chatString;
     private SimpleStringProperty connectionStatus;
@@ -51,7 +47,6 @@ public class AtlantisModel {
     private SimpleIntegerProperty loginSuccess;
     private SimpleStringProperty userName;
     private boolean autoConnect = true;
-    private Thread clientTask;
     private ObservableList<String> gameList;
     private ArrayList<Language> languageList;
     private String currentLanguage;

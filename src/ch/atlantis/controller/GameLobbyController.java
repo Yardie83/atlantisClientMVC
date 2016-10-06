@@ -68,8 +68,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), view.getGameLobbyView().getGameLobbyStage());
-                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage());
+                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),view.getGameLobbyView().getGameLobbyStage());
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }
@@ -119,8 +118,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage());
-                view.createOptionsView(model.getLanguageList(), view.getGameLobbyView().getGameLobbyStage());
+                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),view.getGameLobbyView().getGameLobbyStage());
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }

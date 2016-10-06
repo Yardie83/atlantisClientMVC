@@ -2,7 +2,6 @@ package ch.atlantis.view;
 
 import ch.atlantis.util.Language;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.scene.Parent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
  * <p>
  * This class acts as a hub from where the different views,
  * like the GameLobby, the Options etc. get instantiated.
- *
  */
 
 public class AtlantisView {
@@ -54,11 +52,11 @@ public class AtlantisView {
     private Language selectedLanguage;
 
 
-    public AtlantisView(Stage introStage) {
+    public AtlantisView( Stage introStage ) {
 
         this.introStage = introStage;
-        width = new SimpleIntegerProperty(1280);
-        height = new SimpleIntegerProperty(800);
+        width = new SimpleIntegerProperty( 1280 );
+        height = new SimpleIntegerProperty( 800 );
 
         controls = new ArrayList<>();
     }
@@ -70,7 +68,7 @@ public class AtlantisView {
      */
 
     public void createIntroView() {
-        this.introView = new IntroView(introStage);
+        this.introView = new IntroView( introStage );
     }
 
     /**
@@ -81,25 +79,25 @@ public class AtlantisView {
      * @param fullscreen Shows the GameLobby in fullscreen if true
      */
 
-    public void createGameLobbyView(Boolean fullscreen) {
+    public void createGameLobbyView( Boolean fullscreen ) {
 
         this.fullscreen = fullscreen;
 
-        if (gameLobbyView == null) {
+        if ( gameLobbyView == null ) {
 
-            if (fullscreen) {
-                width.setValue(Screen.getPrimary().getBounds().getWidth());
-                height.setValue(Screen.getPrimary().getBounds().getHeight());
-                this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), true);
+            if ( fullscreen ) {
+                width.setValue( Screen.getPrimary().getBounds().getWidth() );
+                height.setValue( Screen.getPrimary().getBounds().getHeight() );
+                this.gameLobbyView = new GameLobbyView( height.getValue(), width.getValue(), true );
                 //ScenicView.show(gameLobbyView);
             } else {
-                this.gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), false);
+                this.gameLobbyView = new GameLobbyView( height.getValue(), width.getValue(), false );
                 bindSizeToStage();
             }
         }
 
-            getControls(this.gameLobbyView);
-            setControlText(controls);
+        getControls( this.gameLobbyView );
+        setControlText( controls );
     }
 
     /**
@@ -115,8 +113,8 @@ public class AtlantisView {
     //Workaround: There seems to be a padding or margin of sorts on the stage,
     //that's why we subtract a couple pixels of the width and the height.
     public void bindSizeToStage() {
-        width.bind(gameLobbyView.getGameLobbyStage().widthProperty().subtract(8));
-        height.bind(gameLobbyView.getGameLobbyStage().heightProperty().subtract(8));
+        width.bind( gameLobbyView.getGameLobbyStage().widthProperty().subtract( 8 ) );
+        height.bind( gameLobbyView.getGameLobbyStage().heightProperty().subtract( 8 ) );
     }
 
     /**
@@ -125,62 +123,46 @@ public class AtlantisView {
      * Hermann Grieder
      */
 
-    public void createCreateGameView(Stage parentStage) {
-        this.createGameView = new CreateGameView(height.getValue(), width.getValue());
-        Scene scene = initScene(createGameView, "css_CreateGameView");
+    public void createCreateGameView( Stage parentStage ) {
+        if ( this.createGameView == null ) {
+            this.createGameView = new CreateGameView( height.getValue(), width.getValue() );
+            new Scene( createGameView );
+        }
         createGameStage = new Stage();
-        setupOverlay(createGameStage, parentStage);
-        createGameStage.setScene(scene);
-
+        setupOverlay( createGameStage, createGameView.getScene(), parentStage, "css_CreateGameView" );
         activeOverlayStage = createGameStage;
-
     }
 
-    public void createLoginView() {
-        if (this.loginView == null) {
-            this.loginView = new LoginView(height.getValue(), width.getValue());
-            Scene scene = new Scene(loginView);
-        }
-            loginStage = new Stage();
-            setupOverlay(loginStage, loginView.getScene(), "LoginView");
     /**
      * Creates the Login view
      * <p>
      * Hermann Grieder
      */
-
-    public void createLoginView(Stage parentStage) {
-        this.loginView = new LoginView(height.getValue(), width.getValue());
-        Scene scene = initScene(loginView, "css_LoginView");
+    public void createLoginView( Stage parentStage ) {
+        if ( this.loginView == null ) {
+            this.loginView = new LoginView( height.getValue(), width.getValue() );
+            new Scene( loginView );
+        }
         loginStage = new Stage();
-        setupOverlay(loginStage, parentStage);
-        loginStage.setScene(scene);
-
+        setupOverlay( loginStage, loginView.getScene(), parentStage, "css_LoginView" );
         activeOverlayStage = loginStage;
     }
 
-    public void createNewProfileView() {
-
-        if (this.newProfileView == null){
     /**
      * Creates the New Profile view
      * <p>
      * Hermann Grieder
      */
-
-    public void createNewProfileView(Stage parentStage) {
-        this.newProfileView = new NewProfileView(height.getValue(), width.getValue());
-            Scene scene = new Scene(newProfileView);
+    public void createNewProfileView( Stage parentStage ) {
+        if ( this.newProfileView == null ) {
+            this.newProfileView = new NewProfileView( height.getValue(), width.getValue() );
+            new Scene( newProfileView );
         }
-        getControls(this.newProfileView);
-        setControlText(controls);
-        Scene scene = initScene(newProfileView, "css_NewProfileView");
+        getControls( this.newProfileView );
+        setControlText( controls );
         profileStage = new Stage();
-        setupOverlay(profileStage, parentStage);
-        profileStage.setScene(scene);
-
+        setupOverlay( profileStage, newProfileView.getScene(), parentStage, "css_NewProfileView" );
         activeOverlayStage = profileStage;
-        setupOverlay(profileStage, newProfileView.getScene(), "NewProfileView");
     }
 
     /**
@@ -189,111 +171,88 @@ public class AtlantisView {
      * Hermann Grieder
      */
 
-    public void createOptionsView(ArrayList<Language> languageList, Stage parentStage) {
-        this.optionsView = new OptionsView(height.getValue(), width.getValue(), languageList);
-        Scene scene = initScene(optionsView, "css_OptionsView");
-    public void createOptionsView(ArrayList<Language> languageList, String culture) {
-        this.optionsView = new OptionsView(height.getValue(), width.getValue(), languageList, culture);
-        Scene scene = new Scene(optionsView);
+    public void createOptionsView( ArrayList<Language> languageList, String culture, Stage parentStage ) {
+        if ( this.optionsView == null ) {
+            this.optionsView = new OptionsView( height.getValue(), width.getValue(), languageList, culture );
+            new Scene( optionsView );
+        }
         optionsStage = new Stage();
-        setupOverlay(optionsStage, parentStage);
-        optionsStage.setScene(scene);
-
+        setupOverlay( optionsStage, optionsView.getScene(), parentStage, "css_OptionsView" );
         activeOverlayStage = optionsStage;
     }
 
-    private void getControls(Pane pane) {
+    private void getControls( Pane pane ) {
 
-        for (Node node : pane.getChildren()) {
-            if (node instanceof Pane) {
-                getControls((Pane) node);
-            } else if (node instanceof Control) {
+        for ( Node node : pane.getChildren() ) {
+            if ( node instanceof Pane ) {
+                getControls( (Pane) node );
+            } else if ( node instanceof Control ) {
                 Control c = (Control) node;
-                controls.add(c);
+                controls.add( c );
             }
         }
     }
 
-    private void setControlText(ArrayList<Control> controls){
+    private void setControlText( ArrayList<Control> controls ) {
 
-        for (Control control : controls) {
+        for ( Control control : controls ) {
 
-            if (control instanceof Button) {
+            if ( control instanceof Button ) {
 
                 Button button = (Button) control;
-                addLanguageTextToButtonControl(button);
+                addLanguageTextToButtonControl( button );
             }
 
-            if (control instanceof Label) {
+            if ( control instanceof Label ) {
 
                 Label label = (Label) control;
-                addLanguageTextToLabelControl(label);
+                addLanguageTextToLabelControl( label );
             }
         }
 
         controls.clear();
     }
 
-    private void addLanguageTextToButtonControl(Button button) {
+    private void addLanguageTextToButtonControl( Button button ) {
 
-        if (selectedLanguage != null) {
+        if ( selectedLanguage != null ) {
 
-            for (String id : selectedLanguage.getLanguageTable().keySet()) {
+            for ( String id : selectedLanguage.getLanguageTable().keySet() ) {
 
-                if (button.getId() != null) {
+                if ( button.getId() != null ) {
 
-                    if (button.getId().equals(id)) {
+                    if ( button.getId().equals( id ) ) {
 
                         //System.out.println("!!! LADIES AND GENTLEMEN WE HAVE A MATCH !!!");
 
                         //System.out.println("LE TEXT: " + language.getLanguageTable().get(id));
 
-                        button.setText(selectedLanguage.getLanguageTable().get(id));
+                        button.setText( selectedLanguage.getLanguageTable().get( id ) );
                     }
                 }
             }
         }
     }
 
-    private void addLanguageTextToLabelControl(Label label) {
+    private void addLanguageTextToLabelControl( Label label ) {
 
-        if (selectedLanguage != null) {
+        if ( selectedLanguage != null ) {
 
-            for (String id : selectedLanguage.getLanguageTable().keySet()) {
+            for ( String id : selectedLanguage.getLanguageTable().keySet() ) {
 
-                if (label.getId() != null) {
+                if ( label.getId() != null ) {
 
-                    if (label.getId().equals(id)) {
+                    if ( label.getId().equals( id ) ) {
 
                         //System.out.println("!!! LADIES AND GENTLEMEN WE HAVE A MATCH !!!");
 
                         //System.out.println("LE TEXT: " + language.getLanguageTable().get(id));
 
-                        label.setText(selectedLanguage.getLanguageTable().get(id));
+                        label.setText( selectedLanguage.getLanguageTable().get( id ) );
                     }
                 }
             }
         }
-    }
-    /**
-     * Creates a new scene, adds the CSS file and returns that scene.
-     * The css file has to be placed in the /res/css/ folder
-     * <p>
-     * Hermann Grieder
-     *
-     * @param root      The root node of the scene graph
-     * @param cssString Nullable. Name of the CSS file excluding ".css"
-     * @return Scene
-     */
-
-    private Scene initScene(Parent root, String cssString) {
-        Scene scene = new Scene(root);
-
-        if (cssString != null) {
-            String css = this.getClass().getResource("../res/css/" + cssString + ".css").toExternalForm();
-            scene.getStylesheets().add(css);
-        }
-        return scene;
     }
 
     /**
@@ -306,21 +265,26 @@ public class AtlantisView {
      * @param overlayStage The stage of the overlay to set up
      */
 
-    private void setupOverlay(Stage overlayStage, Stage parentStage) {
+    private void setupOverlay( Stage overlayStage, Scene scene, Stage parentStage, String cssString ) {
+
+        if ( cssString != null ) {
+            String css = this.getClass().getResource( "../res/css/" + cssString + ".css" ).toExternalForm();
+            scene.getStylesheets().add( css );
+        }
         // Make it so that the overlays block access to the parentStage
-        overlayStage.initModality(Modality.WINDOW_MODAL);
+        overlayStage.initModality( Modality.WINDOW_MODAL );
         //Match the X and Y to the Game Lobby's X and Y coordinates
-        overlayStage.setX(parentStage.getX());
-        overlayStage.setY(parentStage.getY());
+        overlayStage.setX( parentStage.getX() );
+        overlayStage.setY( parentStage.getY() );
         //Set the dimensions of the Stage
-        overlayStage.setMinHeight(parentStage.getHeight());
-        overlayStage.setMinWidth(parentStage.getWidth());
+        overlayStage.setMinHeight( parentStage.getHeight() );
+        overlayStage.setMinWidth( parentStage.getWidth() );
         //Set opacity for the overlays
-        overlayStage.opacityProperty().setValue(0.95);
+        overlayStage.opacityProperty().setValue( 0.95 );
         //Remove the Window decorations minimize, maximize and close button and the frame
-        overlayStage.initStyle(StageStyle.TRANSPARENT);
+        overlayStage.initStyle( StageStyle.TRANSPARENT );
         //Make it so that the overlays are always on top of the other windows
-        overlayStage.setAlwaysOnTop(true);
+        overlayStage.setAlwaysOnTop( true );
     }
 
     public IntroView getIntroView() {
@@ -379,25 +343,25 @@ public class AtlantisView {
         return width;
     }
 
-    public void setWidth(int width) {
-        this.width.set(width);
+    public void setWidth( int width ) {
+        this.width.set( width );
     }
 
-    public void setFullscreen(boolean fullscreen) {
+    public void setFullscreen( boolean fullscreen ) {
         this.fullscreen = fullscreen;
     }
 
-    public boolean setSelectedLanguage(Language selectedLanguage) {
+    public boolean setSelectedLanguage( Language selectedLanguage ) {
 
-        if (selectedLanguage != null) {
-    public void closeActiveOverlay() {
-        this.activeOverlayStage.close();
-    }
-}
+        if ( selectedLanguage != null ) {
 
             this.selectedLanguage = selectedLanguage;
             return true;
         }
         return false;
+    }
+
+    public void closeActiveOverlay() {
+        this.activeOverlayStage.close();
     }
 }
