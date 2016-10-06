@@ -14,7 +14,6 @@ import javafx.stage.Stage;
  */
 public class AtlantisClient extends Application {
 
-    public static final String LOGGER_NAME = AtlantisClient.class.getSimpleName();
 
     public static void main(String[] args) {
         launch();

@@ -75,9 +75,7 @@ public class AtlantisModel {
             closeConnection();
         }
         if (autoConnect) {
-            System.out.println("Connecting to Server...");
             chatString.setValue(LocalDateTime.now()+" Connecting to Server...");
-            connectionStatus.setValue("Connecting...");
             try {
                 socket = new Socket(HOST, PORT);
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
@@ -85,7 +83,7 @@ public class AtlantisModel {
                 receiveMessage();
             } catch (IOException e) {
                 System.err.println("Connection to the server failed!\nPlease check if the server is running");
-                chatString.setValue(LocalDateTime.now()+" Connection to the server failed!\nPlease check if the server is running");
+                chatString.setValue(LocalDateTime.now()+ " Connection to the server failed!\nPlease check if the server is running");
                 connectionStatus.setValue("Disconnected");
             }
         }
@@ -203,7 +201,7 @@ public class AtlantisModel {
             connectToServer();
             autoConnect = false;
             sendMessage(message);
-        } else if ((socket == null || socket.isClosed()) && !autoConnect) {
+        } else if (!autoConnect) {
             chatString.setValue(LocalDateTime.now()+" Maximum connection attempts reached.");
         } else {
             try {
