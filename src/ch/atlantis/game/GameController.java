@@ -18,7 +18,7 @@ public class GameController {
     private AtlantisModel model;
     private Card selectedCard;
     private int cardBehindPathId;
-    private int cardBeforePathId;
+    private ArrayList<Card> pathCards;
 
     public GameController(GameModel gameModel, AtlantisModel model, GameBoardView gameBoardView) {
         this.gameModel = gameModel;
@@ -30,9 +30,9 @@ public class GameController {
 
     private void handleUserInput() {
 
-        ArrayList<Card> pathCards = gameBoardView.getPathCards();
+        pathCards = gameBoardView.getPathCards();
 
-        for (Card card : pathCards) {
+        for (Card card : pathCards ) {
             if (card.getCardType() == CardType.START) {
                 selectedCard = card;
             }
@@ -41,7 +41,6 @@ public class GameController {
                 public void handle(MouseEvent event) {
                     selectedCard = card;
                     cardBehindPathId = selectedCard.getPathId() - 1;
-                    cardBeforePathId = selectedCard.getPathId() + 1;
                 }
             });
         }
@@ -57,7 +56,6 @@ public class GameController {
                             if (isOccupied(selectedCard)) {
                                 while (isOccupied(selectedCard)) {
                                     selectedCard = getNextCard();
-                                    cardBeforePathId++;
                                 }
                             } else {
                                 gamePiece.moveGamePiece(selectedCard.getLayoutX() + (selectedCard.getWidth() / 2) - (gamePiece.getWidth() / 2),
@@ -66,7 +64,7 @@ public class GameController {
                         }
                         // Find the card behind the player which is on top
                         // and remove it, but leave the card if it is already a water card
-                        for (Card card : pathCards) {
+                        for (Card card : pathCards ) {
                             /*if (isOccupied(card)) {
                                 while (isOccupied(card)) {
                                     cardBehindPathId--;
@@ -87,12 +85,14 @@ public class GameController {
 
     }
 
+    /**
+     * Fabian Witschi
+     * @return
+     */
     private Card getNextCard() {
-        ArrayList<Card> pathCards = gameBoardView.getPathCards();
         for (Card card : pathCards) {
-            if (card.getPathId() == cardBeforePathId) {
-                Card newCard;
-                return newCard = card;
+            if (card.getPathId() == selectedCard.getPathId()+1) {
+                return card;
             }
         }
         return null;
