@@ -7,16 +7,22 @@ import java.util.ArrayList;
  */
 public class Hand {
 
-    private ArrayList<Card> hand;
+    private ArrayList<Card> handCards;
+    private Player player;
 
-    public Hand() { this.hand = new ArrayList<>(); }
+    public Hand(Player player) {
+        this.player = player;
+        this.handCards = new ArrayList<>();
+    }
 
-    public void clear() { this.hand.clear(); }
+    public void clear() { this.handCards.clear(); }
 
-    public void addCard(Card card) { this.hand.add(card); }
+    public void addCard(Card card) { this.handCards.add(card); }
 
-    public void removeCard(Card card) { this.hand.remove(card); }
+    public void removeCard(Card card) { this.handCards.remove(card); }
 
-    public ArrayList<Card> getHandCards() { return hand; }
+    public ArrayList<Card> getHandCards() { return handCards; }
+
+    public String getPlayer() { return player.getPlayerName(); }
 
 }

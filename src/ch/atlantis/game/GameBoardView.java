@@ -26,6 +26,7 @@ import java.util.Iterator;
 public class GameBoardView extends Pane {
 
     private int rowCount = 11;
+    private Hand hand;
     private AtlantisView view;
     private ArrayList<Tile> tiles;
     private ArrayList<Player> players;
@@ -80,11 +81,16 @@ public class GameBoardView extends Pane {
         createBridges(bridges);
 
 
-        addHandCards();
+        addHandCards(movementCards);
+
+        drawHand();
 
         drawBoard();
 
         drawGamePieces();
+    }
+
+    private void drawHand() {
     }
 
     /**
@@ -105,9 +111,70 @@ public class GameBoardView extends Pane {
     private void addPlayers() {
     }
 
-    private void addHandCards() {
-
+    private void addHandCards(ArrayList<Card> movementCards) {
+        if (players.size() == 2) {
+            for (int i = 0; i < 2; i++) {
+                Player player = players.get(i);
+                if (i == 0) {
+                    for (int k = 0; k < 4; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+                if (i == 1) {
+                    for (int k = 0; k < 5; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+            }
+        }
+        if (players.size() == 3) {
+            for (int i = 0; i < 3; i++) {
+                Player player = players.get(i);
+                if (i == 0) {
+                    for (int k = 0; k < 4; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+                if (i == 1) {
+                    for (int k = 0; k < 5; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+                if (i == 2) {
+                    for (int k = 0; k < 6; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+            }
+        }
+        if (players.size() == 4) {
+            for (int i = 0; i < 4; i++) {
+                Player player = players.get(i);
+                if (i == 0) {
+                    for (int k = 0; k < 4; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+                if (i == 1) {
+                    for (int k = 0; k < 5; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+                if (i == 2) {
+                    for (int k = 0; k < 6; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+                if (i == 3) {
+                    for (int k = 0; k < 7; k++) {
+                        player.addHandCard(movementCards.get(k));
+                    }
+                }
+            }
+        }
     }
+
+
 
     /**
      * Hermann Grieder
@@ -380,6 +447,7 @@ public class GameBoardView extends Pane {
         Label label3 = new Label("|");
 
         top.getChildren().addAll(label1, label3, label2);
+        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1), player.getHandCard(2), player.getHandCard(3));
 
         playerAConsole.setLayoutX(tile.getX());
         playerAConsole.setLayoutY(tile.getY());

@@ -13,7 +13,7 @@ enum CardType{
     PATH, WATER, START, END, BRIDGE, MOVEMENT
 }
 
-public class Card extends Rectangle{
+public class Card extends Rectangle {
 
     private boolean isOnTop;
     private int value;
@@ -32,6 +32,8 @@ public class Card extends Rectangle{
     // Constructor for Movement Cards. They do not have a value associated.
     public Card(int colorSet, CardType cardType){
 
+        this.setWidth(20);
+        this.setHeight(50);
         this.cardType = cardType;
         this.colorSet = colorSet;
         this.setStroke(Color.BLACK);
