@@ -50,7 +50,7 @@ public class LoginController {
             public void handle(MouseEvent event) {
                 view.createNewProfileView(view.getGameLobbyView().getGameLobbyStage());
                 new NewProfileController(model, view);
-                view.getLoginStage().close();
+                view.closeActiveOverlay();
                 view.getProfileStage().show();
             }
         });
@@ -58,7 +58,7 @@ public class LoginController {
         view.getLoginView().getBtnCancel().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                view.getLoginStage().close();
+                view.closeActiveOverlay();
             }
         });
     }
@@ -88,7 +88,7 @@ public class LoginController {
                         if (model.loginSuccessProperty().getValue().equals(1)) {
                             view.getGameLobbyView().createPopUp("You're logged in!", 200);
                             view.getGameLobbyView().removeLoginBtn();
-                            view.getLoginStage().close();
+                            view.closeActiveOverlay();
                             model.loginSuccessProperty().setValue(0);
                         } else if (model.loginSuccessProperty().getValue().equals(2)) {
                             view.getLoginView().getLblError().setText("Username or Password are wrong");

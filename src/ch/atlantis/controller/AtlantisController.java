@@ -10,6 +10,8 @@ import ch.atlantis.view.AtlantisView;
  * calls for the creation of the IntroView and IntroController
  * (debugMode = false) or skips it and calls for the creation
  * of the GameLobbyView and the GameLobbyController (debugMode = true).
+ *
+ *
  */
 
 public class AtlantisController {

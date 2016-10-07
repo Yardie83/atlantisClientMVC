@@ -12,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
+ *
  */
 public class CreateGameController {
 
@@ -26,11 +27,14 @@ public class CreateGameController {
 
     private void handleCreateGameControls() {
 
-        // Handle "Create" Btn Action Event in the Create ch.atlantis.game.Game View
+        // Handle "Create" Btn Action Event in the Create Game View
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                createGameEntry();
+                if ( createGameEntry()) {
+                    view.getCreateGameView().clearGameNameLabel();
+                    view.closeActiveOverlay();
+                }
             }
         });
 
@@ -39,29 +43,33 @@ public class CreateGameController {
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
                     createGameEntry();
+                    view.getCreateGameView().clearGameNameLabel();
+                    view.closeActiveOverlay();
                 }
             }
         });
 
-        // Handle "Cancel" Btn Action Event in the Create ch.atlantis.game.Game View
+        // Handle "Cancel" Btn Action Event in the Create Game View
         view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.getCreateGameStage().close();
+                view.getCreateGameView().clearGameNameLabel();
+                view.closeActiveOverlay();
             }
         });
     }
 
-    private void createGameEntry() {
+    private boolean createGameEntry() {
         String gameName = view.getCreateGameView().getTxtGameName().getText();
         RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
         String message = gameName + "," + selectedRadioButton.getText();
         if (gameName.equals("")) {
             view.getCreateGameView().getLblError().setText("Please give your game a name");
             view.getCreateGameView().getLblError().setVisible(true);
+            return false;
         } else {
             model.sendMessage(new Message(MessageType.NEWGAME, message));
-            view.closeActiveOverlay();
+            return true;
         }
     }
 }

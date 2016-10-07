@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.util.Collections;
@@ -51,6 +52,8 @@ public class GameLobbyController {
 
     private void handleGameLobbyControls() {
 
+        Stage gameLobbyStage = view.getGameLobbyView().getGameLobbyStage();
+
         /*
          * *******************************
          * Menu Bar Controls EventHandlers
@@ -68,7 +71,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),view.getGameLobbyView().getGameLobbyStage());
+                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),gameLobbyStage);
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }
@@ -91,7 +94,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnCreateGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createCreateGameView(view.getGameLobbyView().getGameLobbyStage());
+                view.createCreateGameView(gameLobbyStage);
                 new CreateGameController(model, view);
                 view.getCreateGameStage().show();
             }
@@ -100,7 +103,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createLoginView(view.getGameLobbyView().getGameLobbyStage());
+                view.createLoginView(gameLobbyStage);
                 new LoginController(model, view);
                 view.getLoginStage().show();
             }
@@ -109,7 +112,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createNewProfileView(view.getGameLobbyView().getGameLobbyStage());
+                view.createNewProfileView(gameLobbyStage);
                 new NewProfileController(model, view);
                 view.getProfileStage().show();
             }
@@ -118,7 +121,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),view.getGameLobbyView().getGameLobbyStage());
+                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),gameLobbyStage);
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }
@@ -127,7 +130,11 @@ public class GameLobbyController {
         view.getGameLobbyView().getGameListView().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+               if ( event.getClickCount() == 2){
+                   String listInfo = view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem().toString();
 
+                   model.joinGame(listInfo);
+               }
             }
         });
 
@@ -301,14 +308,20 @@ public class GameLobbyController {
                             Collections.reverse(model.getGameList());
                             for (String s : model.getGameList()) {
                                 String[] gameInfo = s.split(",");
-                                if (!gameInfo[0].equalsIgnoreCase("")) {
+                                if (!gameInfo[0].equalsIgnoreCase(" ")) {
+
                                     String gameName = gameInfo[0];
-                                    Integer nrPlayers = Integer.parseInt(gameInfo[1]);
-                                    view.getGameLobbyView().getGameListView().getItems().add(gameName + " : " + nrPlayers);
+                                    Integer numberOfPlayers = Integer.parseInt(gameInfo[1]);
+                                    int currentJoinedUsers = Integer.parseInt(gameInfo[2]);
+
+                                    view.getGameLobbyView().getGameListView().getItems().add(
+                                            gameName + " : " + currentJoinedUsers + "/" + numberOfPlayers + " players");
                                 }
                             }
                             model.getGameList().clear();
-                            view.getGameLobbyView().createPopUp("Game Created!", 200);
+                            if ( model.getJoinSuccess().getValue() != 1) {
+                                view.getGameLobbyView().createPopUp( "Game Created!", 200 );
+                            }
                         }
                     }
                 });

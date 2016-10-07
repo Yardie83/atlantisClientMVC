@@ -80,7 +80,7 @@ public class NewProfileController {
         view.getNewProfileView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.getProfileStage().close();
+                view.closeActiveOverlay();
             }
         });
     }

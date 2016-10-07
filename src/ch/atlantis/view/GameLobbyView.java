@@ -291,7 +291,7 @@ public class GameLobbyView extends Pane {
 
     /**
      * Creates the bubbles coming from the tip of the mouse pointer on mouse click.
-     * The bubbles spawn location and upwards movement are randomized for each bubble.
+     * The bubbles' spawn location and upwards movement are randomized for each bubble.
      *
      * Hermann Grieder
      *

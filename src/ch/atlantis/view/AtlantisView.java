@@ -88,10 +88,10 @@ public class AtlantisView {
             if ( fullscreen ) {
                 width.setValue( Screen.getPrimary().getBounds().getWidth() );
                 height.setValue( Screen.getPrimary().getBounds().getHeight() );
-                this.gameLobbyView = new GameLobbyView( height.getValue(), width.getValue(), true );
+                gameLobbyView = new GameLobbyView( height.getValue(), width.getValue(), true );
                 //ScenicView.show(gameLobbyView);
             } else {
-                this.gameLobbyView = new GameLobbyView( height.getValue(), width.getValue(), false );
+                gameLobbyView = new GameLobbyView( height.getValue(), width.getValue(), false );
                 bindSizeToStage();
             }
         }
