@@ -27,12 +27,24 @@ public class CreateGameController {
 
     private void handleCreateGameControls() {
 
+        view.getCreateGameStage().getScene().setOnKeyPressed( new EventHandler<KeyEvent>() {
+            @Override
+            public void handle( KeyEvent event ) {
+                if ( event.getCode() == KeyCode.ESCAPE ){
+                    view.getCreateGameView().getLblError().setText( "" );
+                    view.closeActiveOverlay();
+                }
+
+            }
+        } );
+
         // Handle "Create" Btn Action Event in the Create Game View
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 if ( createGameEntry()) {
-                    view.getCreateGameView().clearGameNameLabel();
+                    view.getCreateGameView().getLblError().setText( "" );
+                    view.getCreateGameView().clearGameNameTxtField();
                     view.closeActiveOverlay();
                 }
             }
@@ -43,7 +55,8 @@ public class CreateGameController {
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
                     createGameEntry();
-                    view.getCreateGameView().clearGameNameLabel();
+                    view.getCreateGameView().getLblError().setText( "" );
+                    view.getCreateGameView().clearGameNameTxtField();
                     view.closeActiveOverlay();
                 }
             }
@@ -53,7 +66,8 @@ public class CreateGameController {
         view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.getCreateGameView().clearGameNameLabel();
+                view.getCreateGameView().getLblError().setText( "" );
+                view.getCreateGameView().clearGameNameTxtField();
                 view.closeActiveOverlay();
             }
         });

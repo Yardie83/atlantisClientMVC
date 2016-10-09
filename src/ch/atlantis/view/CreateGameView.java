@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 
 /**
  * Created by Hermann Grieder on 08.08.2016.
+ *
+ * Create Game View
  */
 public class CreateGameView extends Pane {
 
@@ -156,8 +158,8 @@ public class CreateGameView extends Pane {
         return btnCreateNewGame;
     }
 
-    public void clearGameNameLabel() {
-        this.lblGameName.setText( "" );
+    public void clearGameNameTxtField() {
+        txtGameName.setText( "" );
     }
 
 }

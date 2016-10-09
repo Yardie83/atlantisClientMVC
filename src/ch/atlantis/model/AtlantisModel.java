@@ -46,7 +46,6 @@ public class AtlantisModel {
     private SimpleStringProperty connectionStatus;
     private SimpleIntegerProperty createProfileSuccess;
     private SimpleIntegerProperty loginSuccess;
-    private SimpleIntegerProperty joinSuccess;
     private SimpleStringProperty userName;
     private boolean autoConnect = true;
     private ObservableList<String> gameList;
@@ -58,7 +57,6 @@ public class AtlantisModel {
         connectionStatus = new SimpleStringProperty();
         createProfileSuccess = new SimpleIntegerProperty( 0 );
         loginSuccess = new SimpleIntegerProperty( 0 );
-        joinSuccess = new SimpleIntegerProperty( 0 );
         userName = new SimpleStringProperty();
         gameList = FXCollections.observableArrayList();
         //TODO: (loris) read the config file here
@@ -144,9 +142,6 @@ public class AtlantisModel {
                                 case LANGUAGELIST:
                                     handleLanguages( message );
                                     break;
-                                case JOINGAME:
-                                    handleJoinGame( message );
-                                    break;
                             }
                         }
                     } catch ( SocketException e ) {
@@ -212,14 +207,6 @@ public class AtlantisModel {
         String gameName = info[ 0 ];
 
         sendMessage( new Message( MessageType.JOINGAME, gameName ) );
-    }
-
-    private void handleJoinGame( Message message ) {
-        if ( message.getMessageObject().equals( Boolean.TRUE )) {
-            joinSuccess.setValue( 1 );
-        }else{
-            joinSuccess.setValue( 0 );
-        }
     }
 
     public void sendMessage( Message message ) {
@@ -307,9 +294,6 @@ public class AtlantisModel {
         return loginSuccess;
     }
 
-    public SimpleIntegerProperty getJoinSuccess() {
-        return joinSuccess;
-    }
     public SimpleStringProperty userNameProperty() {
         return userName;
     }

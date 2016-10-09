@@ -58,7 +58,7 @@ public class GameBoardView extends Pane {
 //                BackgroundSize.DEFAULT)));
 
         readLayout(height);
-        //Currently Emtpy
+        //Currently Empty
         addPlayers();
 
         addPlayerPieces();

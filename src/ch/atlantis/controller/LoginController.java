@@ -48,9 +48,10 @@ public class LoginController {
         view.getLoginView().getBtnCreateProfile().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                view.getLoginView().getLblError().setText("");
+                view.closeActiveOverlay();
                 view.createNewProfileView(view.getGameLobbyView().getGameLobbyStage());
                 new NewProfileController(model, view);
-                view.closeActiveOverlay();
                 view.getProfileStage().show();
             }
         });
@@ -58,6 +59,7 @@ public class LoginController {
         view.getLoginView().getBtnCancel().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                view.getLoginView().getLblError().setText("");
                 view.closeActiveOverlay();
             }
         });

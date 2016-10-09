@@ -63,6 +63,7 @@ public class NewProfileController {
                         if (model.createProfileSuccessProperty().getValue().equals(1)) {
                             view.getGameLobbyView().createPopUp("Profile Created!", 200);
                             view.getGameLobbyView().removeLoginBtn();
+                            view.getNewProfileView().getLblError().setText("");
                             view.closeActiveOverlay();
                             model.createProfileSuccessProperty().setValue(0);
                         } else if (model.createProfileSuccessProperty().getValue().equals(2)) {
@@ -80,6 +81,7 @@ public class NewProfileController {
         view.getNewProfileView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                view.getNewProfileView().getLblError().setText("");
                 view.closeActiveOverlay();
             }
         });

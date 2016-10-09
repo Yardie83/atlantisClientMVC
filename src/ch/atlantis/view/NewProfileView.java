@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Loris Grether on 04.08.2016.
+ *
+ * Create New Profile View
  */
 public class NewProfileView extends Pane {
 
@@ -34,13 +36,18 @@ public class NewProfileView extends Pane {
     private Label lblError;
     private GridPane centerPane;
     private HBox bottomPane;
-    private final VBox root;
+    private VBox root;
 
     public NewProfileView(int height, int width) {
 
+        this.minHeightProperty().setValue( height );
+        this.minWidthProperty().setValue( width );
+
         root = new VBox(30);
-        root.setMinHeight(height);
-        root.setMinWidth(width);
+
+        root.minWidthProperty().bind( this.minWidthProperty() );
+        root.minHeightProperty().bind( this.minHeightProperty() );
+
         root.getChildren().add(createTop());
         root.getChildren().add(createCenter());
         root.getChildren().add(createBottom());

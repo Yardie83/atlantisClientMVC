@@ -292,7 +292,7 @@ public class GameLobbyController {
 
         /*
          * Updates the GameList ListView in the GameLobby with
-         * the List received from the Server
+         * the list received from the server
          *
          * Hermann Grieder
          */
@@ -303,9 +303,16 @@ public class GameLobbyController {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
+                        // Only if the list is not empty go on
                         if (model.getGameList().size() != 0) {
+                            // Clear the list first
+
                             view.getGameLobbyView().getGameListView().getItems().clear();
+
+                            // Reverse the new list, so the newest games are on top
                             Collections.reverse(model.getGameList());
+
+                            // Add each game in the gameList to the ListView
                             for (String s : model.getGameList()) {
                                 String[] gameInfo = s.split(",");
                                 if (!gameInfo[0].equalsIgnoreCase(" ")) {
@@ -315,13 +322,13 @@ public class GameLobbyController {
                                     int currentJoinedUsers = Integer.parseInt(gameInfo[2]);
 
                                     view.getGameLobbyView().getGameListView().getItems().add(
-                                            gameName + " : " + currentJoinedUsers + "/" + numberOfPlayers + " players");
+                                            gameName + " : " + currentJoinedUsers + " of " + numberOfPlayers + " players");
                                 }
                             }
+                            // Clear the list
                             model.getGameList().clear();
-                            if ( model.getJoinSuccess().getValue() != 1) {
                                 view.getGameLobbyView().createPopUp( "Game Created!", 200 );
-                            }
+
                         }
                     }
                 });

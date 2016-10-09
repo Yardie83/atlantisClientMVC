@@ -113,8 +113,8 @@ public class AtlantisView {
     //Workaround: There seems to be a padding or margin of sorts on the stage,
     //that's why we subtract a couple pixels of the width and the height.
     public void bindSizeToStage() {
-        width.bind( gameLobbyView.getGameLobbyStage().widthProperty().subtract( 8 ) );
-        height.bind( gameLobbyView.getGameLobbyStage().heightProperty().subtract( 8 ) );
+        width.bind( gameLobbyView.getGameLobbyStage().widthProperty() );
+        height.bind( gameLobbyView.getGameLobbyStage().heightProperty() );
     }
 
     /**
@@ -130,7 +130,8 @@ public class AtlantisView {
             createGameStage.setScene( new Scene( createGameView ) );
             setupOverlay( createGameStage, parentStage, "css_CreateGameView" );
         }
-
+        setXYLocation( createGameStage, parentStage );
+        setDimensions( createGameStage, parentStage );
         activeOverlayStage = createGameStage;
     }
 
@@ -146,6 +147,9 @@ public class AtlantisView {
             loginStage.setScene( new Scene( loginView ) );
             setupOverlay( loginStage, parentStage, "css_LoginView" );
         }
+
+        setXYLocation( loginStage, parentStage );
+        setDimensions( loginStage, parentStage );
         activeOverlayStage = loginStage;
     }
 
@@ -161,7 +165,10 @@ public class AtlantisView {
             profileStage.setScene( new Scene( newProfileView ) );
             setupOverlay( profileStage, parentStage, "css_NewProfileView" );
         }
+        setXYLocation( profileStage, parentStage );
+        setDimensions( profileStage, parentStage );
         getControls( newProfileView );
+
         setControlText( controls );
 
         activeOverlayStage = profileStage;
@@ -180,7 +187,22 @@ public class AtlantisView {
             optionsStage.setScene( new Scene( optionsView ) );
             setupOverlay( optionsStage, parentStage, "css_OptionsView" );
         }
+        setXYLocation( optionsStage, parentStage );
+        setDimensions( optionsStage, parentStage );
+
+
         activeOverlayStage = optionsStage;
+    }
+
+    private void setXYLocation( Stage overlayStage, Stage parentStage ) {
+        overlayStage.setX( parentStage.getX() );
+        overlayStage.setY( parentStage.getY() );
+    }
+
+    // TODO: This does not work. The overlayStage does not react. I think it must be the root pane, but how to get there?
+    private void setDimensions( Stage overlayStage, Stage parentStage ) {
+        overlayStage.setMinHeight( parentStage.getHeight() );
+        overlayStage.setMinWidth( parentStage.getWidth() );
     }
 
 
@@ -273,16 +295,12 @@ public class AtlantisView {
             String css = this.getClass().getResource( "../res/css/" + cssString + ".css" ).toExternalForm();
             overlayStage.getScene().getStylesheets().add( css );
         }
+        overlayStage.getScene().getRoot().prefWidth( parentStage.getWidth() );
+        overlayStage.getScene().getRoot().prefHeight( parentStage.getHeight() );
         // Make it so that the overlays block access to the parentStage
         overlayStage.initModality( Modality.WINDOW_MODAL );
-        //Match the X and Y to the Game Lobby's X and Y coordinates
-        overlayStage.setX( parentStage.getX() );
-        overlayStage.setY( parentStage.getY() );
-        //Set the dimensions of the Stage
-        overlayStage.setMinHeight( parentStage.getHeight() );
-        overlayStage.setMinWidth( parentStage.getWidth() );
         //Set opacity for the overlays
-        overlayStage.opacityProperty().setValue( 0.95 );
+        overlayStage.opacityProperty().setValue( 0.99 );
         //Remove the Window decorations minimize, maximize and close button and the frame
         overlayStage.initStyle( StageStyle.TRANSPARENT );
         //Make it so that the overlays are always on top of the other windows
