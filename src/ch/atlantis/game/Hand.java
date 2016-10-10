@@ -8,10 +8,8 @@ import java.util.ArrayList;
 public class Hand {
 
     private ArrayList<Card> handCards;
-    private Player player;
 
-    public Hand(Player player) {
-        this.player = player;
+    public Hand() {
         this.handCards = new ArrayList<>();
     }
 
@@ -21,8 +19,8 @@ public class Hand {
 
     public void removeCard(Card card) { this.handCards.remove(card); }
 
-    public ArrayList<Card> getHandCards() { return handCards; }
+    public Card getHandCard(int index) { return this.handCards.get(index); }
 
-    public String getPlayer() { return player.getPlayerName(); }
+    public ArrayList<Card> getHandCards() { return handCards; }
 
 }

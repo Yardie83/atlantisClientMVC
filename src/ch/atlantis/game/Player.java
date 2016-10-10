@@ -17,6 +17,7 @@ public class Player {
     private ArrayList<Card> pathCards;
     private ArrayList<Card> movementCards;
     private ArrayList<Card> handCards;
+    private Hand hand;
     private Card bridge;
 
     public Player(String playerName, Color playerColor) {
@@ -24,7 +25,8 @@ public class Player {
         this.playerColor = playerColor;
         this.pathCards = new ArrayList<>();
         this.movementCards = new ArrayList<>();
-        this.handCards = new ArrayList<>();
+        //this.handCards = new ArrayList<>();
+        this.hand = new Hand();
         this.gamePieces = new ArrayList<>(4);
     }
 
@@ -71,14 +73,14 @@ public class Player {
     }
 
     public void addHandCard(Card handCard){
-        this.handCards.add(handCard);
+        hand.addCard(handCard);
     }
 
     public void removeHandCard(Card handCard){
-        this.handCards.remove(handCard);
+        hand.removeCard(handCard);
     }
 
-    public Card getHandCard(int index) { return handCards.get(index); }
+    public Card getHandCard(int index) { return hand.getHandCard(index); }
 
     public ArrayList<GamePiece> getGamePieces() {
         return gamePieces;
