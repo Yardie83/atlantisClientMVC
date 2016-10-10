@@ -10,19 +10,17 @@ import java.util.ArrayList;
  */
 public class Player {
     private int score = 0;
-    private int playerID;
-    private String playerName;
-    private Color playerColor;
     private ArrayList<GamePiece> gamePieces;
     private ArrayList<Card> pathCards;
     private ArrayList<Card> movementCards;
     private ArrayList<Card> handCards;
     private Hand hand;
+    private String playerName;
     private Card bridge;
+    private int playerId;
 
-    public Player(String playerName, Color playerColor) {
-        this.playerName = playerName;
-        this.playerColor = playerColor;
+    public Player(int playerId) {
+        this.playerId = playerId;
         this.pathCards = new ArrayList<>();
         this.movementCards = new ArrayList<>();
         //this.handCards = new ArrayList<>();
@@ -31,10 +29,6 @@ public class Player {
     }
 
     public String getPlayerName() { return playerName; }
-
-    public Color getPlayerColor() {
-        return playerColor;
-    }
 
     public void addScore(int score){
         this.score += score;
@@ -85,4 +79,7 @@ public class Player {
     public ArrayList<GamePiece> getGamePieces() {
         return gamePieces;
     }
+
+    public void setPlayerId(int playerId) { this.playerId = playerId; }
+
 }
