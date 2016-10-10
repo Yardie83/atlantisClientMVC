@@ -13,12 +13,12 @@ public class GameController {
 
 
     private GameBoardView gameBoardView;
-
     private GameModel gameModel;
     private AtlantisModel model;
     private Card selectedCard;
     private int cardBehindPathId;
     private ArrayList<Card> pathCards;
+    private boolean myTurn;
 
     public GameController(GameModel gameModel, AtlantisModel model, GameBoardView gameBoardView) {
         this.gameModel = gameModel;

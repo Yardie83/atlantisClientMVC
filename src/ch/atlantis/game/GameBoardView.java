@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -61,7 +60,7 @@ public class GameBoardView extends Pane {
         //Currently Empty
         addPlayers();
 
-        addPlayerPieces();
+        addGamePieces();
 
         this.pathCardsSetA = new ArrayList<>();
         createPathCards(pathCardsSetA);
@@ -270,14 +269,6 @@ public class GameBoardView extends Pane {
      * <p>
      * Author: Hermann Grieder
      */
-    private void addPlayerPieces() {
-        for (Player player : players) {
-            for (int i = 0; i < 3; i++) {
-                GamePiece gamePiece = new GamePiece(i, player);
-                player.addGamePiece(gamePiece);
-            }
-        }
-    }
 
     /**
      * Reads the GameBoardLayout.txt file and transfers the values into the values array

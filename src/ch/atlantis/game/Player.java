@@ -11,22 +11,21 @@ import java.util.ArrayList;
 public class Player {
     private String gameName;
     private int score = 0;
-    private ArrayList<GamePiece> gamePieces;
     private ArrayList<Card> pathCards;
     private ArrayList<Card> movementCards;
     private ArrayList<Card> handCards;
     private Hand hand;
+    private GamePiece gamePiece;
     private String playerName;
     private Card bridge;
     private int playerId;
 
-    public Player(int playerId, String gameName) {
+    public Player(int playerId) {
         this.playerId = playerId;
         this.pathCards = new ArrayList<>();
         this.movementCards = new ArrayList<>();
-        //this.handCards = new ArrayList<>();
         this.hand = new Hand();
-        this.gamePieces = new ArrayList<>(4);
+        this.gamePiece = new GamePiece()
         this.gameName = gameName;
     }
 

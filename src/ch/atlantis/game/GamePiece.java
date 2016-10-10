@@ -2,6 +2,8 @@ package ch.atlantis.game;
 
 import javafx.scene.shape.Rectangle;
 
+import java.util.ArrayList;
+
 /**
  * Created by Hermann Grieder on 03.09.2016.
  */
@@ -11,13 +13,17 @@ public class GamePiece extends Rectangle {
     private Player player;
     private double x;
     private double y;
+    private ArrayList<GamePiece> gamePieces;
 
-    public GamePiece(int pieceId, Player player) {
-        this.pieceId = pieceId;
-        this.player = player;
-        this.setFill(player.getPlayerColor());
-        this.setWidth(10);
-        this.setHeight(10);
+    public GamePiece(int playerId) {
+        gamePieces = new ArrayList<>(4);
+        createGamePieces(playerId);
+    }
+
+    private void createGamePieces(int playerId) {
+        for (int i = 0; i < 4; i++) {
+
+        }
     }
 
     public int getPieceId() {
