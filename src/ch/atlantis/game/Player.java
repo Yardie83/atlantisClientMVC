@@ -9,6 +9,7 @@ import java.util.ArrayList;
  *
  */
 public class Player {
+    private String gameName;
     private int score = 0;
     private ArrayList<GamePiece> gamePieces;
     private ArrayList<Card> pathCards;
@@ -19,13 +20,14 @@ public class Player {
     private Card bridge;
     private int playerId;
 
-    public Player(int playerId) {
+    public Player(int playerId, String gameName) {
         this.playerId = playerId;
         this.pathCards = new ArrayList<>();
         this.movementCards = new ArrayList<>();
         //this.handCards = new ArrayList<>();
         this.hand = new Hand();
         this.gamePieces = new ArrayList<>(4);
+        this.gameName = gameName;
     }
 
     public String getPlayerName() { return playerName; }
