@@ -19,3 +19,4 @@ public enum MessageType {
     JOINGAME,
     GAMEREADY
 }
+

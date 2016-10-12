@@ -1,7 +1,5 @@
 package ch.atlantis.game;
 
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 
 /**
@@ -18,12 +16,12 @@ public class Player {
     private Card bridge;
     private int playerId;
 
-    public Player(int playerId) {
+    public Player( int playerId, String gameName ) {
         this.playerId = playerId;
         this.pathCardStack = new PathCardStack();
         this.hand = new Hand();
         this.gamePieces = new GamePiece(playerId);
-        this.gameName = gameName;
+        this.gameName = this.gameName;
     }
 
     public String getPlayerName() { return playerName; }
@@ -53,8 +51,6 @@ public class Player {
     public ArrayList<GamePiece> getGamePieces() { return gamePieces.getGamePieces(); }
 
     public void setPlayerId(int playerId) { this.playerId = playerId; }
-
-    public int getPlayerId() { return playerId; }
 
     public void addPathCard(Card card) { pathCardStack.addPathCard(card); }
 
