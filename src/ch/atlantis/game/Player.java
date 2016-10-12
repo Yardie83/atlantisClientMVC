@@ -11,76 +11,55 @@ import java.util.ArrayList;
 public class Player {
     private String gameName;
     private int score = 0;
-    private ArrayList<Card> pathCards;
-    private ArrayList<Card> movementCards;
-    private ArrayList<Card> handCards;
     private Hand hand;
-    private GamePiece gamePiece;
+    private PathCardStack pathCardStack;
+    private GamePiece gamePieces;
     private String playerName;
     private Card bridge;
     private int playerId;
 
     public Player(int playerId) {
         this.playerId = playerId;
-        this.pathCards = new ArrayList<>();
-        this.movementCards = new ArrayList<>();
+        this.pathCardStack = new PathCardStack();
         this.hand = new Hand();
-        this.gamePiece = new GamePiece()
+        this.gamePieces = new GamePiece(playerId);
         this.gameName = gameName;
     }
 
     public String getPlayerName() { return playerName; }
 
-    public void addScore(int score){
-        this.score += score;
-    }
+    public void setPlayerName(String playerName) { this.playerName = playerName; }
+
+    public void addScore(int score){ this.score += score; }
 
     public void subtractScore(int score) { this.score -= score; }
 
     public int getScore() { return score; }
 
-    public void addGamePiece(GamePiece gamePiece) {
-        this.gamePieces.add(gamePiece);
-    }
+    public void addBridge(Card bridge) { this.bridge = bridge; }
 
-    public void addBridge(Card bridge) {
-        this.bridge = bridge;
-    }
+    public void removeBridge(){ this.bridge = null; }
 
-    public void removeBridge(){
-        this.bridge = null;
-    }
+    public void addHandCard(Card handCard){ hand.addCard(handCard); }
 
-    public ArrayList<Card> getPathCards() {
-        return pathCards;
-    }
-
-    public void addPathCard(Card pathCard) {
-        this.pathCards.add(pathCard);
-    }
-
-    public void removePathCard(Card pathCard){
-        this.pathCards.remove(pathCard);
-    }
-
-    public ArrayList<Card> getMovementCards() {
-        return movementCards;
-    }
-
-    public void addHandCard(Card handCard){
-        hand.addCard(handCard);
-    }
-
-    public void removeHandCard(Card handCard){
-        hand.removeCard(handCard);
-    }
+    public void removeHandCard(Card handCard){ hand.removeCard(handCard); }
 
     public Card getHandCard(int index) { return hand.getHandCard(index); }
 
-    public ArrayList<GamePiece> getGamePieces() {
-        return gamePieces;
-    }
+    public ArrayList<Card> getHandCards() { return hand.getHandCards(); }
+
+    public int getHandCardSize() { return hand.getSize(); }
+
+    public ArrayList<GamePiece> getGamePieces() { return gamePieces.getGamePieces(); }
 
     public void setPlayerId(int playerId) { this.playerId = playerId; }
+
+    public int getPlayerId() { return playerId; }
+
+    public void addPathCard(Card card) { pathCardStack.addPathCard(card); }
+
+    public void removePathCard(Card card) { pathCardStack.removePathCard(card); }
+
+    public ArrayList<Card> getPathCardStack() { return pathCardStack.getPathCardStack(); }
 
 }
