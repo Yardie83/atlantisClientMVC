@@ -2,7 +2,10 @@ package ch.atlantis.game;
 
 import ch.atlantis.model.AtlantisModel;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 
@@ -26,6 +29,18 @@ public class GameController {
         this.gameBoardView = gameBoardView;
         gameBoardView.show();
         handleUserInput();
+        addListeners();
+    }
+
+    private void addListeners() {
+        gameBoardView.getGameStage().getScene().setOnKeyPressed( new EventHandler<KeyEvent>() {
+            @Override
+            public void handle( KeyEvent event ) {
+                if ( event.getCode() == KeyCode.ESCAPE ){
+                    gameBoardView.showOptions();
+                }
+            }
+        });
     }
 
     private void handleUserInput() {

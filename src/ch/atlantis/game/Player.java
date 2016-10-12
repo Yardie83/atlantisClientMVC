@@ -83,4 +83,11 @@ public class Player {
 
     public void setPlayerId(int playerId) { this.playerId = playerId; }
 
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
 }

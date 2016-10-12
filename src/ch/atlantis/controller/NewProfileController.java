@@ -12,6 +12,8 @@ import javafx.event.EventHandler;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
+ *
+ * New Profile View Controller
  */
 public class NewProfileController {
 

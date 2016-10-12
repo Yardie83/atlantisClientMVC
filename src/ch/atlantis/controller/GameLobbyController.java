@@ -138,7 +138,7 @@ public class GameLobbyController {
             }
         });
 
-        //  Create and show GAME Overlay
+        //  Create and show GAME View
         view.getGameLobbyView().getBtnStartGame().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -328,12 +328,23 @@ public class GameLobbyController {
                             // Clear the list
                             model.getGameList().clear();
                                 view.getGameLobbyView().createPopUp( "Game Created!", 200 );
-
                         }
                     }
                 });
             }
         });
+
+
+        model.gameReadyProperty().addListener( new ChangeListener<Boolean>() {
+            @Override
+            public void changed( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
+                if ( newValue ){
+                    view.getGameLobbyView().getStartGameBtn().setVisible( true );
+                }else if ( !newValue ){
+                    view.getGameLobbyView().getStartGameBtn().setVisible( false );
+                }
+            }
+        } );
     }
 
     /**

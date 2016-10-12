@@ -205,7 +205,6 @@ public class AtlantisView {
         overlayStage.setMinWidth( parentStage.getWidth() );
     }
 
-
     private void getControls( Pane pane ) {
         for ( Node node : pane.getChildren() ) {
             if ( node instanceof Pane ) {
@@ -383,5 +382,11 @@ public class AtlantisView {
 
     public void closeActiveOverlay() {
         this.activeOverlayStage.close();
+    }
+
+    public void showOptions(){
+        if ( this.optionsView != null ) {
+            this.optionsStage.show();
+        }
     }
 }

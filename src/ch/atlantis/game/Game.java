@@ -8,11 +8,15 @@ import java.util.ArrayList;
 
 /**
  * Created by Fabian on 15/08/16.
+ *
  */
 public class Game {
 
     private GameBoardView gameBoardView;
     private ArrayList<Player> players;
+    private String gameName;
+    private int noOfPlayers;
+    private int joinedPlayers;
 
     public Game(AtlantisModel model, AtlantisView view) {
 

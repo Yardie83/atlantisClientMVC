@@ -637,4 +637,8 @@ public class GameBoardView extends Pane {
     public ArrayList<Player> getPlayers() {
         return players;
     }
+
+    public void showOptions() {
+        view.showOptions();
+    }
 }

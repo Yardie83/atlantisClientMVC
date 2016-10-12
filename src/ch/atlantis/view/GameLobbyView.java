@@ -60,6 +60,7 @@ public class GameLobbyView extends Pane {
     private Label lblGameTitles;
     private ArrayList<Control> gameLobbyControls;
     private Button btnStartGame;
+    private Button startGameBtn;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
 
@@ -163,7 +164,9 @@ public class GameLobbyView extends Pane {
         txtArea.setEditable(false);
         txtArea.setWrapText(true);
         txtField = new TextField();
-        rightVBox.getChildren().addAll(txtArea, txtField);
+        startGameBtn = new Button( "Start Game" );
+        startGameBtn.setVisible( false );
+        rightVBox.getChildren().addAll(txtArea, txtField, startGameBtn);
 
         return rightVBox;
     }
@@ -274,6 +277,7 @@ public class GameLobbyView extends Pane {
         rightVBox.setId("rightVBox");
         txtArea.setId("txtArea");
         txtField.setId("txtField");
+        startGameBtn.setId( "startGameBtn" );
 
         //  CSS IDs for the CENTER part of the game lobby (small title and ch.atlantis.game.Game list)
         centerVBox.setId("centerVBox");
@@ -379,8 +383,14 @@ public class GameLobbyView extends Pane {
         return btnOptions;
     }
 
+
+    // TODO: This button was just for testing. Needs to be removed later
     public Button getBtnStartGame() {
         return btnStartGame;
+    }
+
+    public Button getStartGameBtn(){
+        return startGameBtn;
     }
 
     public Label getLblStatus() {

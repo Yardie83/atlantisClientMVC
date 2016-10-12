@@ -1,9 +1,12 @@
 package ch.atlantis.model;
 
 import ch.atlantis.controller.AtlantisController;
+import ch.atlantis.game.Game;
+import ch.atlantis.game.Player;
 import ch.atlantis.util.Language;
 import ch.atlantis.util.Message;
 import ch.atlantis.util.MessageType;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -46,11 +49,13 @@ public class AtlantisModel {
     private SimpleStringProperty connectionStatus;
     private SimpleIntegerProperty createProfileSuccess;
     private SimpleIntegerProperty loginSuccess;
+    private SimpleBooleanProperty gameReady;
     private SimpleStringProperty userName;
     private boolean autoConnect = true;
     private ObservableList<String> gameList;
     private ArrayList<Language> languageList;
     private String currentLanguage;
+    private Player player;
 
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
@@ -58,6 +63,7 @@ public class AtlantisModel {
         createProfileSuccess = new SimpleIntegerProperty( 0 );
         loginSuccess = new SimpleIntegerProperty( 0 );
         userName = new SimpleStringProperty();
+        gameReady = new SimpleBooleanProperty( false );
         gameList = FXCollections.observableArrayList();
         //TODO: (loris) read the config file here
         if ( !AtlantisController.debugMode ) {
@@ -142,6 +148,11 @@ public class AtlantisModel {
                                 case LANGUAGELIST:
                                     handleLanguages( message );
                                     break;
+                                case JOINGAME:
+                                    handelJoinGame( message );
+                                    break;
+                                case GAMEREADY:
+                                    handleReadyGame( message );
                             }
                         }
                     } catch ( SocketException e ) {
@@ -159,6 +170,28 @@ public class AtlantisModel {
         };
         Thread clientTask = new Thread( receiveMessageTask );
         clientTask.start();
+    }
+
+    private void handleReadyGame( Message message ) {
+        String[] gameInfo = splitMessage( message );
+        String gameName = gameInfo[ 0 ];
+        Boolean gameIsReady = Boolean.parseBoolean( gameInfo[ 1 ] );
+        if ( player != null ) {
+            if ( gameName.equals( player.getGameName() ) && player.getPlayerId() == 0 ) {
+                if ( gameIsReady ) {
+                    gameReady.set( true );
+                } else {
+                    gameReady.set( false );
+                }
+            }
+        }
+    }
+
+    private void handelJoinGame( Message message ) {
+        String[] info = splitMessage( message );
+        int playerId = Integer.valueOf( info[ 0 ] );
+        String gameName = info[ 1 ];
+        player = new Player( playerId, gameName );
     }
 
     private void handleGameList( Message message ) {
@@ -278,6 +311,16 @@ public class AtlantisModel {
         return null;
     }
 
+    /**
+     * Splits a message at the "," sign.
+     *
+     * @param message Message received from the client
+     * @return String[]
+     */
+    private String[] splitMessage( Message message ) {
+        return message.getMessageObject().toString().split( "," );
+    }
+
     public SimpleStringProperty getChatString() {
         return chatString;
     }
@@ -296,6 +339,10 @@ public class AtlantisModel {
 
     public SimpleStringProperty userNameProperty() {
         return userName;
+    }
+
+    public SimpleBooleanProperty gameReadyProperty() {
+        return gameReady;
     }
 
     public ObservableList<String> getGameList() {
@@ -317,6 +364,5 @@ public class AtlantisModel {
     public void setCurrentLanguage( String currentLanguage ) {
         this.currentLanguage = currentLanguage;
     }
-
 
 }
