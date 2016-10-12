@@ -60,8 +60,6 @@ public class GameBoardView extends Pane {
         //Currently Empty
         addPlayers();
 
-        addGamePieces();
-
         this.pathCardsSetA = new ArrayList<>();
         createPathCards(pathCardsSetA);
         cleanCardSetA(pathCardsSetA);
@@ -117,11 +115,13 @@ public class GameBoardView extends Pane {
                 if (i == 0) {
                     for (int k = 0; k < 4; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
                 if (i == 1) {
                     for (int k = 0; k < 5; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
             }
@@ -132,16 +132,19 @@ public class GameBoardView extends Pane {
                 if (i == 0) {
                     for (int k = 0; k < 4; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
                 if (i == 1) {
                     for (int k = 0; k < 5; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
                 if (i == 2) {
                     for (int k = 0; k < 6; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
             }
@@ -152,21 +155,25 @@ public class GameBoardView extends Pane {
                 if (i == 0) {
                     for (int k = 0; k < 4; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
                 if (i == 1) {
                     for (int k = 0; k < 5; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
                 if (i == 2) {
                     for (int k = 0; k < 6; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
                 if (i == 3) {
                     for (int k = 0; k < 7; k++) {
                         player.addHandCard(movementCards.get(k));
+                        movementCards.remove(k);
                     }
                 }
             }
@@ -372,7 +379,7 @@ public class GameBoardView extends Pane {
             //Console will be placed at X and Y coordinates of the tile with the pathId 500
             if (pathId == 500) {
                 createGameConsole(tile);
-            }
+            }/*
             if (pathId == 601) {
                 if (players.size() != 0) {
                     createPlayerA(tile);
@@ -392,7 +399,7 @@ public class GameBoardView extends Pane {
                 if (players.size() > 3) {
                     createPlayerD(tile);
                 }
-            }
+            }*/
             if (pathId == 701) {
                 createDeck(tile);
             }
@@ -418,7 +425,7 @@ public class GameBoardView extends Pane {
 
         this.getChildren().add(deck);
     }
-
+/*
     private void createPlayerA(Tile tile) {
         VBox playerAConsole = new VBox(10);
         HBox top = new HBox(10);
@@ -467,6 +474,7 @@ public class GameBoardView extends Pane {
         Label label3 = new Label("|");
 
         top.getChildren().addAll(label1, label3, label2);
+        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1), player.getHandCard(2), player.getHandCard(3), player.getHandCard(4));
 
         playerBConsole.setLayoutX(tile.getX());
         playerBConsole.setLayoutY(tile.getY());
@@ -495,6 +503,8 @@ public class GameBoardView extends Pane {
         Label label3 = new Label("|");
 
         top.getChildren().addAll(label1, label3, label2);
+        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
+                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5));
 
         playerCConsole.setLayoutX(tile.getX());
         playerCConsole.setLayoutY(tile.getY());
@@ -524,6 +534,8 @@ public class GameBoardView extends Pane {
         Label label3 = new Label("|");
 
         top.getChildren().addAll(label1, label3, label2);
+        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
+                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5), player.getHandCard(6));
 
         playerDConsole.setLayoutX(tile.getX());
         playerDConsole.setLayoutY(tile.getY());
@@ -531,7 +543,7 @@ public class GameBoardView extends Pane {
         playerDConsole.setMinWidth(tile.getSide() * 2);
 
         this.getChildren().add(playerDConsole);
-    }
+    }*/
 
     private void placeSpecialCard(int colorSet, CardType cardType, Tile tile) {
         Card card = new Card(colorSet, cardType);
@@ -592,21 +604,44 @@ public class GameBoardView extends Pane {
     private void createGameConsole(Tile tile) {
 
         VBox console = new VBox();
+        HBox top = new HBox(10);
+        top.setAlignment(Pos.CENTER);
+        HBox bottom = new HBox(10);
+
+        console.getChildren().addAll(top, bottom);
 
         console.setStyle("-fx-border-width: 1px; " +
                 "-fx-background-color: #7af5c4;" +
                 "-fx-border-color: black");
 
+        Player player = players.get(0);
+        String score = Integer.toString(player.getScore());
+        Label label1 = new Label(player.getPlayerName().toString());
+        Label label2 = new Label("Score: " + score);
+        Label label3 = new Label("|");
 
-        Label label1 = new Label("hallo");
+        top.getChildren().addAll(label1, label3, label2);
 
-        HBox top = new HBox();
+        int handCardSize = player.getHandCardSize();
 
-        top.getChildren().add(label1);
-
-        HBox bottom = new HBox();
-
-        console.getChildren().addAll(top, bottom);
+        switch(handCardSize) {
+            case 4:
+                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
+                        player.getHandCard(2), player.getHandCard(3));
+                break;
+            case 5:
+                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
+                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4));
+                break;
+            case 6:
+                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
+                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5));
+                break;
+            case 7:
+                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
+                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5), player.getHandCard(6));
+                break;
+        }
 
         console.setLayoutX(tile.getX());
         console.setLayoutY(tile.getY() + 20);
@@ -626,19 +661,13 @@ public class GameBoardView extends Pane {
         return pathCards;
     }
 
-    public Stage getGameStage() {
-        return gameStage;
-    }
+    public Stage getGameStage() { return gameStage; }
 
     public void removePathCard(Card pathCard) {
         this.getChildren().remove(pathCard);
     }
 
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
+    public ArrayList<Player> getPlayers() { return players; }
 
-    public void showOptions() {
-        view.showOptions();
-    }
+    public int getPlayerId() { return getPlayerId(); }
 }

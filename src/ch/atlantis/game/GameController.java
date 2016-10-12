@@ -19,9 +19,12 @@ public class GameController {
     private GameModel gameModel;
     private AtlantisModel model;
     private Card selectedCard;
+    private Card cardToMove;
     private int cardBehindPathId;
     private ArrayList<Card> pathCards;
-    private boolean myTurn;
+    private ArrayList<Card> movementCards;
+    private int playerId;
+    int turnId = 0;
 
     public GameController(GameModel gameModel, AtlantisModel model, GameBoardView gameBoardView) {
         this.gameModel = gameModel;
@@ -45,17 +48,17 @@ public class GameController {
 
     private void handleUserInput() {
 
-        pathCards = gameBoardView.getPathCards();
+        movementCards = gameBoardView.getPlayers().get(turnId).getHandCards();
 
-        for (Card card : pathCards ) {
+        for (Card card : movementCards) {
             if (card.getCardType() == CardType.START) {
-                selectedCard = card;
+                cardToMove = possiblePathCard(card);
             }
             card.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    selectedCard = card;
-                    cardBehindPathId = selectedCard.getPathId() - 1;
+                    cardToMove = possiblePathCard(card);
+                    //cardBehindPathId = selectedCard.getPathId() - 1;
                 }
             });
         }
@@ -67,24 +70,25 @@ public class GameController {
                     public void handle(MouseEvent event) {
                         // Place the player game piece in the middle of the card that corresponds
                         // with the card that was played
-                        if (selectedCard.getCardType() != CardType.START) {
-                            if (isOccupied(selectedCard)) {
-                                while (isOccupied(selectedCard)) {
-                                    selectedCard = getNextCard();
+                        if (cardToMove.getCardType() != CardType.START) {
+                            if (isOccupied(cardToMove)) {
+                                while (isOccupied(cardToMove)) {
+                                    cardToMove = getNextCard();
                                 }
-                            } else {
-                                gamePiece.moveGamePiece(selectedCard.getLayoutX() + (selectedCard.getWidth() / 2) - (gamePiece.getWidth() / 2),
-                                        selectedCard.getLayoutY() + (selectedCard.getHeight() / 2) - (gamePiece.getHeight() / 2));
+                            } else if (myTurn(gamePiece)) {
+                                gamePiece.moveGamePiece(cardToMove.getLayoutX() + (cardToMove.getWidth() / 2) - (gamePiece.getWidth() / 2),
+                                        cardToMove.getLayoutY() + (cardToMove.getHeight() / 2) - (gamePiece.getHeight() / 2));
                             }
+
                         }
                         // Find the card behind the player which is on top
                         // and remove it, but leave the card if it is already a water card
-                        for (Card card : pathCards ) {
-                            /*if (isOccupied(card)) {
+                        /*for (Card card : pathCards ) {
+                            if (isOccupied(card)) {
                                 while (isOccupied(card)) {
                                     cardBehindPathId--;
                                 }
-                            } else {*/
+                            } else {
                             if (card.getPathId() == cardBehindPathId && card.isOnTop() && card.getCardType() != CardType.WATER) {
                                 gameBoardView.removePathCard(card);
                             }
@@ -92,21 +96,51 @@ public class GameController {
                                 card.setIsOnTop(true);
                             }
                         }
-                        //}
+                        } */
                     }
                 });
             }
+
+        }
+    }
+
+    private Card possiblePathCard(Card handCard) {
+
+        int pathId = 101;
+
+        for (Card pathCard : gameBoardView.getPathCards()) {
+            if (pathCard.getColorSet() == handCard.getColorSet()) {
+                if (pathCard.getPathId() == pathId) {
+                    pathId++;
+                    return pathCard;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean myTurn(GamePiece gamePiece) {
+
+        if (turnId == gameBoardView.getPlayers().size()) {
+            turnId = 0;
         }
 
+        if (turnId == gamePiece.getPlayerId()) {
+            turnId++;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
      * Fabian Witschi
+     *
      * @return
      */
     private Card getNextCard() {
-        for (Card card : pathCards) {
-            if (card.getPathId() == selectedCard.getPathId()+1) {
+        for (Card card : gameBoardView.getPathCards()) {
+            if (card.getPathId() == cardToMove.getPathId() + 1) {
                 return card;
             }
         }
@@ -124,7 +158,10 @@ public class GameController {
             }
         }
         return false;
+    }
 
+    public int getTurnId() {
+        return turnId;
     }
 
 }

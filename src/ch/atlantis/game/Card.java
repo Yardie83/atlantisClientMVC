@@ -33,7 +33,7 @@ public class Card extends Rectangle {
     public Card(int colorSet, CardType cardType){
 
         this.setWidth(20);
-        this.setHeight(50);
+        this.setHeight(40);
         this.cardType = cardType;
         this.colorSet = colorSet;
         this.setStroke(Color.BLACK);
