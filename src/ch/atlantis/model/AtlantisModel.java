@@ -54,8 +54,6 @@ public class AtlantisModel {
     private SimpleStringProperty userName;
     private boolean autoConnect = true;
     private ObservableList<String> gameList;
-    private ArrayList<Language> languageList;
-
     private LanguageHandler languageHandler;
 
     private String currentLanguage;
