@@ -39,6 +39,7 @@ public class GameController {
         addListeners();
     }
 
+
     private void addListeners() {
         gameBoardView.getGameStage().getScene().setOnKeyPressed( new EventHandler<KeyEvent>() {
             @Override
