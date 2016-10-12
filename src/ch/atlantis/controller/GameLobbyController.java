@@ -54,6 +54,15 @@ public class GameLobbyController {
 
         Stage gameLobbyStage = view.getGameLobbyView().getGameLobbyStage();
 
+        view.getGameLobbyView().getGameLobbyStage().setOnShowing(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+
+                //Music.play();
+
+            }
+        });
+
         /*
          * *******************************
          * Menu Bar Controls EventHandlers
@@ -131,9 +140,13 @@ public class GameLobbyController {
             @Override
             public void handle(MouseEvent event) {
                if ( event.getClickCount() == 2){
-                   String listInfo = view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem().toString();
 
-                   model.joinGame(listInfo);
+                   if (view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem() != null) {
+
+                       String listInfo = view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem().toString();
+
+                       model.joinGame(listInfo);
+                   }
                }
             }
         });

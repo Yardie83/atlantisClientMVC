@@ -267,6 +267,9 @@ public class AtlantisView {
 
                     if ( label.getId().equals( id ) ) {
 
+                        //TODO: Bradley is this okey? instead of the loop?
+                        //selectedLanguage.getLanguageTable().get(label.getId());
+
                         //System.out.println("!!! LADIES AND GENTLEMEN WE HAVE A MATCH !!!");
 
                         //System.out.println("LE TEXT: " + language.getLanguageTable().get(id));
