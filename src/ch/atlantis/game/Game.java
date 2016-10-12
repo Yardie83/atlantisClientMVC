@@ -19,20 +19,20 @@ public class Game {
 
         players = new ArrayList<>(4);
 
-        Player player0 = new Player("Hermann", Color.RED);
-        player0.setPlayerId(0);
+        Player player0 = new Player(0);
+        player0.setPlayerName("Hermann");
         players.add(player0);
 
-        Player player1 = new Player("Loris", Color.BLACK);
-        player1.setPlayerId(1);
+        Player player1 = new Player(1);
+        player1.setPlayerName("Heval");
         players.add(player1);
 
-        Player player2 = new Player("Heval", Color.GREEN);
-        player2.setPlayerId(2);
+        Player player2 = new Player(2);
+        player2.setPlayerName("Loris");
         players.add(player2);
 
-        Player player3 = new Player("Fabian", Color.BLUE);
-        player3.setPlayerId(3);
+        Player player3 = new Player(3);
+        player3.setPlayerName("Fabian");
         players.add(player3);
 
         gameBoardView = new GameBoardView(players, view);
