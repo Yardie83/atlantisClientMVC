@@ -36,10 +36,10 @@ public class GameController {
     }
 
     private void addListeners() {
-        gameBoardView.getGameStage().getScene().setOnKeyPressed( new EventHandler<KeyEvent>() {
+        gameBoardView.getGameStage().getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void handle( KeyEvent event ) {
-                if ( event.getCode() == KeyCode.ESCAPE ){
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
                     gameBoardView.showOptions();
                 }
             }
@@ -106,13 +106,15 @@ public class GameController {
 
     private Card possiblePathCard(Card handCard) {
 
-        int pathId = 101;
-
-        for (Card pathCard : gameBoardView.getPathCards()) {
-            if (pathCard.getColorSet() == handCard.getColorSet()) {
-                if (pathCard.getPathId() == pathId) {
-                    pathId++;
-                    return pathCard;
+        for (int i = 101; i < 154; i++) {
+            for (Card pathCard : gameBoardView.getPathCards()) {
+                if (pathCard.getPathId() == i) {
+                    if (pathCard.getColorSet() == handCard.getColorSet()) {
+                        if (pathCard.isOnTop()) {
+                            cardBehindPathId = i - 1;
+                            return pathCard;
+                        }
+                    }
                 }
             }
         }
