@@ -161,7 +161,7 @@ public class OptionsView extends Pane {
     }
 
     public String getSelectedComboBoxLanguage() {
-        return comboBoxLanguages.getSelectionModel().getSelectedItem().toString();
+        return comboBoxLanguages.getSelectionModel().getSelectedItem();
     }
 
     public void setSelectedComboboxLanguage(String culture){

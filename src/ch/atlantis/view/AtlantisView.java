@@ -199,7 +199,8 @@ public class AtlantisView {
         overlayStage.setY( parentStage.getY() );
     }
 
-    // TODO: This does not work. The overlayStage does not react. I think it must be the root pane, but how to get there?
+    // TODO: This does not work. The overlayStage does not react. I think it must be the root pane, but how to get
+    // there?
     private void setDimensions( Stage overlayStage, Stage parentStage ) {
         overlayStage.setMinHeight( parentStage.getHeight() );
         overlayStage.setMinWidth( parentStage.getWidth() );
@@ -387,9 +388,10 @@ public class AtlantisView {
         this.activeOverlayStage.close();
     }
 
-    public void showOptions(){
-        if ( this.optionsView != null ) {
-            this.optionsStage.show();
+    public void showOptions( ArrayList<Language> languageList, String currentLanguage, Stage gameStage ) {
+        if ( this.optionsView == null ) {
+            createOptionsView( languageList, currentLanguage, gameStage );
         }
+        this.optionsStage.show();
     }
 }

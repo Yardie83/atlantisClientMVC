@@ -1,5 +1,6 @@
 package ch.atlantis.game;
 
+import ch.atlantis.util.Language;
 import ch.atlantis.view.AtlantisView;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -671,7 +672,7 @@ public class GameBoardView extends Pane {
 
     public int getPlayerId() { return getPlayerId(); }
 
-    public void showOptions() {
-        view.showOptions();
+    public void showOptions( ArrayList<Language> languageList, String currentLanguage, Stage gameStage ) {
+        view.showOptions(languageList, currentLanguage, gameStage);
     }
 }
