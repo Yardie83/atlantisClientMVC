@@ -16,6 +16,7 @@ enum CardType{
 public class Card extends Rectangle {
 
     private boolean isOnTop;
+    private boolean isPlayed;
     private int value;
     private int colorSet;
     private CardType cardType;
@@ -38,6 +39,7 @@ public class Card extends Rectangle {
         this.colorSet = colorSet;
         this.setStroke(Color.BLACK);
         applyColorSet(colorSet);
+        this.isPlayed = false;
     }
 
     // Constructor for Path Cards. They do have a value associated.
@@ -106,4 +108,10 @@ public class Card extends Rectangle {
     public boolean isOnTop(){
         return this.isOnTop;
     }
+
+    public boolean isPlayed() { return this.isPlayed; }
+
+    public void setIsPlayedTrue() { this.isPlayed = true; }
+
+    public void setIsPlayedFalse() { this.isPlayed = false; }
 }

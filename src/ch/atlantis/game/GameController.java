@@ -29,6 +29,7 @@ public class GameController {
     private int playerId;
     private int turnId = 0;
     private GamePiece tempoGamePiece;
+    private Deck deck;
 
     public GameController( AtlantisView atlantisView, AtlantisModel atlantisModel, GameModel gameModel, GameBoardView gameBoardView ) {
        this.atlantisView = atlantisView;
@@ -66,6 +67,7 @@ public class GameController {
                 @Override
                 public void handle(MouseEvent event) {
                     cardToMove = possiblePathCard(card);
+                    card.setIsPlayedTrue();
                     //cardBehindPathId = selectedCard.getPathId() - 1;
                 }
             });

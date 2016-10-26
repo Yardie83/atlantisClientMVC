@@ -27,6 +27,7 @@ public class GameBoardView extends Pane {
 
     private int rowCount = 11;
     private Hand hand;
+    private Deck deck;
     private AtlantisView view;
     private ArrayList<Tile> tiles;
     private ArrayList<Player> players;
@@ -78,14 +79,22 @@ public class GameBoardView extends Pane {
         this.bridges = new ArrayList<>();
         createBridges(bridges);
 
-
         addHandCards(movementCards);
+
+        addMovementCardsToDeck(movementCards);
 
         drawHand();
 
         drawBoard();
 
         drawGamePieces();
+    }
+
+    private void addMovementCardsToDeck(ArrayList<Card> movementCards) {
+        this.deck = new Deck();
+
+        deck.fillDeckToStart(movementCards);
+
     }
 
     private void drawHand() {
@@ -408,23 +417,23 @@ public class GameBoardView extends Pane {
     }
 
     private void createDeck(Tile tile) {
-        VBox deck = new VBox();
+        VBox deckBox = new VBox();
 
-        deck.setStyle("-fx-border-width: 1px; " +
+        deckBox.setStyle("-fx-border-width: 1px; " +
                 "-fx-background-color: #F0F8FF;" +
                 "-fx-border-color: black");
 
 
         Label label1 = new Label("Deck");
 
-        deck.getChildren().add(label1);
+        deckBox.getChildren().add(label1);
 
-        deck.setLayoutX(tile.getX());
-        deck.setLayoutY(tile.getY());
-        deck.setMinHeight(100);
-        deck.setMinWidth(tile.getSide() * 2);
+        deckBox.setLayoutX(tile.getX());
+        deckBox.setLayoutY(tile.getY());
+        deckBox.setMinHeight(100);
+        deckBox.setMinWidth(tile.getSide() * 2);
 
-        this.getChildren().add(deck);
+        this.getChildren().add(deckBox);
     }
 /*
     private void createPlayerA(Tile tile) {
@@ -627,20 +636,31 @@ public class GameBoardView extends Pane {
 
         switch(handCardSize) {
             case 4:
-                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3));
+                for (int i = 0; i < handCardSize; i++) {
+                    Card handCard = player.getHandCard(i);
+                    if (!(handCard.isPlayed())) {
+                        bottom.getChildren().addAll(player.getHandCard(i));
+                    } else {
+                        handCard.setIsPlayedFalse();
+                        deck.collectCard(handCard);
+                        player.removeHandCard(handCard);
+                    }
+                }
                 break;
             case 5:
-                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4));
+                for (int i = 0; i < handCardSize; i++) {
+                    bottom.getChildren().addAll(player.getHandCard(i));
+                }
                 break;
             case 6:
-                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5));
+                for (int i = 0; i < handCardSize; i++) {
+                    bottom.getChildren().addAll(player.getHandCard(i));
+                }
                 break;
             case 7:
-                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5), player.getHandCard(6));
+                for (int i = 0; i < handCardSize; i++) {
+                    bottom.getChildren().addAll(player.getHandCard(i));
+                }
                 break;
         }
 
