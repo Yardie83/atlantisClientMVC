@@ -1,5 +1,7 @@
 package ch.atlantis.game;
 
+import sun.corba.Bridge;
+
 import java.util.ArrayList;
 
 /**
@@ -11,6 +13,7 @@ public class Player {
     private int score = 0;
     private Hand hand;
     private PathCardStack pathCardStack;
+    private Bridges bridges;
     private GamePiece gamePieces;
     private String playerName;
     private Card bridge;
@@ -20,6 +23,7 @@ public class Player {
         this.playerId = playerId;
         this.pathCardStack = new PathCardStack();
         this.hand = new Hand();
+        this.bridges = new Bridges(playerId);
         this.gamePieces = new GamePiece(playerId);
         this.gameName = this.gameName;
     }
