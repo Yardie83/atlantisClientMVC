@@ -24,6 +24,8 @@ public class GameController {
     private Card selectedCard;
     private Card cardToMove;
     private int cardBehindPathId;
+    private int cardToMoveId;
+    private int tempColorSet;
     private ArrayList<Card> pathCards;
     private ArrayList<Card> movementCards;
     private int playerId;
@@ -60,15 +62,14 @@ public class GameController {
         movementCards = gameBoardView.getPlayers().get(turnId).getHandCards();
 
         for (Card card : movementCards) {
-            if (card.getCardType() == CardType.START) {
-                cardToMove = possiblePathCard(card);
-            }
             card.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    tempColorSet = card.getColorSet();
                     cardToMove = possiblePathCard(card);
                     card.setIsPlayedTrue();
-                    //cardBehindPathId = selectedCard.getPathId() - 1;
+                    cardBehindPathId = cardToMove.getPathId() - 1;
+                    cardToMoveId = cardToMove.getPathId();
                 }
             });
         }
@@ -80,6 +81,7 @@ public class GameController {
                     public void handle(MouseEvent event) {
                         // Place the player game piece in the middle of the card that corresponds
                         // with the card that was played
+                        cardToMove = possiblePathCard(gamePiece);
                         if (cardToMove.getCardType() != CardType.START) {
                             if (isOccupied(cardToMove)) {
                                 while (isOccupied(cardToMove)) {
@@ -88,6 +90,7 @@ public class GameController {
                             } else if (myTurn(gamePiece)) {
                                 gamePiece.moveGamePiece(cardToMove.getLayoutX() + (cardToMove.getWidth() / 2) - (gamePiece.getWidth() / 2),
                                         cardToMove.getLayoutY() + (cardToMove.getHeight() / 2) - (gamePiece.getHeight() / 2));
+                                gamePiece.setGamePiecePathId(cardToMoveId);
                             }
 
                         }
@@ -122,6 +125,24 @@ public class GameController {
             for (Card pathCard : gameBoardView.getPathCards()) {
                 if (pathCard.getPathId() == i) {
                     if (pathCard.getColorSet() == handCard.getColorSet()) {
+                        if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER
+                                && pathCard.getCardType() != CardType.START) {
+                            cardBehindPathId = i - 1;
+                            return pathCard;
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private Card possiblePathCard(GamePiece gamePiece) {
+
+        for (int i = gamePiece.getGamePiecePathId(); i < 154; i++) {
+            for (Card pathCard : gameBoardView.getPathCards()) {
+                if (pathCard.getPathId() == i) {
+                    if (pathCard.getColorSet() == tempColorSet) {
                         if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER
                                 && pathCard.getCardType() != CardType.START) {
                             cardBehindPathId = i - 1;
