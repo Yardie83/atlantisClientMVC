@@ -38,7 +38,6 @@ public class LoginView extends Pane {
     private Button btnLogin;
     private Button btnCancel;
 
-
     private Button btnCreateProfile;
 
     public LoginView(int height, int width) {
@@ -115,22 +114,22 @@ public class LoginView extends Pane {
         lblError.setVisible(false);
 
         //TOP Element IDs
-        lblLogin.setId("lblLogin");
+        lblLogin.setId("login_lblLogin");
 
         // CENTER Elements IDs
         centerPane.setId("centerPane");
-        lblUserName.setId("lblUserName");
+        lblUserName.setId("login_lblUserName");
         txtUserName.setId("txtUserName");
-        lblPassword.setId("lblPassword");
+        lblPassword.setId("login_lblPassword");
         txtPassword.setId("txtPassword");
-        lblError.setId("lblError");
+        lblError.setId("login_lblError");
 
         //BOTTOM Elements IDs
         bottomPane.setId("bottomPane");
         buttonRow.setId("buttonRow");
-        btnLogin.setId("btnLogin");
-        btnCancel.setId("btnCancel");
-        btnCreateProfile.setId("btnCreateProfile");
+        btnLogin.setId("login_btnLogin");
+        btnCancel.setId("login_btnCancel");
+        btnCreateProfile.setId("login_btnCreateProfile");
     }
 
     public Button getBtnCancel() {

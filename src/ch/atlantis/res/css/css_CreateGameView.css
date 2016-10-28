@@ -22,7 +22,7 @@ with 2 buttons
 /*START TOP*/
 /*****************************************/
 
-#lblNewGame {
+#cg_lblNewGame {
     -fx-alignment: center;
     -fx-font-size: 40px;
     -fx-font-smoothing-type: lcd;
@@ -58,11 +58,11 @@ with 2 buttons
 }
 
 
-#lblGameName {
+#cg_lblGameName {
 
 }
 
-#lblNoOfPlayers {
+#cg_lblNoOfPlayers {
 
 }
 
@@ -106,11 +106,11 @@ with 2 buttons
     -fx-border-color: transparent;
 }
 
-#btnCreateNewGame {
+#cg_btnCreateNewGame {
     -fx-background-color: #62d6a8;
 }
 
-#btnCreateNewGame:hover {
+#cg_tnCreateNewGame:hover {
 
     -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
@@ -121,16 +121,16 @@ with 2 buttons
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
 }
 
-#btnCancel {
+#cg_btnCancel {
     -fx-background-color: #f55860;
 }
 
-#btnCancel:hover {
+#cg_btnCancel:hover {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 2, 2);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #f57a80,  #f55860);
 }
 
-#btnCancel:pressed {
+#cg_btnCancel:pressed {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #f57a80, #f55860);
 }

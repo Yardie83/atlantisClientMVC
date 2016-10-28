@@ -127,15 +127,15 @@ public class CreateGameView extends Pane {
 
         //CENTER elements
         centerPane.setId( "centerPane" );
-        lblNewGame.setId( "lblNewGame" );
-        lblGameName.setId( "lblGameName" );
-        lblNoOfPlayers.setId( "lblNoOfPlayers" );
-        lblError.setId( "lblError" );
+        lblNewGame.setId( "cg_lblNewGame" );
+        lblGameName.setId( "cg_lblGameName" );
+        lblNoOfPlayers.setId( "cg_lblNoOfPlayers" );
+        lblError.setId( "cg_lblError" );
 
         //BOTTOM elements
         bottomPane.setId( "bottomPane" );
-        btnCancel.setId( "btnCancel" );
-        btnCreateNewGame.setId( "btnCreateNewGame" );
+        btnCancel.setId( "cg_btnCancel" );
+        btnCreateNewGame.setId( "cg_btnCreateNewGame" );
     }
 
     public TextField getTxtGameName() {

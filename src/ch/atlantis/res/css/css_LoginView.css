@@ -43,7 +43,7 @@
 /*START TOP*/
 /*****************************************/
 
-#lblLogin {
+#login_lblLogin {
     -fx-alignment: center;
     -fx-font-size: 42px;
     -fx-font-weight: bold;
@@ -68,14 +68,14 @@
 
 }
 
-#lblUserName {
+#login_lblUserName {
 
 }
 
 #txtUserName {
 }
 
-#lblPassword {
+#login_lblPassword {
 
 }
 
@@ -83,7 +83,7 @@
 
 }
 
-#lblError{
+#login_lblError{
     -fx-text-fill: #ff5558;
 }
 
@@ -109,46 +109,46 @@
     -fx-alignment: top-center;
 }
 
-#btnLogin {
+#login_btnLogin {
     -fx-background-color: #62d6a8;
 }
 
-#btnLogin:hover {
+#login_btnLogin:hover {
     -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
 }
 
-#btnLogin:pressed {
+#login_btnLogin:pressed {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
 }
 
-#btnCancel {
+#login_btnCancel {
     -fx-background-color: #f55860;
 }
 
-#btnCancel:hover {
+#login_btnCancel:hover {
 
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 2, 2);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #f57a80, #f55860);
 }
 
-#btnCancel:pressed {
+#login_btnCancel:pressed {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #f57a80, #f55860);
 }
 
-#btnCreateProfile {
+#login_btnCreateProfile {
     -fx-background-color: #61B0FD;
 
 }
 
-#btnCreateProfile:hover {
+#login_btnCreateProfile:hover {
     -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
 }
 
-#btnCreateProfile:pressed {
+#login_btnCreateProfile:pressed {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7DC6FD, #61B0FD);
 }
