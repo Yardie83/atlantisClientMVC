@@ -389,27 +389,7 @@ public class GameBoardView extends Pane {
             //Console will be placed at X and Y coordinates of the tile with the pathId 500
             if (pathId == 500) {
                 createGameConsole(tile);
-            }/*
-            if (pathId == 601) {
-                if (players.size() != 0) {
-                    createPlayerA(tile);
-                }
             }
-            if (pathId == 602) {
-                if (players.size() > 1) {
-                    createPlayerB(tile);
-                }
-            }
-            if (pathId == 603) {
-                if (players.size() > 2) {
-                    createPlayerC(tile);
-                }
-            }
-            if (pathId == 604) {
-                if (players.size() > 3) {
-                    createPlayerD(tile);
-                }
-            }*/
             if (pathId == 701) {
                 createDeck(tile);
             }
@@ -435,125 +415,7 @@ public class GameBoardView extends Pane {
 
         this.getChildren().add(deckBox);
     }
-/*
-    private void createPlayerA(Tile tile) {
-        VBox playerAConsole = new VBox(10);
-        HBox top = new HBox(10);
-        top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
 
-        playerAConsole.getChildren().addAll(top, bottom);
-
-        playerAConsole.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
-        Player player = players.get(0);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName().toString());
-        Label label2 = new Label("Score: " + score);
-        Label label3 = new Label("|");
-
-        top.getChildren().addAll(label1, label3, label2);
-        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1), player.getHandCard(2), player.getHandCard(3));
-
-        playerAConsole.setLayoutX(tile.getX());
-        playerAConsole.setLayoutY(tile.getY());
-        playerAConsole.setMinHeight(100);
-        playerAConsole.setMinWidth(tile.getSide() * 2);
-
-        this.getChildren().add(playerAConsole);
-    }
-
-    private void createPlayerB(Tile tile) {
-        VBox playerBConsole = new VBox(10);
-        HBox top = new HBox(10);
-        top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
-
-        playerBConsole.getChildren().addAll(top, bottom);
-
-        playerBConsole.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
-        Player player = players.get(1);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName().toString());
-        Label label2 = new Label("Score: " + score);
-        Label label3 = new Label("|");
-
-        top.getChildren().addAll(label1, label3, label2);
-        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1), player.getHandCard(2), player.getHandCard(3), player.getHandCard(4));
-
-        playerBConsole.setLayoutX(tile.getX());
-        playerBConsole.setLayoutY(tile.getY());
-        playerBConsole.setMinHeight(100);
-        playerBConsole.setMinWidth(tile.getSide() * 2);
-
-        this.getChildren().add(playerBConsole);
-    }
-
-    private void createPlayerC(Tile tile) {
-        VBox playerCConsole = new VBox(10);
-        HBox top = new HBox(10);
-        top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
-
-        playerCConsole.getChildren().addAll(top, bottom);
-
-        playerCConsole.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
-        Player player = players.get(2);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName());
-        Label label2 = new Label("Score: " + score);
-        Label label3 = new Label("|");
-
-        top.getChildren().addAll(label1, label3, label2);
-        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5));
-
-        playerCConsole.setLayoutX(tile.getX());
-        playerCConsole.setLayoutY(tile.getY());
-        playerCConsole.setMinHeight(100);
-        playerCConsole.setMinWidth(tile.getSide() * 2);
-
-        this.getChildren().add(playerCConsole);
-    }
-
-
-    private void createPlayerD(Tile tile) {
-        VBox playerDConsole = new VBox(10);
-        HBox top = new HBox(10);
-        top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
-
-        playerDConsole.getChildren().addAll(top, bottom);
-
-        playerDConsole.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
-        Player player = players.get(3);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName().toString());
-        Label label2 = new Label("Score: " + score);
-        Label label3 = new Label("|");
-
-        top.getChildren().addAll(label1, label3, label2);
-        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5), player.getHandCard(6));
-
-        playerDConsole.setLayoutX(tile.getX());
-        playerDConsole.setLayoutY(tile.getY());
-        playerDConsole.setMinHeight(100);
-        playerDConsole.setMinWidth(tile.getSide() * 2);
-
-        this.getChildren().add(playerDConsole);
-    }*/
 
     private void placeSpecialCard(int colorSet, CardType cardType, Tile tile) {
         Card card = new Card(colorSet, cardType);

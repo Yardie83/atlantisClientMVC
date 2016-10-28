@@ -187,6 +187,23 @@ public class GameLobbyController {
 
         /*
          * ******************************************************************
+         * When the game is ready and the host clicks the visible start game button,
+         * we send a message to the server that we want to receive the game information
+         * needed to start the game.
+         * ******************************************************************
+         *
+         * Hermann Grieder
+         */
+
+        view.getGameLobbyView().getStartGameBtn().setOnAction( new EventHandler<ActionEvent>() {
+            @Override
+            public void handle( ActionEvent event ) {
+                model.sendMessage( new Message( MessageType.STARTGAME ) );
+            }
+        } );
+
+        /*
+         * ******************************************************************
          * BUBBLES!! It creates bubbles(!!) when you click in the gameLobby!!
          * ******************************************************************
          * Hermann Grieder
@@ -358,6 +375,7 @@ public class GameLobbyController {
                 }
             }
         } );
+
     }
 
     /**

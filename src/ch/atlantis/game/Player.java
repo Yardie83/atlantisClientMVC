@@ -25,7 +25,7 @@ public class Player {
         this.hand = new Hand();
         this.bridges = new Bridges(playerId);
         this.gamePieces = new GamePiece(playerId);
-        this.gameName = this.gameName;
+        this.gameName = gameName;
     }
 
     public String getPlayerName() { return playerName; }
