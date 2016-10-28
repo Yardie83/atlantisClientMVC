@@ -4,10 +4,11 @@ import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.view.AtlantisView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.RadioButton;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
- *
+ * <p>
  * Options View Controller
  */
 public class OptionsController {
@@ -28,16 +29,24 @@ public class OptionsController {
             @Override
             public void handle(ActionEvent event) {
 
+                //Fullscreen Settings
+
+                //Music Settings
+                RadioButton rb = (RadioButton) view.getOptionsView().getRadioBtnGroupSound().getSelectedToggle();
+
+                //model.soundController(rb.getText());
+
+                //Language Settings
                 String culture = view.getOptionsView().getSelectedComboBoxLanguage();
                 //System.out.println(culture);
 
-                if (culture != model.getCurrentLanguage()) {
+                if (culture != model.getConfigLanguage()) {
 
                     if (view.setSelectedLanguage(model.getSelectedLanguage(culture))) {
 
                         view.createGameLobbyView(false);
 
-                        model.setCurrentLanguage(culture);
+                        model.setConfigLanguage(culture);
                         view.getOptionsView().setSelectedComboboxLanguage(culture);
                         view.getOptionsStage().close();
                     } else {

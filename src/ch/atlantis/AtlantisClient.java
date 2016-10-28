@@ -23,7 +23,7 @@ public class AtlantisClient extends Application {
     public void start(Stage introStage) throws Exception {
 
         AtlantisModel model = new AtlantisModel();
-        AtlantisView view = new AtlantisView(introStage);
+        AtlantisView view = new AtlantisView(introStage, model);
         new AtlantisController(model, view);
     }
 }

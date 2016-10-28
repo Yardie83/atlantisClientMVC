@@ -1,21 +1,14 @@
 package ch.atlantis.model;
 
-import ch.atlantis.controller.AtlantisController;
-import ch.atlantis.game.Game;
 import ch.atlantis.game.Player;
-import ch.atlantis.util.Language;
-import ch.atlantis.util.LanguageHandler;
-import ch.atlantis.util.Message;
-import ch.atlantis.util.MessageType;
+import ch.atlantis.util.*;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import sun.awt.SunToolkit;
+
 
 import javax.sound.sampled.Clip;
 import java.io.File;
@@ -56,34 +49,33 @@ public class AtlantisModel {
     private ObservableList<String> gameList;
     private LanguageHandler languageHandler;
 
-    private String currentLanguage;
     private Player player;
-    private boolean isMusic = true;
 
     private AtlantisConfig conf;
+
+    private Music musicThread;
+
 
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
         connectionStatus = new SimpleStringProperty();
-        createProfileSuccess = new SimpleIntegerProperty( 0 );
-        loginSuccess = new SimpleIntegerProperty( 0 );
+        createProfileSuccess = new SimpleIntegerProperty(0);
+        loginSuccess = new SimpleIntegerProperty(0);
         userName = new SimpleStringProperty();
-        gameReady = new SimpleBooleanProperty( false );
+        gameReady = new SimpleBooleanProperty(false);
         gameList = FXCollections.observableArrayList();
 
         this.handleLanguages();
         this.handleSettings();
-        this.soundController();
+        //this.soundController(conf.getIsMusic());
     }
 
     private void handleSettings() {
 
         if (conf == null) {
             conf = new AtlantisConfig();
-            if (conf.readAtlantisConfig()) {
-                //currentLanguage = conf.getConfigLanguage();
-                //isMusic = conf.getIsMusic();
-            } else {
+            if (!conf.readAtlantisConfig()) {
+
                 //TODO: Error Message could not read config
             }
         }
@@ -164,10 +156,10 @@ public class AtlantisModel {
                                     handleUserName(message);
                                     break;
                                 case JOINGAME:
-                                    handelJoinGame( message );
+                                    handelJoinGame(message);
                                     break;
                                 case GAMEREADY:
-                                    handleReadyGame( message );
+                                    handleReadyGame(message);
                             }
                         }
                     } catch (SocketException e) {
@@ -187,30 +179,30 @@ public class AtlantisModel {
         clientTask.start();
     }
 
-    private void handleReadyGame( Message message ) {
-        String[] gameInfo = splitMessage( message );
-        String gameName = gameInfo[ 0 ];
-        Boolean gameIsReady = Boolean.parseBoolean( gameInfo[ 1 ] );
-        if ( player != null ) {
-            if ( gameName.equals( player.getGameName() ) && player.getPlayerId() == 0 ) {
-                if ( gameIsReady ) {
-                    gameReady.set( true );
+    private void handleReadyGame(Message message) {
+        String[] gameInfo = splitMessage(message);
+        String gameName = gameInfo[0];
+        Boolean gameIsReady = Boolean.parseBoolean(gameInfo[1]);
+        if (player != null) {
+            if (gameName.equals(player.getGameName()) && player.getPlayerId() == 0) {
+                if (gameIsReady) {
+                    gameReady.set(true);
                 } else {
-                    gameReady.set( false );
+                    gameReady.set(false);
                 }
             }
         }
     }
 
-    private void handelJoinGame( Message message ) {
-        String[] info = splitMessage( message );
-        int playerId = Integer.valueOf( info[ 0 ] );
-        String gameName = info[ 1 ];
-        player = new Player( playerId, gameName );
+    private void handelJoinGame(Message message) {
+        String[] info = splitMessage(message);
+        int playerId = Integer.valueOf(info[0]);
+        String gameName = info[1];
+        player = new Player(playerId, gameName);
     }
 
-    private void handleGameList( Message message ) {
-        gameList.add( message.getMessageObject().toString() );
+    private void handleGameList(Message message) {
+        gameList.add(message.getMessageObject().toString());
     }
 
     private void handleLanguages() {
@@ -309,22 +301,20 @@ public class AtlantisModel {
         }
     }
 
-    public void soundController() {
+    public void soundController(boolean status) {
 
-        Media backgroundMusic = new Media(Paths.get("src/ch/atlantis/res/Maid with the Flaxen Hair.mp3").toUri()
-                .toString());
+        if (musicThread == null) {
+            musicThread = new Music();
+        }
 
-        MediaPlayer myPlayer = new MediaPlayer(backgroundMusic);
+        if ((status) && !this.getIsMusic()) {
 
-        if (isMusic) {
+            musicThread.start();
 
-            myPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-
-            myPlayer.play();
-
-        } else {
-
-            myPlayer.stop();
+        } else if ((status) && this.getIsMusic()) {
+            musicThread.stopMusic();
+            musicThread.interrupt();
+            musicThread = null;
         }
     }
 
@@ -346,8 +336,8 @@ public class AtlantisModel {
      * @param message Message received from the client
      * @return String[]
      */
-    private String[] splitMessage( Message message ) {
-        return message.getMessageObject().toString().split( "," );
+    private String[] splitMessage(Message message) {
+        return message.getMessageObject().toString().split(",");
     }
 
     public SimpleStringProperty getChatString() {
@@ -386,11 +376,22 @@ public class AtlantisModel {
         return languageHandler.getLanguageList();
     }
 
-    public String getCurrentLanguage() {
-        return currentLanguage;
+    public String getConfigLanguage() {
+        return this.conf.getConfigLanguage();
     }
 
-    public void setCurrentLanguage(String currentLanguage) {
-        this.currentLanguage = currentLanguage;
+    public void setIsMusic(boolean isMusic) {
+
+        this.conf.setIsMusic(isMusic);
+        this.conf.createAtlantisConfig();
+    }
+
+    public boolean getIsMusic() {
+        return this.conf.getIsMusic();
+    }
+
+    public void setConfigLanguage(String currentLanguage) {
+        this.conf.setConfigLanguage(currentLanguage);
+        this.conf.createAtlantisConfig();
     }
 }

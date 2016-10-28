@@ -60,6 +60,8 @@ public class GameLobbyController {
 
                 //Music.play();
 
+                //model.soundController();
+
             }
         });
 
@@ -80,7 +82,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),gameLobbyStage);
+                view.createOptionsView(model.getLanguageList(), model.getConfigLanguage(),gameLobbyStage);
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }
@@ -130,7 +132,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),gameLobbyStage);
+                view.createOptionsView(model.getLanguageList(), model.getConfigLanguage(),gameLobbyStage);
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }

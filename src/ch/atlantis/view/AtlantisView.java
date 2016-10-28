@@ -1,5 +1,6 @@
 package ch.atlantis.view;
 
+import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.Language;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
@@ -26,6 +27,7 @@ public class AtlantisView {
 
     private IntroView introView;
     private Stage introStage;
+    private AtlantisModel model;
 
     private GameLobbyView gameLobbyView;
 
@@ -52,11 +54,16 @@ public class AtlantisView {
     private Language selectedLanguage;
 
 
-    public AtlantisView( Stage introStage ) {
+
+
+    public AtlantisView(Stage introStage, AtlantisModel model) {
 
         this.introStage = introStage;
+        this.model = model;
         width = new SimpleIntegerProperty( 1280 );
         height = new SimpleIntegerProperty( 800 );
+
+        this.setSelectedLanguage(model.getSelectedLanguage(model.getConfigLanguage()));
 
         controls = new ArrayList<>();
     }
@@ -167,8 +174,8 @@ public class AtlantisView {
         }
         setXYLocation( profileStage, parentStage );
         setDimensions( profileStage, parentStage );
-        getControls( newProfileView );
 
+        getControls( newProfileView );
         setControlText( controls );
 
         activeOverlayStage = profileStage;

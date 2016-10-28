@@ -7,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 
@@ -44,7 +43,7 @@ public class GameController {
             @Override
             public void handle( KeyEvent event ) {
                 if ( event.getCode() == KeyCode.ESCAPE ) {
-                    gameBoardView.showOptions( atlantisModel.getLanguageList(), atlantisModel.getCurrentLanguage(), gameBoardView
+                    gameBoardView.showOptions( atlantisModel.getLanguageList(), atlantisModel.getConfigLanguage(), gameBoardView
                             .getGameStage() );
                     new OptionsController( atlantisModel, atlantisView );
                 }

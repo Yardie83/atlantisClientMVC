@@ -41,6 +41,8 @@ public class OptionsView extends Pane {
     private HBox bottomPane;
     private Button btnApply;
     private Button btnCancel;
+    private ToggleGroup radioBtnGroupSound;
+    private ToggleGroup radioBtnGroupFullscreen;
 
 
     public OptionsView(int height, int width, ArrayList<Language> languageList, String culture) {
@@ -73,14 +75,14 @@ public class OptionsView extends Pane {
         centerPane = new GridPane();
 
         lblFullScreen = new Label("Fullscreen");
-        ToggleGroup radioBtnGroupFullscreen = new ToggleGroup();
+        radioBtnGroupFullscreen = new ToggleGroup();
         radioBtnFullScreenOn = new RadioButton("On");
         radioBtnFullScreenOn.setSelected(true);
         radioBtnFullScreenOff = new RadioButton("Off");
         radioBtnGroupFullscreen.getToggles().addAll(radioBtnFullScreenOn, radioBtnFullScreenOff);
 
         lblSoundToggle = new Label("Sound");
-        ToggleGroup radioBtnGroupSound = new ToggleGroup();
+        radioBtnGroupSound = new ToggleGroup();
         radioBtnSoundOn = new RadioButton("On");
         radioBtnSoundOn.setSelected(true);
         radioBtnSoundOff = new RadioButton("Off");
@@ -175,6 +177,14 @@ public class OptionsView extends Pane {
 
     public Button getBtnCancel() {
         return btnCancel;
+    }
+
+    public ToggleGroup getRadioBtnGroupSound() {
+        return radioBtnGroupSound;
+    }
+
+    public ToggleGroup getRadioBtnGroupFullscreen() {
+        return radioBtnGroupFullscreen;
     }
 }
 
