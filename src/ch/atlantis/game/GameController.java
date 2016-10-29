@@ -34,11 +34,10 @@ public class GameController {
     private Deck deck;
 
     public GameController( AtlantisView atlantisView, AtlantisModel atlantisModel, GameModel gameModel, GameBoardView gameBoardView ) {
-       this.atlantisView = atlantisView;
+        this.atlantisView = atlantisView;
         this.atlantisModel = atlantisModel;
         this.gameModel = gameModel;
         this.gameBoardView = gameBoardView;
-        gameBoardView.show();
         handleUserInput();
         addListeners();
     }
@@ -198,6 +197,10 @@ public class GameController {
 
     public int getTurnId() {
         return turnId;
+    }
+
+    public void showGame(){
+        gameBoardView.show();
     }
 
 }

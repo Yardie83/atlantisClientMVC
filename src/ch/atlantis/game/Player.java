@@ -13,17 +13,16 @@ public class Player {
     private int score = 0;
     private Hand hand;
     private PathCardStack pathCardStack;
-    private Bridges bridges;
     private GamePiece gamePieces;
     private String playerName;
-    private Card bridge;
+    private int bridge;
     private int playerId;
 
     public Player( int playerId, String gameName ) {
         this.playerId = playerId;
         this.pathCardStack = new PathCardStack();
         this.hand = new Hand();
-        this.bridges = new Bridges(playerId);
+        this.bridge = 1;
         this.gamePieces = new GamePiece(playerId);
         this.gameName = gameName;
     }
@@ -38,9 +37,7 @@ public class Player {
 
     public int getScore() { return score; }
 
-    public void addBridge(Card bridge) { this.bridge = bridge; }
-
-    public void removeBridge(){ this.bridge = null; }
+    public void removeBridge(){ this.bridge = 0; }
 
     public void addHandCard(Card handCard){ hand.addCard(handCard); }
 

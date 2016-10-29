@@ -151,11 +151,11 @@ public class GameLobbyController {
             }
         });
 
-        //  Create and show GAME View
+        //  Create and show GAME View Test Test Test Test **** DO NOT USE
         view.getGameLobbyView().getBtnStartGame().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                new Game(model, view);
+
             }
         });
 
@@ -370,8 +370,19 @@ public class GameLobbyController {
             public void changed( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
                 if ( newValue ){
                     view.getGameLobbyView().getStartGameBtn().setVisible( true );
-                }else if ( !newValue ){
+                } else {
                     view.getGameLobbyView().getStartGameBtn().setVisible( false );
+                }
+            }
+        } );
+
+        model.gameInfoProperty().addListener( new ChangeListener<Boolean>() {
+            @Override
+            public void changed( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
+                if ( newValue == Boolean.TRUE ){
+                    Game g = new Game( model, view, model.getMessage());
+                    g.showGame();
+                    model.gameInfoProperty().setValue( false );
                 }
             }
         } );

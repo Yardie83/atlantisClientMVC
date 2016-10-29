@@ -25,6 +25,7 @@ import java.util.Iterator;
  */
 public class GameBoardView extends Pane {
 
+    private GameModel gameModel;
     private int rowCount = 11;
     private Hand hand;
     private Deck deck;
@@ -34,14 +35,13 @@ public class GameBoardView extends Pane {
     private ArrayList<Card> pathCardsSetA;
     private ArrayList<Card> pathCardsSetB;
     private ArrayList<Card> movementCards;
-    private ArrayList<Card> bridges;
     private ArrayList<Card> pathCards;
     private Stage gameStage;
     private Scene gameScene;
 
-    public GameBoardView(ArrayList<Player> players, AtlantisView view) {
+    public GameBoardView(GameModel gameModel, AtlantisView view) {
 
-        this.players = players;
+        this.gameModel = gameModel;
         this.view = view;
 
         int height = view.heightProperty().getValue();
@@ -76,9 +76,6 @@ public class GameBoardView extends Pane {
         createMovementCards(movementCards);
         Collections.shuffle(movementCards);
 
-        this.bridges = new ArrayList<>();
-        createBridges(bridges);
-
         addHandCards(movementCards);
 
         addMovementCardsToDeck(movementCards);
@@ -100,20 +97,6 @@ public class GameBoardView extends Pane {
     private void drawHand() {
     }
 
-    /**
-     * Creates and adds a bridge for each player in the players list
-     * <p>
-     * Hermann Grieder
-     * @param bridges
-     */
-    private void createBridges(ArrayList<Card> bridges) {
-        this.bridges = new ArrayList<>(4);
-        for (Player player : players) {
-            Card bridge = new Card(7, CardType.BRIDGE);
-            player.addBridge(bridge);
-            this.bridges.add(bridge);
-        }
-    }
 
     private void addPlayers() {
     }

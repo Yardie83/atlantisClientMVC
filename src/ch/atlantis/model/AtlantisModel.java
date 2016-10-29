@@ -1,6 +1,5 @@
 package ch.atlantis.model;
 
-import ch.atlantis.controller.AtlantisController;
 import ch.atlantis.game.Game;
 import ch.atlantis.game.Player;
 import ch.atlantis.util.Language;
@@ -15,9 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import sun.awt.SunToolkit;
 
-import javax.sound.sampled.Clip;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -51,6 +48,7 @@ public class AtlantisModel {
     private SimpleIntegerProperty createProfileSuccess;
     private SimpleIntegerProperty loginSuccess;
     private SimpleBooleanProperty gameReady;
+    private SimpleBooleanProperty gameInfo;
     private SimpleStringProperty userName;
     private boolean autoConnect = true;
     private ObservableList<String> gameList;
@@ -61,6 +59,7 @@ public class AtlantisModel {
     private boolean isMusic = true;
 
     private AtlantisConfig conf;
+    private Game game;
 
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
@@ -69,6 +68,7 @@ public class AtlantisModel {
         loginSuccess = new SimpleIntegerProperty( 0 );
         userName = new SimpleStringProperty();
         gameReady = new SimpleBooleanProperty( false );
+        gameInfo = new SimpleBooleanProperty( false );
         gameList = FXCollections.observableArrayList();
 
         this.handleLanguages();
@@ -168,6 +168,9 @@ public class AtlantisModel {
                                     break;
                                 case GAMEREADY:
                                     handleReadyGame( message );
+                                    break;
+                                case GAMEINIT:
+                                    handleGameInit();
                             }
                         }
                     } catch (SocketException e) {
@@ -200,6 +203,10 @@ public class AtlantisModel {
                 }
             }
         }
+    }
+
+    private void handleGameInit() {
+        gameInfo.set( true );
     }
 
     private void handelJoinGame( Message message ) {
@@ -350,6 +357,10 @@ public class AtlantisModel {
         return message.getMessageObject().toString().split( "," );
     }
 
+    public Message getMessage() {
+        return message;
+    }
+
     public SimpleStringProperty getChatString() {
         return chatString;
     }
@@ -372,6 +383,10 @@ public class AtlantisModel {
 
     public SimpleBooleanProperty gameReadyProperty() {
         return gameReady;
+    }
+
+    public SimpleBooleanProperty gameInfoProperty() {
+        return gameInfo;
     }
 
     public ObservableList<String> getGameList() {

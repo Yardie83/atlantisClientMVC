@@ -17,6 +17,7 @@ public enum MessageType {
     USERNAME,
     JOINGAME,
     GAMEREADY,
-    STARTGAME
+    STARTGAME,
+    GAMEINIT
 }
 
