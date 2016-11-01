@@ -55,7 +55,7 @@ public class AtlantisModel {
     private LanguageHandler languageHandler;
 
     private String currentLanguage;
-    private Player player;
+    private Player localPlayer;
     private boolean isMusic = true;
 
     private AtlantisConfig conf;
@@ -64,11 +64,11 @@ public class AtlantisModel {
     public AtlantisModel() {
         chatString = new SimpleStringProperty();
         connectionStatus = new SimpleStringProperty();
-        createProfileSuccess = new SimpleIntegerProperty( 0 );
-        loginSuccess = new SimpleIntegerProperty( 0 );
+        createProfileSuccess = new SimpleIntegerProperty(0);
+        loginSuccess = new SimpleIntegerProperty(0);
         userName = new SimpleStringProperty();
-        gameReady = new SimpleBooleanProperty( false );
-        gameInfo = new SimpleBooleanProperty( false );
+        gameReady = new SimpleBooleanProperty(false);
+        gameInfo = new SimpleBooleanProperty(false);
         gameList = FXCollections.observableArrayList();
 
         this.handleLanguages();
@@ -164,10 +164,10 @@ public class AtlantisModel {
                                     handleUserName(message);
                                     break;
                                 case JOINGAME:
-                                    handelJoinGame( message );
+                                    handelJoinGame(message);
                                     break;
                                 case GAMEREADY:
-                                    handleReadyGame( message );
+                                    handleReadyGame(message);
                                     break;
                                 case GAMEINIT:
                                     handleGameInit();
@@ -190,34 +190,34 @@ public class AtlantisModel {
         clientTask.start();
     }
 
-    private void handleReadyGame( Message message ) {
-        String[] gameInfo = splitMessage( message );
-        String gameName = gameInfo[ 0 ];
-        Boolean gameIsReady = Boolean.parseBoolean( gameInfo[ 1 ] );
-        if ( player != null ) {
-            if ( gameName.equals( player.getGameName() ) && player.getPlayerId() == 0 ) {
-                if ( gameIsReady ) {
-                    gameReady.set( true );
+    private void handleReadyGame(Message message) {
+        String[] gameInfo = splitMessage(message);
+        String gameName = gameInfo[0];
+        Boolean gameIsReady = Boolean.parseBoolean(gameInfo[1]);
+        if (localPlayer != null) {
+            if (gameName.equals(localPlayer.getGameName()) && localPlayer.getPlayerID() == 0) {
+                if (gameIsReady) {
+                    gameReady.set(true);
                 } else {
-                    gameReady.set( false );
+                    gameReady.set(false);
                 }
             }
         }
     }
 
     private void handleGameInit() {
-        gameInfo.set( true );
+        gameInfo.set(true);
     }
 
-    private void handelJoinGame( Message message ) {
-        String[] info = splitMessage( message );
-        int playerId = Integer.valueOf( info[ 0 ] );
-        String gameName = info[ 1 ];
-        player = new Player( playerId, gameName );
+    private void handelJoinGame(Message message) {
+        String[] info = splitMessage(message);
+        int playerId = Integer.valueOf(info[0]);
+        String gameName = info[1];
+        localPlayer = new Player(playerId, gameName);
     }
 
-    private void handleGameList( Message message ) {
-        gameList.add( message.getMessageObject().toString() );
+    private void handleGameList(Message message) {
+        gameList.add(message.getMessageObject().toString());
     }
 
     private void handleLanguages() {
@@ -325,9 +325,9 @@ public class AtlantisModel {
 
         if (isMusic) {
 
-            myPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-
-            myPlayer.play();
+//            myPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+//
+//            myPlayer.play();
 
         } else {
 
@@ -353,8 +353,8 @@ public class AtlantisModel {
      * @param message Message received from the client
      * @return String[]
      */
-    private String[] splitMessage( Message message ) {
-        return message.getMessageObject().toString().split( "," );
+    private String[] splitMessage(Message message) {
+        return message.getMessageObject().toString().split(",");
     }
 
     public Message getMessage() {
@@ -407,5 +407,9 @@ public class AtlantisModel {
 
     public void setCurrentLanguage(String currentLanguage) {
         this.currentLanguage = currentLanguage;
+    }
+
+    public Player getLocalPlayer() {
+        return localPlayer;
     }
 }

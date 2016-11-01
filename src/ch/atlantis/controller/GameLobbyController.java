@@ -54,15 +54,6 @@ public class GameLobbyController {
 
         Stage gameLobbyStage = view.getGameLobbyView().getGameLobbyStage();
 
-        view.getGameLobbyView().getGameLobbyStage().setOnShowing(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-
-                //Music.play();
-
-            }
-        });
-
         /*
          * *******************************
          * Menu Bar Controls EventHandlers
@@ -80,7 +71,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),gameLobbyStage);
+                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(), gameLobbyStage);
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }
@@ -130,7 +121,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(),gameLobbyStage);
+                view.createOptionsView(model.getLanguageList(), model.getCurrentLanguage(), gameLobbyStage);
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }
@@ -139,26 +130,17 @@ public class GameLobbyController {
         view.getGameLobbyView().getGameListView().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-               if ( event.getClickCount() == 2){
+                if (event.getClickCount() == 2) {
 
-                   if (view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem() != null) {
+                    if (view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem() != null) {
 
-                       String listInfo = view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem().toString();
+                        String listInfo = view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem().toString();
 
-                       model.joinGame(listInfo);
-                   }
-               }
+                        model.joinGame(listInfo);
+                    }
+                }
             }
         });
-
-        //  Create and show GAME View Test Test Test Test **** DO NOT USE
-        view.getGameLobbyView().getBtnStartGame().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-
-            }
-        });
-
 
         /*
          * ******************************
@@ -195,12 +177,12 @@ public class GameLobbyController {
          * Hermann Grieder
          */
 
-        view.getGameLobbyView().getStartGameBtn().setOnAction( new EventHandler<ActionEvent>() {
+        view.getGameLobbyView().getStartGameBtn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void handle( ActionEvent event ) {
-                model.sendMessage( new Message( MessageType.STARTGAME ) );
+            public void handle(ActionEvent event) {
+                model.sendMessage(new Message(MessageType.STARTGAME));
             }
-        } );
+        });
 
         /*
          * ******************************************************************
@@ -357,7 +339,7 @@ public class GameLobbyController {
                             }
                             // Clear the list
                             model.getGameList().clear();
-                                view.getGameLobbyView().createPopUp( "Game Created!", 200 );
+                            view.getGameLobbyView().createPopUp("Game Created!", 200);
                         }
                     }
                 });
@@ -365,27 +347,27 @@ public class GameLobbyController {
         });
 
 
-        model.gameReadyProperty().addListener( new ChangeListener<Boolean>() {
+        model.gameReadyProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-                if ( newValue ){
-                    view.getGameLobbyView().getStartGameBtn().setVisible( true );
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    view.getGameLobbyView().getStartGameBtn().setVisible(true);
                 } else {
-                    view.getGameLobbyView().getStartGameBtn().setVisible( false );
+                    view.getGameLobbyView().getStartGameBtn().setVisible(false);
                 }
             }
-        } );
+        });
 
-        model.gameInfoProperty().addListener( new ChangeListener<Boolean>() {
+        model.gameInfoProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-                if ( newValue == Boolean.TRUE ){
-                    Game g = new Game( model, view, model.getMessage());
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == Boolean.TRUE) {
+                    Game g = new Game(model, view, model.getMessage(), model.getLocalPlayer());
                     g.showGame();
-                    model.gameInfoProperty().setValue( false );
+                    model.gameInfoProperty().setValue(false);
                 }
             }
-        } );
+        });
 
     }
 

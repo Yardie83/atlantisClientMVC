@@ -36,11 +36,11 @@ public class AtlantisConfig {
     private Boolean isMusic;
 
 
-    public AtlantisConfig(){
+    public AtlantisConfig() {
 
         File myFile = new File(ConfigPath);
 
-        if (!myFile.exists()){
+        if (!myFile.exists()) {
 
             configLanguage = "en-en";
             isMusic = true;
@@ -49,11 +49,11 @@ public class AtlantisConfig {
         }
     }
 
-    public boolean readAtlantisConfig(){
+    public boolean readAtlantisConfig() {
 
         File xmlConfigurationFile = new File(ConfigPath);
 
-        if (!xmlConfigurationFile.exists()){
+        if (!xmlConfigurationFile.exists()) {
             return false;
             //log error blabla
         }
@@ -72,7 +72,6 @@ public class AtlantisConfig {
             this.isMusic = Boolean.valueOf(doc.getDocumentElement().getAttribute("Music"));
 
 
-
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             return false;
@@ -82,7 +81,7 @@ public class AtlantisConfig {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -90,7 +89,7 @@ public class AtlantisConfig {
         return true;
     }
 
-    public void createAtlantisConfig(){
+    public void createAtlantisConfig() {
 
         try {
 
@@ -118,13 +117,11 @@ public class AtlantisConfig {
             StreamResult result = new StreamResult(new File(ConfigPath));
             transformer.transform(source, result);
 
-        }catch (ParserConfigurationException parseException){
+        } catch (ParserConfigurationException parseException) {
 
-        }
-        catch (TransformerException transformerException){
+        } catch (TransformerException transformerException) {
 
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
 
         }
     }

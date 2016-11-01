@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
+ * <p>
  * Start of the Application.
  * Creates the model, the view and the controller.
  */

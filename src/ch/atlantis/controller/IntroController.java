@@ -8,7 +8,7 @@ import javafx.stage.WindowEvent;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
- *
+ * <p>
  * Plays the introVideo on startup and switches to the GameLobby
  * on mouseClick on the video
  */
@@ -46,7 +46,6 @@ public class IntroController {
                 new GameLobbyController(model, view);
 
                 //Load and show the languages
-
 
 
                 view.getGameLobbyView().show();

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Loris Grether on 04.08.2016.
- *
+ * <p>
  * Create New Profile View
  */
 public class NewProfileView extends Pane {
@@ -40,13 +40,13 @@ public class NewProfileView extends Pane {
 
     public NewProfileView(int height, int width) {
 
-        this.minHeightProperty().setValue( height );
-        this.minWidthProperty().setValue( width );
+        this.minHeightProperty().setValue(height);
+        this.minWidthProperty().setValue(width);
 
         root = new VBox(30);
 
-        root.minWidthProperty().bind( this.minWidthProperty() );
-        root.minHeightProperty().bind( this.minHeightProperty() );
+        root.minWidthProperty().bind(this.minWidthProperty());
+        root.minHeightProperty().bind(this.minHeightProperty());
 
         root.getChildren().add(createTop());
         root.getChildren().add(createCenter());
@@ -78,7 +78,7 @@ public class NewProfileView extends Pane {
         centerPane.add(lblPasswordRevision = new Label("Re-Type Password: "), 0, 2);
         centerPane.add(txtPasswordRevision = new TextField(), 1, 2);
 
-        centerPane.add(lblError = new Label(""), 0,3,2,1);
+        centerPane.add(lblError = new Label(""), 0, 3, 2, 1);
 
         return centerPane;
     }

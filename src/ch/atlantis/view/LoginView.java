@@ -73,7 +73,7 @@ public class LoginView extends Pane {
 
         centerPane.add(lblPassword = new Label("Password: "), 0, 1);
         centerPane.add(txtPassword = new PasswordField(), 1, 1);
-        centerPane.add(lblError = new Label(""),0,2,2,1);
+        centerPane.add(lblError = new Label(""), 0, 2, 2, 1);
 
         return centerPane;
     }
