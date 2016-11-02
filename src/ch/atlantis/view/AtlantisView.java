@@ -75,7 +75,7 @@ public class AtlantisView {
      */
 
     public void createIntroView() {
-        this.introView = new IntroView( introStage );
+        this.introView = new IntroView(introStage);
     }
 
     /**
@@ -86,25 +86,25 @@ public class AtlantisView {
      * @param fullscreen Shows the GameLobby in fullscreen if true
      */
 
-    public void createGameLobbyView( Boolean fullscreen ) {
+    public void createGameLobbyView(Boolean fullscreen) {
 
         this.fullscreen = fullscreen;
 
-        if ( gameLobbyView == null ) {
+        if (gameLobbyView == null) {
 
-            if ( fullscreen ) {
-                width.setValue( Screen.getPrimary().getBounds().getWidth() );
-                height.setValue( Screen.getPrimary().getBounds().getHeight() );
-                gameLobbyView = new GameLobbyView( height.getValue(), width.getValue(), true );
+            if (fullscreen) {
+                width.setValue(Screen.getPrimary().getBounds().getWidth());
+                height.setValue(Screen.getPrimary().getBounds().getHeight());
+                gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), true);
                 //ScenicView.show(gameLobbyView);
             } else {
-                gameLobbyView = new GameLobbyView( height.getValue(), width.getValue(), false );
+                gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), false);
                 bindSizeToStage();
             }
         }
 
-        getControls( this.gameLobbyView );
-        setControlText( controls );
+        getControls(this.gameLobbyView);
+        setControlText(controls);
     }
 
     /**
@@ -120,8 +120,8 @@ public class AtlantisView {
     //Workaround: There seems to be a padding or margin of sorts on the stage,
     //that's why we subtract a couple pixels of the width and the height.
     public void bindSizeToStage() {
-        width.bind( gameLobbyView.getGameLobbyStage().widthProperty() );
-        height.bind( gameLobbyView.getGameLobbyStage().heightProperty() );
+        width.bind(gameLobbyView.getGameLobbyStage().widthProperty());
+        height.bind(gameLobbyView.getGameLobbyStage().heightProperty());
     }
 
     /**
@@ -130,15 +130,15 @@ public class AtlantisView {
      * Hermann Grieder
      */
 
-    public void createCreateGameView( Stage parentStage ) {
-        if ( this.createGameView == null ) {
-            this.createGameView = new CreateGameView( height.getValue(), width.getValue() );
+    public void createCreateGameView(Stage parentStage) {
+        if (this.createGameView == null) {
+            this.createGameView = new CreateGameView(height.getValue(), width.getValue());
             createGameStage = new Stage();
-            createGameStage.setScene( new Scene( createGameView ) );
-            setupOverlay( createGameStage, parentStage, "css_CreateGameView" );
+            createGameStage.setScene(new Scene(createGameView));
+            setupOverlay(createGameStage, parentStage, "css_CreateGameView");
         }
-        setXYLocation( createGameStage, parentStage );
-        setDimensions( createGameStage, parentStage );
+        setXYLocation(createGameStage, parentStage);
+        setDimensions(createGameStage, parentStage);
         activeOverlayStage = createGameStage;
     }
 
@@ -147,16 +147,16 @@ public class AtlantisView {
      * <p>
      * Hermann Grieder
      */
-    public void createLoginView( Stage parentStage ) {
-        if ( loginView == null ) {
-            loginView = new LoginView( height.getValue(), width.getValue() );
+    public void createLoginView(Stage parentStage) {
+        if (loginView == null) {
+            loginView = new LoginView(height.getValue(), width.getValue());
             loginStage = new Stage();
-            loginStage.setScene( new Scene( loginView ) );
-            setupOverlay( loginStage, parentStage, "css_LoginView" );
+            loginStage.setScene(new Scene(loginView));
+            setupOverlay(loginStage, parentStage, "css_LoginView");
         }
 
-        setXYLocation( loginStage, parentStage );
-        setDimensions( loginStage, parentStage );
+        setXYLocation(loginStage, parentStage);
+        setDimensions(loginStage, parentStage);
         activeOverlayStage = loginStage;
     }
 
@@ -165,12 +165,12 @@ public class AtlantisView {
      * <p>
      * Hermann Grieder
      */
-    public void createNewProfileView( Stage parentStage ) {
-        if ( newProfileView == null ) {
-            newProfileView = new NewProfileView( height.getValue(), width.getValue() );
+    public void createNewProfileView(Stage parentStage) {
+        if (newProfileView == null) {
+            newProfileView = new NewProfileView(height.getValue(), width.getValue());
             profileStage = new Stage();
-            profileStage.setScene( new Scene( newProfileView ) );
-            setupOverlay( profileStage, parentStage, "css_NewProfileView" );
+            profileStage.setScene(new Scene(newProfileView));
+            setupOverlay(profileStage, parentStage, "css_NewProfileView");
         }
         setXYLocation( profileStage, parentStage );
         setDimensions( profileStage, parentStage );
@@ -187,44 +187,44 @@ public class AtlantisView {
      * Hermann Grieder
      */
 
-    public void createOptionsView( ArrayList<Language> languageList, String culture, Stage parentStage ) {
-        if ( this.optionsView == null ) {
-            this.optionsView = new OptionsView( height.getValue(), width.getValue(), languageList, culture );
+    public void createOptionsView(ArrayList<Language> languageList, String culture, Stage parentStage) {
+        if (this.optionsView == null) {
+            this.optionsView = new OptionsView(height.getValue(), width.getValue(), languageList, culture);
             optionsStage = new Stage();
-            optionsStage.setScene( new Scene( optionsView ) );
-            setupOverlay( optionsStage, parentStage, "css_OptionsView" );
+            optionsStage.setScene(new Scene(optionsView));
+            setupOverlay(optionsStage, parentStage, "css_OptionsView");
         }
-        setXYLocation( optionsStage, parentStage );
-        setDimensions( optionsStage, parentStage );
+        setXYLocation(optionsStage, parentStage);
+        setDimensions(optionsStage, parentStage);
 
 
         activeOverlayStage = optionsStage;
     }
 
-    private void setXYLocation( Stage overlayStage, Stage parentStage ) {
-        overlayStage.setX( parentStage.getX() );
-        overlayStage.setY( parentStage.getY() );
+    private void setXYLocation(Stage overlayStage, Stage parentStage) {
+        overlayStage.setX(parentStage.getX());
+        overlayStage.setY(parentStage.getY());
     }
 
     // TODO: This does not work. The overlayStage does not react. I think it must be the root pane, but how to get
     // there?
-    private void setDimensions( Stage overlayStage, Stage parentStage ) {
-        overlayStage.setMinHeight( parentStage.getHeight() );
-        overlayStage.setMinWidth( parentStage.getWidth() );
+    private void setDimensions(Stage overlayStage, Stage parentStage) {
+        overlayStage.setMinHeight(parentStage.getHeight());
+        overlayStage.setMinWidth(parentStage.getWidth());
     }
 
-    private void getControls( Pane pane ) {
-        for ( Node node : pane.getChildren() ) {
-            if ( node instanceof Pane ) {
-                getControls( (Pane) node );
-            } else if ( node instanceof Control ) {
+    private void getControls(Pane pane) {
+        for (Node node : pane.getChildren()) {
+            if (node instanceof Pane) {
+                getControls((Pane) node);
+            } else if (node instanceof Control) {
                 Control c = (Control) node;
-                controls.add( c );
+                controls.add(c);
             }
         }
     }
 
-    private void setControlText( ArrayList<Control> controls ) {
+    private void setControlText(ArrayList<Control> controls) {
 
         for ( Control control : controls ) {
 

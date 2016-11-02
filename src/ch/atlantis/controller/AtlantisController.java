@@ -5,13 +5,11 @@ import ch.atlantis.view.AtlantisView;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
+ * <p>
  * Main Controller class. Depending on the value of the debugMode
  * calls for the creation of the IntroView and IntroController
  * (debugMode = false) or skips it and calls for the creation
  * of the GameLobbyView and the GameLobbyController (debugMode = true).
- *
- *
  */
 
 public class AtlantisController {

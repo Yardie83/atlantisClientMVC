@@ -141,26 +141,17 @@ public class GameLobbyController {
         view.getGameLobbyView().getGameListView().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-               if ( event.getClickCount() == 2){
+                if (event.getClickCount() == 2) {
 
-                   if (view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem() != null) {
+                    if (view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem() != null) {
 
-                       String listInfo = view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem().toString();
+                        String listInfo = view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem().toString();
 
-                       model.joinGame(listInfo);
-                   }
-               }
+                        model.joinGame(listInfo);
+                    }
+                }
             }
         });
-
-        //  Create and show GAME View
-        view.getGameLobbyView().getBtnStartGame().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                new Game(model, view);
-            }
-        });
-
 
         /*
          * ******************************
@@ -184,6 +175,23 @@ public class GameLobbyController {
                     model.sendMessage(new Message(MessageType.CHAT, username + ": " + chatMessage));
                     txtField.clear();
                 }
+            }
+        });
+
+        /*
+         * ******************************************************************
+         * When the game is ready and the host clicks the visible start game button,
+         * we send a message to the server that we want to receive the game information
+         * needed to start the game.
+         * ******************************************************************
+         *
+         * Hermann Grieder
+         */
+
+        view.getGameLobbyView().getStartGameBtn().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                model.sendMessage(new Message(MessageType.STARTGAME));
             }
         });
 
@@ -342,7 +350,7 @@ public class GameLobbyController {
                             }
                             // Clear the list
                             model.getGameList().clear();
-                                view.getGameLobbyView().createPopUp( "Game Created!", 200 );
+                            view.getGameLobbyView().createPopUp("Game Created!", 200);
                         }
                     }
                 });
@@ -350,16 +358,28 @@ public class GameLobbyController {
         });
 
 
-        model.gameReadyProperty().addListener( new ChangeListener<Boolean>() {
+        model.gameReadyProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed( ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue ) {
-                if ( newValue ){
-                    view.getGameLobbyView().getStartGameBtn().setVisible( true );
-                }else if ( !newValue ){
-                    view.getGameLobbyView().getStartGameBtn().setVisible( false );
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    view.getGameLobbyView().getStartGameBtn().setVisible(true);
+                } else {
+                    view.getGameLobbyView().getStartGameBtn().setVisible(false);
                 }
             }
-        } );
+        });
+
+        model.gameInfoProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue == Boolean.TRUE) {
+                    Game g = new Game(model, view, model.getMessage(), model.getLocalPlayer());
+                    g.showGame();
+                    model.gameInfoProperty().setValue(false);
+                }
+            }
+        });
+
     }
 
     /**

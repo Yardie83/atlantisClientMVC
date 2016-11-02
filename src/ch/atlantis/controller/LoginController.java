@@ -14,7 +14,7 @@ import javafx.scene.input.MouseEvent;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
- *
+ * <p>
  * Controller for the Login View
  */
 public class LoginController {

@@ -25,61 +25,34 @@ import java.util.Iterator;
  */
 public class GameBoardView extends Pane {
 
-    private int rowCount = 11;
-    private Hand hand;
     private AtlantisView view;
     private ArrayList<Tile> tiles;
     private ArrayList<Player> players;
     private ArrayList<Card> pathCardsSetA;
     private ArrayList<Card> pathCardsSetB;
-    private ArrayList<Card> movementCards;
-    private ArrayList<Card> bridges;
     private ArrayList<Card> pathCards;
     private Stage gameStage;
-    private Scene gameScene;
+    private ArrayList<Card> deck;
+    private int height;
+    private final Player localPlayer;
 
-    public GameBoardView(ArrayList<Player> players, AtlantisView view) {
+    public GameBoardView(GameModel gameModel, AtlantisView view) {
 
-        this.players = players;
         this.view = view;
 
-        int height = view.heightProperty().getValue();
+        height = view.heightProperty().getValue();
         int width = view.widthProperty().getValue();
 
         super.setMinHeight(height);
         super.setMinWidth(width);
 
-//        //TODO: Put background into css stylesheet and fix position
-//        super.setBackground(new Background(new BackgroundImage(
-//                new Image("ch/atlantis/res/gameboardbg.jpg"),
-//                BackgroundRepeat.NO_REPEAT,
-//                BackgroundRepeat.NO_REPEAT,
-//                BackgroundPosition.CENTER,
-//                BackgroundSize.DEFAULT)));
-
-        readLayout(height);
-        //Currently Empty
-        addPlayers();
-
-        this.pathCardsSetA = new ArrayList<>();
-        createPathCards(pathCardsSetA);
-        cleanCardSetA(pathCardsSetA);
-        Collections.shuffle(pathCardsSetA);
-
-        this.pathCardsSetB = new ArrayList<>();
-        createPathCards(pathCardsSetB);
-        cleanCardSetB(pathCardsSetB);
-        Collections.shuffle(pathCardsSetB);
-
-        this.movementCards = new ArrayList<>();
-        createMovementCards(movementCards);
-        Collections.shuffle(movementCards);
-
-        this.bridges = new ArrayList<>();
-        createBridges(bridges);
-
-
-        addHandCards(movementCards);
+        localPlayer = gameModel.getLocalPlayer();
+        players = gameModel.getPlayers();
+        tiles = setXYTiles(gameModel.getTiles());
+        pathCardsSetA = gameModel.getPathCardSetA();
+        pathCardsSetB = gameModel.getPathCardSetB();
+        pathCards = new ArrayList<>();
+        deck = gameModel.getDeck();
 
         drawHand();
 
@@ -88,243 +61,23 @@ public class GameBoardView extends Pane {
         drawGamePieces();
     }
 
-    private void drawHand() {
-    }
-
-    /**
-     * Creates and adds a bridge for each player in the players list
-     * <p>
-     * Hermann Grieder
-     * @param bridges
-     */
-    private void createBridges(ArrayList<Card> bridges) {
-        this.bridges = new ArrayList<>(4);
-        for (Player player : players) {
-            Card bridge = new Card(7, CardType.BRIDGE);
-            player.addBridge(bridge);
-            this.bridges.add(bridge);
-        }
-    }
-
-    private void addPlayers() {
-    }
-
-    private void addHandCards(ArrayList<Card> movementCards) {
-        if (players.size() == 2) {
-            for (int i = 0; i < 2; i++) {
-                Player player = players.get(i);
-                if (i == 0) {
-                    for (int k = 0; k < 4; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-                if (i == 1) {
-                    for (int k = 0; k < 5; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-            }
-        }
-        if (players.size() == 3) {
-            for (int i = 0; i < 3; i++) {
-                Player player = players.get(i);
-                if (i == 0) {
-                    for (int k = 0; k < 4; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-                if (i == 1) {
-                    for (int k = 0; k < 5; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-                if (i == 2) {
-                    for (int k = 0; k < 6; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-            }
-        }
-        if (players.size() == 4) {
-            for (int i = 0; i < 4; i++) {
-                Player player = players.get(i);
-                if (i == 0) {
-                    for (int k = 0; k < 4; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-                if (i == 1) {
-                    for (int k = 0; k < 5; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-                if (i == 2) {
-                    for (int k = 0; k < 6; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-                if (i == 3) {
-                    for (int k = 0; k < 7; k++) {
-                        player.addHandCard(movementCards.get(k));
-                        movementCards.remove(k);
-                    }
-                }
-            }
-        }
-    }
-
-
-
-    /**
-     * Hermann Grieder
-     * <p>
-     * Creates the 105 movement cards and adds it to the movementCards ArrayList
-     * @param movementCards
-     */
-    private void createMovementCards(ArrayList<Card> movementCards) {
-        this.movementCards = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 15; j++) {
-                this.movementCards.add(new Card(i, CardType.MOVEMENT));
-            }
-        }
-    }
-
-    /**
-     * Creates and adds 49 path cards to the card set
-     * <p>
-     * Author: Hermann Grieder
-     *
-     * @param pathCardsSet The ArrayList to store the cards in
-     */
-    private void createPathCards(ArrayList<Card> pathCardsSet) {
-        for (int j = 0; j < 7; j++) {
-            for (int k = 1; k <= 7; k++) {
-                pathCardsSet.add(new Card(j, k, CardType.PATH));
-            }
-        }
-    }
-
-    /**
-     * Removes the unneeded cards from the pathCardSetA List
-     * The cards to be removed in A are different than in set B
-     * <p>
-     * <p>
-     * Author: Fabian Witschi
-     *
-     * @param pathCardsSetA The first path card set
-     */
-    private void cleanCardSetA(ArrayList<Card> pathCardsSetA) {
-
-        for (int i = 0; i < pathCardsSetA.size(); i++) {
-            Card card = pathCardsSetA.get(i);
-            int value = card.getValue();
-            int colorSet = card.getColorSet();
-            int index;
-            if (value == 7) {
-                if (colorSet == Card.GREY || colorSet == Card.YELLOW || colorSet == Card.BLUE || colorSet == Card.WHITE) {
-                    index = pathCardsSetA.indexOf(card);
-                    pathCardsSetA.remove(index);
-                }
-            } else if (value == 6) {
-                if (colorSet == Card.BROWN || colorSet == Card.PINK || colorSet == Card.GREEN) {
-                    index = pathCardsSetA.indexOf(card);
-                    pathCardsSetA.remove(index);
-                }
-            }
-        }
-    }
-
-    /**
-     * Removes the unneeded cards from the pathCardSetB List.
-     * The cards to be removed in B are different than in set A
-     * <p>
-     * Fabian Witschi
-     *
-     * @param pathCardsSetB The second path card set
-     */
-    private void cleanCardSetB(ArrayList<Card> pathCardsSetB) {
-
-        for (int i = 0; i < pathCardsSetB.size(); i++) {
-            Card card = pathCardsSetB.get(i);
-            int value = card.getValue();
-            int colorSet = card.getColorSet();
-            int index;
-            if (value == 7) {
-                if (colorSet == Card.BROWN || colorSet == Card.PINK || colorSet == Card.GREEN) {
-                    index = pathCardsSetB.indexOf(card);
-                    pathCardsSetB.remove(index);
-                }
-            } else if (value == 6) {
-                if (colorSet == Card.GREY || colorSet == Card.YELLOW || colorSet == Card.BLUE || colorSet == Card.WHITE) {
-                    index = pathCardsSetB.indexOf(card);
-                    pathCardsSetB.remove(index);
-                }
-            }
-        }
-    }
-
-    /**
-     * Adds 3 GamePieces to each Player in the players list
-     * <p>
-     * Author: Hermann Grieder
-     */
-
-    /**
-     * Reads the GameBoardLayout.txt file and transfers the values into the values array
-     * <p>
-     * Author: Hermann Grieder
-     *
-     * @param height Height of the stage
-     */
-    private void readLayout(int height) {
-
-        int pathId;
+    private ArrayList<Tile> setXYTiles(ArrayList<Tile> tiles) {
+        int rowCount = 11;
         int side = (height / rowCount);
 
-        tiles = new ArrayList<>();
-
-        try {
-            BufferedReader bf = new BufferedReader(new FileReader("src/ch/atlantis/res/GameBoardLayout.txt"));
-
-            String currentLine;
-            int y = -1;
-
-            try {
-                while ((currentLine = bf.readLine()) != null) {
-                    y++;
-                    String[] values = currentLine.trim().split(" ");
-                    for (int x = 0; x < values.length; x++) {
-
-                        int xPos = x * side;
-                        int yPos = y * side;
-
-                        int value = Integer.parseInt(values[x]);
-
-                        if (value != 000) {
-                            pathId = value;
-                        } else {
-                            pathId = 0;
-                        }
-
-                        tiles.add(new Tile(xPos, yPos, side, pathId));
-                    }
-                }
-            } catch (IOException e) {
-                System.out.println("Empty Line!");
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File \"GameBoardLayout.txt\" not found!");
+        for (Tile tile : tiles) {
+            tile.setX(tile.getX() * side);
+            tile.setY(tile.getY() * side);
+            tile.setSide(side);
         }
+        return tiles;
     }
+
+
+    private void drawHand() {
+
+    }
+
 
     /**
      * Draws the GameBoard by placing the cards on the corresponding tile
@@ -335,8 +88,6 @@ public class GameBoardView extends Pane {
 
         Iterator<Card> iteratorA = pathCardsSetA.iterator();
         Iterator<Card> iteratorB = pathCardsSetB.iterator();
-
-        pathCards = new ArrayList<>();
 
         for (Tile tile : tiles) {
 
@@ -380,27 +131,8 @@ public class GameBoardView extends Pane {
             //Console will be placed at X and Y coordinates of the tile with the pathId 500
             if (pathId == 500) {
                 createGameConsole(tile);
-            }/*
-            if (pathId == 601) {
-                if (players.size() != 0) {
-                    createPlayerA(tile);
-                }
             }
-            if (pathId == 602) {
-                if (players.size() > 1) {
-                    createPlayerB(tile);
-                }
-            }
-            if (pathId == 603) {
-                if (players.size() > 2) {
-                    createPlayerC(tile);
-                }
-            }
-            if (pathId == 604) {
-                if (players.size() > 3) {
-                    createPlayerD(tile);
-                }
-            }*/
+            //Card deck will be placed at X and Y coordinates of the tile with the pathId 500
             if (pathId == 701) {
                 createDeck(tile);
             }
@@ -408,143 +140,25 @@ public class GameBoardView extends Pane {
     }
 
     private void createDeck(Tile tile) {
-        VBox deck = new VBox();
+        VBox deckBox = new VBox();
 
-        deck.setStyle("-fx-border-width: 1px; " +
+        deckBox.setStyle("-fx-border-width: 1px; " +
                 "-fx-background-color: #F0F8FF;" +
                 "-fx-border-color: black");
 
 
         Label label1 = new Label("Deck");
 
-        deck.getChildren().add(label1);
+        deckBox.getChildren().add(label1);
 
-        deck.setLayoutX(tile.getX());
-        deck.setLayoutY(tile.getY());
-        deck.setMinHeight(100);
-        deck.setMinWidth(tile.getSide() * 2);
+        deckBox.setLayoutX(tile.getX());
+        deckBox.setLayoutY(tile.getY());
+        deckBox.setMinHeight(100);
+        //deckBox.setMinWidth(tile.getSide() * 2);
 
-        this.getChildren().add(deck);
-    }
-/*
-    private void createPlayerA(Tile tile) {
-        VBox playerAConsole = new VBox(10);
-        HBox top = new HBox(10);
-        top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
-
-        playerAConsole.getChildren().addAll(top, bottom);
-
-        playerAConsole.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
-        Player player = players.get(0);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName().toString());
-        Label label2 = new Label("Score: " + score);
-        Label label3 = new Label("|");
-
-        top.getChildren().addAll(label1, label3, label2);
-        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1), player.getHandCard(2), player.getHandCard(3));
-
-        playerAConsole.setLayoutX(tile.getX());
-        playerAConsole.setLayoutY(tile.getY());
-        playerAConsole.setMinHeight(100);
-        playerAConsole.setMinWidth(tile.getSide() * 2);
-
-        this.getChildren().add(playerAConsole);
+        this.getChildren().add(deckBox);
     }
 
-    private void createPlayerB(Tile tile) {
-        VBox playerBConsole = new VBox(10);
-        HBox top = new HBox(10);
-        top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
-
-        playerBConsole.getChildren().addAll(top, bottom);
-
-        playerBConsole.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
-        Player player = players.get(1);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName().toString());
-        Label label2 = new Label("Score: " + score);
-        Label label3 = new Label("|");
-
-        top.getChildren().addAll(label1, label3, label2);
-        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1), player.getHandCard(2), player.getHandCard(3), player.getHandCard(4));
-
-        playerBConsole.setLayoutX(tile.getX());
-        playerBConsole.setLayoutY(tile.getY());
-        playerBConsole.setMinHeight(100);
-        playerBConsole.setMinWidth(tile.getSide() * 2);
-
-        this.getChildren().add(playerBConsole);
-    }
-
-    private void createPlayerC(Tile tile) {
-        VBox playerCConsole = new VBox(10);
-        HBox top = new HBox(10);
-        top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
-
-        playerCConsole.getChildren().addAll(top, bottom);
-
-        playerCConsole.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
-        Player player = players.get(2);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName());
-        Label label2 = new Label("Score: " + score);
-        Label label3 = new Label("|");
-
-        top.getChildren().addAll(label1, label3, label2);
-        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5));
-
-        playerCConsole.setLayoutX(tile.getX());
-        playerCConsole.setLayoutY(tile.getY());
-        playerCConsole.setMinHeight(100);
-        playerCConsole.setMinWidth(tile.getSide() * 2);
-
-        this.getChildren().add(playerCConsole);
-    }
-
-
-    private void createPlayerD(Tile tile) {
-        VBox playerDConsole = new VBox(10);
-        HBox top = new HBox(10);
-        top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
-
-        playerDConsole.getChildren().addAll(top, bottom);
-
-        playerDConsole.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
-        Player player = players.get(3);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName().toString());
-        Label label2 = new Label("Score: " + score);
-        Label label3 = new Label("|");
-
-        top.getChildren().addAll(label1, label3, label2);
-        bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5), player.getHandCard(6));
-
-        playerDConsole.setLayoutX(tile.getX());
-        playerDConsole.setLayoutY(tile.getY());
-        playerDConsole.setMinHeight(100);
-        playerDConsole.setMinWidth(tile.getSide() * 2);
-
-        this.getChildren().add(playerDConsole);
-    }*/
 
     private void placeSpecialCard(int colorSet, CardType cardType, Tile tile) {
         Card card = new Card(colorSet, cardType);
@@ -573,13 +187,14 @@ public class GameBoardView extends Pane {
 
     private void drawCard(Card card, Tile tile) {
 
-        pathCards.add(card);
-
         card.setPathId(tile.getPathId());
         card.setWidth(tile.getSide());
         card.setHeight(tile.getSide());
         card.setLayoutX(tile.getX());
         card.setLayoutY(tile.getY());
+        card.applyColor();
+
+        pathCards.add(card);
         this.getChildren().add(card);
     }
 
@@ -615,45 +230,24 @@ public class GameBoardView extends Pane {
                 "-fx-background-color: #7af5c4;" +
                 "-fx-border-color: black");
 
-        Player player = players.get(0);
-        String score = Integer.toString(player.getScore());
-        Label label1 = new Label(player.getPlayerName().toString());
+
+        String score = Integer.toString(localPlayer.getScore());
+        Label label1 = new Label(localPlayer.getPlayerName());
         Label label2 = new Label("Score: " + score);
         Label label3 = new Label("|");
 
         top.getChildren().addAll(label1, label3, label2);
 
-        int handCardSize = player.getHandCardSize();
-
-        switch(handCardSize) {
-            case 4:
-                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3));
-                break;
-            case 5:
-                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4));
-                break;
-            case 6:
-                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5));
-                break;
-            case 7:
-                bottom.getChildren().addAll(player.getHandCard(0), player.getHandCard(1),
-                        player.getHandCard(2), player.getHandCard(3), player.getHandCard(4), player.getHandCard(5), player.getHandCard(6));
-                break;
-        }
-
         console.setLayoutX(tile.getX());
         console.setLayoutY(tile.getY() + 20);
         console.setMinHeight(200);
-        console.setMinWidth(tile.getSide() * 7);
+        //console.setMinWidth(tile.getSide() * 7);
 
         this.getChildren().add(console);
     }
 
     public void show() {
-        gameScene = new Scene(this);
+        Scene gameScene = new Scene(this);
         gameStage = view.getGameLobbyView().getGameLobbyStage();
         gameStage.setScene(gameScene);
     }
@@ -662,17 +256,19 @@ public class GameBoardView extends Pane {
         return pathCards;
     }
 
-    public Stage getGameStage() { return gameStage; }
+    public Stage getGameStage() {
+        return gameStage;
+    }
 
     public void removePathCard(Card pathCard) {
         this.getChildren().remove(pathCard);
     }
 
-    public ArrayList<Player> getPlayers() { return players; }
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
 
-    public int getPlayerId() { return getPlayerId(); }
-
-    public void showOptions( ArrayList<Language> languageList, String currentLanguage, Stage gameStage ) {
+    public void showOptions(ArrayList<Language> languageList, String currentLanguage, Stage gameStage) {
         view.showOptions(languageList, currentLanguage, gameStage);
     }
 }

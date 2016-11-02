@@ -15,6 +15,7 @@ public class GamePiece extends Rectangle {
     private double x;
     private double y;
     private ArrayList<GamePiece> gamePieces;
+    private int pathId;
 
     public GamePiece(int playerId, int pieceId) {
         this.playerId = playerId;
@@ -61,18 +62,36 @@ public class GamePiece extends Rectangle {
         this.y = y;
     }
 
+    public void setGamePiecePathId(int pathId) {
+        this.pathId = pathId;
+    }
+
+    public int getGamePiecePathId() {
+        return pathId;
+    }
+
     public int getPieceId() {
         return pieceId;
     }
 
-    public void setPieceId(int pieceId) { this.pieceId = pieceId; }
+    public void setPieceId(int pieceId) {
+        this.pieceId = pieceId;
+    }
 
-    public ArrayList<GamePiece> getGamePieces() { return gamePieces; }
+    public ArrayList<GamePiece> getGamePieces() {
+        return gamePieces;
+    }
 
-    public int getPlayerId() { return playerId; }
+    public int getPlayerId() {
+        return playerId;
+    }
 
-    public double getGamePieceX() { return x; }
+    public double getGamePieceX() {
+        return x;
+    }
 
-    public double getGamePieceY() { return y; }
+    public double getGamePieceY() {
+        return y;
+    }
 
 }

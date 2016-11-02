@@ -12,7 +12,6 @@ import javafx.scene.input.KeyEvent;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
- *
  */
 public class CreateGameController {
 
@@ -27,23 +26,23 @@ public class CreateGameController {
 
     private void handleCreateGameControls() {
 
-        view.getCreateGameStage().getScene().setOnKeyPressed( new EventHandler<KeyEvent>() {
+        view.getCreateGameStage().getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void handle( KeyEvent event ) {
-                if ( event.getCode() == KeyCode.ESCAPE ){
-                    view.getCreateGameView().getLblError().setText( "" );
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    view.getCreateGameView().getLblError().setText("");
                     view.closeActiveOverlay();
                 }
 
             }
-        } );
+        });
 
         // Handle "Create" Btn Action Event in the Create Game View
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if ( createGameEntry()) {
-                    view.getCreateGameView().getLblError().setText( "" );
+                if (createGameEntry()) {
+                    view.getCreateGameView().getLblError().setText("");
                     view.getCreateGameView().clearGameNameTxtField();
                     view.closeActiveOverlay();
                 }
@@ -55,7 +54,7 @@ public class CreateGameController {
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
                     createGameEntry();
-                    view.getCreateGameView().getLblError().setText( "" );
+                    view.getCreateGameView().getLblError().setText("");
                     view.getCreateGameView().clearGameNameTxtField();
                     view.closeActiveOverlay();
                 }
@@ -66,7 +65,7 @@ public class CreateGameController {
         view.getCreateGameView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.getCreateGameView().getLblError().setText( "" );
+                view.getCreateGameView().getLblError().setText("");
                 view.getCreateGameView().clearGameNameTxtField();
                 view.closeActiveOverlay();
             }

@@ -26,7 +26,7 @@ import java.util.Random;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
- *
+ * <p>
  * The GameLobbyView. Also creates the bubbles on mouseClick.
  */
 public class GameLobbyView extends Pane {
@@ -59,7 +59,6 @@ public class GameLobbyView extends Pane {
     private Separator s0;
     private Label lblGameTitles;
     private ArrayList<Control> gameLobbyControls;
-    private Button btnStartGame;
     private Button startGameBtn;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
@@ -164,8 +163,8 @@ public class GameLobbyView extends Pane {
         txtArea.setEditable(false);
         txtArea.setWrapText(true);
         txtField = new TextField();
-        startGameBtn = new Button( "Start Game" );
-        startGameBtn.setVisible( false );
+        startGameBtn = new Button("Start Game");
+        startGameBtn.setVisible(false);
         rightVBox.getChildren().addAll(txtArea, txtField, startGameBtn);
 
         return rightVBox;
@@ -192,21 +191,19 @@ public class GameLobbyView extends Pane {
         s0 = new Separator();
         Separator s1 = new Separator();
         Separator s2 = new Separator();
-        Separator s3 = new Separator();
-        btnStartGame = new Button("Start Game");
 
 
-        leftVBox.getChildren().addAll(btnCreateGame, s0, btnLogin, s1, btnCreateProfile, s2, btnOptions, s3, btnStartGame);
+        leftVBox.getChildren().addAll(btnCreateGame, s0, btnLogin, s1, btnCreateProfile, s2, btnOptions);
         return leftVBox;
     }
 
     /**
      * Creates an animated PopUp Box in the bottom right corner of the GameLobby
-     *
+     * <p>
      * Hermann Grieder
      *
      * @param message The text to be displayed
-     * @param inset The amount of pixels the box should move into the screen from the right
+     * @param inset   The amount of pixels the box should move into the screen from the right
      */
     public void createPopUp(String message, int inset) {
         popup = new Pane();
@@ -237,7 +234,7 @@ public class GameLobbyView extends Pane {
 
     /**
      * Adds CSS identifiers for all the controls in the GameLobby.
-     *
+     * <p>
      * Hermann Grieder
      */
     private void addCSSIdentifiers() {
@@ -277,7 +274,7 @@ public class GameLobbyView extends Pane {
         rightVBox.setId("rightVBox");
         txtArea.setId("txtArea");
         txtField.setId("txtField");
-        startGameBtn.setId( "startGameBtn" );
+        startGameBtn.setId("startGameBtn");
 
         //  CSS IDs for the CENTER part of the game lobby (small title and ch.atlantis.game.Game list)
         centerVBox.setId("centerVBox");
@@ -296,10 +293,10 @@ public class GameLobbyView extends Pane {
     /**
      * Creates the bubbles coming from the tip of the mouse pointer on mouse click.
      * The bubbles' spawn location and upwards movement are randomized for each bubble.
-     *
+     * <p>
      * Hermann Grieder
      *
-     * @param event The MouseEvent that was fired
+     * @param event       The MouseEvent that was fired
      * @param bubbleCount Number of bubbles to be produced
      */
     public void createBubbles(MouseEvent event, int bubbleCount) {
@@ -383,13 +380,7 @@ public class GameLobbyView extends Pane {
         return btnOptions;
     }
 
-
-    // TODO: This button was just for testing. Needs to be removed later
-    public Button getBtnStartGame() {
-        return btnStartGame;
-    }
-
-    public Button getStartGameBtn(){
+    public Button getStartGameBtn() {
         return startGameBtn;
     }
 

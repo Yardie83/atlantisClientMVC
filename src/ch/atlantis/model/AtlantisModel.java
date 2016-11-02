@@ -1,5 +1,6 @@
 package ch.atlantis.model;
 
+import ch.atlantis.game.Game;
 import ch.atlantis.game.Player;
 import ch.atlantis.util.*;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -9,8 +10,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
-import javax.sound.sampled.Clip;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -44,14 +46,19 @@ public class AtlantisModel {
     private SimpleIntegerProperty createProfileSuccess;
     private SimpleIntegerProperty loginSuccess;
     private SimpleBooleanProperty gameReady;
+    private SimpleBooleanProperty gameInfo;
     private SimpleStringProperty userName;
     private boolean autoConnect = true;
     private ObservableList<String> gameList;
     private LanguageHandler languageHandler;
 
     private Player player;
+    private String currentLanguage;
+    private Player localPlayer;
+    private boolean isMusic = true;
 
     private AtlantisConfig conf;
+    private Game game;
 
     private Music musicThread;
 
@@ -63,11 +70,13 @@ public class AtlantisModel {
         loginSuccess = new SimpleIntegerProperty(0);
         userName = new SimpleStringProperty();
         gameReady = new SimpleBooleanProperty(false);
+        gameReady = new SimpleBooleanProperty(false);
+        gameInfo = new SimpleBooleanProperty(false);
         gameList = FXCollections.observableArrayList();
 
         this.handleLanguages();
         this.handleSettings();
-        //this.soundController(conf.getIsMusic());
+        this.soundController(conf.getIsMusic());
     }
 
     private void handleSettings() {
@@ -160,6 +169,9 @@ public class AtlantisModel {
                                     break;
                                 case GAMEREADY:
                                     handleReadyGame(message);
+                                    break;
+                                case GAMEINIT:
+                                    handleGameInit();
                             }
                         }
                     } catch (SocketException e) {
@@ -183,8 +195,8 @@ public class AtlantisModel {
         String[] gameInfo = splitMessage(message);
         String gameName = gameInfo[0];
         Boolean gameIsReady = Boolean.parseBoolean(gameInfo[1]);
-        if (player != null) {
-            if (gameName.equals(player.getGameName()) && player.getPlayerId() == 0) {
+        if (localPlayer != null) {
+            if (gameName.equals(localPlayer.getGameName()) && localPlayer.getPlayerID() == 0) {
                 if (gameIsReady) {
                     gameReady.set(true);
                 } else {
@@ -194,11 +206,15 @@ public class AtlantisModel {
         }
     }
 
+    private void handleGameInit() {
+        gameInfo.set(true);
+    }
+
     private void handelJoinGame(Message message) {
         String[] info = splitMessage(message);
         int playerId = Integer.valueOf(info[0]);
         String gameName = info[1];
-        player = new Player(playerId, gameName);
+        localPlayer = new Player(playerId, gameName);
     }
 
     private void handleGameList(Message message) {
@@ -340,6 +356,10 @@ public class AtlantisModel {
         return message.getMessageObject().toString().split(",");
     }
 
+    public Message getMessage() {
+        return message;
+    }
+
     public SimpleStringProperty getChatString() {
         return chatString;
     }
@@ -362,6 +382,10 @@ public class AtlantisModel {
 
     public SimpleBooleanProperty gameReadyProperty() {
         return gameReady;
+    }
+
+    public SimpleBooleanProperty gameInfoProperty() {
+        return gameInfo;
     }
 
     public ObservableList<String> getGameList() {
@@ -393,5 +417,9 @@ public class AtlantisModel {
     public void setConfigLanguage(String currentLanguage) {
         this.conf.setConfigLanguage(currentLanguage);
         this.conf.createAtlantisConfig();
+    }
+
+    public Player getLocalPlayer() {
+        return localPlayer;
     }
 }
