@@ -47,8 +47,7 @@ public class GameController {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE) {
-                    gameBoardView.showOptions(atlantisModel.getLanguageList(), atlantisModel.getCurrentLanguage(), gameBoardView
-                            .getGameStage());
+                    //gameBoardView.showOptions(atlantisModel.getLanguageList(), atlantisModel.getCurrentLanguage(), gameBoardView.getGameStage());
                     new OptionsController(atlantisModel, atlantisView);
                 }
             }

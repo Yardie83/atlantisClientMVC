@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 /**
- * Created by Hermann Grieder on 21.07.2016.
+ * Created by Hermann Grieder and Loris Grether on 21.07.2016.
  */
 public class OptionsView extends Pane {
 
@@ -45,14 +45,14 @@ public class OptionsView extends Pane {
     private ToggleGroup radioBtnGroupFullscreen;
 
 
-    public OptionsView(int height, int width, ArrayList<Language> languageList, String culture) {
+    public OptionsView(int height, int width, ArrayList<Language> languageList, String culture, boolean isMusic) {
 
         root = new VBox(30);
         root.setMinHeight(height);
         root.setMinWidth(width);
 
         root.getChildren().add(createTop());
-        root.getChildren().add(createContent(languageList, culture));
+        root.getChildren().add(createContent(languageList, culture, isMusic));
         root.getChildren().add(createBottom());
 
         defineStyleClass();
@@ -70,7 +70,7 @@ public class OptionsView extends Pane {
 
     }
 
-    private GridPane createContent(ArrayList<Language> languageList, String culture) {
+    private GridPane createContent(ArrayList<Language> languageList, String culture, boolean isMusic) {
 
         centerPane = new GridPane();
 
@@ -88,12 +88,14 @@ public class OptionsView extends Pane {
         radioBtnSoundOff = new RadioButton("Off");
         radioBtnGroupSound.getToggles().addAll(radioBtnSoundOn, radioBtnSoundOff);
 
+         if (!isMusic) radioBtnSoundOff.setSelected(true);
+
         lblLanguage = new Label("Language");
 
         comboBoxLanguages = new ComboBox<String>();
         comboBoxLanguages.setTooltip(new Tooltip("select a lanugage"));
 
-        for (Language language : languageList) {
+        for (Language language : languageList){
 
             comboBoxLanguages.getItems().add(language.getCulture());
 
@@ -166,7 +168,7 @@ public class OptionsView extends Pane {
         return comboBoxLanguages.getSelectionModel().getSelectedItem();
     }
 
-    public void setSelectedComboboxLanguage(String culture) {
+    public void setSelectedComboboxLanguage(String culture){
         System.out.println("!!! LADIES AND GENTLEMEN NOW WE SHOULD CHANGE THE SELECTED LANGUAGE TO: " + culture);
         comboBoxLanguages.getSelectionModel().select(culture);
     }

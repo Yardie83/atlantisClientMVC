@@ -27,9 +27,5 @@ public class Music extends Thread {
     public void stopMusic(){
 
         myPlayer.stop();
-
-
-}
-
-
+    }
 }

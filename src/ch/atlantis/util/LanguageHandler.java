@@ -1,6 +1,5 @@
 package ch.atlantis.util;
 
-import ch.atlantis.util.Language;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -16,8 +15,14 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 /**
- * Created by LorisGrether on 22.08.2016.
+ * Created by Loris Grether on 22.08.2016.
+ *
+ * This class handles the several language files.
+ * As soon as the program gets started and the model is instantiated, all the language files in
+ * a specific folder will be read, processed and loaded into the program.
+ *
  */
+
 public class LanguageHandler {
 
     private ArrayList<Language> languageList;
@@ -30,15 +35,20 @@ public class LanguageHandler {
 
     private void getFiles() {
 
-        String[] files = new String[2];
+        File folder = new File("src/ch/atlantis/res/languages/");
 
-        files[0] = "src/ch/atlantis/res/languages/Atlantis_en-en - Kopie.xml";
-        files[1] = "src/ch/atlantis/res/languages/Atlantis_de-de - Kopie.xml";
+        if (!folder.isDirectory()){
+            //TODO: Log error Message
+        }
 
-        if (files != null || files.length != 0) {
+        File[] myFiles = folder.listFiles();
 
-            for (String file : files) {
-                readLanguageFile(file);
+        for (File file : myFiles){
+            if (file.exists()){
+                if (file.getName().endsWith(".xml"));
+
+                readLanguageFile(file.getPath());
+                //TODO: Log file.getPath(); was read
             }
         }
     }

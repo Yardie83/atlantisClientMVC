@@ -7,10 +7,13 @@ import javafx.event.EventHandler;
 import javafx.scene.control.RadioButton;
 
 /**
- * Created by Hermann Grieder on 28.08.2016.
+ * Created by Loris Grether on 28.08.2016.
  * <p>
- * Options View Controller
+ * Controller for the OptionsView
+ * Handles all events performed on the controls in the OptionsView
+ * Blablabla
  */
+
 public class OptionsController {
 
     final private AtlantisModel model;
@@ -30,31 +33,15 @@ public class OptionsController {
             public void handle(ActionEvent event) {
 
                 //Fullscreen Settings
+                //fullscreenSettings();
 
                 //Music Settings
-                RadioButton rb = (RadioButton) view.getOptionsView().getRadioBtnGroupSound().getSelectedToggle();
-
-                //model.soundController(rb.getText());
+                musicSettings();
 
                 //Language Settings
-                String culture = view.getOptionsView().getSelectedComboBoxLanguage();
-                //System.out.println(culture);
+                languageSettings();
 
-                if (culture != model.getConfigLanguage()) {
-
-                    if (view.setSelectedLanguage(model.getSelectedLanguage(culture))) {
-
-                        view.createGameLobbyView(false);
-
-                        model.setConfigLanguage(culture);
-                        view.getOptionsView().setSelectedComboboxLanguage(culture);
-                        view.getOptionsStage().close();
-                    } else {
-                        //TODO: (Loris) Error message
-                    }
-                } else {
-                    view.getOptionsStage().close();
-                }
+                view.getOptionsStage().close();
             }
         });
 
@@ -64,6 +51,49 @@ public class OptionsController {
                 view.getOptionsStage().close();
             }
         });
+    }
+
+    /*
+    * The method musicSettings turns the program music on and off
+    *
+    * Loris Grether
+    * */
+    private void musicSettings() {
+
+        RadioButton rb = (RadioButton) view.getOptionsView().getRadioBtnGroupSound().getSelectedToggle();
+
+        if (rb.getText().equals("On") && !model.getIsMusic()) {
+            model.soundController(true);
+        } else if (rb.getText().equals("Off") && model.getIsMusic()) {
+            model.soundController(false);
+        }
+    }
+
+
+    /*
+    *The method languageSettings changes the langage from the program when the user changes the language in the settings
+    *
+    * Loris Grether
+    * */
+    private void languageSettings() {
+
+        String culture = view.getOptionsView().getSelectedComboBoxLanguage();
+
+        if (culture != model.getConfigLanguage()) {
+
+            if (view.setSelectedLanguage(model.getSelectedLanguage(culture))) {
+
+                view.createGameLobbyView(false);
+
+                model.setConfigLanguage(culture);
+                view.getOptionsView().setSelectedComboboxLanguage(culture);
+                //view.getOptionsStage().close();
+            } else {
+                //TODO: (Loris) Error message
+            }
+        } else {
+            //view.getOptionsStage().close();
+        }
     }
     //END Handle Options Controls
 }

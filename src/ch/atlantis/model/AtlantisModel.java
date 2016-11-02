@@ -1,6 +1,7 @@
 package ch.atlantis.model;
 
 import ch.atlantis.game.Game;
+import ch.atlantis.AtlantisClient;
 import ch.atlantis.game.Player;
 import ch.atlantis.util.*;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -10,18 +11,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -35,6 +33,8 @@ import java.util.ArrayList;
  * Closes the connection on close of the application.
  */
 public class AtlantisModel {
+
+    private Logger logger;
 
     private ObjectInputStream inReader;
     private ObjectOutputStream outputStream;
@@ -64,6 +64,9 @@ public class AtlantisModel {
 
 
     public AtlantisModel() {
+
+        logger = Logger.getLogger(AtlantisClient.LOGGER_NAME);
+
         chatString = new SimpleStringProperty();
         connectionStatus = new SimpleStringProperty();
         createProfileSuccess = new SimpleIntegerProperty(0);
@@ -85,7 +88,7 @@ public class AtlantisModel {
             conf = new AtlantisConfig();
             if (!conf.readAtlantisConfig()) {
 
-                //TODO: Error Message could not read config
+                logger.warning("The AtlantisConfig could not be read!");
             }
         }
     }
@@ -231,10 +234,7 @@ public class AtlantisModel {
 
             //success
 
-            //TODO: (Loris) Config file stuff
-//            currentLanguage = languageList.get(0).getCulture();
-//            System.out.println("THE SELECTED LANGUAGE IS: " + currentLanguage);
-
+            //TODO: Log languages etc
         }
     }
 
@@ -319,19 +319,16 @@ public class AtlantisModel {
 
     public void soundController(boolean status) {
 
-        if (musicThread == null) {
+        if (status) {
             musicThread = new Music();
-        }
-
-        if ((status) && !this.getIsMusic()) {
-
             musicThread.start();
 
-        } else if ((status) && this.getIsMusic()) {
+        } else if (musicThread != null && !status) {
             musicThread.stopMusic();
             musicThread.interrupt();
             musicThread = null;
         }
+        this.setIsMusic(status);
     }
 
     public Language getSelectedLanguage(String culture) {
@@ -415,6 +412,7 @@ public class AtlantisModel {
     }
 
     public void setConfigLanguage(String currentLanguage) {
+
         this.conf.setConfigLanguage(currentLanguage);
         this.conf.createAtlantisConfig();
     }
