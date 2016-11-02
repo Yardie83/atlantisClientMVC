@@ -54,17 +54,6 @@ public class GameLobbyController {
 
         Stage gameLobbyStage = view.getGameLobbyView().getGameLobbyStage();
 
-        view.getGameLobbyView().getGameLobbyStage().setOnShowing(new EventHandler<WindowEvent>() {
-            @Override
-            public void handle(WindowEvent event) {
-
-                //Music.play();
-
-                //model.soundController();
-
-            }
-        });
-
         /*
          * *******************************
          * Menu Bar Controls EventHandlers
