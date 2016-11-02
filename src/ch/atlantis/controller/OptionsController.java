@@ -62,9 +62,9 @@ public class OptionsController {
 
         RadioButton rb = (RadioButton) view.getOptionsView().getRadioBtnGroupSound().getSelectedToggle();
 
-        if (rb.getText().equals("On") && !model.getIsMusic()) {
+        if (rb.getText().equals(view.getSelectedLanguage().getLanguageTable().get("optionsView_radioBtnSoundOn")) && !model.getIsMusic()) {
             model.soundController(true);
-        } else if (rb.getText().equals("Off") && model.getIsMusic()) {
+        } else if (rb.getText().equals(view.getSelectedLanguage().getLanguageTable().get("optionsView_radioBtnSoundOff")) && model.getIsMusic()) {
             model.soundController(false);
         }
     }

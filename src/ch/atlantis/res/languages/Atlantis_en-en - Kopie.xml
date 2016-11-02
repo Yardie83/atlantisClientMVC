@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
 <LanguageEntry Culture="en-en">
+
 <!-- GameLobbyView Controls -->
     <String Id="btnCreateGame" >Create Game</String>
     <String Id="btnLogin" >Login</String>
@@ -13,7 +14,7 @@
     <String Id="menuItemExit" >Exit</String>
     <String Id="menuItemGameRules" >Game Rules</String>
 	
-    <String Id="lblWindowTitle" >WindowTitleEnglish</String>
+    <String Id="lblWindowTitle" >Welcome in Atlantis</String>
 	<String Id="lblGameTitles" >Games</String>
 	
 	<!-- NewProfileView Controls -->
@@ -24,4 +25,48 @@
 	
 	<String Id="btnCancel" >Cancel</String>
 	<String Id="btnCreateProfile" >Create Profile</String>
+	
+	<String Id="msgHello" >Hi</String>
+	<String Id="msgLoggedInAs" >Logged in as</String>
+	<String Id="msgOf" >of</String>
+	<String Id="msgPlayers" >Players</String>
+	<String Id="msgGameCreated" >Game Created</String>
+	
+	<String Id="msgPasswordsNotMatch" >Die Passwörter stimmen nicht überein</String>
+	<String Id="msgProfileCreated" >Profil wurde erstellt</String>
+	<String Id="msgUsernameExists" >Dieser Benutzername existiert schon</String>
+	
+	<!-- OptionsView Controls -->
+	<String Id="optionsView_lblOptions" >Options</String>
+	<String Id="optionsView_lblFullScreen" >Fullscreen</String>
+	<String Id="optionsView_radioBtnFullScreenOn" >On</String>
+	<String Id="optionsView_radioBtnFullScreenOff" >Off</String>
+	<String Id="optionsView_lblSoundToggle" >Music</String>
+	<String Id="optionsView_radioBtnSoundOn" >On</String>
+	<String Id="optionsView_radioBtnSoundOff" >Off</String>
+	<String Id="optionsView_lblLanguage" >Language</String>
+	<String Id="optionsView_btnApply" >Apply</String>
+	<String Id="optionsView_btnCancel" >Cancel</String>
+	
+	<!-- LoginView Controls -->
+	<String Id="login_lblLogin" >Login</String>
+	<String Id="login_lblUserName" >Username</String>
+	<String Id="login_lblPassword" >Password</String>
+	<String Id="login_lblError1" >Please fill out all fields</String>
+	<String Id="login_lblError2" >Username or password are wrong</String>
+	<String Id="login_btnLogin" >Login</String>
+	<String Id="login_btnCancel" >Cancel</String>
+	<String Id="login_btnCreateProfile" >Create Profile</String>
+	<String Id="msgLoggedIn" >You are logged in!</String>
+	
+	<!-- LoginView Controls -->
+	<String Id="btnLogin" >Anmelden</String>
+	
+	<!-- CreateGameView Controls -->
+	<String Id="msgGiveGameName" >Bitte gieb deinem Spiel einen Namen</String>
+	<String Id="msgGiveGameNamee" >Anmelden</String>
+	
+	<!-- LoginView Controls -->
+	<String Id="btnLogin" >Anmelden</String>
+	
 </LanguageEntry>

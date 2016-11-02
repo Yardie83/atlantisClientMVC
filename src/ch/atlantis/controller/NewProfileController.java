@@ -40,11 +40,14 @@ public class NewProfileController {
 
                 if (userName.equals("") || password.equals("") || passwordRevision.equals("")) {
                     //Show the Error label when fields are left empty
-                    view.getNewProfileView().getLblError().setText("Please fill in all fields");
+                    //view.getNewProfileView().getLblError().setText("Please fill in all fields");
+                    view.getNewProfileView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("login_lblError1"));
+
                     view.getNewProfileView().getLblError().setVisible(true);
                 } else if (!password.equals(passwordRevision)) {
                     //Show the Error label when the passwords do not match
-                    view.getNewProfileView().getLblError().setText("Passwords do not match!");
+                    //view.getNewProfileView().getLblError().setText("Passwords do not match!");
+                    view.getNewProfileView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("msgPasswordsNotMatch"));
                     view.getNewProfileView().getLblError().setVisible(true);
                 } else {
                     // Send the UserName and the Password to the server to create the profile
@@ -63,13 +66,15 @@ public class NewProfileController {
                     @Override
                     public void run() {
                         if (model.createProfileSuccessProperty().getValue().equals(1)) {
-                            view.getGameLobbyView().createPopUp("Profile Created!", 200);
+                            //view.getGameLobbyView().createPopUp("Profile Created!", 200);
+                            view.getGameLobbyView().createPopUp(view.getSelectedLanguage().getLanguageTable().get("msgProfileCreated"), 200);
                             view.getGameLobbyView().removeLoginBtn();
                             view.getNewProfileView().getLblError().setText("");
                             view.closeActiveOverlay();
                             model.createProfileSuccessProperty().setValue(0);
                         } else if (model.createProfileSuccessProperty().getValue().equals(2)) {
-                            view.getNewProfileView().getLblError().setText("Username already exists");
+                            //view.getNewProfileView().getLblError().setText("Username already exists");
+                            view.getNewProfileView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("msgUsernameExists"));
                             view.getNewProfileView().getLblError().setVisible(true);
                             model.createProfileSuccessProperty().setValue(0);
                         }

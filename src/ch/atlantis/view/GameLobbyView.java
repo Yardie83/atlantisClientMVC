@@ -5,11 +5,13 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
+import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -81,9 +83,9 @@ public class GameLobbyView extends Pane {
         gameLobbyStage.setScene(gameLobbyScene);
 
         //Set Mouse Cursor Image
-//        Image image = new Image("/ch.atlantis.res/Fishi.png");
-//        gameLobbyScene.setCursor(new ImageCursor(image));
-//
+        //Image image = new Image("/ch/atlantis/res/Fishi.png");
+        //gameLobbyScene.setCursor(new ImageCursor(image));
+
 //        double x = MouseInfo.getPointerInfo().getLocation().getX();
 //        double y = MouseInfo.getPointerInfo().getLocation().getY();
 //        double angleToTurn = Math.toDegrees(Math.atan2(y, x));

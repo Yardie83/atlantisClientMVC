@@ -38,7 +38,7 @@
 /*START TOP*/
 /*****************************************/
 
-#lblOptions {
+#optionsView_lblOptions {
     -fx-alignment: center;
     -fx-font-size: 42px;
     -fx-font-weight: bold;
@@ -94,31 +94,31 @@
 }
 
 
-#btnApply {
+#optionsView_btnApply {
     -fx-background-color: #62d6a8;
 }
 
-#btnApply:hover {
+#optionsView_btnApply:hover {
     -fx-effect: dropshadow(one-pass-box, black, 5, 0.1, 2, 2);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
 }
 
-#btnApply:pressed {
+#optionsView_btnApply:pressed {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #7af5c4, #62d6a8);
 }
 
-#btnCancel {
+#optionsView_btnCancel {
     -fx-background-color: #f55860;
 }
 
-#btnCancel:hover {
+#optionsView_btnCancel:hover {
 
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 2, 2);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 50%, #f57a80, #f55860);
 }
 
-#btnCancel:pressed {
+#optionsView_btnCancel:pressed {
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, 0, 0);
     -fx-background-color: linear-gradient(from 0% 0% to 0% 100%, #f57a80, #f55860);
 }

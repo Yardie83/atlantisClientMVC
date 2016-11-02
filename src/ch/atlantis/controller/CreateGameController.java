@@ -77,7 +77,8 @@ public class CreateGameController {
         RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
         String message = gameName + "," + selectedRadioButton.getText();
         if (gameName.equals("")) {
-            view.getCreateGameView().getLblError().setText("Please give your game a name");
+            //view.getCreateGameView().getLblError().setText("Please give your game a name");
+            view.getCreateGameView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("msgGiveGameName"));
             view.getCreateGameView().getLblError().setVisible(true);
             return false;
         } else {

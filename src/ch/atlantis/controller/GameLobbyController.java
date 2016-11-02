@@ -295,8 +295,12 @@ public class GameLobbyController {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        view.getGameLobbyView().getLblWindowTitle().setText("Hi " + newValue + ", Welcome to Atlantis");
-                        view.getGameLobbyView().getLblInfo().setText("Logged in as " + newValue);
+                        //view.getGameLobbyView().getLblWindowTitle().setText("Hi " + newValue + ", Welcome to Atlantis");
+                        view.getGameLobbyView().getLblWindowTitle().setText(
+                                view.getSelectedLanguage().getLanguageTable().get("msgHello") + " " + newValue + ", " +
+                                        view.getSelectedLanguage().getLanguageTable().get("lblWindowTitle"));
+                        //view.getGameLobbyView().getLblInfo().setText("Logged in as " + newValue);
+                        view.getGameLobbyView().getLblInfo().setText(view.getSelectedLanguage().getLanguageTable().get("msgLoggedInAs") + " " + newValue);
                     }
                 });
             }
@@ -333,13 +337,19 @@ public class GameLobbyController {
                                     Integer numberOfPlayers = Integer.parseInt(gameInfo[1]);
                                     int currentJoinedUsers = Integer.parseInt(gameInfo[2]);
 
+//                                    view.getGameLobbyView().getGameListView().getItems().add(
+//                                            gameName + " : " + currentJoinedUsers + " of " + numberOfPlayers + " players");
+
                                     view.getGameLobbyView().getGameListView().getItems().add(
-                                            gameName + " : " + currentJoinedUsers + " of " + numberOfPlayers + " players");
+                                            gameName + " : " + currentJoinedUsers + " " +
+                                                    view.getSelectedLanguage().getLanguageTable().get("msgOf") +
+                                                    " " + numberOfPlayers + view.getSelectedLanguage().getLanguageTable().get("msgPlayers"));
                                 }
                             }
                             // Clear the list
                             model.getGameList().clear();
-                            view.getGameLobbyView().createPopUp("Game Created!", 200);
+                            //view.getGameLobbyView().createPopUp("Game Created!", 200);
+                            view.getGameLobbyView().createPopUp(view.getSelectedLanguage().getLanguageTable().get("msgGameCreated"), 200);
                         }
                     }
                 });

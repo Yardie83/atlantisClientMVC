@@ -76,7 +76,8 @@ public class LoginController {
 
         //Show the Error label when fields are left empty
         if (userName.equals("") || password.equals("")) {
-            view.getLoginView().getLblError().setText("Please fill in all fields");
+            //view.getLoginView().getLblError().setText("Please fill in all fields");
+            view.getLoginView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("login_lblError1"));
             view.getLoginView().getLblError().setVisible(true);
         } else {
             //Send the login credentials to the server
@@ -90,12 +91,14 @@ public class LoginController {
                     @Override
                     public void run() {
                         if (model.loginSuccessProperty().getValue().equals(1)) {
-                            view.getGameLobbyView().createPopUp("You're logged in!", 200);
+                            //view.getGameLobbyView().createPopUp("You're logged in!", 200);
+                            view.getGameLobbyView().createPopUp(view.getSelectedLanguage().getLanguageTable().get("msgLoggedIn"), 200);
                             view.getGameLobbyView().removeLoginBtn();
                             view.closeActiveOverlay();
                             model.loginSuccessProperty().setValue(0);
                         } else if (model.loginSuccessProperty().getValue().equals(2)) {
-                            view.getLoginView().getLblError().setText("Username or Password are wrong");
+                            //view.getLoginView().getLblError().setText("Username or Password are wrong");
+                            view.getLoginView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("login_lblError2"));
                             view.getLoginView().getLblError().setVisible(true);
                             model.loginSuccessProperty().setValue(0);
                         }

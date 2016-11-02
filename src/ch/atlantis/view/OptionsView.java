@@ -146,19 +146,25 @@ public class OptionsView extends Pane {
         root.setId("root");
 
         /*Style IDs for the controls in the Options View*/
-        lblOptions.setId("lblOptions");
-        lblFullScreen.setId("lblFullScreen");
-        lblSoundToggle.setId("lblSoundToggle");
-        lblLanguage.setId("lblLanguage");
+        lblOptions.setId("optionsView_lblOptions");
+        lblFullScreen.setId("optionsView_lblFullScreen");
+        lblSoundToggle.setId("optionsView_lblSoundToggle");
+        lblLanguage.setId("optionsView_lblLanguage");
 
         radioBtnFullScreenOn.getStyleClass().add("radioButtons");
         radioBtnFullScreenOff.getStyleClass().add("radioButtons");
 
+        radioBtnFullScreenOn.setId("optionsView_radioBtnFullScreenOn");
+        radioBtnFullScreenOff.setId("optionsView_radioBtnFullScreenOff");
+
         radioBtnSoundOn.getStyleClass().add("radioButtons");
         radioBtnSoundOff.getStyleClass().add("radioButtons");
 
-        btnApply.setId("btnApply");
-        btnCancel.setId("btnCancel");
+        radioBtnSoundOn.setId("optionsView_radioBtnSoundOn");
+        radioBtnSoundOff.setId("optionsView_radioBtnSoundOff");
+
+        btnApply.setId("optionsView_btnApply");
+        btnCancel.setId("optionsView_btnCancel");
 
         centerPane.setId("centerPane");
         bottomPane.setId("bottomPane");

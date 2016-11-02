@@ -5,9 +5,7 @@ import ch.atlantis.util.Language;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Screen;
@@ -53,9 +51,6 @@ public class AtlantisView {
 
     private Language selectedLanguage;
 
-
-
-
     public AtlantisView(Stage introStage, AtlantisModel model) {
 
         this.introStage = introStage;
@@ -64,8 +59,13 @@ public class AtlantisView {
         height = new SimpleIntegerProperty(800);
 
         this.setSelectedLanguage(model.getSelectedLanguage(model.getConfigLanguage()));
+        
+        this.setLabelLanguageText();
 
         controls = new ArrayList<>();
+    }
+
+    private void setLabelLanguageText() {
     }
 
     /**
@@ -157,6 +157,10 @@ public class AtlantisView {
 
         setXYLocation(loginStage, parentStage);
         setDimensions(loginStage, parentStage);
+
+        getControls(this.loginView);
+        setControlText(this.controls);
+
         activeOverlayStage = loginStage;
     }
 
@@ -230,10 +234,18 @@ public class AtlantisView {
 
         for (Control control : controls) {
 
-            if (control instanceof Button) {
+            if (control instanceof ButtonBase) {
 
-                Button button = (Button) control;
-                addLanguageTextToButtonControl(button);
+                if (control instanceof Button){
+
+                    Button button = (Button) control;
+                    addLanguageTextToButtonControl(button);
+
+                }else if (control instanceof RadioButton){
+
+                    RadioButton button = (RadioButton) control;
+                    addLanguageTextToButtonControl(button);
+                }
             }
 
             if (control instanceof Label) {
@@ -246,7 +258,7 @@ public class AtlantisView {
         controls.clear();
     }
 
-    private void addLanguageTextToButtonControl(Button button) {
+    private void addLanguageTextToButtonControl(ButtonBase button) {
 
         if (selectedLanguage != null) {
 
@@ -394,5 +406,9 @@ public class AtlantisView {
             createOptionsView(languageList, currentLanguage, gameStage);
         }
         this.optionsStage.show();
+    }
+
+    public Language getSelectedLanguage() {
+        return selectedLanguage;
     }
 }
