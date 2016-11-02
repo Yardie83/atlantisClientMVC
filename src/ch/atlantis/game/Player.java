@@ -1,5 +1,8 @@
 package ch.atlantis.game;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.paint.Color;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -15,23 +18,15 @@ public class Player implements Serializable {
     private String gameName;
     private int score;
     private int bridge;
+    private Color color;
 
     public Player(int playerID, String gameName) {
         this.playerID = playerID;
         this.gameName = gameName;
-
-        this.movementCards = new ArrayList<>();
-        this.gamePieces = new ArrayList<>(4);
-
-        this.bridge = 1;
     }
 
     public String getPlayerName() {
         return playerName;
-    }
-
-    public void setPlayerName(String playerName) {
-        this.playerName = playerName;
     }
 
     public void addScore(int score) {
@@ -42,9 +37,7 @@ public class Player implements Serializable {
         this.score -= score;
     }
 
-    public int getScore() {
-        return score;
-    }
+    public int getScore() { return score; }
 
     public void removeBridge() {
         this.bridge = 0;
@@ -64,5 +57,32 @@ public class Player implements Serializable {
 
     public String getGameName() {
         return gameName;
+    }
+
+    public Color getColor() { return color; }
+
+    public ArrayList<Card> getMovementCards() { return movementCards; }
+
+    public void setColor() {
+        switch (playerID) {
+            case 0:
+                color = Color.RED;
+                break;
+            case 1:
+                color = Color.BLUE;
+                break;
+            case 2:
+                color = Color.GREEN;
+                break;
+            case 3:
+                color = Color.YELLOW;
+                break;
+        }
+    }
+
+    public void setBridge() { this.bridge = 1; }
+
+    public void setName(String name) {
+        this.playerName = name;
     }
 }

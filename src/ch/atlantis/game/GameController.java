@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
 
@@ -78,7 +77,7 @@ public class GameController {
 
     private Card possiblePathCard(GamePiece gamePiece) {
 
-        for (int i = gamePiece.getGamePiecePathId(); i < 154; i++) {
+        for (int i = gamePiece.getPathId(); i < 154; i++) {
             for (Card pathCard : gameBoardView.getPathCards()) {
                 if (pathCard.getPathId() == i) {
                     if (pathCard.getColorSet() == tempColorSet) {

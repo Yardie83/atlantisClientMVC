@@ -8,15 +8,11 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
+import java.util.HashMap;
 
 /**
  * Created by Hermann Grieder on 23.08.2016.
@@ -33,6 +29,8 @@ public class GameBoardView extends Pane {
     private ArrayList<Card> deck;
     private int height;
     private final Player localPlayer;
+    private Tile consoleTile;
+    private HashMap<Integer, Label> scoresLabels;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -46,6 +44,7 @@ public class GameBoardView extends Pane {
 
         localPlayer = gameModel.getLocalPlayer();
         players = gameModel.getPlayers();
+        this.consoleTile = null;
         tiles = setXYTiles(gameModel.getTiles());
         pathCards = gameModel.getPathCards();
         deck = gameModel.getDeck();
@@ -55,6 +54,8 @@ public class GameBoardView extends Pane {
         drawCards(pathCards, tiles);
 
         drawGamePieces();
+
+        createGameConsole(consoleTile);
     }
 
     private ArrayList<Tile> setXYTiles(ArrayList<Tile> tiles) {
@@ -77,6 +78,9 @@ public class GameBoardView extends Pane {
 
         for (Card card : pathCards) {
             for (Tile tile : tiles) {
+                if (tile.getPathId() == 500) {
+                    consoleTile = tile;
+                }
                 if (card.getPathId() == tile.getPathId()) {
                     card.setWidth(tile.getSide());
                     card.setHeight(tile.getSide());
@@ -98,7 +102,13 @@ public class GameBoardView extends Pane {
                     for (GamePiece gamePiece : player.getGamePieces()) {
                         gamePiece.setLayoutX(card.getLayoutX() + offsetX);
                         gamePiece.setLayoutY(card.getLayoutY() + offsetY);
+                        gamePiece.setPathId(card.getPathId());
+                        gamePiece.setFill(player.getColor());
+                        gamePiece.setStroke(Color.BLACK);
+                        gamePiece.setWidth(10);
+                        gamePiece.setHeight(10);
                         this.getChildren().add(gamePiece);
+                        System.out.println(gamePiece.getPathId());
                         offsetX += 20;
                     }
                     offsetY += 15;
@@ -110,14 +120,32 @@ public class GameBoardView extends Pane {
 
     private void createGameConsole(Tile tile) {
 
-        VBox console = new VBox();
+        this.scoresLabels = new HashMap<>();
+
+        HBox console = new HBox();
+        VBox otherPlayersBox = new VBox(10);
+        otherPlayersBox.setMinHeight(200);
+        otherPlayersBox.setMinWidth(tile.getSide() * 2);
+
+        for (Player player : players) {
+            if (!player.getPlayerName().equals(localPlayer.getGameName())) {
+                Label labelName = new Label(player.getPlayerName());
+                Label labelScore = new Label(Integer.toString(player.getScore()));
+                scoresLabels.put(player.getPlayerID(), labelScore);
+                otherPlayersBox.getChildren().addAll(labelName, labelScore);
+            }
+        }
+
+        VBox localPlayerBox = new VBox();
+        localPlayerBox.setMinHeight(200);
+        localPlayerBox.setMinWidth(tile.getSide() * 7);
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
         HBox bottom = new HBox(10);
 
-        console.getChildren().addAll(top, bottom);
+        localPlayerBox.getChildren().addAll(top, bottom);
 
-        console.setStyle("-fx-border-width: 1px; " +
+        localPlayerBox.setStyle("-fx-border-width: 1px; " +
                 "-fx-background-color: #7af5c4;" +
                 "-fx-border-color: black");
 
@@ -132,7 +160,9 @@ public class GameBoardView extends Pane {
         console.setLayoutX(tile.getX());
         console.setLayoutY(tile.getY() + 20);
         console.setMinHeight(200);
-        //console.setMinWidth(tile.getSide() * 7);
+        console.setMinWidth(tile.getSide() * 9);
+
+        console.getChildren().addAll(otherPlayersBox, localPlayerBox);
 
         this.getChildren().add(console);
     }
@@ -162,4 +192,7 @@ public class GameBoardView extends Pane {
     public void showOptions(ArrayList<Language> languageList, String currentLanguage, Stage gameStage) {
         view.showOptions(languageList, currentLanguage, gameStage);
     }
+
+    public HashMap<Integer, Label> getLabels() { return scoresLabels; }
+
 }

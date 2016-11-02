@@ -218,6 +218,7 @@ public class AtlantisModel {
         int playerId = Integer.valueOf(info[0]);
         String gameName = info[1];
         localPlayer = new Player(playerId, gameName);
+        localPlayer.setName(userName.getValue());
     }
 
     private void handleGameList(Message message) {

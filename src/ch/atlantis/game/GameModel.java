@@ -28,11 +28,20 @@ public class GameModel {
             pathCards = initList.get("PathCards");
             deck = initList.get("Deck");
 
+            initPlayer(players);
+
 //            System.out.println("Players: " + players.size() + "\n" +
 //                    "Tiles: " + tiles.size() + "\n" +
 //                    "PathA: " + pathCardSetA.size() + "\n" +
 //                    "PathB: " + pathCardSetB.size() + "\n" +
 //                    "Deck: "  + deck.size() + "\n");
+        }
+    }
+
+    private void initPlayer(ArrayList<Player> players) {
+        for (Player player : players) {
+            player.setBridge();
+            player.setColor();
         }
     }
 
