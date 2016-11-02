@@ -12,8 +12,7 @@ public class GameModel {
 
     private ArrayList<Player> players;
     private ArrayList<Tile> tiles;
-    private ArrayList<Card> pathCardSetA;
-    private ArrayList<Card> pathCardSetB;
+    private ArrayList pathCards;
     private ArrayList<Card> deck;
     private Player localPlayer;
 
@@ -26,8 +25,7 @@ public class GameModel {
             HashMap<String, ArrayList> initList = (HashMap<String, ArrayList>) message.getMessageObject();
             players = initList.get("Players");
             tiles = initList.get("Tiles");
-            pathCardSetA = initList.get("PathCardsSetA");
-            pathCardSetB = initList.get("PathCardsSetB");
+            pathCards = initList.get("PathCards");
             deck = initList.get("Deck");
 
 //            System.out.println("Players: " + players.size() + "\n" +
@@ -46,12 +44,8 @@ public class GameModel {
         return tiles;
     }
 
-    public ArrayList<Card> getPathCardSetA() {
-        return pathCardSetA;
-    }
-
-    public ArrayList<Card> getPathCardSetB() {
-        return pathCardSetB;
+    public ArrayList<Card> getPathCards() {
+        return pathCards;
     }
 
     public ArrayList<Card> getDeck() {
