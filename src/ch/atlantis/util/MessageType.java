@@ -18,6 +18,7 @@ public enum MessageType {
     JOINGAME,
     GAMEREADY,
     STARTGAME,
-    GAMEINIT
+    GAMEINIT,
+    GAMEHANDLING
 }
 

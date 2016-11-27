@@ -23,6 +23,10 @@ public class Player implements Serializable {
     public Player(int playerID, String gameName) {
         this.playerID = playerID;
         this.gameName = gameName;
+        this.movementCards = new ArrayList<>();
+        this.gamePieces = new ArrayList<>(3);
+
+        this.bridge = 1;
     }
 
     public String getPlayerName() {
@@ -51,6 +55,8 @@ public class Player implements Serializable {
         return gamePieces;
     }
 
+    public void addGamePieces(ArrayList<GamePiece> gamePieces) { this.gamePieces = gamePieces; }
+
     public int getPlayerID() {
         return playerID;
     }
@@ -62,6 +68,8 @@ public class Player implements Serializable {
     public Color getColor() { return color; }
 
     public ArrayList<Card> getMovementCards() { return movementCards; }
+
+    public void addMovementCards(ArrayList<Card> movementCards) { this.movementCards = movementCards; }
 
     public void setColor() {
         switch (playerID) {

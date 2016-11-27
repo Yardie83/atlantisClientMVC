@@ -2,7 +2,7 @@ package ch.atlantis.model;
 
 import ch.atlantis.game.Game;
 import ch.atlantis.AtlantisClient;
-import ch.atlantis.game.Player;
+import ch.atlantis.game.*;
 import ch.atlantis.util.*;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -19,6 +19,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
@@ -61,6 +62,10 @@ public class AtlantisModel {
     private Game game;
 
     private Music musicThread;
+
+    private GamePiece gamePiece;
+    private Card cardBehind;
+
 
 
     public AtlantisModel() {
@@ -175,6 +180,10 @@ public class AtlantisModel {
                                     break;
                                 case GAMEINIT:
                                     handleGameInit();
+                                    break;
+                                case GAMEHANDLING:
+                                    handleGameEvent(message);
+                                    break;
                             }
                         }
                     } catch (SocketException e) {
@@ -219,6 +228,16 @@ public class AtlantisModel {
         String gameName = info[1];
         localPlayer = new Player(playerId, gameName);
         localPlayer.setName(userName.getValue());
+    }
+
+    public void handleGameEvent(Message message) {
+
+        if (message.getMessageObject() instanceof HashMap) {
+            HashMap<String, Object> gameInfo = (HashMap<String, Object>) message.getMessageObject();
+            this.gamePiece = (GamePiece) gameInfo.get("GamePiece");
+            this.cardBehind = (Card) gameInfo.get("CardBehind");
+        }
+
     }
 
     private void handleGameList(Message message) {
@@ -421,4 +440,9 @@ public class AtlantisModel {
     public Player getLocalPlayer() {
         return localPlayer;
     }
+
+    public GamePiece getGamePiece() { return gamePiece; }
+
+    public Card getCardBehind() { return cardBehind; }
+
 }

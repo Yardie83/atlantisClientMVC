@@ -86,6 +86,7 @@ public class GameBoardView extends Pane {
                     card.setHeight(tile.getSide());
                     card.setLayoutX(tile.getX());
                     card.setLayoutY(tile.getY());
+                    card.setStroke(Color.BLACK);
                     card.applyColor();
                     this.getChildren().add(card);
                 }
@@ -108,7 +109,6 @@ public class GameBoardView extends Pane {
                         gamePiece.setWidth(10);
                         gamePiece.setHeight(10);
                         this.getChildren().add(gamePiece);
-                        System.out.println(gamePiece.getPathId());
                         offsetX += 20;
                     }
                     offsetY += 15;
@@ -161,6 +161,11 @@ public class GameBoardView extends Pane {
         console.setLayoutY(tile.getY() + 20);
         console.setMinHeight(200);
         console.setMinWidth(tile.getSide() * 9);
+
+        for (int i = 0; i < players.get(localPlayer.getPlayerID()).getMovementCards().size(); i++) {
+            Card movementCardForConsole = players.get(localPlayer.getPlayerID()).getMovementCards().get(i);
+            localPlayerBox.getChildren().add(movementCardForConsole);
+        }
 
         console.getChildren().addAll(otherPlayersBox, localPlayerBox);
 

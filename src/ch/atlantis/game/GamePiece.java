@@ -13,10 +13,8 @@ public class GamePiece extends Rectangle implements Serializable {
 
     private static final long serialVersionUID = 7661939850705259125L;
     private int pieceId;
-    private int playerId;
     private double x;
     private double y;
-    private ArrayList<GamePiece> gamePieces;
     private int pathId;
 
     public void moveGamePiece(double x, double y) {
@@ -40,14 +38,6 @@ public class GamePiece extends Rectangle implements Serializable {
 
     public void setPieceId(int pieceId) {
         this.pieceId = pieceId;
-    }
-
-    public ArrayList<GamePiece> getGamePieces() {
-        return gamePieces;
-    }
-
-    public int getPlayerId() {
-        return playerId;
     }
 
     public double getGamePieceX() {
