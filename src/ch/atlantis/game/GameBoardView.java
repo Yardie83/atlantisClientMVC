@@ -208,7 +208,7 @@ public class GameBoardView extends Pane {
         for(Card card : localPlayer.getMovementCards()){
             card.setWidth(60);
             card.setHeight(80);
-            //card.applyColor();
+            card.applyColor(gameModel.getListCardImages());
             localPlayerBox.getChildren().add(card);
         }
     }

@@ -69,6 +69,14 @@ public class GameModel {
         }
     }
 
+    public boolean buyHandCard(int value){
+
+
+
+
+        return false;
+    }
+
 
     public ArrayList<Player> getPlayers() {
         return players;

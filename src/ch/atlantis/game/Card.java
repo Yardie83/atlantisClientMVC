@@ -39,6 +39,21 @@ public class Card extends Rectangle implements Serializable {
 
 
     public void applyColor(Hashtable<String, ImageView> listCardImages) {
+
+        if (this.getCardType() == CardType.PATH && value != 0){
+
+            if (this.colorSet == BROWN){
+
+            }
+
+
+        }
+        if (getCardType() == CardType.MOVEMENT){
+
+            super.setFill(new ImagePattern(listCardImages.get("card_" + colorSet + ".jpg").getImage()));
+        }
+
+
         if (value != 0) {
             switch (this.colorSet) {
                 case BROWN:
