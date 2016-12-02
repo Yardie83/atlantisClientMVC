@@ -120,20 +120,23 @@ public class GameModel {
 
         for (Card pathCard : pathCards) {
 
-            if (pathCard.getCardType() != CardType.WATER) {
+            if (pathIdBehind >= 101 && pathIdAfter <= 154) {
 
-                if (pathCard.getPathId() == pathIdBehind) {
-                    valueBehind = pathCard.getValue();
-                }
-                if (pathCard.getPathId() == pathIdAfter) {
-                    valueAfter = pathCard.getValue();
-                }
-            } else {
-                if (pathCard.getPathId() == pathIdBehind) {
-                    getPriceForCrossing(pathIdBehind--);
-                }
-                if (pathCard.getPathId() == pathIdAfter) {
-                    getPriceForCrossing(pathIdAfter++);
+                if (pathCard.getCardType() != CardType.WATER) {
+
+                    if (pathCard.getPathId() == pathIdBehind) {
+                        valueBehind = pathCard.getValue();
+                    }
+                    if (pathCard.getPathId() == pathIdAfter) {
+                        valueAfter = pathCard.getValue();
+                    }
+                } else {
+                    if (pathCard.getPathId() == pathIdBehind) {
+                        getPriceForCrossing(pathIdBehind--);
+                    }
+                    if (pathCard.getPathId() == pathIdAfter) {
+                        getPriceForCrossing(pathIdAfter++);
+                    }
                 }
             }
         }
