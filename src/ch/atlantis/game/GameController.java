@@ -17,7 +17,6 @@ import java.util.HashMap;
 
 /**
  * Created by Hermann Grieder on 31.08.2016.
- *
  */
 public class GameController {
 
@@ -66,9 +65,9 @@ public class GameController {
                 @Override
                 public void handle(MouseEvent event) {
                     if (playerTurn == gameModel.getLocalPlayer().getPlayerID()) {
-                        System.out.println("Game Controller: Card" + movementCard.getCardType() + " " + movementCard.getColorSet());
                         selectedCard = movementCard;
                     }
+                    validateMove(selectedCard, selectedGamePiece);
                 }
             });
         }
@@ -78,11 +77,32 @@ public class GameController {
             gamePiece.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    selectedGamePiece = gamePiece;
-                    System.out.println(selectedGamePiece.getPathId());
-                    //sendHashMap();
+                    if (playerTurn == gameModel.getLocalPlayer().getPlayerID()) {
+                        selectedGamePiece = gamePiece;
+                    }
+                    validateMove(selectedCard, selectedGamePiece);
                 }
             });
+        }
+    }
+
+    private void validateMove(Card selectedCard, GamePiece selectedGamePiece) {
+
+        if (selectedCard != null && selectedGamePiece != null) {
+
+            try {
+                //gameModel.IsMyTurn();
+
+
+                sendHashMap();
+                selectedCard = null;
+                selectedGamePiece = null;
+
+                //here we catch the own made exceptions
+            } catch (Exception ex) {
+
+            } //catch (NotMyTurnException ex) {
+            //}
         }
     }
 
