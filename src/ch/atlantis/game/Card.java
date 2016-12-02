@@ -39,13 +39,22 @@ public class Card extends Rectangle implements Serializable {
 
     public void applyCardImages(Hashtable<String, ImageView> listCardImages) {
 
-        if (this.getCardType() == CardType.PATH){
+        if (this.getCardType() == CardType.PATH) {
 
             super.setFill(new ImagePattern(listCardImages.get(colorSet + "_" + value + ".jpg").getImage()));
-        }
-        if (getCardType() == CardType.MOVEMENT){
+
+        } else if (getCardType() == CardType.MOVEMENT) {
 
             super.setFill(new ImagePattern(listCardImages.get("card_" + colorSet + ".jpg").getImage()));
+
+        } else if (getCardType() == CardType.START) {
+
+            super.setFill(new ImagePattern(listCardImages.get("atlantis.jpg").getImage()));
+
+        } else if (getCardType() == CardType.END) {
+
+            super.setFill(new ImagePattern(listCardImages.get("land.jpg").getImage()));
+
         }
     }
 
