@@ -142,13 +142,16 @@ public class GameController {
                 selectedCard = null;
                 selectedGamePiece = null;
 
-                //here we catch the exceptions
+
+            } catch (GameException ex) {
+                System.out.println(ex.getMessage());
+                return false;
             } catch (Exception ex) {
-                // Here we can inform the player abput his mistakes
-            } //catch (NotMyTurnException ex) {$
-            //}
+                System.out.println(ex.getMessage());
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
     public void sendHashMap() {

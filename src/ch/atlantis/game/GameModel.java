@@ -59,7 +59,7 @@ public class GameModel {
         if (myFiles != null) {
             for (File file : myFiles) {
                 if (file.exists() && file.isFile()) {
-                    if (file.getName().endsWith(".jpg")) {
+                    if (file.getName().endsWith(".jpg")){
 
                         //without the substring(4) the path is invalid resp nullpointerexception
                         ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
@@ -70,7 +70,7 @@ public class GameModel {
         }
     }
 
-    public boolean buyHandCard(int value) {
+    public boolean buyHandCard(int value){
 
 
         return false;
@@ -95,6 +95,9 @@ public class GameModel {
                         && pathCard.getColorSet() == movementCard.getColorSet()) {
                     nextPathId = pathCard.getPathId();
                 }
+            } else if (pathCard.getCardType() == CardType.WATER) {
+                int price = getPriceForCrossing(pathCard.getPathId());
+                throw new GameException("Hälsch dein schnaaaauz!");
             }
             i++;
         }
@@ -135,7 +138,6 @@ public class GameModel {
         {
             return valueBehind;
         }
-
     }
 
     public ArrayList<Player> getPlayers() {
