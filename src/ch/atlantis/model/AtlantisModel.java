@@ -181,8 +181,8 @@ public class AtlantisModel {
                                 case GAMEINIT:
                                     handleGameInit();
                                     break;
-                                case GAMEHANDLING:
-                                    handleGameEvent(message);
+                                case MOVE:
+                                    handleMove(message);
                                     break;
                             }
                         }
@@ -226,11 +226,11 @@ public class AtlantisModel {
         String[] info = splitMessage(message);
         int playerId = Integer.valueOf(info[0]);
         String gameName = info[1];
-        localPlayer = new Player(playerId, gameName);
-        localPlayer.setName(userName.getValue());
+        localPlayer = new Player(playerId, gameName, userName.getValue());
+
     }
 
-    public void handleGameEvent(Message message) {
+    public void handleMove(Message message) {
 
         if (message.getMessageObject() instanceof HashMap) {
             HashMap<String, Object> gameInfo = (HashMap<String, Object>) message.getMessageObject();

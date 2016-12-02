@@ -17,9 +17,9 @@ import java.util.HashMap;
 
 /**
  * Created by Hermann Grieder on 31.08.2016.
+ *
  */
 public class GameController {
-
 
     private GameBoardView gameBoardView;
     private AtlantisView atlantisView;
@@ -27,7 +27,6 @@ public class GameController {
     private AtlantisModel atlantisModel;
     private Card selectedCard;
     private GamePiece selectedGamePiece;
-    private HashMap<String, Object> mapToSend = new HashMap<>();
     private Card cardToMove;
     private int cardBehindPathId;
     private int cardToMoveId;
@@ -35,20 +34,14 @@ public class GameController {
     private ArrayList<Card> pathCards;
     private ArrayList<Card> movementCards;
     private int playerId;
-    private GamePiece tempoGamePiece;
     private Message message;
-    private int allowedPlayerId = 0;
+    private int playerTurn = 0;
 
     public GameController(AtlantisView atlantisView, AtlantisModel atlantisModel, GameModel gameModel, GameBoardView gameBoardView) {
         this.atlantisView = atlantisView;
         this.atlantisModel = atlantisModel;
         this.gameModel = gameModel;
         this.gameBoardView = gameBoardView;
-
-        if (myTurn(allowedPlayerId)) {
-            sendHashMap();
-        }
-
     }
 
 
@@ -58,8 +51,8 @@ public class GameController {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE) {
-                    //gameBoardView.showOptions(atlantisModel.getLanguageList(), atlantisModel.getCurrentLanguage(), gameBoardView.getGameStage());
                     new OptionsController(atlantisModel, atlantisView);
+                    //gameBoardView.showOptions(atlantisModel.getLanguageList(), atlantisModel.getCurrentLanguage(), gameBoardView.getGameStage());
                 }
             }
         });
@@ -67,17 +60,17 @@ public class GameController {
 
     private void handleUserInput() {
 
-        for (Card card : gameModel.getLocalPlayer().getMovementCards()) {
+        for (Card movementCard : gameModel.getLocalPlayer().getMovementCards()) {
 
-            card.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            movementCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-
-                    selectedCard = card;
-
+                    if (playerTurn == gameModel.getLocalPlayer().getPlayerID()) {
+                        System.out.println("Game Controller: Card" + movementCard.getCardType() + " " + movementCard.getColorSet());
+                        selectedCard = movementCard;
+                    }
                 }
             });
-
         }
 
         for (GamePiece gamePiece : gameModel.getLocalPlayer().getGamePieces()) {
@@ -85,115 +78,20 @@ public class GameController {
             gamePiece.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-
                     selectedGamePiece = gamePiece;
-
+                    System.out.println(selectedGamePiece.getPathId());
+                    //sendHashMap();
                 }
             });
-
         }
-
     }
 
     public void sendHashMap() {
-        mapToSend.put("Card", selectedCard);
+        HashMap<String, Object> mapToSend = new HashMap<>();
+        mapToSend.put("Card", selectedCard.getColorSet());
         mapToSend.put("GamePiece", selectedGamePiece);
+        atlantisModel.sendMessage(new Message(MessageType.MOVE, mapToSend));
 
-        atlantisModel.sendMessage(new Message(MessageType.GAMEHANDLING, mapToSend));
-
-    }
-
-    private void handlePlayersChanges() {
-
-
-
-    }
-
-    private Card possiblePathCard(Card handCard) {
-
-        for (int i = 101; i < 154; i++) {
-            for (Card pathCard : gameBoardView.getPathCards()) {
-                if (pathCard.getPathId() == i) {
-                    if (pathCard.getColorSet() == handCard.getColorSet()) {
-                        if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER
-                                && pathCard.getCardType() != CardType.START) {
-                            cardBehindPathId = i - 1;
-                            return pathCard;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private Card possiblePathCard(GamePiece gamePiece) {
-
-        for (int i = gamePiece.getPathId(); i < 154; i++) {
-            for (Card pathCard : gameModel.getPathCards()) {
-                if (pathCard.getPathId() == i) {
-                    if (pathCard.getColorSet() == tempColorSet) {
-                        if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER
-                                && pathCard.getCardType() != CardType.START) {
-                            cardBehindPathId = i - 1;
-                            return pathCard;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private boolean myTurn(int allowedPlayerId) {
-
-        if (gameModel.getLocalPlayer().getPlayerID() == allowedPlayerId) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Fabian Witschi
-     *
-     * @return
-     */
-    private Card getNextCard() {
-        for (Card card : gameModel.getPathCards()) {
-            if (card.getPathId() == cardToMove.getPathId() + 1) {
-                return card;
-            }
-        }
-        return null;
-    }
-
-    private boolean isOccupied(Card cardToMove) {
-
-        for (Player player : gameModel.getPlayers()) {
-            for (GamePiece gamePiece : player.getGamePieces()) {
-                if (gamePiece.getGamePieceX() == cardToMove.getLayoutX() + (cardToMove.getWidth() / 2) - (gamePiece.getWidth() / 2) && gamePiece.getGamePieceY() ==
-                        cardToMove.getLayoutY() + (cardToMove.getHeight() / 2) - (gamePiece.getHeight() / 2)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public void handleMoveFromPlayer(Message message) {
-
-    }
-
-    private boolean myTurn() {
-
-        if (allowedPlayerId == gameModel.getLocalPlayer().getPlayerID()) {
-            allowedPlayerId++;
-            if (allowedPlayerId == gameModel.getPlayers().size()) {
-                allowedPlayerId = 0;
-            }
-            return true;
-        }
-        return false;
     }
 
     public void showGame() {
@@ -202,13 +100,8 @@ public class GameController {
             public void run() {
                 gameBoardView.show();
                 startListeners();
-                if (myTurn(allowedPlayerId)) {
-                    handleUserInput();
-                    sendHashMap();
-                }
+                handleUserInput();
             }
         });
-
     }
-
 }

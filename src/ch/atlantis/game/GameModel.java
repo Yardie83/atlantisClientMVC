@@ -12,14 +12,12 @@ public class GameModel {
 
     private ArrayList<Player> players;
     private ArrayList<Tile> tiles;
-    private ArrayList pathCards;
+    private ArrayList<Card> pathCards;
     private ArrayList<Card> deck;
     private Player localPlayer;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
-
-        this.localPlayer = localPlayer;
 
         if (message.getMessageObject() instanceof HashMap) {
             HashMap<String, ArrayList> initList = (HashMap<String, ArrayList>) message.getMessageObject();
@@ -28,22 +26,15 @@ public class GameModel {
             pathCards = initList.get("PathCards");
             deck = initList.get("Deck");
 
-            initPlayer(players);
-
-//            System.out.println("Players: " + players.size() + "\n" +
-//                    "Tiles: " + tiles.size() + "\n" +
-//                    "PathA: " + pathCardSetA.size() + "\n" +
-//                    "PathB: " + pathCardSetB.size() + "\n" +
-//                    "Deck: "  + deck.size() + "\n");
+            for (Player player : players) {
+                player.applyColor();
+                if (player.getPlayerID() == localPlayer.getPlayerID()) {
+                    this.localPlayer = player;
+                }
+            }
         }
     }
 
-    private void initPlayer(ArrayList<Player> players) {
-        for (Player player : players) {
-            player.setBridge();
-            player.setColor();
-        }
-    }
 
     public ArrayList<Player> getPlayers() {
         return players;

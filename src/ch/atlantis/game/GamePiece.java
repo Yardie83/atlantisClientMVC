@@ -12,12 +12,11 @@ import java.util.ArrayList;
 public class GamePiece extends Rectangle implements Serializable {
 
     private static final long serialVersionUID = 7661939850705259125L;
-    private int pieceId;
     private double x;
     private double y;
     private int pathId;
 
-    public void moveGamePiece(double x, double y) {
+    public void move(double x, double y) {
         this.setLayoutX(x);
         this.setLayoutY(y);
         this.x = x;
@@ -30,14 +29,6 @@ public class GamePiece extends Rectangle implements Serializable {
 
     public int getPathId() {
         return pathId;
-    }
-
-    public int getPieceId() {
-        return pieceId;
-    }
-
-    public void setPieceId(int pieceId) {
-        this.pieceId = pieceId;
     }
 
     public double getGamePieceX() {

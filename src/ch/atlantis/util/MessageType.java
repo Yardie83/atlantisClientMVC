@@ -19,6 +19,6 @@ public enum MessageType {
     GAMEREADY,
     STARTGAME,
     GAMEINIT,
-    GAMEHANDLING
+    MOVE
 }
 

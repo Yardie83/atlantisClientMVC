@@ -60,7 +60,6 @@ public class GameLobbyView extends Pane {
     private Pane popup;
     private Separator s0;
     private Label lblGameTitles;
-    private ArrayList<Control> gameLobbyControls;
     private Button startGameBtn;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
@@ -69,8 +68,6 @@ public class GameLobbyView extends Pane {
         Scene gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
-
-        gameLobbyControls = new ArrayList<>();
 
         if (fullscreen) {
             gameLobbyStage.setFullScreen(true);
@@ -177,7 +174,7 @@ public class GameLobbyView extends Pane {
         centerVBox = new VBox(30);
         lblGameTitles = new Label("Games");
         lblGameTitles.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
-        gameListView = new ListView();
+        gameListView = new ListView<>();
         centerVBox.getChildren().addAll(lblGameTitles, gameListView);
         return centerVBox;
     }

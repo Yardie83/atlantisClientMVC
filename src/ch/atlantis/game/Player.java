@@ -1,6 +1,5 @@
 package ch.atlantis.game;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.paint.Color;
 
 import java.io.Serializable;
@@ -13,65 +12,20 @@ public class Player implements Serializable {
     private static final long serialVersionUID = 7661939850705259874L;
     private ArrayList<GamePiece> gamePieces;
     private ArrayList<Card> movementCards;
-    private int playerID;
     private String playerName;
     private String gameName;
-    private int score;
-    private int bridge;
+    private int playerID;
     private Color color;
+    private int bridge;
+    private int score;
 
-    public Player(int playerID, String gameName) {
+    public Player(int playerID, String gameName, String playerName) {
+        this.playerName = playerName;
         this.playerID = playerID;
         this.gameName = gameName;
-        this.movementCards = new ArrayList<>();
-        this.gamePieces = new ArrayList<>(3);
-
-        this.bridge = 1;
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
-
-    public void addScore(int score) {
-        this.score += score;
-    }
-
-    public void subtractScore(int score) {
-        this.score -= score;
-    }
-
-    public int getScore() { return score; }
-
-    public void removeBridge() {
-        this.bridge = 0;
-    }
-
-    public int getBridge() {
-        return bridge;
-    }
-
-    public ArrayList<GamePiece> getGamePieces() {
-        return gamePieces;
-    }
-
-    public void addGamePieces(ArrayList<GamePiece> gamePieces) { this.gamePieces = gamePieces; }
-
-    public int getPlayerID() {
-        return playerID;
-    }
-
-    public String getGameName() {
-        return gameName;
-    }
-
-    public Color getColor() { return color; }
-
-    public ArrayList<Card> getMovementCards() { return movementCards; }
-
-    public void addMovementCards(ArrayList<Card> movementCards) { this.movementCards = movementCards; }
-
-    public void setColor() {
+    public void applyColor() {
         switch (playerID) {
             case 0:
                 color = Color.RED;
@@ -88,9 +42,42 @@ public class Player implements Serializable {
         }
     }
 
-    public void setBridge() { this.bridge = 1; }
+    public Color getColor() { return color; }
 
-    public void setName(String name) {
-        this.playerName = name;
+    public int getScore() { return score; }
+
+    public int getBridge() {
+        return bridge;
     }
+
+    public void removeBridge() {
+        this.bridge = 0;
+    }
+
+    public int getPlayerID() {
+        return playerID;
+    }
+
+    public String getGameName() {
+        return gameName;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void addScore(int score) {
+        this.score += score;
+    }
+
+    public void subtractScore(int score) {
+        this.score -= score;
+    }
+
+    public ArrayList<GamePiece> getGamePieces() {
+        return gamePieces;
+    }
+
+    public ArrayList<Card> getMovementCards() { return movementCards; }
+
 }

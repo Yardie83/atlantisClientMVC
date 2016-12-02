@@ -161,7 +161,8 @@ public class GameLobbyController {
                     TextField txtField = view.getGameLobbyView().getTxtField();
                     String username = model.userNameProperty().getValue();
                     String chatMessage = txtField.getText();
-                    model.sendMessage(new Message(MessageType.CHAT, username + ": " + chatMessage));
+                    String message = username + ": " + chatMessage;
+                    model.sendMessage(new Message(MessageType.CHAT, message));
                     txtField.clear();
                 }
             }
@@ -321,8 +322,7 @@ public class GameLobbyController {
                     public void run() {
                         // Only if the list is not empty go on
                         if (model.getGameList().size() != 0) {
-                            // Clear the list first
-
+                            // Clear the current list in the gameLobby every time we receive the list
                             view.getGameLobbyView().getGameListView().getItems().clear();
 
                             // Reverse the new list, so the newest games are on top
@@ -337,16 +337,13 @@ public class GameLobbyController {
                                     Integer numberOfPlayers = Integer.parseInt(gameInfo[1]);
                                     int currentJoinedUsers = Integer.parseInt(gameInfo[2]);
 
-//                                    view.getGameLobbyView().getGameListView().getItems().add(
-//                                            gameName + " : " + currentJoinedUsers + " of " + numberOfPlayers + " players");
-
                                     view.getGameLobbyView().getGameListView().getItems().add(
                                             gameName + " : " + currentJoinedUsers + " " +
                                                     view.getSelectedLanguage().getLanguageTable().get("msgOf") +
-                                                    " " + numberOfPlayers + view.getSelectedLanguage().getLanguageTable().get("msgPlayers"));
+                                                    " " + numberOfPlayers + " " + view.getSelectedLanguage().getLanguageTable().get("msgPlayers"));
                                 }
                             }
-                            // Clear the list
+                            // Clear the list in the model to avoid duplicate entries the next time we receive the list
                             model.getGameList().clear();
                             //view.getGameLobbyView().createPopUp("Game Created!", 200);
                             view.getGameLobbyView().createPopUp(view.getSelectedLanguage().getLanguageTable().get("msgGameCreated"), 200);
@@ -378,7 +375,6 @@ public class GameLobbyController {
                 }
             }
         });
-
     }
 
     /**

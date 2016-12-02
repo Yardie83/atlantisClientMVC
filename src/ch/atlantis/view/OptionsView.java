@@ -145,7 +145,7 @@ public class OptionsView extends Pane {
         /*Style ID for the root BorderPane */
         root.setId("root");
 
-        /*Style IDs for the controls in the Options View*/
+        /*Style IDs for the controls in the Options View */
         lblOptions.setId("optionsView_lblOptions");
         lblFullScreen.setId("optionsView_lblFullScreen");
         lblSoundToggle.setId("optionsView_lblSoundToggle");
@@ -175,7 +175,6 @@ public class OptionsView extends Pane {
     }
 
     public void setSelectedComboboxLanguage(String culture){
-        System.out.println("!!! LADIES AND GENTLEMEN NOW WE SHOULD CHANGE THE SELECTED LANGUAGE TO: " + culture);
         comboBoxLanguages.getSelectionModel().select(culture);
     }
 

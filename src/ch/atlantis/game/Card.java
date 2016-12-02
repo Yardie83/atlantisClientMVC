@@ -34,25 +34,6 @@ public class Card extends Rectangle implements Serializable {
     public final static int BLUE = 5;
     public final static int WHITE = 6;
 
-    // Constructor for Movement Cards. They do not have a value associated.
-    public Card(int colorSet, CardType cardType) {
-
-
-        this.cardType = cardType;
-        this.colorSet = colorSet;
-        this.setStroke(Color.BLACK);
-        this.isPlayed = false;
-    }
-
-    // Constructor for Path Cards. They do have a value associated.
-    public Card(int colorSet, int value, CardType cardType) {
-
-        this.value = value;
-        this.colorSet = colorSet;
-        this.cardType = cardType;
-        this.setStroke(Color.BLACK);
-    }
-
     public void applyColor() {
         switch (this.colorSet) {
             case BROWN:

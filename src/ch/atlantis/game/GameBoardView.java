@@ -22,13 +22,11 @@ import java.util.HashMap;
 public class GameBoardView extends Pane {
 
     private AtlantisView view;
-    private ArrayList<Tile> tiles;
     private ArrayList<Player> players;
     private ArrayList<Card> pathCards;
     private Stage gameStage;
-    private ArrayList<Card> deck;
     private int height;
-    private final Player localPlayer;
+    private Player localPlayer;
     private Tile consoleTile;
     private HashMap<Integer, Label> scoresLabels;
 
@@ -41,21 +39,16 @@ public class GameBoardView extends Pane {
 
         super.setMinHeight(height);
         super.setMinWidth(width);
-
+        ArrayList<Tile> tiles = setXYTiles(gameModel.getTiles());
         localPlayer = gameModel.getLocalPlayer();
         players = gameModel.getPlayers();
-        this.consoleTile = null;
-        tiles = setXYTiles(gameModel.getTiles());
         pathCards = gameModel.getPathCards();
-        deck = gameModel.getDeck();
-
-        drawHand();
 
         drawCards(pathCards, tiles);
 
         drawGamePieces();
 
-        createGameConsole(consoleTile);
+        createGameConsole();
     }
 
     private ArrayList<Tile> setXYTiles(ArrayList<Tile> tiles) {
@@ -68,10 +61,6 @@ public class GameBoardView extends Pane {
             tile.setSide(side);
         }
         return tiles;
-    }
-
-    private void drawHand() {
-
     }
 
     private void drawCards(ArrayList<Card> pathCards, ArrayList<Tile> tiles) {
@@ -95,12 +84,13 @@ public class GameBoardView extends Pane {
     }
 
     private void drawGamePieces() {
-        int offsetX = 10;
-        int offsetY = 5;
+        double offsetX = 10;
+        double offsetY =  5;
         for (Card card : pathCards) {
             if (card.getCardType() == CardType.START) {
                 for (Player player : players) {
                     for (GamePiece gamePiece : player.getGamePieces()) {
+                        //Put the game pieces onto the start field
                         gamePiece.setLayoutX(card.getLayoutX() + offsetX);
                         gamePiece.setLayoutY(card.getLayoutY() + offsetY);
                         gamePiece.setPathId(card.getPathId());
@@ -118,14 +108,14 @@ public class GameBoardView extends Pane {
         }
     }
 
-    private void createGameConsole(Tile tile) {
+    private void createGameConsole() {
 
         this.scoresLabels = new HashMap<>();
 
         HBox console = new HBox();
         VBox otherPlayersBox = new VBox(10);
         otherPlayersBox.setMinHeight(200);
-        otherPlayersBox.setMinWidth(tile.getSide() * 2);
+        otherPlayersBox.setMinWidth(consoleTile.getSide() * 2);
 
         for (Player player : players) {
             if (!player.getPlayerName().equals(localPlayer.getGameName())) {
@@ -136,9 +126,9 @@ public class GameBoardView extends Pane {
             }
         }
 
-        VBox localPlayerBox = new VBox();
+        HBox localPlayerBox = new HBox();
         localPlayerBox.setMinHeight(200);
-        localPlayerBox.setMinWidth(tile.getSide() * 7);
+        localPlayerBox.setMinWidth(consoleTile.getSide() * 7);
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
         HBox bottom = new HBox(10);
@@ -157,15 +147,17 @@ public class GameBoardView extends Pane {
 
         top.getChildren().addAll(label1, label3, label2);
 
-        console.setLayoutX(tile.getX());
-        console.setLayoutY(tile.getY() + 20);
+        console.setLayoutX(consoleTile.getX());
+        console.setLayoutY(consoleTile.getY() + 20);
         console.setMinHeight(200);
-        console.setMinWidth(tile.getSide() * 9);
+        console.setMinWidth(consoleTile.getSide() * 9);
 
-        for (int i = 0; i < players.get(localPlayer.getPlayerID()).getMovementCards().size(); i++) {
-            Card movementCardForConsole = players.get(localPlayer.getPlayerID()).getMovementCards().get(i);
-            localPlayerBox.getChildren().add(movementCardForConsole);
-        }
+       for(Card card : localPlayer.getMovementCards()){
+           card.setWidth(60);
+           card.setHeight(80);
+           card.applyColor();
+           localPlayerBox.getChildren().add(card);
+       }
 
         console.getChildren().addAll(otherPlayersBox, localPlayerBox);
 
