@@ -90,7 +90,7 @@ public class GameBoardView extends Pane {
 
                     //addStartEndCard();
 
-                    card.applyColor(gameModel.getListCardImages());
+                    card.applyCardImages(gameModel.getListCardImages());
                     //TODO: At this place the card-image will be added to the card
                     this.getChildren().add(card);
                 }
@@ -208,7 +208,7 @@ public class GameBoardView extends Pane {
         for(Card card : localPlayer.getMovementCards()){
             card.setWidth(60);
             card.setHeight(80);
-            //card.applyColor();
+            card.applyCardImages(gameModel.getListCardImages());
             localPlayerBox.getChildren().add(card);
         }
     }
@@ -220,6 +220,20 @@ public class GameBoardView extends Pane {
         gameScene.getStylesheets().add(css);
         gameStage = view.getGameLobbyView().getGameLobbyStage();
         gameStage.setScene(gameScene);
+    }
+
+
+    //*************************** METHODS DURING THE ACTIVE GAME *****************************//
+
+    public void moveGamePiece(int nextPathId, GamePiece selectedGamePiece) {
+        System.out.println(nextPathId);
+        for (Tile nextTile : gameModel.getTiles()){
+            if (nextTile.getPathId() == nextPathId){
+                int x = nextTile.getX();
+                int y = nextTile.getY();
+                selectedGamePiece.move(x,y);
+            }
+        }
     }
 
     public ArrayList<Card> getPathCards() {
@@ -263,6 +277,5 @@ public class GameBoardView extends Pane {
     public Button getButtonEndTurn() {
         return buttonEndTurn;
     }
-
 
 }
