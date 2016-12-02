@@ -94,9 +94,6 @@ public class GameModel {
                         && pathCard.getPathId() == i
                         && pathCard.getColorSet() == movementCard.getColorSet()) {
                     nextPathId = pathCard.getPathId();
-                } else if (pathCard.getCardType() == CardType.WATER) {
-                    int price = getPriceForCrossing(pathCard.getPathId());
-                    throw new GameException("Hälsch dein schnaaaauz!");
                 }
             }
             i++;
