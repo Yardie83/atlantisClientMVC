@@ -91,14 +91,12 @@ public class GameController {
         if (selectedCard != null && selectedGamePiece != null) {
 
             try {
-                //gameModel.IsMyTurn();
 
-
-                sendHashMap();
+                int nextPathId = gameModel.findNextPathId(selectedCard, selectedGamePiece);
                 selectedCard = null;
                 selectedGamePiece = null;
 
-                //here we catch the own made exceptions
+                //here we catch the exceptions
             } catch (Exception ex) {
 
             } //catch (NotMyTurnException ex) {
