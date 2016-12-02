@@ -73,7 +73,7 @@ public class GameModel {
     public int findNextPathId(Card movementCard, GamePiece gamePiece) throws Exception {
 
         int startPathId;
-
+        nextPathId = 0;
         if (gamePiece.getPathId() == 300) {
             startPathId = 101;
         } else {
@@ -81,11 +81,9 @@ public class GameModel {
         }
         for (int i = startPathId; i < 154; i++) {
             nextPathId = findPathId(movementCard, i);
-            if (nextPathId != 0) {
-                return nextPathId;
-            }
         }
-        return 0;
+        return nextPathId;
+
     }
 
     private int findPathId(Card movementCard, int i) throws Exception {

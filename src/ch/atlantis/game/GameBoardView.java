@@ -222,6 +222,20 @@ public class GameBoardView extends Pane {
         gameStage.setScene(gameScene);
     }
 
+
+    //*************************** METHODS DURING THE ACTIVE GAME *****************************//
+
+    public void moveGamePiece(int nextPathId, GamePiece selectedGamePiece) {
+        System.out.println(nextPathId);
+        for (Tile nextTile : gameModel.getTiles()){
+            if (nextTile.getPathId() == nextPathId){
+                int x = nextTile.getX();
+                int y = nextTile.getY();
+                selectedGamePiece.move(x,y);
+            }
+        }
+    }
+
     public ArrayList<Card> getPathCards() {
         return pathCards;
     }
@@ -263,6 +277,5 @@ public class GameBoardView extends Pane {
     public Button getButtonEndTurn() {
         return buttonEndTurn;
     }
-
 
 }

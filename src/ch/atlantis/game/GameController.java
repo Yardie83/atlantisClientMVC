@@ -68,7 +68,6 @@ public class GameController {
                     if (playerTurn == gameModel.getLocalPlayer().getPlayerID()) {
                         selectedCard = movementCard;
                     }
-                    validateMove(selectedCard, selectedGamePiece);
                 }
             });
         }
@@ -81,7 +80,6 @@ public class GameController {
                     if (playerTurn == gameModel.getLocalPlayer().getPlayerID()) {
                         selectedGamePiece = gamePiece;
                     }
-                    validateMove(selectedCard, selectedGamePiece);
                 }
             });
         }
@@ -98,7 +96,21 @@ public class GameController {
         gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                // if (validateMove(selectedCard, selectedGamePiece)) {
 
+
+                // TODO: Just for testing purposes
+                try {
+                    gameModel.findNextPathId(selectedCard, selectedGamePiece);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // TODO: END
+
+
+                gameBoardView.moveGamePiece(gameModel.getNextPathId(), selectedGamePiece);
+                //  }
             }
         });
 
@@ -118,7 +130,7 @@ public class GameController {
 
     }
 
-    private void validateMove(Card selectedCard, GamePiece selectedGamePiece) {
+    private boolean validateMove(Card selectedCard, GamePiece selectedGamePiece) {
 
         if (selectedCard != null && selectedGamePiece != null) {
 
@@ -134,6 +146,7 @@ public class GameController {
             } //catch (NotMyTurnException ex) {$
             //}
         }
+        return false;
     }
 
     public void sendHashMap() {
@@ -154,42 +167,6 @@ public class GameController {
             }
         });
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
