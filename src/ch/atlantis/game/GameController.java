@@ -91,7 +91,6 @@ public class GameController {
         if (selectedCard != null && selectedGamePiece != null) {
 
             try {
-                //gameModel.IsMyTurn();
 
 
                 sendHashMap();
@@ -100,8 +99,8 @@ public class GameController {
 
                 //here we catch the own made exceptions
             } catch (Exception ex) {
-
-            } //catch (NotMyTurnException ex) {
+                // Here we can inform the player abput his mistakes
+            } //catch (NotMyTurnException ex) {$
             //}
         }
     }
