@@ -70,7 +70,7 @@ public class GameModel {
         }
     }
 
-    public boolean buyHandCard(int value){
+    public boolean buyHandCard(int value) {
 
 
         return false;
@@ -85,31 +85,20 @@ public class GameModel {
         } else {
             startPathId = gamePiece.getPathId();
         }
-        for (int i = startPathId; i < 154; i++) {
-            nextPathId = findPathId(movementCard, i);
+        int i = startPathId;
+        while (nextPathId == 0 && i < 154) {
+
+            for (Card pathCard : pathCards) {
+                if (pathCard.isOnTop()
+                        && pathCard.getCardType() != CardType.WATER
+                        && pathCard.getPathId() == i
+                        && pathCard.getColorSet() == movementCard.getColorSet()) {
+                    nextPathId = pathCard.getPathId();
+                }
+            }
+            i++;
         }
         return nextPathId;
-
-    }
-
-    private int findPathId(Card movementCard, int i) throws Exception {
-        Card waterFound = null;
-        for (Card pathCard : pathCards) {
-            if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER) {
-                if (pathCard.getPathId() == i) {
-                    if (pathCard.getColorSet() == movementCard.getColorSet()) {
-                        return pathCard.getPathId();
-                    }
-                }
-            } else if (pathCard.getCardType() == CardType.WATER) {
-                waterFound = pathCard;
-            }
-        }
-        if (waterFound != null) {
-            int price = getPriceForCrossing(waterFound.getPathId());
-            throw new Exception("Price for crossing: " + price);
-        }
-        return 0;
     }
 
     private int getPriceForCrossing(int pathId) {
