@@ -124,12 +124,11 @@ public class GameController {
 
             try {
 
-
-                sendHashMap();
+                int nextPathId = gameModel.findNextPathId(selectedCard, selectedGamePiece);
                 selectedCard = null;
                 selectedGamePiece = null;
 
-                //here we catch the own made exceptions
+                //here we catch the exceptions
             } catch (Exception ex) {
                 // Here we can inform the player abput his mistakes
             } //catch (NotMyTurnException ex) {$
