@@ -73,8 +73,6 @@ public class GameModel {
     public boolean buyHandCard(int value){
 
 
-
-
         return false;
     }
 
