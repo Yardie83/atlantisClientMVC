@@ -98,10 +98,10 @@ public class GameController {
             public void handle(ActionEvent event) {
                 // if (validateMove(selectedCard, selectedGamePiece)) {
 
-
+                int nextPathId = 0;
                 // TODO: Just for testing purposes
                 try {
-                    gameModel.findNextPathId(selectedCard, selectedGamePiece);
+                    nextPathId = gameModel.findNextPathId(selectedCard, selectedGamePiece);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -109,7 +109,9 @@ public class GameController {
                 // TODO: END
 
 
-                gameBoardView.moveGamePiece(gameModel.getNextPathId(), selectedGamePiece);
+                gameBoardView.moveGamePiece(nextPathId, selectedGamePiece);
+                selectedCard = null;
+                selectedGamePiece = null;
                 //  }
             }
         });
@@ -140,13 +142,16 @@ public class GameController {
                 selectedCard = null;
                 selectedGamePiece = null;
 
-                //here we catch the exceptions
+
+            } catch (GameException ex) {
+                System.out.println(ex.getMessage());
+                return false;
             } catch (Exception ex) {
-                // Here we can inform the player abput his mistakes
-            } //catch (NotMyTurnException ex) {$
-            //}
+                System.out.println(ex.getMessage());
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
     public void sendHashMap() {

@@ -29,14 +29,6 @@ public class Card extends Rectangle implements Serializable {
     private CardType cardType;
     private int pathID;
 
-    public final static int BROWN = 0;
-    public final static int PINK = 1;
-    public final static int GREY = 2;
-    public final static int YELLOW = 3;
-    public final static int GREEN = 4;
-    public final static int BLUE = 5;
-    public final static int WHITE = 6;
-
     public void applyCardImages(Hashtable<String, ImageView> listCardImages) {
 
         if (this.getCardType() == CardType.PATH) {
@@ -54,7 +46,6 @@ public class Card extends Rectangle implements Serializable {
         } else if (getCardType() == CardType.END) {
 
             super.setFill(new ImagePattern(listCardImages.get("land.jpg").getImage()));
-
         }
     }
 

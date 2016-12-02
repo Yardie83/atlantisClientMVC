@@ -59,7 +59,7 @@ public class GameModel {
         if (myFiles != null) {
             for (File file : myFiles) {
                 if (file.exists() && file.isFile()) {
-                    if (file.getName().endsWith(".jpg")) {
+                    if (file.getName().endsWith(".jpg")){
 
                         //without the substring(4) the path is invalid resp nullpointerexception
                         ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
@@ -85,31 +85,23 @@ public class GameModel {
         } else {
             startPathId = gamePiece.getPathId();
         }
-        for (int i = startPathId; i < 154; i++) {
-            nextPathId = findPathId(movementCard, i);
-        }
-        return nextPathId;
+        int i = startPathId;
+        while (nextPathId == 0 && i < 154) {
 
-    }
-
-    private int findPathId(Card movementCard, int i) throws Exception {
-        Card waterFound = null;
-        for (Card pathCard : pathCards) {
-            if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER) {
-                if (pathCard.getPathId() == i) {
-                    if (pathCard.getColorSet() == movementCard.getColorSet()) {
-                        return pathCard.getPathId();
-                    }
+            for (Card pathCard : pathCards) {
+                if (pathCard.isOnTop()
+                        && pathCard.getCardType() != CardType.WATER
+                        && pathCard.getPathId() == i
+                        && pathCard.getColorSet() == movementCard.getColorSet()) {
+                    nextPathId = pathCard.getPathId();
                 }
             } else if (pathCard.getCardType() == CardType.WATER) {
-                waterFound = pathCard;
+                int price = getPriceForCrossing(pathCard.getPathId());
+                throw new GameException("Hälsch dein schnaaaauz!");
             }
+            i++;
         }
-        if (waterFound != null) {
-            int price = getPriceForCrossing(waterFound.getPathId());
-            throw new Exception("Price for crossing: " + price);
-        }
-        return 0;
+        return nextPathId;
     }
 
     private int getPriceForCrossing(int pathId) {
@@ -149,7 +141,6 @@ public class GameModel {
         {
             return valueBehind;
         }
-
     }
 
     public ArrayList<Player> getPlayers() {
