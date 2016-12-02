@@ -151,6 +151,7 @@ public class GameModel {
 
     public Player getLocalPlayer() {
         return localPlayer;
+
     }
 
     public Hashtable<String, ImageView> getListCardImages() {
