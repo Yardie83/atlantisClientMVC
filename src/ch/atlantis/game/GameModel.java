@@ -103,7 +103,6 @@ public class GameModel {
                 }
             } else if (pathCard.getCardType() == CardType.WATER) {
                 waterFound = pathCard;
-
             }
         }
         if (waterFound != null) {
