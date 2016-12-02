@@ -56,13 +56,15 @@ public class GameModel {
 
         File[] myFiles = folder.listFiles();
 
-        for (File file : myFiles) {
-            if (file.exists() && file.isFile()) {
-                if (file.getName().endsWith(".jpg")) {
+        if (myFiles != null) {
+            for (File file : myFiles) {
+                if (file.exists() && file.isFile()) {
+                    if (file.getName().endsWith(".jpg")){
 
-                    //without the substring(4) the path is invalid resp nullpointerexception
-                    ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
-                    listCardImages.put(file.getName(), imageView);
+                        //without the substring(4) the path is invalid resp nullpointerexception
+                        ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
+                        listCardImages.put(file.getName(), imageView);
+                    }
                 }
             }
         }

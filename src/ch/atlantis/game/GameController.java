@@ -5,6 +5,7 @@ import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.MessageType;
 import ch.atlantis.view.AtlantisView;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -84,6 +85,37 @@ public class GameController {
                 }
             });
         }
+
+        //**********************************GAME CONTROL BUTTONS************************************ //
+
+        gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+
+        gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+
+        gameBoardView.getButtonReset().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+
+        gameBoardView.getButtonEndTurn().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+
     }
 
     private void validateMove(Card selectedCard, GamePiece selectedGamePiece) {
@@ -98,8 +130,8 @@ public class GameController {
 
                 //here we catch the exceptions
             } catch (Exception ex) {
-
-            } //catch (NotMyTurnException ex) {
+                // Here we can inform the player abput his mistakes
+            } //catch (NotMyTurnException ex) {$
             //}
         }
     }
@@ -122,4 +154,42 @@ public class GameController {
             }
         });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

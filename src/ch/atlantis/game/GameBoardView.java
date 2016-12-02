@@ -4,6 +4,7 @@ import ch.atlantis.util.Language;
 import ch.atlantis.view.AtlantisView;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -31,6 +32,10 @@ public class GameBoardView extends Pane {
     private Tile consoleTile;
     private HashMap<Integer, Label> scoresLabels;
     private GameModel gameModel;
+    private Button buttonBuyCards;
+    private Button buttonMove;
+    private Button buttonReset;
+    private Button buttonEndTurn;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -126,22 +131,40 @@ public class GameBoardView extends Pane {
 
     private void createGameConsole() {
 
-        this.scoresLabels = new HashMap<>();
+        HBox console = initConsole();
+        VBox otherPlayersBox = createOtherPlayersBox();
+        HBox localPlayerBox = createLocalPlayerBox();
+        VBox gameControls = createGameControls();
+        placeMovementCards(localPlayerBox);
 
+        console.getChildren().addAll(otherPlayersBox, localPlayerBox, gameControls);
+
+        this.getChildren().add(console);
+    }
+
+    private VBox createGameControls() {
+        VBox gameControls = new VBox(10);
+
+        buttonBuyCards = new Button("Buy Cards");
+        buttonMove = new Button("Move");
+        buttonReset = new Button("Reset");
+        buttonEndTurn = new Button("End Turn");
+
+        gameControls.getChildren().addAll(buttonBuyCards, buttonMove, buttonReset, buttonEndTurn);
+
+        return  gameControls;
+    }
+
+    private HBox initConsole() {
         HBox console = new HBox();
-        VBox otherPlayersBox = new VBox(10);
-        otherPlayersBox.setMinHeight(200);
-        otherPlayersBox.setMinWidth(consoleTile.getSide() * 2);
+        console.setLayoutX(consoleTile.getX());
+        console.setLayoutY(consoleTile.getY() + 20);
+        console.setMinHeight(200);
+        console.setMinWidth(consoleTile.getSide() * 9);
+        return console;
+    }
 
-        for (Player player : players) {
-            if (!player.getPlayerName().equals(localPlayer.getGameName())) {
-                Label labelName = new Label(player.getPlayerName());
-                Label labelScore = new Label(Integer.toString(player.getScore()));
-                scoresLabels.put(player.getPlayerID(), labelScore);
-                otherPlayersBox.getChildren().addAll(labelName, labelScore);
-            }
-        }
-
+    private HBox createLocalPlayerBox() {
         HBox localPlayerBox = new HBox();
         localPlayerBox.setMinHeight(200);
         localPlayerBox.setMinWidth(consoleTile.getSide() * 7);
@@ -162,22 +185,32 @@ public class GameBoardView extends Pane {
         Label label3 = new Label("|");
 
         top.getChildren().addAll(label1, label3, label2);
+        return localPlayerBox;
+    }
 
-        console.setLayoutX(consoleTile.getX());
-        console.setLayoutY(consoleTile.getY() + 20);
-        console.setMinHeight(200);
-        console.setMinWidth(consoleTile.getSide() * 9);
+    private VBox createOtherPlayersBox() {
+        VBox otherPlayersBox = new VBox(10);
+        otherPlayersBox.setMinHeight(200);
+        otherPlayersBox.setMinWidth(consoleTile.getSide() * 2);
+        scoresLabels = new HashMap<>();
+        for (Player player : players) {
+            if (!player.getPlayerName().equals(localPlayer.getGameName())) {
+                Label labelName = new Label(player.getPlayerName());
+                Label labelScore = new Label(Integer.toString(player.getScore()));
+                scoresLabels.put(player.getPlayerID(), labelScore);
+                otherPlayersBox.getChildren().addAll(labelName, labelScore);
+            }
+        }
+        return otherPlayersBox;
+    }
 
-       for(Card card : localPlayer.getMovementCards()){
-           card.setWidth(60);
-           card.setHeight(80);
-           //card.applyColor();
-           localPlayerBox.getChildren().add(card);
-       }
-
-        console.getChildren().addAll(otherPlayersBox, localPlayerBox);
-
-        this.getChildren().add(console);
+    private void placeMovementCards(HBox localPlayerBox) {
+        for(Card card : localPlayer.getMovementCards()){
+            card.setWidth(60);
+            card.setHeight(80);
+            //card.applyColor();
+            localPlayerBox.getChildren().add(card);
+        }
     }
 
     public void show() {
@@ -210,5 +243,26 @@ public class GameBoardView extends Pane {
     }
 
     public HashMap<Integer, Label> getLabels() { return scoresLabels; }
+
+
+    // ************************************* GETTERS / SETTERS ********************************************* //
+
+
+    public Button getButtonBuyCards() {
+        return buttonBuyCards;
+    }
+
+    public Button getButtonMove() {
+        return buttonMove;
+    }
+
+    public Button getButtonReset() {
+        return buttonReset;
+    }
+
+    public Button getButtonEndTurn() {
+        return buttonEndTurn;
+    }
+
 
 }
