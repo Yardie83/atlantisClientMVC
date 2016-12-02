@@ -59,7 +59,7 @@ public class AtlantisView {
         height = new SimpleIntegerProperty(800);
 
         this.setSelectedLanguage(model.getSelectedLanguage(model.getConfigLanguage()));
-        
+
         this.setLabelLanguageText();
 
         controls = new ArrayList<>();
@@ -236,22 +236,23 @@ public class AtlantisView {
 
             if (control instanceof ButtonBase) {
 
-                if (control instanceof Button){
+                if (control instanceof Button) {
 
                     Button button = (Button) control;
                     addLanguageTextToButtonControl(button);
 
-                }else if (control instanceof RadioButton){
+                } else if (control instanceof RadioButton) {
 
                     RadioButton button = (RadioButton) control;
                     addLanguageTextToButtonControl(button);
+
+                } else if (control instanceof Label) {
+
+                    Label label = (Label) control;
+                    addLanguageTextToLabelControl(label);
                 }
-            }
 
-            if (control instanceof Label) {
-
-                Label label = (Label) control;
-                addLanguageTextToLabelControl(label);
+                //if control label was here with just if
             }
         }
 

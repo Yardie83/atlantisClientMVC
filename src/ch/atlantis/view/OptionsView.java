@@ -60,7 +60,6 @@ public class OptionsView extends Pane {
         this.getChildren().add(root);
     }
 
-
     private Label createTop() {
 
         lblOptions = new Label("OPTIONS");

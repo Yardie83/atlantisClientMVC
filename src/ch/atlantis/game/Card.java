@@ -1,9 +1,12 @@
 package ch.atlantis.game;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 import java.io.Serializable;
+import java.util.Hashtable;
 
 /**
  * Created by Hermann Grieder on 15/08/16.
@@ -34,34 +37,44 @@ public class Card extends Rectangle implements Serializable {
     public final static int BLUE = 5;
     public final static int WHITE = 6;
 
-    public void applyColor() {
-        switch (this.colorSet) {
-            case BROWN:
-                super.setFill(Color.BROWN);
-                break;
-            case PINK:
-                super.setFill(Color.PINK);
-                break;
-            case GREY:
-                super.setFill(Color.GREY);
-                break;
-            case YELLOW:
-                super.setFill(Color.YELLOW);
-                break;
-            case GREEN:
-                super.setFill(Color.GREEN);
-                break;
-            case BLUE:
-                super.setFill(Color.BLUE);
-                break;
-            case WHITE:
-                super.setFill(Color.WHITE);
-                break;
-            case 7:
-                super.setFill(null);
-                break;
-            default:
-                super.setFill(null);
+
+    public void applyColor(Hashtable<String, ImageView> listCardImages) {
+        if (value != 0) {
+            switch (this.colorSet) {
+                case BROWN:
+                    super.setFill(Color.BROWN);
+                    super.setFill(new ImagePattern(listCardImages.get("brown_" + value + ".jpg").getImage()));
+                    break;
+                case PINK:
+                    super.setFill(Color.PINK);
+                    super.setFill(new ImagePattern(listCardImages.get("pink_" + value + ".jpg").getImage()));
+                    break;
+                case GREY:
+                    super.setFill(Color.GREY);
+                    super.setFill(new ImagePattern(listCardImages.get("grey_" + value + ".jpg").getImage()));
+                    break;
+                case YELLOW:
+                    super.setFill(Color.YELLOW);
+                    super.setFill(new ImagePattern(listCardImages.get("yellow_" + value + ".jpg").getImage()));
+                    break;
+                case GREEN:
+                    super.setFill(Color.GREEN);
+                    super.setFill(new ImagePattern(listCardImages.get("green_" + value + ".jpg").getImage()));
+                    break;
+                case BLUE:
+                    super.setFill(Color.BLUE);
+                    super.setFill(new ImagePattern(listCardImages.get("blue_" + value + ".jpg").getImage()));
+                    break;
+                case WHITE:
+                    super.setFill(Color.WHITE);
+                    super.setFill(new ImagePattern(listCardImages.get("white_" + value + ".jpg").getImage()));
+                    break;
+                case 7:
+                    super.setFill(null);
+                    break;
+                default:
+                    super.setFill(null);
+            }
         }
     }
 

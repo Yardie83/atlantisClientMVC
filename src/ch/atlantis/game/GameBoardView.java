@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -29,8 +30,11 @@ public class GameBoardView extends Pane {
     private Player localPlayer;
     private Tile consoleTile;
     private HashMap<Integer, Label> scoresLabels;
+    private GameModel gameModel;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
+
+        this.gameModel = gameModel;
 
         this.view = view;
 
@@ -76,16 +80,28 @@ public class GameBoardView extends Pane {
                     card.setLayoutX(tile.getX());
                     card.setLayoutY(tile.getY());
                     card.setStroke(Color.BLACK);
-                    card.applyColor();
+
+                    addWater(card);
+
+                    //addStartEndCard();
+
+                    card.applyColor(gameModel.getListCardImages());
+                    //TODO: At this place the card-image will be added to the card
                     this.getChildren().add(card);
                 }
             }
         }
     }
 
+    private void addWater(Card card) {
+
+        card.setFill(new ImagePattern(gameModel.getListCardImages().get("water.jpg").getImage()));
+
+    }
+
     private void drawGamePieces() {
-        double offsetX = 10;
-        double offsetY =  5;
+        int offsetX = 10;
+        int offsetY = 5;
         for (Card card : pathCards) {
             if (card.getCardType() == CardType.START) {
                 for (Player player : players) {
@@ -155,7 +171,7 @@ public class GameBoardView extends Pane {
        for(Card card : localPlayer.getMovementCards()){
            card.setWidth(60);
            card.setHeight(80);
-           card.applyColor();
+           //card.applyColor();
            localPlayerBox.getChildren().add(card);
        }
 
@@ -165,7 +181,10 @@ public class GameBoardView extends Pane {
     }
 
     public void show() {
+
+        String css = this.getClass().getResource("../res/css/css_Game.css").toExternalForm();
         Scene gameScene = new Scene(this);
+        gameScene.getStylesheets().add(css);
         gameStage = view.getGameLobbyView().getGameLobbyStage();
         gameStage.setScene(gameScene);
     }

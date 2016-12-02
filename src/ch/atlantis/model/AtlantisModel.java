@@ -325,10 +325,9 @@ public class AtlantisModel {
         }
     }
 
-    //TODO: Make this better-looking instead of a PDF create a view with the rules
     public void showGameRules() {
         try {
-            File file = new File(getClass().getResource("/ch/atlantis/res/Atlantis_Spielregel.pdf").getFile());
+            File file = new File("src/ch/atlantis/res/Atlantis_Spielregel.pdf");
             if (file.exists()) {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
             }
