@@ -38,6 +38,7 @@ public class Card extends Rectangle implements Serializable {
     public final static int WHITE = 6;
 
 
+
     public void applyColor(Hashtable<String, ImageView> listCardImages) {
 
         if (this.getCardType() == CardType.PATH && value != 0){
