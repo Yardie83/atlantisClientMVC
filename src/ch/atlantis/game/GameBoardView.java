@@ -90,7 +90,7 @@ public class GameBoardView extends Pane {
 
                     //addStartEndCard();
 
-                    card.applyColor(gameModel.getListCardImages());
+                    card.applyCardImages(gameModel.getListCardImages());
                     //TODO: At this place the card-image will be added to the card
                     this.getChildren().add(card);
                 }
@@ -208,7 +208,7 @@ public class GameBoardView extends Pane {
         for(Card card : localPlayer.getMovementCards()){
             card.setWidth(60);
             card.setHeight(80);
-            card.applyColor(gameModel.getListCardImages());
+            card.applyCardImages(gameModel.getListCardImages());
             localPlayerBox.getChildren().add(card);
         }
     }
