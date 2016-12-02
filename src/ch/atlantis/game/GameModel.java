@@ -59,7 +59,7 @@ public class GameModel {
         if (myFiles != null) {
             for (File file : myFiles) {
                 if (file.exists() && file.isFile()) {
-                    if (file.getName().endsWith(".jpg")){
+                    if (file.getName().endsWith(".jpg")) {
 
                         //without the substring(4) the path is invalid resp nullpointerexception
                         ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
@@ -89,17 +89,21 @@ public class GameModel {
     }
 
     private int findPathId(Card movementCard, int i) throws Exception {
+        Card waterFound = null;
         for (Card pathCard : pathCards) {
-            if (pathCard.getPathId() == i && pathCard.getCardType() != CardType.WATER) {
-                if (pathCard.getColorSet() == movementCard.getColorSet()) {
-                    if (pathCard.isOnTop()) {
+            if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER) {
+                if (pathCard.getPathId() == i) {
+                    if (pathCard.getColorSet() == movementCard.getColorSet()) {
                         return pathCard.getPathId();
                     }
                 }
             } else if (pathCard.getCardType() == CardType.WATER) {
-                int price = getPriceForCrossing(pathCard.getPathId());
-                throw new Exception("Hälsch dein schnaaaauz!");
+                waterFound = pathCard;
             }
+        }
+        if (waterFound != null) {
+            int price = getPriceForCrossing(waterFound.getPathId());
+            throw new Exception("Price for crossing: " + price);
         }
         return 0;
     }
@@ -111,24 +115,34 @@ public class GameModel {
         int valueAfter = 0;
 
         for (Card pathCard : pathCards) {
-            if (pathCard.getPathId() == pathIdBehind && pathCard.getCardType() != CardType.WATER) {
-                valueBehind = pathCard.getValue();
-            }
-            if (pathCard.getPathId() == pathIdAfter && pathCard.getCardType() != CardType.WATER) {
-                valueAfter = pathCard.getValue();
-            }
-            if (pathCard.getPathId() == pathIdBehind && pathCard.getCardType() == CardType.WATER) {
-                pathIdBehind--;
-            }
-            if (pathCard.getPathId() == pathIdAfter && pathCard.getCardType() == CardType.WATER) {
-                pathIdAfter++;
+
+            if (pathCard.getCardType() != CardType.WATER) {
+
+                if (pathCard.getPathId() == pathIdBehind) {
+                    valueBehind = pathCard.getValue();
+                }
+                if (pathCard.getPathId() == pathIdAfter) {
+                    valueAfter = pathCard.getValue();
+                }
+            } else {
+                if (pathCard.getPathId() == pathIdBehind) {
+                    getPriceForCrossing(pathIdBehind--);
+                }
+                if (pathCard.getPathId() == pathIdAfter) {
+                    getPriceForCrossing(pathIdAfter++);
+                }
             }
         }
-        if (valueBehind > valueAfter) {
+        if (valueBehind > valueAfter)
+
+        {
             return valueAfter;
-        } else {
+        } else
+
+        {
             return valueBehind;
         }
+
     }
 
     public ArrayList<Player> getPlayers() {
@@ -147,11 +161,12 @@ public class GameModel {
         return deck;
     }
 
-    public int getNextPathId() { return nextPathId; }
+    public int getNextPathId() {
+        return nextPathId;
+    }
 
     public Player getLocalPlayer() {
         return localPlayer;
-
     }
 
     public Hashtable<String, ImageView> getListCardImages() {
