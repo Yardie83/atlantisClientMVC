@@ -221,6 +221,7 @@ public class GameBoardView extends Pane {
     private HBox placeMovementCards() {
         HBox bottom = new HBox(10);
         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayer().getPlayerID()).getMovementCards()) {
+            System.out.println("GameBoard -> Card: " + card.getColorSet() + " added");
             card.setWidth(60);
             card.setHeight(80);
             card.setStroke(Color.TRANSPARENT);
@@ -297,10 +298,11 @@ public class GameBoardView extends Pane {
                     scoresLabels.get(gameModel.getPreviousTurn()).setText("Score: " + String.valueOf(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getScore()));
                 }
 
-//                //Update the movementCards
-//                if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()) {
-//                    HBoxMovementCards = placeMovementCards();
-//                }
+                //Update the movementCards
+                if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()) {
+                    HBoxMovementCards.getChildren().remove(gameModel.getCardPlayedIndex());
+                    HBoxMovementCards.getChildren().add(gameModel.getNewCardFromDeck());
+                }
 
                 //Remove the pathCards
                 Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
@@ -335,10 +337,6 @@ public class GameBoardView extends Pane {
 
     public Stage getGameStage() {
         return gameStage;
-    }
-
-    public HashMap<Integer, Label> getLabels() {
-        return scoresLabels;
     }
 
     public Button getButtonBuyCards() {

@@ -232,16 +232,16 @@ public class GameController {
         gameBoardView.getButtonEndTurn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (gameModel.getCurrentTurn() == gameModel.getLocalPlayer().getPlayerID()) {
-                    gameBoardView.resetHighlight(gameModel.getSelectedCard());
-                    gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                    if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
+                if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
+                    if (gameModel.getCurrentTurn() == gameModel.getLocalPlayer().getPlayerID()) {
+                        gameBoardView.resetHighlight(gameModel.getSelectedCard());
+                        gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                         gameModel.findTargetPathId();
                         HashMap<String, Object> moveMap = gameModel.writeGameStateMap();
                         sendMoveMessage(moveMap);
+                        gameModel.setSelectedCard(null);
+                        gameModel.setSelectedGamePiece(null);
                     }
-                    gameModel.setSelectedCard(null);
-                    gameModel.setSelectedGamePiece(null);
                 }
             }
         });

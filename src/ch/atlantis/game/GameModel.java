@@ -27,6 +27,8 @@ public class GameModel {
     private int targetPathIdRemote;
     private int indexOfPathCardToRemove;
     private int indexOfPathCardToShow;
+    private Card newCardFromDeck;
+    private int indexOfSelectedCard;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
@@ -143,7 +145,7 @@ public class GameModel {
         gameStateMap.put("CurrentTurn", currentTurn);
         gameStateMap.put("PlayerId", localPlayer.getPlayerID());
         gameStateMap.put("GameName", localPlayer.getGameName());
-        int indexOfSelectedCard = players.get(localPlayer.getPlayerID()).getMovementCards().indexOf(selectedCard);
+        indexOfSelectedCard = players.get(localPlayer.getPlayerID()).getMovementCards().indexOf(selectedCard);
         gameStateMap.put("SelectedCard", indexOfSelectedCard);
         gameStateMap.put("GamePieceIndex", localPlayer.getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathId", targetPathId);
@@ -169,14 +171,18 @@ public class GameModel {
         targetPathIdRemote = (int) gameStateMap.get("TargetPathId");
         indexOfPathCardToRemove = (int) gameStateMap.get("IndexOfCardToRemove");
         indexOfPathCardToShow = (int) gameStateMap.get("IndexOfCardToShow");
+        newCardFromDeck = (Card) gameStateMap.get("DeckCard");
     }
 
     public void updateValues() {
         players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex).setCurrentPathId(targetPathIdRemote);
+        players.get(previousTurn).getMovementCards().remove(cardPlayedIndex);
+        players.get(previousTurn).getMovementCards().add(newCardFromDeck);
+        players.get(previousTurn).addScore(pathCards.get(indexOfPathCardToRemove).getValue());
         pathCards.get(indexOfPathCardToRemove).setPathId(-1);
         pathCards.get(indexOfPathCardToShow).setIsOnTop(true);
         localPlayer = players.get(localPlayer.getPlayerID());
-        System.out.println(localPlayer.getScore() + " <- Local Score : Remote Score -> " + players.get(localPlayer.getScore()));
+        System.out.println(localPlayer.getScore() + " <- Local Score : Remote Score -> " + players.get(previousTurn).getScore());
     }
 
     @SuppressWarnings("unchecked")
@@ -239,6 +245,14 @@ public class GameModel {
 
     public int getIndexOfPathCardToShow() {
         return indexOfPathCardToShow;
+    }
+
+    public int getCardPlayedIndex() {
+        return cardPlayedIndex;
+    }
+
+    public Card getNewCardFromDeck() {
+        return newCardFromDeck;
     }
 
     public HashMap<String, Object> getPreviousGameStateMap() {
