@@ -168,7 +168,8 @@ public class GameLobbyView extends Pane {
         txtArea.setWrapText(true);
         txtField = new TextField();
         startGameBtn = new Button("Start Game");
-        startGameBtn.setVisible(false);
+        startGameBtn.setVisible(true);
+        startGameBtn.setDisable(true);
         rightVBox.getChildren().addAll(txtArea, txtField, startGameBtn);
 
         return rightVBox;

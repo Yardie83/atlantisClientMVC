@@ -287,7 +287,7 @@ public class GameLobbyController {
          * UserName to be displayed. If the user is not logged in,
          * Guest + number will be displayed as the name.
          *
-         *  Hermann Grieder
+         *  Loris Grether
          */
 
         model.userNameProperty().addListener(new ChangeListener<String>() {
@@ -358,9 +358,9 @@ public class GameLobbyController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    view.getGameLobbyView().getStartGameBtn().setVisible(true);
+                    view.getGameLobbyView().getStartGameBtn().setDisable(false);
                 } else {
-                    view.getGameLobbyView().getStartGameBtn().setVisible(false);
+                    view.getGameLobbyView().getStartGameBtn().setVisible(true);
                 }
             }
         });
@@ -369,7 +369,7 @@ public class GameLobbyController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue == Boolean.TRUE) {
-                    Game g = new Game(model, view, model.getMessage(), model.getLocalPlayer());
+                    Game g = new Game(model, view);
                     g.showGame();
                     model.gameInfoProperty().setValue(false);
                 }

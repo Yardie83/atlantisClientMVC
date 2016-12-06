@@ -15,7 +15,7 @@ import java.util.Hashtable;
  */
 
 enum CardType {
-    PATH, WATER, START, END, BRIDGE, MOVEMENT
+    PATH, WATER, START, END, MOVEMENT
 }
 
 public class Card extends Rectangle implements Serializable {
@@ -31,7 +31,10 @@ public class Card extends Rectangle implements Serializable {
 
     public void applyCardImages(Hashtable<String, ImageView> listCardImages) {
 
-        if (this.getCardType() == CardType.PATH) {
+        if (this.getCardType() == CardType.WATER){
+            super.setFill(new ImagePattern(listCardImages.get("water.jpg").getImage()));
+
+        }else if (this.getCardType() == CardType.PATH) {
 
             super.setFill(new ImagePattern(listCardImages.get(colorSet + "_" + value + ".jpg").getImage()));
 

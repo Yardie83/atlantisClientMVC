@@ -23,6 +23,8 @@ public class Player implements Serializable {
         this.playerName = playerName;
         this.playerID = playerID;
         this.gameName = gameName;
+        this.movementCards = null;
+        this.gamePieces = null;
     }
 
     public void applyColor() {
@@ -79,5 +81,9 @@ public class Player implements Serializable {
     }
 
     public ArrayList<Card> getMovementCards() { return movementCards; }
+
+    public void addMovementCard(Card newMovementCard){
+        movementCards.add(newMovementCard);
+    }
 
 }

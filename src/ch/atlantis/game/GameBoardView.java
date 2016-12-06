@@ -6,15 +6,19 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 
 /**
  * Created by Hermann Grieder on 23.08.2016.
@@ -23,123 +27,139 @@ import java.util.HashMap;
  */
 public class GameBoardView extends Pane {
 
-    private AtlantisView view;
-    private ArrayList<Player> players;
-    private ArrayList<Card> pathCards;
-    private Stage gameStage;
-    private int height;
-    private Player localPlayer;
-    private Tile consoleTile;
     private HashMap<Integer, Label> scoresLabels;
     private GameModel gameModel;
+    private AtlantisView view;
+    private Tile consoleTile;
+    private Stage gameStage;
+
     private Button buttonBuyCards;
     private Button buttonMove;
     private Button buttonReset;
     private Button buttonEndTurn;
+    private Hashtable<String, ImageView> listCardImages;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
         this.gameModel = gameModel;
-
         this.view = view;
 
-        height = view.heightProperty().getValue();
-        int width = view.widthProperty().getValue();
-
-        super.setMinHeight(height);
-        super.setMinWidth(width);
-        ArrayList<Tile> tiles = setXYTiles(gameModel.getTiles());
-        localPlayer = gameModel.getLocalPlayer();
-        players = gameModel.getPlayers();
-        pathCards = gameModel.getPathCards();
-
-        drawCards(pathCards, tiles);
-
-        drawGamePieces();
-
-        createGameConsole();
+        initBoard();
     }
 
-    private ArrayList<Tile> setXYTiles(ArrayList<Tile> tiles) {
+    /**
+     * Sets the X and Y values for each tile calculated by the screen height of individual users. Draws the cards,
+     * the gamePieces and the player console.
+     */
+    private void initBoard() {
+
+        int height = view.heightProperty().getValue();
+        int width = view.widthProperty().getValue();
+        super.setMinHeight(height);
+        super.setMinWidth(width);
+
         int rowCount = 11;
         int side = (height / rowCount);
 
-        for (Tile tile : tiles) {
+        for (Tile tile : gameModel.getTiles()) {
             tile.setX(tile.getX() * side);
             tile.setY(tile.getY() * side);
             tile.setSide(side);
         }
-        return tiles;
+
+        listCardImages = readCards();
+
+        drawCards();
+
+        drawGamePieces();
+
+        drawConsole();
     }
 
-    private void drawCards(ArrayList<Card> pathCards, ArrayList<Tile> tiles) {
+    private void drawCards() {
 
-        for (Card card : pathCards) {
-            for (Tile tile : tiles) {
-                if (tile.getPathId() == 500) {
-                    consoleTile = tile;
-                }
+        for (Card card : gameModel.getPathCards()) {
+            for (Tile tile : gameModel.getTiles()) {
                 if (card.getPathId() == tile.getPathId()) {
                     card.setWidth(tile.getSide());
                     card.setHeight(tile.getSide());
                     card.setLayoutX(tile.getX());
                     card.setLayoutY(tile.getY());
-                    card.setStroke(Color.BLACK);
-
-                    addWater(card);
-
-                    //addStartEndCard();
-
-                    card.applyCardImages(gameModel.getListCardImages());
-                    //TODO: At this place the card-image will be added to the card
+                    card.applyCardImages(listCardImages);
                     this.getChildren().add(card);
                 }
             }
         }
     }
 
-    private void addWater(Card card) {
-
-        card.setFill(new ImagePattern(gameModel.getListCardImages().get("water.jpg").getImage()));
-
-    }
-
     private void drawGamePieces() {
+        // First find the start of the game to place the gamePieces onto
+        Card startCard = null;
+        for (Card card : gameModel.getPathCards()) {
+            if (card.getCardType() == CardType.START) {
+                startCard = card;
+            }
+        }
+
+        // Offset values so the gamePieces are not placed on top of each other upon start
         int offsetX = 10;
         int offsetY = 5;
-        for (Card card : pathCards) {
-            if (card.getCardType() == CardType.START) {
-                for (Player player : players) {
-                    for (GamePiece gamePiece : player.getGamePieces()) {
-                        //Put the game pieces onto the start field
-                        gamePiece.setLayoutX(card.getLayoutX() + offsetX);
-                        gamePiece.setLayoutY(card.getLayoutY() + offsetY);
-                        gamePiece.setPathId(card.getPathId());
-                        gamePiece.setFill(player.getColor());
-                        gamePiece.setStroke(Color.BLACK);
-                        gamePiece.setWidth(10);
-                        gamePiece.setHeight(10);
-                        this.getChildren().add(gamePiece);
-                        offsetX += 20;
-                    }
-                    offsetY += 15;
-                    offsetX = 10;
+        // For each player place each gamePiece onto the start card
+        for (Player player : gameModel.getPlayers()) {
+            for (GamePiece gamePiece : player.getGamePieces()) {
+                if (startCard != null) {
+                    gamePiece.setLayoutX(startCard.getLayoutX() + offsetX);
+                    gamePiece.setLayoutY(startCard.getLayoutY() + offsetY);
+                    gamePiece.setCurrentPathId(startCard.getPathId());
                 }
+                styleGamePiece(player, gamePiece);
+
+                this.getChildren().add(gamePiece);
+                offsetX += 20;
             }
+            offsetY += 15;
+            offsetX = 10;
         }
     }
 
-    private void createGameConsole() {
+    /**
+     * Styles the gamePiece. Sets the color, width and height as well as the style class for CSS
+     *
+     * @param player    The player to whom the gamePiece belongs to
+     * @param gamePiece The gamePiece to be styled
+     */
+    private void styleGamePiece(Player player, GamePiece gamePiece) {
+        gamePiece.setWidth(10);
+        gamePiece.setHeight(10);
+        gamePiece.setStroke(Color.TRANSPARENT);
+        gamePiece.setStrokeWidth(2);
+        gamePiece.setFill(player.getColor());
+    }
+
+    private void drawConsole() {
+        for (Tile tile : gameModel.getTiles())
+            if (tile.getPathId() == 500) {
+                consoleTile = tile;
+            }
 
         HBox console = initConsole();
-        VBox otherPlayersBox = createOtherPlayersBox();
-        HBox localPlayerBox = createLocalPlayerBox();
+        VBox otherPlayersBox = createOpponentBox();
+        VBox localPlayerBox = createLocalPlayerBox(listCardImages);
         VBox gameControls = createGameControls();
-        placeMovementCards(localPlayerBox);
 
         console.getChildren().addAll(otherPlayersBox, localPlayerBox, gameControls);
 
         this.getChildren().add(console);
+
+    }
+
+    private HBox initConsole() {
+        HBox console = new HBox();
+        console.setLayoutX(consoleTile.getX());
+        console.setLayoutY(consoleTile.getY() + 20);
+        console.setMinHeight(200);
+        console.setMinWidth(consoleTile.getSide() * 9);
+        return console;
     }
 
     private VBox createGameControls() {
@@ -152,26 +172,17 @@ public class GameBoardView extends Pane {
 
         gameControls.getChildren().addAll(buttonBuyCards, buttonMove, buttonReset, buttonEndTurn);
 
-        return  gameControls;
+        return gameControls;
     }
 
-    private HBox initConsole() {
-        HBox console = new HBox();
-        console.setLayoutX(consoleTile.getX());
-        console.setLayoutY(consoleTile.getY() + 20);
-        console.setMinHeight(200);
-        console.setMinWidth(consoleTile.getSide() * 9);
-        return console;
-    }
-
-    private HBox createLocalPlayerBox() {
-        HBox localPlayerBox = new HBox();
+    private VBox createLocalPlayerBox(Hashtable<String, ImageView> listCardImages) {
+        VBox localPlayerBox = new VBox(10);
         localPlayerBox.setMinHeight(200);
         localPlayerBox.setMinWidth(consoleTile.getSide() * 7);
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
         HBox bottom = new HBox(10);
-
+        placeMovementCards(bottom, listCardImages);
         localPlayerBox.getChildren().addAll(top, bottom);
 
         localPlayerBox.setStyle("-fx-border-width: 1px; " +
@@ -179,8 +190,8 @@ public class GameBoardView extends Pane {
                 "-fx-border-color: black");
 
 
-        String score = Integer.toString(localPlayer.getScore());
-        Label label1 = new Label(localPlayer.getPlayerName());
+        String score = Integer.toString(gameModel.getLocalPlayer().getScore());
+        Label label1 = new Label(gameModel.getLocalPlayer().getPlayerName());
         Label label2 = new Label("Score: " + score);
         Label label3 = new Label("|");
 
@@ -188,13 +199,13 @@ public class GameBoardView extends Pane {
         return localPlayerBox;
     }
 
-    private VBox createOtherPlayersBox() {
+    private VBox createOpponentBox() {
         VBox otherPlayersBox = new VBox(10);
         otherPlayersBox.setMinHeight(200);
         otherPlayersBox.setMinWidth(consoleTile.getSide() * 2);
         scoresLabels = new HashMap<>();
-        for (Player player : players) {
-            if (!player.getPlayerName().equals(localPlayer.getGameName())) {
+        for (Player player : gameModel.getPlayers()) {
+            if (!player.getPlayerName().equals(gameModel.getLocalPlayer().getGameName())) {
                 Label labelName = new Label(player.getPlayerName());
                 Label labelScore = new Label(Integer.toString(player.getScore()));
                 scoresLabels.put(player.getPlayerID(), labelScore);
@@ -204,13 +215,41 @@ public class GameBoardView extends Pane {
         return otherPlayersBox;
     }
 
-    private void placeMovementCards(HBox localPlayerBox) {
-        for(Card card : localPlayer.getMovementCards()){
+    private void placeMovementCards(HBox bottom, Hashtable<String, ImageView> listCardImages) {
+        for (Card card : gameModel.getLocalPlayer().getMovementCards()) {
             card.setWidth(60);
             card.setHeight(80);
-            card.applyCardImages(gameModel.getListCardImages());
-            localPlayerBox.getChildren().add(card);
+            card.setStroke(Color.TRANSPARENT);
+            card.setStrokeWidth(2);
+            card.applyCardImages(listCardImages);
+            bottom.getChildren().add(card);
         }
+    }
+
+    private Hashtable<String, ImageView> readCards() {
+        Hashtable<String, ImageView> listCardImages = new Hashtable<>();
+
+        File folder = new File("src/ch/atlantis/res/Spielmaterial/");
+
+        if (!folder.isDirectory()) {
+            //TODO:Error blabla
+        }
+
+        File[] myFiles = folder.listFiles();
+
+        if (myFiles != null) {
+            for (File file : myFiles) {
+                if (file.exists() && file.isFile()) {
+                    if (file.getName().endsWith(".jpg")) {
+
+                        //without the substring(4) the path is invalid resp nullpointerexception
+                        ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
+                        listCardImages.put(file.getName(), imageView);
+                    }
+                }
+            }
+        }
+        return listCardImages;
     }
 
     public void show() {
@@ -225,42 +264,54 @@ public class GameBoardView extends Pane {
 
     //*************************** METHODS DURING THE ACTIVE GAME *****************************//
 
-    public void moveGamePiece(int nextPathId, GamePiece selectedGamePiece) {
-        System.out.println(nextPathId);
-        for (Tile nextTile : gameModel.getTiles()){
-            if (nextTile.getPathId() == nextPathId){
-                int x = nextTile.getX();
-                int y = nextTile.getY();
-                selectedGamePiece.move(x,y);
+    public void moveGamePiece(int targetPathId, GamePiece selectedGamePiece) {
+
+        for (Tile targetTile : gameModel.getTiles()) {
+            if (targetTile.getPathId() == targetPathId) {
+                int x = targetTile.getX() + (targetTile.getSide() / 2);
+                int y = targetTile.getY() + (targetTile.getSide() / 2);
+                selectedGamePiece.move(x, y);
             }
         }
     }
 
-    public ArrayList<Card> getPathCards() {
-        return pathCards;
-    }
-
-    public Stage getGameStage() {
-        return gameStage;
+    public void updateBoard() {
+        GamePiece gamePieceToMove = gameModel.getGamePieceToMove();
+        int targetPathId = gamePieceToMove.getCurrentPathId();
+        System.out.println("TargetPathId: " + targetPathId);
+        moveGamePiece(targetPathId, gamePieceToMove);
     }
 
     public void removePathCard(Card pathCard) {
         this.getChildren().remove(pathCard);
     }
 
-    public ArrayList<Player> getPlayers() {
-        return players;
-    }
-
     public void showOptions(ArrayList<Language> languageList, String currentLanguage, Stage gameStage) {
         view.showOptions(languageList, currentLanguage, gameStage);
     }
 
-    public HashMap<Integer, Label> getLabels() { return scoresLabels; }
+    // ************************************* Styling Methods & CSS ***************************************** //
+
+    void resetHighlight(Rectangle item) {
+        item.setStroke(Color.TRANSPARENT);
+        item.setStrokeWidth(2);
+    }
+
+    void highlightItem(Rectangle item) {
+        item.setStroke(Color.BLACK);
+        item.setStrokeWidth(2);
+    }
 
 
     // ************************************* GETTERS / SETTERS ********************************************* //
 
+    public Stage getGameStage() {
+        return gameStage;
+    }
+
+    public HashMap<Integer, Label> getLabels() {
+        return scoresLabels;
+    }
 
     public Button getButtonBuyCards() {
         return buttonBuyCards;
@@ -277,5 +328,6 @@ public class GameBoardView extends Pane {
     public Button getButtonEndTurn() {
         return buttonEndTurn;
     }
+
 
 }

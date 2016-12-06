@@ -1,13 +1,9 @@
 package ch.atlantis.game;
 
 import ch.atlantis.util.Message;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 
 /**
  * Created by Hermann Grieder on 28.10.2016
@@ -17,90 +13,89 @@ public class GameModel {
     private ArrayList<Player> players;
     private ArrayList<Tile> tiles;
     private ArrayList<Card> pathCards;
-    private ArrayList<Card> deck;
     private Player localPlayer;
-
-    private Hashtable<String, ImageView> listCardImages;
-    private int nextPathId;
+    private int currentTurn;
+    private int previousTurn;
+    private Card selectedCard;
+    private GamePiece selectedGamePiece;
+    private Card cardUsed;
+    private int gamePieceUsedIndex;
+    private HashMap<String, Object> gameStateMap;
+    private HashMap<String, Object> previousGameStateMap;
+    private int targetPathId;
+    private int targetFoundInTurn;
+    private int targetPathIdRemote;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
 
-        if (message.getMessageObject() instanceof HashMap) {
-            HashMap<String, ArrayList> initList = (HashMap<String, ArrayList>) message.getMessageObject();
-            players = initList.get("Players");
-            tiles = initList.get("Tiles");
-            pathCards = initList.get("PathCards");
-            deck = initList.get("Deck");
+        this.gameStateMap = (HashMap<String, Object>) message.getMessageObject();
+        this.previousGameStateMap = gameStateMap;
+        this.targetFoundInTurn = -1;
+        this.currentTurn = 0;
+        this.previousTurn = this.currentTurn;
+        readInitialGameStateMap(gameStateMap);
+        initLocalPlayer(localPlayer);
+        applyPlayerColor();
 
-            for (Player player : players) {
-                player.applyColor();
-                if (player.getPlayerID() == localPlayer.getPlayerID()) {
-                    this.localPlayer = player;
-                }
-            }
-        }
-
-        this.readCards();
     }
 
-    private void readCards() {
-
-        listCardImages = new Hashtable<>();
-
-        File folder = new File("src/ch/atlantis/res/Spielmaterial/");
-
-        if (!folder.isDirectory()) {
-            //TODO:Error blabla
-        }
-
-        File[] myFiles = folder.listFiles();
-
-        if (myFiles != null) {
-            for (File file : myFiles) {
-                if (file.exists() && file.isFile()) {
-                    if (file.getName().endsWith(".jpg")){
-
-                        //without the substring(4) the path is invalid resp nullpointerexception
-                        ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
-                        listCardImages.put(file.getName(), imageView);
-                    }
-                }
+    private void initLocalPlayer(Player localPlayer) {
+        for (Player player : players) {
+            if (player.getPlayerID() == localPlayer.getPlayerID()) {
+                this.localPlayer = player;
             }
         }
     }
 
-    public boolean buyHandCard(int value){
+    private void applyPlayerColor() {
+        for (Player player : players) {
+            player.applyColor();
+        }
+    }
+
+
+    public boolean buyHandCard(int value) {
 
 
         return false;
     }
 
-    public int findNextPathId(Card movementCard, GamePiece gamePiece) throws Exception {
+    public int findTargetPathId() {
 
-        int startPathId;
-        nextPathId = 0;
-        if (gamePiece.getPathId() == 300) {
-            startPathId = 101;
-        } else {
-            startPathId = gamePiece.getPathId();
+        int startPathId = 101;
+        if (selectedGamePiece.getCurrentPathId() != 300) {
+            startPathId = selectedGamePiece.getCurrentPathId() + 1;
         }
-        int i = startPathId;
-        while (nextPathId == 0 && i < 154) {
 
+        boolean found = false;
+        int nextPathId = startPathId;
+        targetPathId = 0;
+        while (!found && nextPathId < 154) {
             for (Card pathCard : pathCards) {
                 if (pathCard.isOnTop()
                         && pathCard.getCardType() != CardType.WATER
-                        && pathCard.getPathId() == i
-                        && pathCard.getColorSet() == movementCard.getColorSet()) {
-                    nextPathId = pathCard.getPathId();
+                        && pathCard.getPathId() == nextPathId
+                        && pathCard.getColorSet() == selectedCard.getColorSet()) {
+                    found = true;
+                    targetPathId = pathCard.getPathId();
+                    System.out.println(targetPathId);
                 }
             }
-            i++;
+            nextPathId++;
         }
-        return nextPathId;
+        targetFoundInTurn = currentTurn;
+        return targetPathId;
     }
 
+    /**
+     * Fabian Witschi
+     * <br>
+     *
+     * Finds the price that needs to be paid to cross one or more water tiles
+     * @param pathId The current pathId of the gamePiece that was moved there
+     * @return The price to cross
+     */
     private int getPriceForCrossing(int pathId) {
         int pathIdBehind = pathId - 1;
         int pathIdAfter = pathId + 1;
@@ -129,15 +124,59 @@ public class GameModel {
                 }
             }
         }
-        if (valueBehind > valueAfter)
-
-        {
+        if (valueBehind > valueAfter) {
             return valueAfter;
-        } else
-
-        {
+        } else {
             return valueBehind;
         }
+    }
+
+    public HashMap<String, Object> writeGameStateMap() {
+        HashMap<String, Object> gameStateMap = new HashMap<>();
+        gameStateMap.put("CurrentTurn", currentTurn);
+        gameStateMap.put("PlayerId", localPlayer.getPlayerID());
+        gameStateMap.put("GameName", localPlayer.getGameName());
+        gameStateMap.put("Card", selectedCard);
+        gameStateMap.put("GamePieceIndex", localPlayer.getGamePieces().indexOf(selectedGamePiece));
+        gameStateMap.put("TargetPathId", targetPathId);
+        return gameStateMap;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void readInitialGameStateMap(HashMap<String, Object> gameStateMap) {
+        currentTurn = (int) gameStateMap.get("CurrentTurn");
+        players = (ArrayList<Player>) gameStateMap.get("Players");
+        tiles = (ArrayList<Tile>) gameStateMap.get("Tiles");
+        pathCards = (ArrayList<Card>) gameStateMap.get("PathCards");
+        System.out.println("CurrentTurn: " + this.currentTurn);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void readGameStateMap(HashMap<String, Object> gameStateMap) {
+        previousTurn = currentTurn;
+        currentTurn = (int) gameStateMap.get("CurrentTurn");
+        players = (ArrayList<Player>) gameStateMap.get("Players");
+        cardUsed = (Card) gameStateMap.get("CardUsed");
+        gamePieceUsedIndex = (int) gameStateMap.get("GamePieceUsedIndex");
+        targetPathIdRemote = (int) gameStateMap.get("TargetPathId");
+    }
+
+    public void updateValues() {
+        players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex).setCurrentPathId(targetPathIdRemote);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void reloadGameStateMap(HashMap<String, Object> gameStateMap) {
+        currentTurn = (int) gameStateMap.get("CurrentTurn");
+        selectedCard = (Card) gameStateMap.get("Card");
+        selectedGamePiece = (GamePiece) gameStateMap.get("GamePiece");
+        System.out.println("CurrentTurn: " + this.currentTurn);
+    }
+
+    // ********************************* GETTERS & SETTERS ***************************** //
+
+    public GamePiece getGamePieceToMove() {
+        return players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex);
     }
 
     public ArrayList<Player> getPlayers() {
@@ -152,20 +191,38 @@ public class GameModel {
         return pathCards;
     }
 
-    public ArrayList<Card> getDeck() {
-        return deck;
-    }
-
-    public int getNextPathId() {
-        return nextPathId;
-    }
-
     public Player getLocalPlayer() {
         return localPlayer;
     }
 
-    public Hashtable<String, ImageView> getListCardImages() {
-        return listCardImages;
+    public int getCurrentTurn() {
+        return currentTurn;
     }
+
+    public Card getSelectedCard() {
+        return selectedCard;
+    }
+
+    public void setSelectedCard(Card selectedCard) {
+        this.selectedCard = selectedCard;
+    }
+
+    public GamePiece getSelectedGamePiece() {
+        return selectedGamePiece;
+    }
+
+    public void setSelectedGamePiece(GamePiece selectedGamePiece) {
+        this.selectedGamePiece = selectedGamePiece;
+    }
+
+    public HashMap<String, Object> getPreviousGameStateMap() {
+        return previousGameStateMap;
+    }
+
+    public void savePreviousGameStateMap() {
+        if (targetFoundInTurn != currentTurn) findTargetPathId();
+        this.previousGameStateMap = writeGameStateMap();
+    }
+
 
 }
