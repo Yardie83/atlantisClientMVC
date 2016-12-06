@@ -2,6 +2,7 @@ package ch.atlantis.game;
 
 import ch.atlantis.util.Language;
 import ch.atlantis.view.AtlantisView;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -38,6 +39,9 @@ public class GameBoardView extends Pane {
     private Button buttonReset;
     private Button buttonEndTurn;
     private Hashtable<String, ImageView> listCardImages;
+    private Label lblLocalPlayer;
+    private Label lblScoreLocalPlayer;
+    private HBox HBoxMovementCards;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -69,14 +73,14 @@ public class GameBoardView extends Pane {
 
         listCardImages = readCards();
 
-        drawCards();
+        drawPath();
 
         drawGamePieces();
 
         drawConsole();
     }
 
-    private void drawCards() {
+    private void drawPath() {
 
         for (Card card : gameModel.getPathCards()) {
             for (Tile tile : gameModel.getTiles()) {
@@ -144,7 +148,7 @@ public class GameBoardView extends Pane {
 
         HBox console = initConsole();
         VBox otherPlayersBox = createOpponentBox();
-        VBox localPlayerBox = createLocalPlayerBox(listCardImages);
+        VBox localPlayerBox = createLocalPlayerBox();
         VBox gameControls = createGameControls();
 
         console.getChildren().addAll(otherPlayersBox, localPlayerBox, gameControls);
@@ -175,15 +179,14 @@ public class GameBoardView extends Pane {
         return gameControls;
     }
 
-    private VBox createLocalPlayerBox(Hashtable<String, ImageView> listCardImages) {
+    private VBox createLocalPlayerBox() {
         VBox localPlayerBox = new VBox(10);
         localPlayerBox.setMinHeight(200);
         localPlayerBox.setMinWidth(consoleTile.getSide() * 7);
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
-        HBox bottom = new HBox(10);
-        placeMovementCards(bottom, listCardImages);
-        localPlayerBox.getChildren().addAll(top, bottom);
+        HBoxMovementCards = placeMovementCards();
+        localPlayerBox.getChildren().addAll(top, HBoxMovementCards);
 
         localPlayerBox.setStyle("-fx-border-width: 1px; " +
                 "-fx-background-color: #7af5c4;" +
@@ -191,11 +194,11 @@ public class GameBoardView extends Pane {
 
 
         String score = Integer.toString(gameModel.getLocalPlayer().getScore());
-        Label label1 = new Label(gameModel.getLocalPlayer().getPlayerName());
-        Label label2 = new Label("Score: " + score);
+        Label lblLocalPlayer = new Label(gameModel.getLocalPlayer().getPlayerName());
+        lblScoreLocalPlayer = new Label("Score: " + score);
         Label label3 = new Label("|");
 
-        top.getChildren().addAll(label1, label3, label2);
+        top.getChildren().addAll(lblLocalPlayer, label3, lblScoreLocalPlayer);
         return localPlayerBox;
     }
 
@@ -206,17 +209,18 @@ public class GameBoardView extends Pane {
         scoresLabels = new HashMap<>();
         for (Player player : gameModel.getPlayers()) {
             if (!player.getPlayerName().equals(gameModel.getLocalPlayer().getGameName())) {
-                Label labelName = new Label(player.getPlayerName());
-                Label labelScore = new Label(Integer.toString(player.getScore()));
-                scoresLabels.put(player.getPlayerID(), labelScore);
-                otherPlayersBox.getChildren().addAll(labelName, labelScore);
+                Label lblOpponentName = new Label(player.getPlayerName());
+                Label lblOpponentScore = new Label(Integer.toString(player.getScore()));
+                scoresLabels.put(player.getPlayerID(), lblOpponentScore);
+                otherPlayersBox.getChildren().addAll(lblOpponentName, lblOpponentScore);
             }
         }
         return otherPlayersBox;
     }
 
-    private void placeMovementCards(HBox bottom, Hashtable<String, ImageView> listCardImages) {
-        for (Card card : gameModel.getLocalPlayer().getMovementCards()) {
+    private HBox placeMovementCards() {
+        HBox bottom = new HBox(10);
+        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayer().getPlayerID()).getMovementCards()) {
             card.setWidth(60);
             card.setHeight(80);
             card.setStroke(Color.TRANSPARENT);
@@ -224,6 +228,7 @@ public class GameBoardView extends Pane {
             card.applyCardImages(listCardImages);
             bottom.getChildren().add(card);
         }
+        return bottom;
     }
 
     private Hashtable<String, ImageView> readCards() {
@@ -276,10 +281,33 @@ public class GameBoardView extends Pane {
     }
 
     public void updateBoard() {
-        GamePiece gamePieceToMove = gameModel.getGamePieceToMove();
-        int targetPathId = gamePieceToMove.getCurrentPathId();
-        System.out.println("TargetPathId: " + targetPathId);
-        moveGamePiece(targetPathId, gamePieceToMove);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                //Move the gamePiece
+                GamePiece gamePieceToMove = gameModel.getGamePieceToMove();
+                int targetPathId = gamePieceToMove.getCurrentPathId();
+                System.out.println("TargetPathId: " + targetPathId);
+                moveGamePiece(targetPathId, gamePieceToMove);
+
+                //Update the score
+                if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()){
+                    lblScoreLocalPlayer.setText("Score: " + String.valueOf(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getScore()));
+                }else{
+                    scoresLabels.get(gameModel.getPreviousTurn()).setText("Score: " + String.valueOf(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getScore()));
+                }
+
+//                //Update the movementCards
+//                if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()) {
+//                    HBoxMovementCards = placeMovementCards();
+//                }
+
+                //Remove the pathCards
+                Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
+                removePathCard(pathCardToRemove);
+            }
+        });
+
     }
 
     public void removePathCard(Card pathCard) {

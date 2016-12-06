@@ -10,21 +10,23 @@ import java.util.HashMap;
  */
 public class GameModel {
 
-    private ArrayList<Player> players;
     private ArrayList<Tile> tiles;
+    private ArrayList<Player> players;
     private ArrayList<Card> pathCards;
     private Player localPlayer;
     private int currentTurn;
     private int previousTurn;
     private Card selectedCard;
     private GamePiece selectedGamePiece;
-    private Card cardUsed;
+    private int cardPlayedIndex;
     private int gamePieceUsedIndex;
     private HashMap<String, Object> gameStateMap;
     private HashMap<String, Object> previousGameStateMap;
     private int targetPathId;
     private int targetFoundInTurn;
     private int targetPathIdRemote;
+    private int indexOfPathCardToRemove;
+    private int indexOfPathCardToShow;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
@@ -84,6 +86,10 @@ public class GameModel {
             }
             nextPathId++;
         }
+        // If we cannot find a targetPathId on the path then the next target is the end
+        if (!found && nextPathId + 1 == 154) {
+            targetPathId = 400;
+        }
         targetFoundInTurn = currentTurn;
         return targetPathId;
     }
@@ -91,8 +97,9 @@ public class GameModel {
     /**
      * Fabian Witschi
      * <br>
-     *
+     * <p>
      * Finds the price that needs to be paid to cross one or more water tiles
+     *
      * @param pathId The current pathId of the gamePiece that was moved there
      * @return The price to cross
      */
@@ -136,7 +143,8 @@ public class GameModel {
         gameStateMap.put("CurrentTurn", currentTurn);
         gameStateMap.put("PlayerId", localPlayer.getPlayerID());
         gameStateMap.put("GameName", localPlayer.getGameName());
-        gameStateMap.put("Card", selectedCard);
+        int indexOfSelectedCard = players.get(localPlayer.getPlayerID()).getMovementCards().indexOf(selectedCard);
+        gameStateMap.put("SelectedCard", indexOfSelectedCard);
         gameStateMap.put("GamePieceIndex", localPlayer.getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathId", targetPathId);
         return gameStateMap;
@@ -156,13 +164,19 @@ public class GameModel {
         previousTurn = currentTurn;
         currentTurn = (int) gameStateMap.get("CurrentTurn");
         players = (ArrayList<Player>) gameStateMap.get("Players");
-        cardUsed = (Card) gameStateMap.get("CardUsed");
+        cardPlayedIndex = (int) gameStateMap.get("SelectedCard");
         gamePieceUsedIndex = (int) gameStateMap.get("GamePieceUsedIndex");
         targetPathIdRemote = (int) gameStateMap.get("TargetPathId");
+        indexOfPathCardToRemove = (int) gameStateMap.get("IndexOfCardToRemove");
+        indexOfPathCardToShow = (int) gameStateMap.get("IndexOfCardToShow");
     }
 
     public void updateValues() {
         players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex).setCurrentPathId(targetPathIdRemote);
+        pathCards.get(indexOfPathCardToRemove).setPathId(-1);
+        pathCards.get(indexOfPathCardToShow).setIsOnTop(true);
+        localPlayer = players.get(localPlayer.getPlayerID());
+        System.out.println(localPlayer.getScore() + " <- Local Score : Remote Score -> " + players.get(localPlayer.getScore()));
     }
 
     @SuppressWarnings("unchecked")
@@ -199,6 +213,10 @@ public class GameModel {
         return currentTurn;
     }
 
+    public int getPreviousTurn() {
+        return previousTurn;
+    }
+
     public Card getSelectedCard() {
         return selectedCard;
     }
@@ -213,6 +231,14 @@ public class GameModel {
 
     public void setSelectedGamePiece(GamePiece selectedGamePiece) {
         this.selectedGamePiece = selectedGamePiece;
+    }
+
+    public int getIndexOfPathCardToRemove() {
+        return indexOfPathCardToRemove;
+    }
+
+    public int getIndexOfPathCardToShow() {
+        return indexOfPathCardToShow;
     }
 
     public HashMap<String, Object> getPreviousGameStateMap() {
