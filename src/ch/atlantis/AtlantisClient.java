@@ -6,21 +6,25 @@ import ch.atlantis.view.AtlantisView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Date;
+import java.util.logging.*;
+
 
 /**
- * Created by Loris Grether and Hermann Grieder on 17.07.2016.
+ * Created by Loris Grether and Hermann Grieder and Can Heval Cokyasar on 17.07.2016 / 29.11.2016.
  *
- * Start of the Application.
- * Creates the model, the view and the controller.
+ * Start of the application.
+ * Creates the model, the view, and the controller.
+ *
+ * Logger configuration.
+ *
  */
+
+
 public class AtlantisClient extends Application {
 
-    public static final String LOGGER_NAME = AtlantisClient.class.getSimpleName();
-    private Logger logger = null;
+    // Name of the main logger
+    private final static Logger LOGGER = Logger.getLogger(AtlantisClient.class.getName());
 
     public static void main(String[] args) {
         launch();
@@ -29,26 +33,20 @@ public class AtlantisClient extends Application {
     @Override
     public void start(Stage introStage) throws Exception {
 
-        logger = Logger.getLogger(LOGGER_NAME);
-        logger.setLevel(Level.INFO);
-
-        addLogHandler();
-
         AtlantisModel model = new AtlantisModel();
         AtlantisView view = new AtlantisView(introStage, model);
         new AtlantisController(model, view);
 
-        logger.info("The Application was started");
-    }
+        LOGGER.setLevel(Level.INFO);
 
-    private void addLogHandler() {
-        try {
-            //Handler logHandler = new FileHandler("%h/javaaaaaaaaaaaa%u.log", 50000, 3);
-            //Handler logHandler = new FileHandler("%t/" + LOGGER_NAME + "_%u" + "_%g" + ".log", 1000000, 9);
-            //logHandler.setLevel(Level.FINE);
-            //logger.addHandler(logHandler);
-        } catch (Exception e) {
-            throw new RuntimeException("Unable to initialize log files: " + e.toString());
-        }
+        Handler fh = new FileHandler("log.txt");
+        LOGGER.addHandler(fh);
+
+        Handler ch = new ConsoleHandler();
+        LOGGER.addHandler(ch);
+
+        LogManager lm = LogManager.getLogManager();
+        lm.addLogger(LOGGER);
+
     }
 }

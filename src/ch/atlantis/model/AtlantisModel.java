@@ -70,7 +70,7 @@ public class AtlantisModel {
 
     public AtlantisModel() {
 
-        logger = Logger.getLogger(AtlantisClient.LOGGER_NAME);
+        logger = Logger.getLogger(AtlantisClient.class.getName());
 
         chatString = new SimpleStringProperty();
         connectionStatus = new SimpleStringProperty();

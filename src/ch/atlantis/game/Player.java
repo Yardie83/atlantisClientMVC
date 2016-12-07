@@ -29,9 +29,7 @@ public class Player implements Serializable {
         this.bridge = 1;
     }
 
-    public String getPlayerName() {
-        return playerName;
-    }
+    public String getPlayerName() { return playerName; }
 
     public void addScore(int score) {
         this.score += score;
@@ -43,9 +41,7 @@ public class Player implements Serializable {
 
     public int getScore() { return score; }
 
-    public void removeBridge() {
-        this.bridge = 0;
-    }
+    public void removeBridge() { this.bridge = 0; }
 
     public int getBridge() {
         return bridge;
