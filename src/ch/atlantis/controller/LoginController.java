@@ -52,7 +52,7 @@ public class LoginController {
             public void handle(MouseEvent event) {
                 view.getLoginView().getLblError().setText("");
                 view.closeActiveOverlay();
-                view.createNewProfileView(view.getGameLobbyView().getGameLobbyStage());
+                view.createNewProfileView();
                 new NewProfileController(model, view);
                 view.getProfileStage().show();
             }
@@ -91,8 +91,8 @@ public class LoginController {
                     @Override
                     public void run() {
                         if (model.loginSuccessProperty().getValue().equals(1)) {
-                            //view.getGameLobbyView().createPopUp("You're logged in!", 200);
-                            view.getGameLobbyView().createPopUp(view.getSelectedLanguage().getLanguageTable().get("msgLoggedIn"), 200);
+                            //view.getGameLobbyView().showPopUp("You're logged in!", 200);
+                            view.getGameLobbyView().showPopUp(view.getSelectedLanguage().getLanguageTable().get("msgLoggedIn"), 200);
                             view.getGameLobbyView().removeLoginBtn();
                             view.closeActiveOverlay();
                             model.loginSuccessProperty().setValue(0);

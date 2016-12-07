@@ -71,7 +71,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getConfigLanguage(),gameLobbyStage);
+                view.createOptionsView();
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }
@@ -94,7 +94,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnCreateGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createCreateGameView(gameLobbyStage);
+                view.createCreateGameView();
                 new CreateGameController(model, view);
                 view.getCreateGameStage().show();
             }
@@ -103,7 +103,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnLogin().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createLoginView(gameLobbyStage);
+                view.createLoginView();
                 new LoginController(model, view);
                 view.getLoginStage().show();
             }
@@ -112,7 +112,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnCreateProfile().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createNewProfileView(gameLobbyStage);
+                view.createNewProfileView();
                 new NewProfileController(model, view);
                 view.getProfileStage().show();
             }
@@ -121,7 +121,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getBtnOptions().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.createOptionsView(model.getLanguageList(), model.getConfigLanguage(),gameLobbyStage);
+                view.createOptionsView();
                 new OptionsController(model, view);
                 view.getOptionsStage().show();
             }
@@ -131,12 +131,8 @@ public class GameLobbyController {
             @Override
             public void handle(MouseEvent event) {
                 if (event.getClickCount() == 2) {
-
                     if (view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem() != null) {
-
-                        String listInfo = view.getGameLobbyView().getGameListView().getSelectionModel().getSelectedItem().toString();
-
-                        model.joinGame(listInfo);
+                        model.joinGame(view.getListInfo());
                     }
                 }
             }
@@ -279,13 +275,12 @@ public class GameLobbyController {
                         view.getGameLobbyView().getLblStatus().setText("Status: " + newValue);
                     }
                 });
-
             }
         });
 
         /*
          * UserName to be displayed. If the user is not logged in,
-         * Guest + number will be displayed as the name.
+         * "Guest + (number)" will be displayed as the name.
          *
          *  Loris Grether
          */
@@ -296,11 +291,9 @@ public class GameLobbyController {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        //view.getGameLobbyView().getLblWindowTitle().setText("Hi " + newValue + ", Welcome to Atlantis");
                         view.getGameLobbyView().getLblWindowTitle().setText(
                                 view.getSelectedLanguage().getLanguageTable().get("msgHello") + " " + newValue + ", " +
                                         view.getSelectedLanguage().getLanguageTable().get("lblWindowTitle"));
-                        //view.getGameLobbyView().getLblInfo().setText("Logged in as " + newValue);
                         view.getGameLobbyView().getLblInfo().setText(view.getSelectedLanguage().getLanguageTable().get("msgLoggedInAs") + " " + newValue);
                     }
                 });
@@ -320,34 +313,7 @@ public class GameLobbyController {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        // Only if the list is not empty go on
-                        if (model.getGameList().size() != 0) {
-                            // Clear the current list in the gameLobby every time we receive the list
-                            view.getGameLobbyView().getGameListView().getItems().clear();
-
-                            // Reverse the new list, so the newest games are on top
-                            Collections.reverse(model.getGameList());
-
-                            // Add each game in the gameList to the ListView
-                            for (String s : model.getGameList()) {
-                                String[] gameInfo = s.split(",");
-                                if (!gameInfo[0].equalsIgnoreCase(" ")) {
-
-                                    String gameName = gameInfo[0];
-                                    Integer numberOfPlayers = Integer.parseInt(gameInfo[1]);
-                                    int currentJoinedUsers = Integer.parseInt(gameInfo[2]);
-
-                                    view.getGameLobbyView().getGameListView().getItems().add(
-                                            gameName + " : " + currentJoinedUsers + " " +
-                                                    view.getSelectedLanguage().getLanguageTable().get("msgOf") +
-                                                    " " + numberOfPlayers + " " + view.getSelectedLanguage().getLanguageTable().get("msgPlayers"));
-                                }
-                            }
-                            // Clear the list in the model to avoid duplicate entries the next time we receive the list
-                            model.getGameList().clear();
-                            //view.getGameLobbyView().createPopUp("Game Created!", 200);
-                            view.getGameLobbyView().createPopUp(view.getSelectedLanguage().getLanguageTable().get("msgGameCreated"), 200);
-                        }
+                        view.updateGameList();
                     }
                 });
             }

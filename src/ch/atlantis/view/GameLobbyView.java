@@ -210,7 +210,7 @@ public class GameLobbyView extends Pane {
      * @param message The text to be displayed
      * @param inset   The amount of pixels the box should move into the screen from the right
      */
-    public void createPopUp(String message, int inset) {
+    public void showPopUp(String message, int inset) {
         popup = new Pane();
         popup.setTranslateX(gameLobbyStage.getWidth());
         popup.setTranslateY(gameLobbyStage.getHeight() - 110);

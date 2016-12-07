@@ -229,19 +229,19 @@ public class GameBoardView extends Pane {
     }
 
     private VBox createOpponentBox() {
-        VBox otherPlayersBox = new VBox(10);
-        otherPlayersBox.setMinHeight(200);
-        otherPlayersBox.setMinWidth(consoleTile.getSide() * 2);
+        VBox opponentsBox = new VBox(10);
+        opponentsBox.setMinHeight(200);
+        opponentsBox.setMinWidth(consoleTile.getSide() * 2);
         scoresLabels = new HashMap<>();
         for (Player player : gameModel.getPlayers()) {
             if (player.getPlayerID() != gameModel.getLocalPlayer().getPlayerID()) {
                 Label lblOpponentName = new Label(player.getPlayerName());
                 Label lblOpponentScore = new Label(Integer.toString(player.getScore()));
                 scoresLabels.put(player.getPlayerID(), lblOpponentScore);
-                otherPlayersBox.getChildren().addAll(lblOpponentName, lblOpponentScore);
+                opponentsBox.getChildren().addAll(lblOpponentName, lblOpponentScore);
             }
         }
-        return otherPlayersBox;
+        return opponentsBox;
     }
 
     private HBox placeMovementCards() {
@@ -278,7 +278,7 @@ public class GameBoardView extends Pane {
                 if (file.exists() && file.isFile()) {
                     if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
 
-                        //without the substring(4) the path is invalid resp nullpointerexception
+                        //without the substring(4) the path is invalid resp nullPointerException
                         ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
                         listCardImages.put(file.getName(), imageView);
                     }
@@ -349,7 +349,7 @@ public class GameBoardView extends Pane {
     }
 
     public void showOptions(ArrayList<Language> languageList, String currentLanguage, Stage gameStage) {
-        view.showOptions(languageList, currentLanguage, gameStage);
+        view.showOptions();
     }
 
     // ************************************* Styling Methods & CSS ***************************************** //

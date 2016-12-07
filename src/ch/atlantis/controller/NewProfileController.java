@@ -66,8 +66,8 @@ public class NewProfileController {
                     @Override
                     public void run() {
                         if (model.createProfileSuccessProperty().getValue().equals(1)) {
-                            //view.getGameLobbyView().createPopUp("Profile Created!", 200);
-                            view.getGameLobbyView().createPopUp(view.getSelectedLanguage().getLanguageTable().get("msgProfileCreated"), 200);
+                            //view.getGameLobbyView().showPopUp("Profile Created!", 200);
+                            view.getGameLobbyView().showPopUp(view.getSelectedLanguage().getLanguageTable().get("msgProfileCreated"), 200);
                             view.getGameLobbyView().removeLoginBtn();
                             view.getNewProfileView().getLblError().setText("");
                             view.closeActiveOverlay();

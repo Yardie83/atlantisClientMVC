@@ -41,22 +41,19 @@ public class CreateGameController {
         view.getCreateGameView().getBtnCreateNewGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (createGameEntry()) {
-                    view.getCreateGameView().getLblError().setText("");
-                    view.getCreateGameView().clearGameNameTxtField();
-                    view.closeActiveOverlay();
+                if (checkInput()) {
+                    createGame();
                 }
             }
         });
-
+        // The user can also press the ENTER key to create a game in the Create Game View
         view.getCreateGameView().getTxtGameName().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ENTER) {
-                    createGameEntry();
-                    view.getCreateGameView().getLblError().setText("");
-                    view.getCreateGameView().clearGameNameTxtField();
-                    view.closeActiveOverlay();
+                    if (checkInput()) {
+                        createGame();
+                    }
                 }
             }
         });
@@ -72,7 +69,14 @@ public class CreateGameController {
         });
     }
 
-    private boolean createGameEntry() {
+    private void createGame() {
+        view.getCreateGameView().getLblError().setText("");
+        view.getCreateGameView().clearGameNameTxtField();
+        view.closeActiveOverlay();
+        view.getGameLobbyView().showPopUp(view.getSelectedLanguage().getLanguageTable().get("msgGameCreated"), 200);
+    }
+
+    private boolean checkInput() {
         String gameName = view.getCreateGameView().getTxtGameName().getText();
         RadioButton selectedRadioButton = (RadioButton) view.getCreateGameView().getTgNoOfPlayers().getSelectedToggle();
         String message = gameName + "," + selectedRadioButton.getText();

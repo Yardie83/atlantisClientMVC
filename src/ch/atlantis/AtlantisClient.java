@@ -5,9 +5,6 @@ import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.view.AtlantisView;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

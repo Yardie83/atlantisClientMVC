@@ -254,7 +254,6 @@ public class AtlantisModel {
         if (conf == null) {
             conf = new AtlantisConfig();
             if (!conf.readAtlantisConfig()) {
-
                 logger.warning("The AtlantisConfig could not be read!");
             }
         }
@@ -287,7 +286,6 @@ public class AtlantisModel {
     public void joinGame(String listInfo) {
         String[] info = listInfo.split(" ");
         String gameName = info[0];
-
         sendMessage(new Message(MessageType.JOINGAME, gameName));
     }
 

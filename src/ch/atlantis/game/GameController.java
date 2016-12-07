@@ -90,8 +90,13 @@ public class GameController {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE) {
-                    //new OptionsController(atlantisModel, atlantisView);
-                    //gameBoardView.showOptions(atlantisModel.getLanguageList(), atlantisModel.getCurrentLanguage(), gameBoardView.getGameStage());
+                    if (atlantisView.getOptionsStage() == null){
+                        atlantisView.createOptionsView();
+                        new OptionsController(atlantisModel,atlantisView);
+                        atlantisView.getOptionsStage().show();
+                    }else{
+                        atlantisView.getOptionsStage().show();
+                    }
                 }
             }
         });
