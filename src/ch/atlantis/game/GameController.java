@@ -71,6 +71,7 @@ public class GameController {
                     if (atlantisModel.getMessage().getMessageObject() instanceof HashMap) {
                         HashMap<String, Object> gameStateMap = (HashMap<String, Object>) atlantisModel.getMessage().getMessageObject();
                         gameModel.readGameStateMap(gameStateMap);
+                        registerMouseEvents(gameModel.getNewCardFromDeck());
                         gameModel.updateValues();
                         gameBoardView.updateBoard();
                     }
@@ -89,7 +90,7 @@ public class GameController {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE) {
-                    new OptionsController(atlantisModel, atlantisView);
+                    //new OptionsController(atlantisModel, atlantisView);
                     //gameBoardView.showOptions(atlantisModel.getLanguageList(), atlantisModel.getCurrentLanguage(), gameBoardView.getGameStage());
                 }
             }
@@ -99,48 +100,7 @@ public class GameController {
         // ************************** MOVEMENT CARDS **************************** //
 
         for (Card movementCard : gameModel.getLocalPlayer().getMovementCards()) {
-            /*
-             * Selects the movement card the player clicked on
-             */
-            movementCard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (gameModel.getSelectedCard() != null) {
-                        gameBoardView.resetHighlight(gameModel.getSelectedCard());
-                    }
-                    gameModel.setSelectedCard(movementCard);
-                    System.out.println(gameModel.getSelectedCard().getColorSet());
-                    gameBoardView.highlightItem(movementCard);
-                }
-            });
-
-            /*
-             * On mouse enter the movement card will be highlighted.
-             */
-            movementCard.setOnMouseEntered(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    for (Card movementCardToReset : gameModel.getLocalPlayer().getMovementCards()) {
-                        if (movementCardToReset != gameModel.getSelectedCard()) {
-                            gameBoardView.resetHighlight(movementCardToReset);
-                        }
-                    }
-                    gameBoardView.highlightItem(movementCard);
-                }
-            });
-
-            /*
-             * On mouse exited the movement card will be reset from being highlighted if it is not
-             * the selected movement card
-             */
-            movementCard.setOnMouseExited(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-                    if (movementCard != gameModel.getSelectedCard()) {
-                        gameBoardView.resetHighlight(movementCard);
-                    }
-                }
-            });
+            registerMouseEvents(movementCard);
         }
 
         // *********************** GAME PIECES ********************************** //
@@ -242,6 +202,51 @@ public class GameController {
                         gameModel.setSelectedCard(null);
                         gameModel.setSelectedGamePiece(null);
                     }
+                }
+            }
+        });
+    }
+
+    private void registerMouseEvents(Card card){
+        /*
+             * Selects the movement card the player clicked on
+             */
+        card.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (gameModel.getSelectedCard() != null) {
+                    gameBoardView.resetHighlight(gameModel.getSelectedCard());
+                }
+                gameModel.setSelectedCard(card);
+                System.out.println(gameModel.getSelectedCard().getColorSet());
+                gameBoardView.highlightItem(card);
+            }
+        });
+
+            /*
+             * On mouse enter the movement card will be highlighted.
+             */
+        card.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                for (Card movementCardToReset : gameModel.getLocalPlayer().getMovementCards()) {
+                    if (movementCardToReset != gameModel.getSelectedCard()) {
+                        gameBoardView.resetHighlight(movementCardToReset);
+                    }
+                }
+                gameBoardView.highlightItem(card);
+            }
+        });
+
+            /*
+             * On mouse exited the movement card will be reset from being highlighted if it is not
+             * the selected movement card
+             */
+        card.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (card != gameModel.getSelectedCard()) {
+                    gameBoardView.resetHighlight(card);
                 }
             }
         });

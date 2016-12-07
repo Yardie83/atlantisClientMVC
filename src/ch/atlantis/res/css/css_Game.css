@@ -1,5 +1,10 @@
 .root{
     -fx-background-color: lightblue;
+    -fx-background-image: url("../background_2.jpg");
+    -fx-background-size: stretch;
+    -fx-font-family: "Arial Black";
+    -fx-font-smoothing-type: lcd;
+
 }
 
 

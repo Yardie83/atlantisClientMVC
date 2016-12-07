@@ -84,17 +84,36 @@ public class GameBoardView extends Pane {
 
         for (Card card : gameModel.getPathCards()) {
             for (Tile tile : gameModel.getTiles()) {
-                if (card.getPathId() == tile.getPathId()) {
-                    card.setWidth(tile.getSide());
-                    card.setHeight(tile.getSide());
-                    card.setLayoutX(tile.getX());
+                if (card.getCardType() == CardType.START && tile.getPathId() == 300) {
+                    drawSpecialCards(card, tile);
                     card.setLayoutY(tile.getY());
-                    card.applyCardImages(listCardImages);
-                    this.getChildren().add(card);
+                } else if (card.getCardType() == CardType.END && tile.getPathId() == 400) {
+                    drawSpecialCards(card, tile);
+                    card.setLayoutY(tile.getY());
+                } else if (card.getPathId() == tile.getPathId()) {
+                    drawMainPath(card, tile);
                 }
             }
+            card.applyCardImages(listCardImages);
+            this.getChildren().add(card);
         }
     }
+
+    private void drawMainPath(Card card, Tile tile) {
+        card.setWidth(tile.getSide());
+        card.setHeight(tile.getSide());
+        card.setLayoutX(tile.getX());
+        card.setLayoutY(tile.getY());
+        card.toFront();
+    }
+
+    private void drawSpecialCards(Card card, Tile tile) {
+        card.setLayoutX(tile.getX() - tile.getSide());
+        card.setWidth(tile.getSide()*3);
+        card.setHeight(tile.getSide() * 2);
+        card.toBack();
+    }
+
 
     private void drawGamePieces() {
         // First find the start of the game to place the gamePieces onto
@@ -182,16 +201,11 @@ public class GameBoardView extends Pane {
     private VBox createLocalPlayerBox() {
         VBox localPlayerBox = new VBox(10);
         localPlayerBox.setMinHeight(200);
-        localPlayerBox.setMinWidth(consoleTile.getSide() * 7);
+        localPlayerBox.setMinWidth(consoleTile.getSide() * 3);
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
         HBoxMovementCards = placeMovementCards();
         localPlayerBox.getChildren().addAll(top, HBoxMovementCards);
-
-        localPlayerBox.setStyle("-fx-border-width: 1px; " +
-                "-fx-background-color: #7af5c4;" +
-                "-fx-border-color: black");
-
 
         String score = Integer.toString(gameModel.getLocalPlayer().getScore());
         Label lblLocalPlayer = new Label(gameModel.getLocalPlayer().getPlayerName());
@@ -222,14 +236,18 @@ public class GameBoardView extends Pane {
         HBox bottom = new HBox(10);
         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayer().getPlayerID()).getMovementCards()) {
             System.out.println("GameBoard -> Card: " + card.getColorSet() + " added");
-            card.setWidth(60);
-            card.setHeight(80);
-            card.setStroke(Color.TRANSPARENT);
-            card.setStrokeWidth(2);
-            card.applyCardImages(listCardImages);
+            styleMovementCard(card);
             bottom.getChildren().add(card);
         }
         return bottom;
+    }
+
+    private void styleMovementCard(Card card) {
+        card.setWidth(60);
+        card.setHeight(80);
+        card.setStroke(Color.TRANSPARENT);
+        card.setStrokeWidth(2);
+        card.applyCardImages(listCardImages);
     }
 
     private Hashtable<String, ImageView> readCards() {
@@ -292,15 +310,16 @@ public class GameBoardView extends Pane {
                 moveGamePiece(targetPathId, gamePieceToMove);
 
                 //Update the score
-                if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()){
+                if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()) {
                     lblScoreLocalPlayer.setText("Score: " + String.valueOf(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getScore()));
-                }else{
+                } else {
                     scoresLabels.get(gameModel.getPreviousTurn()).setText("Score: " + String.valueOf(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getScore()));
                 }
 
                 //Update the movementCards
                 if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()) {
                     HBoxMovementCards.getChildren().remove(gameModel.getCardPlayedIndex());
+                    styleMovementCard(gameModel.getNewCardFromDeck());
                     HBoxMovementCards.getChildren().add(gameModel.getNewCardFromDeck());
                 }
 
@@ -309,7 +328,6 @@ public class GameBoardView extends Pane {
                 removePathCard(pathCardToRemove);
             }
         });
-
     }
 
     public void removePathCard(Card pathCard) {
@@ -331,7 +349,6 @@ public class GameBoardView extends Pane {
         item.setStroke(Color.BLACK);
         item.setStrokeWidth(2);
     }
-
 
     // ************************************* GETTERS / SETTERS ********************************************* //
 
