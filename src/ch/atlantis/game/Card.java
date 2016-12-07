@@ -1,9 +1,12 @@
 package ch.atlantis.game;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
 import java.io.Serializable;
+import java.util.Hashtable;
 
 /**
  * Created by Hermann Grieder on 15/08/16.
@@ -12,7 +15,7 @@ import java.io.Serializable;
  */
 
 enum CardType {
-    PATH, WATER, START, END, BRIDGE, MOVEMENT
+    PATH, WATER, START, END, MOVEMENT
 }
 
 public class Card extends Rectangle implements Serializable {
@@ -26,61 +29,26 @@ public class Card extends Rectangle implements Serializable {
     private CardType cardType;
     private int pathID;
 
-    public final static int BROWN = 0;
-    public final static int PINK = 1;
-    public final static int GREY = 2;
-    public final static int YELLOW = 3;
-    public final static int GREEN = 4;
-    public final static int BLUE = 5;
-    public final static int WHITE = 6;
+    public void applyCardImages(Hashtable<String, ImageView> listCardImages) {
 
-    // Constructor for Movement Cards. They do not have a value associated.
-    public Card(int colorSet, CardType cardType) {
+        if (this.getCardType() == CardType.WATER){
+            super.setFill(new ImagePattern(listCardImages.get("water.jpg").getImage()));
 
+        }else if (this.getCardType() == CardType.PATH) {
 
-        this.cardType = cardType;
-        this.colorSet = colorSet;
-        this.setStroke(Color.BLACK);
-        this.isPlayed = false;
-    }
+            super.setFill(new ImagePattern(listCardImages.get(colorSet + "_" + value + ".jpg").getImage()));
 
-    // Constructor for Path Cards. They do have a value associated.
-    public Card(int colorSet, int value, CardType cardType) {
+        } else if (getCardType() == CardType.MOVEMENT) {
 
-        this.value = value;
-        this.colorSet = colorSet;
-        this.cardType = cardType;
-        this.setStroke(Color.BLACK);
-    }
+            super.setFill(new ImagePattern(listCardImages.get("card_" + colorSet + ".jpg").getImage()));
 
-    public void applyColor() {
-        switch (this.colorSet) {
-            case BROWN:
-                super.setFill(Color.BROWN);
-                break;
-            case PINK:
-                super.setFill(Color.PINK);
-                break;
-            case GREY:
-                super.setFill(Color.GREY);
-                break;
-            case YELLOW:
-                super.setFill(Color.YELLOW);
-                break;
-            case GREEN:
-                super.setFill(Color.GREEN);
-                break;
-            case BLUE:
-                super.setFill(Color.BLUE);
-                break;
-            case WHITE:
-                super.setFill(Color.WHITE);
-                break;
-            case 7:
-                super.setFill(null);
-                break;
-            default:
-                super.setFill(null);
+        } else if (getCardType() == CardType.START) {
+
+            super.setFill(new ImagePattern(listCardImages.get("atlantis.png").getImage()));
+
+        } else if (getCardType() == CardType.END) {
+
+            super.setFill(new ImagePattern(listCardImages.get("land.png").getImage()));
         }
     }
 

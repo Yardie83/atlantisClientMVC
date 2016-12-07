@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Hermann Grieder on 17.07.2016.
@@ -59,7 +60,7 @@ public class AtlantisView {
         height = new SimpleIntegerProperty(800);
 
         this.setSelectedLanguage(model.getSelectedLanguage(model.getConfigLanguage()));
-        
+
         this.setLabelLanguageText();
 
         controls = new ArrayList<>();
@@ -107,6 +108,39 @@ public class AtlantisView {
         setControlText(controls);
     }
 
+    public void updateGameList() {
+        // Only if the list is not empty go on
+        if (model.getGameList().size() != 0) {
+            // Clear the current list in the gameLobby every time we receive the list
+            gameLobbyView.getGameListView().getItems().clear();
+
+            // Reverse the new list, so the newest games are on top
+            Collections.reverse(model.getGameList());
+
+            // Add each game in the gameList to the ListView
+            for (String s : model.getGameList()) {
+                String[] gameInfo = s.split(",");
+                if (!gameInfo[0].equalsIgnoreCase(" ")) {
+
+                    String gameName = gameInfo[0];
+                    int currentJoinedUsers = Integer.parseInt(gameInfo[2]);
+                    String outOf = selectedLanguage.getLanguageTable().get("msgOf");
+                    Integer numberOfPlayers = Integer.parseInt(gameInfo[1]);
+                    String players = selectedLanguage.getLanguageTable().get("msgPlayers");
+
+                    gameLobbyView.getGameListView().getItems().add(
+                            gameName
+                            + " : "
+                            + currentJoinedUsers + " "
+                            + outOf
+                            + " " + numberOfPlayers + " " + players);
+                }
+            }
+            // Clear the list in the model to avoid duplicate entries the next time we receive the list
+            model.getGameList().clear();
+        }
+    }
+
     /**
      * Binds the width and the height to the GameLobby Stage to ensure that
      * the overlays have the same dimensions as the game lobby stage when the
@@ -130,7 +164,8 @@ public class AtlantisView {
      * Hermann Grieder
      */
 
-    public void createCreateGameView(Stage parentStage) {
+    public void createCreateGameView() {
+        Stage parentStage = gameLobbyView.getGameLobbyStage();
         if (this.createGameView == null) {
             this.createGameView = new CreateGameView(height.getValue(), width.getValue());
             createGameStage = new Stage();
@@ -147,7 +182,8 @@ public class AtlantisView {
      * <p>
      * Hermann Grieder
      */
-    public void createLoginView(Stage parentStage) {
+    public void createLoginView() {
+        Stage parentStage = gameLobbyView.getGameLobbyStage();
         if (loginView == null) {
             loginView = new LoginView(height.getValue(), width.getValue());
             loginStage = new Stage();
@@ -169,7 +205,8 @@ public class AtlantisView {
      * <p>
      * Hermann Grieder
      */
-    public void createNewProfileView(Stage parentStage) {
+    public void createNewProfileView() {
+        Stage parentStage = gameLobbyView.getGameLobbyStage();
         if (this.newProfileView == null) {
             this.newProfileView = new NewProfileView(height.getValue(), width.getValue());
             this.profileStage = new Stage();
@@ -191,7 +228,10 @@ public class AtlantisView {
      * Hermann Grieder
      */
 
-    public void createOptionsView(ArrayList<Language> languageList, String culture, Stage parentStage) {
+    public void createOptionsView() {
+        ArrayList<Language> languageList = model.getLanguageList();
+        String culture = model.getConfigLanguage();
+        Stage parentStage = gameLobbyView.getGameLobbyStage();
         if (this.optionsView == null) {
             this.optionsView = new OptionsView(height.getValue(), width.getValue(), languageList, culture, model.getIsMusic());
             this.optionsStage = new Stage();
@@ -233,41 +273,28 @@ public class AtlantisView {
     private void setControlText(ArrayList<Control> controls) {
 
         for (Control control : controls) {
-
             if (control instanceof ButtonBase) {
-
-                if (control instanceof Button){
-
+                if (control instanceof Button) {
                     Button button = (Button) control;
                     addLanguageTextToButtonControl(button);
-
-                }else if (control instanceof RadioButton){
-
+                } else if (control instanceof RadioButton) {
                     RadioButton button = (RadioButton) control;
                     addLanguageTextToButtonControl(button);
+                } else if (control instanceof Label) {
+                    Label label = (Label) control;
+                    addLanguageTextToLabelControl(label);
                 }
-            }
-
-            if (control instanceof Label) {
-
-                Label label = (Label) control;
-                addLanguageTextToLabelControl(label);
+                //if control label was here with just if
             }
         }
-
         controls.clear();
     }
 
     private void addLanguageTextToButtonControl(ButtonBase button) {
-
         if (selectedLanguage != null) {
-
             for (String id : selectedLanguage.getLanguageTable().keySet()) {
-
                 if (button.getId() != null) {
-
                     if (button.getId().equals(id)) {
-
                         button.setText(selectedLanguage.getLanguageTable().get(id));
                     }
                 }
@@ -276,18 +303,11 @@ public class AtlantisView {
     }
 
     private void addLanguageTextToLabelControl(Label label) {
-
         if (selectedLanguage != null) {
-
             for (String id : selectedLanguage.getLanguageTable().keySet()) {
-
                 if (label.getId() != null) {
-
                     if (label.getId().equals(id)) {
-
                         //TODO: Bradley is this okey? instead of the loop?
-                        //selectedLanguage.getLanguageTable().get(label.getId());
-
                         label.setText(selectedLanguage.getLanguageTable().get(id));
                     }
                 }
@@ -401,9 +421,9 @@ public class AtlantisView {
         this.activeOverlayStage.close();
     }
 
-    public void showOptions(ArrayList<Language> languageList, String currentLanguage, Stage gameStage) {
+    public void showOptions() {
         if (this.optionsView == null) {
-            createOptionsView(languageList, currentLanguage, gameStage);
+            createOptionsView();
         }
         this.optionsStage.show();
     }
@@ -411,4 +431,10 @@ public class AtlantisView {
     public Language getSelectedLanguage() {
         return selectedLanguage;
     }
+
+    public String getListInfo() {
+        return gameLobbyView.getGameListView().getSelectionModel().getSelectedItem().toString();
+    }
+
+
 }

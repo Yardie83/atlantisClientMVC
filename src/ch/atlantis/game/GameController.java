@@ -5,6 +5,9 @@ import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.MessageType;
 import ch.atlantis.view.AtlantisView;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -12,54 +15,66 @@ import javafx.scene.input.MouseEvent;
 
 import ch.atlantis.util.Message;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by Hermann Grieder on 31.08.2016.
+ * The GameController coordinates between the gameModel and the gameBoardView. It handles userInputs and listens
+ * to incoming messages in the atlantisModel
  */
 public class GameController {
-
 
     private GameBoardView gameBoardView;
     private AtlantisView atlantisView;
     private GameModel gameModel;
     private AtlantisModel atlantisModel;
-    private Card selectedCard;
-    private GamePiece selectedGamePiece;
-    private HashMap<String, Object> mapToSend = new HashMap<>();
-    private Card cardToMove;
-    private int cardBehindPathId;
-    private int cardToMoveId;
-    private int tempColorSet;
-    private ArrayList<Card> pathCards;
-    private ArrayList<Card> movementCards;
-    private int playerId;
-    private GamePiece tempoGamePiece;
-    private Message message;
-    private int allowedPlayerId = 0;
+
+    private int clickCount;
+
 
     public GameController(AtlantisView atlantisView, AtlantisModel atlantisModel, GameModel gameModel, GameBoardView gameBoardView) {
         this.atlantisView = atlantisView;
         this.atlantisModel = atlantisModel;
         this.gameModel = gameModel;
         this.gameBoardView = gameBoardView;
+    }
 
-        if (myTurn(allowedPlayerId)) {
-            sendHashMap();
-        }
+    // ********************************** METHODS ************************************* //
 
+    public void startGame() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                gameBoardView.show();
+                addListeners();
+                handleUserInput();
+            }
+        });
+    }
+
+    private void sendMoveMessage(HashMap<String, Object> moveMap) {
+        atlantisModel.sendMessage(new Message(MessageType.MOVE, moveMap));
     }
 
 
-    public void startListeners() {
+    private void addListeners() {
 
-        gameBoardView.getGameStage().getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+        /*
+         * Listens if a move message was received in the atlantisModel
+         * then calls the gameModel readInitialGameStateMap method and the gameBoardView update method
+         */
+        atlantisModel.moveValidProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ESCAPE) {
-                    //gameBoardView.showOptions(atlantisModel.getLanguageList(), atlantisModel.getCurrentLanguage(), gameBoardView.getGameStage());
-                    new OptionsController(atlantisModel, atlantisView);
+            @SuppressWarnings("unchecked")
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    if (atlantisModel.getMessage().getMessageObject() instanceof HashMap) {
+                        HashMap<String, Object> gameStateMap = (HashMap<String, Object>) atlantisModel.getMessage().getMessageObject();
+                        gameModel.readGameStateMap(gameStateMap);
+                        registerMouseEvents(gameModel.getNewCardFromDeck());
+                        gameModel.updateValues();
+                        gameBoardView.updateBoard();
+                    }
                 }
             }
         });
@@ -67,148 +82,178 @@ public class GameController {
 
     private void handleUserInput() {
 
-        for (Card card : gameModel.getLocalPlayer().getMovementCards()) {
-
-            card.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-
-                    selectedCard = card;
-
-                }
-            });
-
-        }
-
-        for (GamePiece gamePiece : gameModel.getLocalPlayer().getGamePieces()) {
-
-            gamePiece.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent event) {
-
-                    selectedGamePiece = gamePiece;
-
-                }
-            });
-
-        }
-
-    }
-
-    public void sendHashMap() {
-        mapToSend.put("Card", selectedCard);
-        mapToSend.put("GamePiece", selectedGamePiece);
-
-        atlantisModel.sendMessage(new Message(MessageType.GAMEHANDLING, mapToSend));
-
-    }
-
-    private void handlePlayersChanges() {
-
-
-
-    }
-
-    private Card possiblePathCard(Card handCard) {
-
-        for (int i = 101; i < 154; i++) {
-            for (Card pathCard : gameBoardView.getPathCards()) {
-                if (pathCard.getPathId() == i) {
-                    if (pathCard.getColorSet() == handCard.getColorSet()) {
-                        if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER
-                                && pathCard.getCardType() != CardType.START) {
-                            cardBehindPathId = i - 1;
-                            return pathCard;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private Card possiblePathCard(GamePiece gamePiece) {
-
-        for (int i = gamePiece.getPathId(); i < 154; i++) {
-            for (Card pathCard : gameModel.getPathCards()) {
-                if (pathCard.getPathId() == i) {
-                    if (pathCard.getColorSet() == tempColorSet) {
-                        if (pathCard.isOnTop() && pathCard.getCardType() != CardType.WATER
-                                && pathCard.getCardType() != CardType.START) {
-                            cardBehindPathId = i - 1;
-                            return pathCard;
-                        }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    private boolean myTurn(int allowedPlayerId) {
-
-        if (gameModel.getLocalPlayer().getPlayerID() == allowedPlayerId) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Fabian Witschi
-     *
-     * @return
-     */
-    private Card getNextCard() {
-        for (Card card : gameModel.getPathCards()) {
-            if (card.getPathId() == cardToMove.getPathId() + 1) {
-                return card;
-            }
-        }
-        return null;
-    }
-
-    private boolean isOccupied(Card cardToMove) {
-
-        for (Player player : gameModel.getPlayers()) {
-            for (GamePiece gamePiece : player.getGamePieces()) {
-                if (gamePiece.getGamePieceX() == cardToMove.getLayoutX() + (cardToMove.getWidth() / 2) - (gamePiece.getWidth() / 2) && gamePiece.getGamePieceY() ==
-                        cardToMove.getLayoutY() + (cardToMove.getHeight() / 2) - (gamePiece.getHeight() / 2)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public void handleMoveFromPlayer(Message message) {
-
-    }
-
-    private boolean myTurn() {
-
-        if (allowedPlayerId == gameModel.getLocalPlayer().getPlayerID()) {
-            allowedPlayerId++;
-            if (allowedPlayerId == gameModel.getPlayers().size()) {
-                allowedPlayerId = 0;
-            }
-            return true;
-        }
-        return false;
-    }
-
-    public void showGame() {
-        Platform.runLater(new Runnable() {
+        /*
+         * On KeyPressed Esc the options menu is shown
+         */
+        //TODO: Make this work
+        gameBoardView.getGameStage().getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void run() {
-                gameBoardView.show();
-                startListeners();
-                if (myTurn(allowedPlayerId)) {
-                    handleUserInput();
-                    sendHashMap();
+            public void handle(KeyEvent event) {
+                if (event.getCode() == KeyCode.ESCAPE) {
+                    if (atlantisView.getOptionsStage() == null){
+                        atlantisView.createOptionsView();
+                        new OptionsController(atlantisModel,atlantisView);
+                        atlantisView.getOptionsStage().show();
+                    }else{
+                        atlantisView.getOptionsStage().show();
+                    }
                 }
             }
         });
 
+
+        // ************************** MOVEMENT CARDS **************************** //
+
+        for (Card movementCard : gameModel.getLocalPlayer().getMovementCards()) {
+            registerMouseEvents(movementCard);
+        }
+
+        // *********************** GAME PIECES ********************************** //
+
+        for (GamePiece gamePiece : gameModel.getLocalPlayer().getGamePieces()) {
+            /*
+             * Selects the gamePiece the player clicked on
+             */
+            gamePiece.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (gameModel.getSelectedGamePiece() != null) {
+                        gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
+                    }
+                    gameModel.setSelectedGamePiece(gamePiece);
+                    System.out.println(gameModel.getSelectedGamePiece().getCurrentPathId());
+                    gameBoardView.highlightItem(gamePiece);
+                }
+            });
+
+            /*
+             * On mouse enter the gamePiece will be highlighted.
+             */
+            gamePiece.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (gamePiece != gameModel.getSelectedGamePiece()) {
+                        gameBoardView.highlightItem(gamePiece);
+                    }
+                }
+            });
+
+            /*
+             * On mouse exited the gamePiece will be reset from being highlighted if it is not the
+             * selected gamePiece
+             */
+            gamePiece.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (gamePiece != gameModel.getSelectedGamePiece()) {
+                        gameBoardView.resetHighlight(gamePiece);
+                    }
+                }
+            });
+        }
+
+        //********************************** GAME CONTROL BUTTONS ************************************ //
+
+        gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+            }
+        });
+
+        gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                clickCount++;
+                if (clickCount == 1) {
+                    gameModel.savePreviousGameStateMap();
+                    System.out.println("GameModel -> Previous Game State Saved");
+                }
+                if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
+                    gameBoardView.resetHighlight(gameModel.getSelectedCard());
+                    gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
+                    gameBoardView.moveGamePiece(gameModel.findTargetPathId(), gameModel.getSelectedGamePiece());
+                }
+                gameModel.setSelectedCard(null);
+                gameModel.setSelectedGamePiece(null);
+            }
+
+        });
+
+        gameBoardView.getButtonReset().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (gameModel.getPreviousGameStateMap() != null) {
+                    gameModel.reloadGameStateMap(gameModel.getPreviousGameStateMap());
+                    gameBoardView.resetHighlight(gameModel.getSelectedCard());
+                    gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
+                    gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece().getCurrentPathId(), gameModel.getSelectedGamePiece());
+                    clickCount = 0;
+                }
+            }
+        });
+
+        gameBoardView.getButtonEndTurn().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
+                    if (gameModel.getCurrentTurn() == gameModel.getLocalPlayer().getPlayerID()) {
+                        gameBoardView.resetHighlight(gameModel.getSelectedCard());
+                        gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
+                        gameModel.findTargetPathId();
+                        HashMap<String, Object> moveMap = gameModel.writeGameStateMap();
+                        sendMoveMessage(moveMap);
+                        gameModel.setSelectedCard(null);
+                        gameModel.setSelectedGamePiece(null);
+                    }
+                }
+            }
+        });
     }
 
+    private void registerMouseEvents(Card card){
+        /*
+             * Selects the movement card the player clicked on
+             */
+        card.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (gameModel.getSelectedCard() != null) {
+                    gameBoardView.resetHighlight(gameModel.getSelectedCard());
+                }
+                gameModel.setSelectedCard(card);
+                System.out.println(gameModel.getSelectedCard().getColorSet());
+                gameBoardView.highlightItem(card);
+            }
+        });
+
+            /*
+             * On mouse enter the movement card will be highlighted.
+             */
+        card.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                for (Card movementCardToReset : gameModel.getLocalPlayer().getMovementCards()) {
+                    if (movementCardToReset != gameModel.getSelectedCard()) {
+                        gameBoardView.resetHighlight(movementCardToReset);
+                    }
+                }
+                gameBoardView.highlightItem(card);
+            }
+        });
+
+            /*
+             * On mouse exited the movement card will be reset from being highlighted if it is not
+             * the selected movement card
+             */
+        card.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (card != gameModel.getSelectedCard()) {
+                    gameBoardView.resetHighlight(card);
+                }
+            }
+        });
+    }
 }

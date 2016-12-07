@@ -41,31 +41,26 @@ public class AtlantisModel {
     private ObjectOutputStream outputStream;
     private Message message;
     private Socket socket;
+    private boolean autoConnect;
 
     private SimpleStringProperty chatString;
     private SimpleStringProperty connectionStatus;
     private SimpleIntegerProperty createProfileSuccess;
     private SimpleIntegerProperty loginSuccess;
+    private SimpleBooleanProperty moveValid;
     private SimpleBooleanProperty gameReady;
     private SimpleBooleanProperty gameInfo;
     private SimpleStringProperty userName;
-    private boolean autoConnect = true;
     private ObservableList<String> gameList;
     private LanguageHandler languageHandler;
 
-    private Player player;
-    private String currentLanguage;
     private Player localPlayer;
     private boolean isMusic = true;
 
     private AtlantisConfig conf;
-    private Game game;
+
 
     private Music musicThread;
-
-    private GamePiece gamePiece;
-    private Card cardBehind;
-
 
 
     public AtlantisModel() {
@@ -81,22 +76,14 @@ public class AtlantisModel {
         gameReady = new SimpleBooleanProperty(false);
         gameInfo = new SimpleBooleanProperty(false);
         gameList = FXCollections.observableArrayList();
+        autoConnect = true;
 
         this.handleLanguages();
         this.handleSettings();
         this.soundController(conf.getIsMusic());
+        moveValid = new SimpleBooleanProperty();
     }
 
-    private void handleSettings() {
-
-        if (conf == null) {
-            conf = new AtlantisConfig();
-            if (!conf.readAtlantisConfig()) {
-
-                logger.warning("The AtlantisConfig could not be read!");
-            }
-        }
-    }
 
     /**
      * Tries to connect to the server. If a connection could be established
@@ -181,8 +168,11 @@ public class AtlantisModel {
                                 case GAMEINIT:
                                     handleGameInit();
                                     break;
-                                case GAMEHANDLING:
-                                    handleGameEvent(message);
+                                case MOVE:
+                                    handleMove();
+                                    break;
+                                case GAMEOVER:
+                                    handleGameOver(message);
                                     break;
                             }
                         }
@@ -226,19 +216,20 @@ public class AtlantisModel {
         String[] info = splitMessage(message);
         int playerId = Integer.valueOf(info[0]);
         String gameName = info[1];
-        localPlayer = new Player(playerId, gameName);
-        localPlayer.setName(userName.getValue());
+        localPlayer = new Player(playerId, gameName, userName.getValue());
     }
 
-    public void handleGameEvent(Message message) {
-
-        if (message.getMessageObject() instanceof HashMap) {
-            HashMap<String, Object> gameInfo = (HashMap<String, Object>) message.getMessageObject();
-            this.gamePiece = (GamePiece) gameInfo.get("GamePiece");
-            this.cardBehind = (Card) gameInfo.get("CardBehind");
-        }
-
+    @SuppressWarnings("unchecked")
+    public void handleMove() {
+        moveValid.setValue(true);
+        moveValid.setValue(false);
     }
+
+    private void handleGameOver(Message message) {
+        Boolean gameOver = (Boolean) message.getMessageObject();
+        System.out.println("AtlantisModel -> GameOver: " + gameOver);
+    }
+
 
     private void handleGameList(Message message) {
         gameList.add(message.getMessageObject().toString());
@@ -249,12 +240,22 @@ public class AtlantisModel {
         languageHandler = new LanguageHandler();
 
         if (languageHandler.getLanguageList().size() == 0 || languageHandler.getLanguageList() == null) {
-            System.out.println("No languages available");
+            System.out.println("AtlantisModel -> No languages available");
         } else {
 
             //success
 
             //TODO: Log languages etc
+        }
+    }
+
+    private void handleSettings() {
+
+        if (conf == null) {
+            conf = new AtlantisConfig();
+            if (!conf.readAtlantisConfig()) {
+                logger.warning("The AtlantisConfig could not be read!");
+            }
         }
     }
 
@@ -285,7 +286,6 @@ public class AtlantisModel {
     public void joinGame(String listInfo) {
         String[] info = listInfo.split(" ");
         String gameName = info[0];
-
         sendMessage(new Message(MessageType.JOINGAME, gameName));
     }
 
@@ -325,10 +325,9 @@ public class AtlantisModel {
         }
     }
 
-    //TODO: Make this better-looking instead of a PDF create a view with the rules
     public void showGameRules() {
         try {
-            File file = new File(getClass().getResource("/ch/atlantis/res/Atlantis_Spielregel.pdf").getFile());
+            File file = new File("src/ch/atlantis/res/Atlantis_Spielregel.pdf");
             if (file.exists()) {
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
             }
@@ -342,13 +341,14 @@ public class AtlantisModel {
         if (status) {
             musicThread = new Music();
             musicThread.start();
+        }
 
-        } else if (musicThread != null && !status) {
+        if (musicThread != null && !status) {
             musicThread.stopMusic();
             musicThread.interrupt();
             musicThread = null;
         }
-        this.setIsMusic(status);
+        isMusic = status;
     }
 
     public Language getSelectedLanguage(String culture) {
@@ -393,6 +393,14 @@ public class AtlantisModel {
         return loginSuccess;
     }
 
+    public boolean isMoveValid() {
+        return moveValid.get();
+    }
+
+    public SimpleBooleanProperty moveValidProperty() {
+        return moveValid;
+    }
+
     public SimpleStringProperty userNameProperty() {
         return userName;
     }
@@ -421,12 +429,6 @@ public class AtlantisModel {
         return this.conf.getConfigLanguage();
     }
 
-    public void setIsMusic(boolean isMusic) {
-
-        this.conf.setIsMusic(isMusic);
-        this.conf.createAtlantisConfig();
-    }
-
     public boolean getIsMusic() {
         return this.conf.getIsMusic();
     }
@@ -441,8 +443,5 @@ public class AtlantisModel {
         return localPlayer;
     }
 
-    public GamePiece getGamePiece() { return gamePiece; }
-
-    public Card getCardBehind() { return cardBehind; }
 
 }

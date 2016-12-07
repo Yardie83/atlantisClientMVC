@@ -12,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -22,7 +23,11 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import sun.applet.Main;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -60,7 +65,6 @@ public class GameLobbyView extends Pane {
     private Pane popup;
     private Separator s0;
     private Label lblGameTitles;
-    private ArrayList<Control> gameLobbyControls;
     private Button startGameBtn;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
@@ -69,8 +73,6 @@ public class GameLobbyView extends Pane {
         Scene gameLobbyScene = new Scene(this);
         gameLobbyScene.getStylesheets().add(css);
         gameLobbyStage = new Stage();
-
-        gameLobbyControls = new ArrayList<>();
 
         if (fullscreen) {
             gameLobbyStage.setFullScreen(true);
@@ -166,7 +168,8 @@ public class GameLobbyView extends Pane {
         txtArea.setWrapText(true);
         txtField = new TextField();
         startGameBtn = new Button("Start Game");
-        startGameBtn.setVisible(false);
+        startGameBtn.setVisible(true);
+        startGameBtn.setDisable(true);
         rightVBox.getChildren().addAll(txtArea, txtField, startGameBtn);
 
         return rightVBox;
@@ -177,7 +180,7 @@ public class GameLobbyView extends Pane {
         centerVBox = new VBox(30);
         lblGameTitles = new Label("Games");
         lblGameTitles.setEffect(new InnerShadow(BlurType.THREE_PASS_BOX, Color.LIGHTGREY, 2, 0.2, 0, 2));
-        gameListView = new ListView();
+        gameListView = new ListView<>();
         centerVBox.getChildren().addAll(lblGameTitles, gameListView);
         return centerVBox;
     }
@@ -207,7 +210,7 @@ public class GameLobbyView extends Pane {
      * @param message The text to be displayed
      * @param inset   The amount of pixels the box should move into the screen from the right
      */
-    public void createPopUp(String message, int inset) {
+    public void showPopUp(String message, int inset) {
         popup = new Pane();
         popup.setTranslateX(gameLobbyStage.getWidth());
         popup.setTranslateY(gameLobbyStage.getHeight() - 110);
