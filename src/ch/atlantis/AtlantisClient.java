@@ -33,6 +33,7 @@ public class AtlantisClient extends Application {
     @Override
     public void start(Stage introStage) throws Exception {
 
+
         AtlantisModel model = new AtlantisModel();
         AtlantisView view = new AtlantisView(introStage, model);
         new AtlantisController(model, view);
