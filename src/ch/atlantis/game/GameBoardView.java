@@ -81,22 +81,36 @@ public class GameBoardView extends Pane {
     }
 
     private void drawPath() {
-
+        Card cardToMoveToFront = null;
         for (Card card : gameModel.getPathCards()) {
             for (Tile tile : gameModel.getTiles()) {
                 if (card.getCardType() == CardType.START && tile.getPathId() == 300) {
                     drawSpecialCards(card, tile);
+                    card.setLayoutX(tile.getX() - tile.getSide());
                     card.setLayoutY(tile.getY());
                 } else if (card.getCardType() == CardType.END && tile.getPathId() == 400) {
                     drawSpecialCards(card, tile);
-                    card.setLayoutY(tile.getY());
+                    card.setLayoutX(tile.getX() - tile.getSide() + 17);
+                    card.setLayoutY(tile.getY() - tile.getSide());
                 } else if (card.getPathId() == tile.getPathId()) {
                     drawMainPath(card, tile);
+                    // In order to have the last pathCard before the end be drawn on top of the end
+                    // we have to single out the last card and tell it specifically to be on top.
+                    // Could not get it to work any other way.
+                    // Another idea would be to single out the start and the end card and after we draw
+                    // the path to draw the start and end and send them to the back. There is no problem with the first
+                    // card for some reason
+                    if(card.getPathId() == 153){
+                        cardToMoveToFront = card;
+                    }
                 }
             }
             card.applyCardImages(listCardImages);
             this.getChildren().add(card);
         }
+        // Here we tell the last path card to be on top in order to be drawn on top of the end card
+        int index = gameModel.getPathCards().indexOf(cardToMoveToFront);
+        gameModel.getPathCards().get(index).toFront();
     }
 
     private void drawMainPath(Card card, Tile tile) {
@@ -104,11 +118,9 @@ public class GameBoardView extends Pane {
         card.setHeight(tile.getSide());
         card.setLayoutX(tile.getX());
         card.setLayoutY(tile.getY());
-        card.toFront();
     }
 
     private void drawSpecialCards(Card card, Tile tile) {
-        card.setLayoutX(tile.getX() - tile.getSide());
         card.setWidth(tile.getSide()*3);
         card.setHeight(tile.getSide() * 2);
         card.toBack();
@@ -131,7 +143,7 @@ public class GameBoardView extends Pane {
         for (Player player : gameModel.getPlayers()) {
             for (GamePiece gamePiece : player.getGamePieces()) {
                 if (startCard != null) {
-                    gamePiece.setLayoutX(startCard.getLayoutX() + offsetX);
+                    gamePiece.setLayoutX(startCard.getLayoutX() + offsetX + startCard.getWidth() / 3);
                     gamePiece.setLayoutY(startCard.getLayoutY() + offsetY);
                     gamePiece.setCurrentPathId(startCard.getPathId());
                 }
@@ -222,7 +234,7 @@ public class GameBoardView extends Pane {
         otherPlayersBox.setMinWidth(consoleTile.getSide() * 2);
         scoresLabels = new HashMap<>();
         for (Player player : gameModel.getPlayers()) {
-            if (!player.getPlayerName().equals(gameModel.getLocalPlayer().getGameName())) {
+            if (player.getPlayerID() != gameModel.getLocalPlayer().getPlayerID()) {
                 Label lblOpponentName = new Label(player.getPlayerName());
                 Label lblOpponentScore = new Label(Integer.toString(player.getScore()));
                 scoresLabels.put(player.getPlayerID(), lblOpponentScore);
@@ -264,7 +276,7 @@ public class GameBoardView extends Pane {
         if (myFiles != null) {
             for (File file : myFiles) {
                 if (file.exists() && file.isFile()) {
-                    if (file.getName().endsWith(".jpg")) {
+                    if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
 
                         //without the substring(4) the path is invalid resp nullpointerexception
                         ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
@@ -324,8 +336,10 @@ public class GameBoardView extends Pane {
                 }
 
                 //Remove the pathCards
-                Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
-                removePathCard(pathCardToRemove);
+                if(gamePieceToMove.getCurrentPathId()!= 101) {
+                    Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
+                    removePathCard(pathCardToRemove);
+                }
             }
         });
     }

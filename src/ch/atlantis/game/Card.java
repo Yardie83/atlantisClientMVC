@@ -44,11 +44,11 @@ public class Card extends Rectangle implements Serializable {
 
         } else if (getCardType() == CardType.START) {
 
-            super.setFill(new ImagePattern(listCardImages.get("atlantis.jpg").getImage()));
+            super.setFill(new ImagePattern(listCardImages.get("atlantis.png").getImage()));
 
         } else if (getCardType() == CardType.END) {
 
-            super.setFill(new ImagePattern(listCardImages.get("land.jpg").getImage()));
+            super.setFill(new ImagePattern(listCardImages.get("land.png").getImage()));
         }
     }
 
