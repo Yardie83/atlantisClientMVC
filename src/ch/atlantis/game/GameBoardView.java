@@ -42,6 +42,7 @@ public class GameBoardView extends Pane {
     private Label lblLocalPlayer;
     private Label lblScoreLocalPlayer;
     private HBox HBoxMovementCards;
+    private Label infoLabel;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -100,7 +101,7 @@ public class GameBoardView extends Pane {
                     // Another idea would be to single out the start and the end card and after we draw
                     // the path to draw the start and end and send them to the back. There is no problem with the first
                     // card for some reason
-                    if(card.getPathId() == 153){
+                    if (card.getPathId() == 153) {
                         cardToMoveToFront = card;
                     }
                 }
@@ -121,7 +122,7 @@ public class GameBoardView extends Pane {
     }
 
     private void drawSpecialCards(Card card, Tile tile) {
-        card.setWidth(tile.getSide()*3);
+        card.setWidth(tile.getSide() * 3);
         card.setHeight(tile.getSide() * 2);
         card.toBack();
     }
@@ -203,7 +204,9 @@ public class GameBoardView extends Pane {
         buttonBuyCards = new Button("Buy Cards");
         buttonMove = new Button("Move");
         buttonReset = new Button("Reset");
+        buttonReset.setDisable(true);
         buttonEndTurn = new Button("End Turn");
+        buttonEndTurn.setDisable(true);
 
         gameControls.getChildren().addAll(buttonBuyCards, buttonMove, buttonReset, buttonEndTurn);
 
@@ -213,11 +216,13 @@ public class GameBoardView extends Pane {
     private VBox createLocalPlayerBox() {
         VBox localPlayerBox = new VBox(10);
         localPlayerBox.setMinHeight(200);
-        localPlayerBox.setMinWidth(consoleTile.getSide() * 3);
+        localPlayerBox.setMinWidth(consoleTile.getSide() * 4);
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
         HBoxMovementCards = placeMovementCards();
-        localPlayerBox.getChildren().addAll(top, HBoxMovementCards);
+        infoLabel = new Label("");
+        infoLabel.setStyle("-fx-text-fill: white");
+        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, infoLabel);
 
         String score = Integer.toString(gameModel.getLocalPlayer().getScore());
         Label lblLocalPlayer = new Label(gameModel.getLocalPlayer().getPlayerName());
@@ -231,7 +236,7 @@ public class GameBoardView extends Pane {
     private VBox createOpponentBox() {
         VBox opponentsBox = new VBox(10);
         opponentsBox.setMinHeight(200);
-        opponentsBox.setMinWidth(consoleTile.getSide() * 2);
+        opponentsBox.setMinWidth(consoleTile.getSide());
         scoresLabels = new HashMap<>();
         for (Player player : gameModel.getPlayers()) {
             if (player.getPlayerID() != gameModel.getLocalPlayer().getPlayerID()) {
@@ -300,8 +305,9 @@ public class GameBoardView extends Pane {
 
     //*************************** METHODS DURING THE ACTIVE GAME *****************************//
 
-    public void moveGamePiece(int targetPathId, GamePiece selectedGamePiece) {
-
+    public void moveGamePiece() {
+        int targetPathId = gameModel.getSelectedGamePiece().getCurrentPathId();
+        GamePiece selectedGamePiece = gameModel.getSelectedGamePiece();
         for (Tile targetTile : gameModel.getTiles()) {
             if (targetTile.getPathId() == targetPathId) {
                 int x = targetTile.getX() + (targetTile.getSide() / 2);
@@ -316,10 +322,7 @@ public class GameBoardView extends Pane {
             @Override
             public void run() {
                 //Move the gamePiece
-                GamePiece gamePieceToMove = gameModel.getGamePieceToMove();
-                int targetPathId = gamePieceToMove.getCurrentPathId();
-                System.out.println("TargetPathId: " + targetPathId);
-                moveGamePiece(targetPathId, gamePieceToMove);
+                moveGamePiece();
 
                 //Update the score
                 if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()) {
@@ -336,7 +339,7 @@ public class GameBoardView extends Pane {
                 }
 
                 //Remove the pathCards
-                if(gamePieceToMove.getCurrentPathId()!= 101) {
+                if (gameModel.getSelectedGamePiece().getCurrentPathId() != 101) {
                     Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
                     removePathCard(pathCardToRemove);
                 }
@@ -348,7 +351,7 @@ public class GameBoardView extends Pane {
         this.getChildren().remove(pathCard);
     }
 
-    public void showOptions(ArrayList<Language> languageList, String currentLanguage, Stage gameStage) {
+    public void showOptions() {
         view.showOptions();
     }
 
@@ -386,5 +389,7 @@ public class GameBoardView extends Pane {
         return buttonEndTurn;
     }
 
-
+    public Label getInfoLabel() {
+        return infoLabel;
+    }
 }

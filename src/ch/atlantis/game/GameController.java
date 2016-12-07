@@ -52,7 +52,8 @@ public class GameController {
         });
     }
 
-    private void sendMoveMessage(HashMap<String, Object> moveMap) {
+    private void sendMoveMessage() {
+        HashMap<String, Object> moveMap = gameModel.writeGameStateMap();
         atlantisModel.sendMessage(new Message(MessageType.MOVE, moveMap));
     }
 
@@ -71,9 +72,10 @@ public class GameController {
                     if (atlantisModel.getMessage().getMessageObject() instanceof HashMap) {
                         HashMap<String, Object> gameStateMap = (HashMap<String, Object>) atlantisModel.getMessage().getMessageObject();
                         gameModel.readGameStateMap(gameStateMap);
-                        registerMouseEvents(gameModel.getNewCardFromDeck());
+                        handleMouseEvents(gameModel.getNewCardFromDeck());
                         gameModel.updateValues();
                         gameBoardView.updateBoard();
+                        gameBoardView.getButtonMove().setDisable(false);
                     }
                 }
             }
@@ -90,13 +92,8 @@ public class GameController {
             @Override
             public void handle(KeyEvent event) {
                 if (event.getCode() == KeyCode.ESCAPE) {
-                    if (atlantisView.getOptionsStage() == null){
-                        atlantisView.createOptionsView();
-                        new OptionsController(atlantisModel,atlantisView);
-                        atlantisView.getOptionsStage().show();
-                    }else{
-                        atlantisView.getOptionsStage().show();
-                    }
+                    gameBoardView.showOptions();
+                    new OptionsController(atlantisModel, atlantisView);
                 }
             }
         });
@@ -105,7 +102,7 @@ public class GameController {
         // ************************** MOVEMENT CARDS **************************** //
 
         for (Card movementCard : gameModel.getLocalPlayer().getMovementCards()) {
-            registerMouseEvents(movementCard);
+            handleMouseEvents(movementCard);
         }
 
         // *********************** GAME PIECES ********************************** //
@@ -120,8 +117,10 @@ public class GameController {
                     if (gameModel.getSelectedGamePiece() != null) {
                         gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                     }
-                    gameModel.setSelectedGamePiece(gamePiece);
-                    System.out.println(gameModel.getSelectedGamePiece().getCurrentPathId());
+                    if (clickCount == 0) {
+                        gameModel.setSelectedGamePiece(gamePiece);
+                    }
+                    System.out.println("GameController -> GamePiece Current Path Id: " + gameModel.getSelectedGamePiece().getCurrentPathId());
                     gameBoardView.highlightItem(gamePiece);
                 }
             });
@@ -164,31 +163,50 @@ public class GameController {
         gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                gameBoardView.getButtonBuyCards().setDisable(true);
+                gameBoardView.getButtonReset().setDisable(false);
 
-                clickCount++;
                 if (clickCount == 1) {
-                    gameModel.savePreviousGameStateMap();
-                    System.out.println("GameModel -> Previous Game State Saved");
+                    gameModel.saveCurrentGameState();
+                    System.out.println("GameModel -> Current Game State Saved");
                 }
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
+                    clickCount++;
+                    gameBoardView.getInfoLabel().setText("");
                     gameBoardView.resetHighlight(gameModel.getSelectedCard());
                     gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                    gameBoardView.moveGamePiece(gameModel.findTargetPathId(), gameModel.getSelectedGamePiece());
+                    if (gameModel.canMoveDirectly()){
+                        gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
+                        gameModel.getSelectedCard().setOpacity(0);
+                        gameModel.getSelectedCard().setDisable(true);
+                        gameBoardView.moveGamePiece();
+                        gameBoardView.getButtonMove().setDisable(true);
+                        gameBoardView.getButtonEndTurn().setDisable(false);
+                        gameBoardView.getInfoLabel().setText("Press End Turn To Confirm Your Move");
+                    }
                 }
-                gameModel.setSelectedCard(null);
-                gameModel.setSelectedGamePiece(null);
             }
-
         });
 
         gameBoardView.getButtonReset().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if (gameModel.getPreviousGameStateMap() != null) {
-                    gameModel.reloadGameStateMap(gameModel.getPreviousGameStateMap());
+                if (gameBoardView.getButtonMove().isDisabled()){
+                    gameBoardView.getButtonMove().setDisable(false);
+                }
+                if (gameBoardView.getButtonBuyCards().isDisabled()){
+                    gameBoardView.getButtonBuyCards().setDisable(false);
+                }
+                if (gameModel.getCurrentGameStateMap() != null) {
+                    //gameModel.reloadGameStateMap(gameModel.getCurrentGameStateMap());
                     gameBoardView.resetHighlight(gameModel.getSelectedCard());
                     gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                    gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece().getCurrentPathId(), gameModel.getSelectedGamePiece());
+                    gameModel.getSelectedGamePiece().resetPathId();
+                    gameBoardView.moveGamePiece();
+                    gameModel.getSelectedCard().setOpacity(1);
+                    gameModel.getSelectedCard().setDisable(false);
+                    gameModel.setSelectedCard(null);
+                    gameModel.setSelectedGamePiece(null);
                     clickCount = 0;
                 }
             }
@@ -197,25 +215,48 @@ public class GameController {
         gameBoardView.getButtonEndTurn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                gameBoardView.getButtonReset().setDisable(true);
+                gameBoardView.getButtonBuyCards().setDisable(true);
+                gameBoardView.getButtonMove().setDisable(true);
+                gameBoardView.getButtonEndTurn().setDisable(true);
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayer().getPlayerID()) {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());
                         gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                        gameModel.findTargetPathId();
-                        HashMap<String, Object> moveMap = gameModel.writeGameStateMap();
-                        sendMoveMessage(moveMap);
+                        sendMoveMessage();
                         gameModel.setSelectedCard(null);
                         gameModel.setSelectedGamePiece(null);
+                        clickCount = 0;
                     }
                 }
             }
         });
+
+        gameModel.targetIsOccupiedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue){
+                    gameBoardView.getInfoLabel().setText("Target is occupied\nPlay another card to jump over");
+                }
+                gameModel.targetIsOccupiedProperty().set(false);
+            }
+        });
+
+        gameModel.waterOnTheWayPathIdProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (newValue.intValue() != 0){
+                    gameBoardView.getInfoLabel().setText("You need to cross water\nPay with a bridge or with collected cards");
+                }
+                gameModel.waterOnTheWayPathIdProperty().set(0);
+            }
+        });
     }
 
-    private void registerMouseEvents(Card card){
+    private void handleMouseEvents(Card card) {
         /*
-             * Selects the movement card the player clicked on
-             */
+         * Selects the movement card the player clicked on
+         */
         card.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
