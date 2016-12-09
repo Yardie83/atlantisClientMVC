@@ -63,7 +63,9 @@ public class AtlantisModel {
 
     public AtlantisModel() {
 
-        logger = Logger.getLogger(AtlantisClient.class.getName());
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
+
+        logger.info("Du Hayvan!");
 
         chatString = new SimpleStringProperty();
         connectionStatus = new SimpleStringProperty();
@@ -82,7 +84,6 @@ public class AtlantisModel {
         this.soundController(conf.getIsMusic());
         moveValid = new SimpleBooleanProperty();
     }
-
 
     /**
      * Tries to connect to the server. If a connection could be established
@@ -250,7 +251,7 @@ public class AtlantisModel {
         if (conf == null) {
             conf = new AtlantisConfig();
             if (!conf.readAtlantisConfig()) {
-                logger.warning("The AtlantisConfig could not be read!");
+                logger.info("AtlantisConfig could not be read.");
             }
         }
     }
