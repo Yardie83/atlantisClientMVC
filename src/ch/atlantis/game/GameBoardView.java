@@ -372,8 +372,6 @@ public class GameBoardView extends Pane {
                     Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
                     removePathCard(pathCardToRemove);
                 }
-
-
             }
         });
     }

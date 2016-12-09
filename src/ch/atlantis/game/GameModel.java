@@ -111,12 +111,12 @@ public class GameModel {
             for (GamePiece gamePiece : player.getGamePieces()) {
                 if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId) {
                     System.out.println("GameModel -> TargetPathId is occupied");
-                    return false;
+                    return true;
                 }
             }
         }
         System.out.println("GameModel -> TargetPathId is not occupied");
-        return true;
+        return false;
     }
 
     /**
@@ -161,7 +161,7 @@ public class GameModel {
             System.out.println("No water found to the target");
             return 0;
         }
-        System.out.println("Water on PathId: " + startPathId);
+        System.out.println("Water found on PathId: " + startPathId);
         return startPathId;
     }
 
@@ -337,22 +337,21 @@ public class GameModel {
 
         // Find the target pathId on the client side
         targetPathId = findTargetPathId();
-        selectedGamePiece.setTargetPathId(targetPathId);
-        // Check if the target pathId is already occupied by someone else
-        targetNotOccupied.setValue(checkIfOccupied(targetPathId, selectedGamePiece));
 
         // Check if there is water on the way to the target. Returns the pathId of that water tile or 0 if not water is on the way
-
         waterOnTheWayPathId.set(checkIfWaterOnTheWay(selectedGamePiece.getCurrentPathId(), targetPathId));
-
         // If there is water on the way to the target then calculate the price to cross
         int priceToCrossWater = 0;
         if (waterOnTheWayPathId.get() != 0) {
             priceToCrossWater = getPriceForCrossing(waterOnTheWayPathId.get());
+            return false;
         }
-
-        System.out.println("GameModel -> Move can be done directly");
-        return targetNotOccupied.getValue() && waterOnTheWayPathId.get() == 0;
+        // Check if the target pathId is already occupied by someone else
+        targetNotOccupied.setValue(!checkIfOccupied(targetPathId, selectedGamePiece));
+        if (targetNotOccupied.get() == true){
+            return true;
+        }
+        return false;
     }
 
 

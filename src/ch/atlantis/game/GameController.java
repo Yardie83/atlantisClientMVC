@@ -136,7 +136,7 @@ public class GameController {
                 gameBoardView.getButtonBuyCards().setDisable(true);
                 gameBoardView.getButtonReset().setDisable(false);
 
-                if (clickCount == 1) {
+                if (clickCount == 0) {
                     gameModel.saveCurrentGameState();
                     System.out.println("GameModel -> Current Game State Saved");
                 }
@@ -146,13 +146,17 @@ public class GameController {
                     gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                     gameBoardView.setInfoLabelText("");
                     if (gameModel.canMoveDirectly()) {
-                        gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
-                        gameModel.getSelectedCard().setOpacity(0);
-                        gameModel.getSelectedCard().setDisable(true);
-                        gameBoardView.moveGamePiece();
-                        gameBoardView.getButtonMove().setDisable(true);
-                        gameBoardView.getButtonEndTurn().setDisable(false);
-                        gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
+                            System.out.println("GameModel -> Move can be done directly");
+                            System.out.println("Press \"End Turn\" to confirm your move");
+                            gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
+                            gameModel.getSelectedCard().setOpacity(0);
+                            gameModel.getSelectedCard().setDisable(true);
+                            gameBoardView.moveGamePiece();
+                            gameBoardView.getButtonMove().setDisable(true);
+                            gameBoardView.getButtonEndTurn().setDisable(false);
+                            gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
+                    }else{
+                        System.out.println("GameModel -> Move can not be done directly");
                     }
                 }
             }
@@ -166,6 +170,9 @@ public class GameController {
                 }
                 if (gameBoardView.getButtonBuyCards().isDisabled()) {
                     gameBoardView.getButtonBuyCards().setDisable(false);
+                }
+                if(gameBoardView.getButtonEndTurn().isDisabled()){
+                    gameBoardView.getButtonEndTurn().setDisable(false);
                 }
                 gameBoardView.getButtonReset().setDisable(true);
                 gameBoardView.resetHighlight(gameModel.getSelectedCard());
@@ -214,7 +221,7 @@ public class GameController {
                     if (gameModel.getSelectedGamePiece() != null) {
                         gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                     }
-                    if (clickCount == 0) {
+                    if (clickCount == 0 /*&& gameModel.getSelectedGamePiece().getCurrentPathId() != 400 */ ) {
                         gameModel.setSelectedGamePiece(gamePiece);
                     }
                     System.out.println("GameController -> GamePiece Current Path Id: " + gameModel.getSelectedGamePiece().getCurrentPathId());
