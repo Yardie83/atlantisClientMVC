@@ -6,7 +6,6 @@ import ch.atlantis.view.AtlantisView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.Date;
 import java.util.logging.*;
 
 
@@ -32,7 +31,6 @@ public class AtlantisClient extends Application {
 
     @Override
     public void start(Stage introStage) throws Exception {
-
 
         AtlantisModel model = new AtlantisModel();
         AtlantisView view = new AtlantisView(introStage, model);
