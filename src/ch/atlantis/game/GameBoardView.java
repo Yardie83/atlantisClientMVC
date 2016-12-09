@@ -72,7 +72,7 @@ public class GameBoardView extends Pane {
             tile.setSide(side);
         }
 
-        listCardImages = readCards();
+        listCardImages = readCardImages();
 
         drawPath();
 
@@ -272,7 +272,7 @@ public class GameBoardView extends Pane {
         card.applyCardImages(listCardImages);
     }
 
-    private Hashtable<String, ImageView> readCards() {
+    private Hashtable<String, ImageView> readCardImages() {
         Hashtable<String, ImageView> listCardImages = new Hashtable<>();
 
         File folder = new File("src/ch/atlantis/res/Spielmaterial/");

@@ -59,14 +59,12 @@
 	<String Id="login_btnCreateProfile" >Profil Erstellen</String>
 	<String Id="msgLoggedIn" > Du bist angemeldet!</String>
 	
-	<!-- LoginView Controls -->
-	<String Id="btnLogin" >Anmelden</String>
-	
 	<!-- CreateGameView Controls -->
 	<String Id="msgGiveGameName" >Bitte gieb deinem Spiel einen Namen</String>
-	<String Id="msgGiveGameNamee" >Anmelden</String>
-	
-	<!-- LoginView Controls -->
-	<String Id="btnLogin" >Anmelden</String>
+	<String Id="cg_lblNewGame" >NEUES SPIEL</String>
+	<String Id="cg_lblGameName" >Spielname</String>
+	<String Id="cg_lblNoOfPlayers" >Anzahl der Spieler</String>
+	<String Id="cg_btnCancel" >Abbrechen</String>
+	<String Id="cg_btnCreateNewGame" >Erstellen</String>
 
 </LanguageEntry>

@@ -32,9 +32,9 @@
 	<String Id="msgPlayers" >Players</String>
 	<String Id="msgGameCreated" >Game Created</String>
 	
-	<String Id="msgPasswordsNotMatch" >Die Passwörter stimmen nicht überein</String>
-	<String Id="msgProfileCreated" >Profil wurde erstellt</String>
-	<String Id="msgUsernameExists" >Dieser Benutzername existiert schon</String>
+	<String Id="msgPasswordsNotMatch" >The passwords do not match</String>
+	<String Id="msgProfileCreated" >Profile was created</String>
+	<String Id="msgUsernameExists" >This username already exists</String>
 	
 	<!-- OptionsView Controls -->
 	<String Id="optionsView_lblOptions" >Options</String>
@@ -59,14 +59,12 @@
 	<String Id="login_btnCreateProfile" >Create Profile</String>
 	<String Id="msgLoggedIn" >You are logged in!</String>
 	
-	<!-- LoginView Controls -->
-	<String Id="btnLogin" >Anmelden</String>
-	
 	<!-- CreateGameView Controls -->
-	<String Id="msgGiveGameName" >Bitte gieb deinem Spiel einen Namen</String>
-	<String Id="msgGiveGameNamee" >Anmelden</String>
-	
-	<!-- LoginView Controls -->
-	<String Id="btnLogin" >Anmelden</String>
+	<String Id="msgGiveGameName" >Please give your game a name</String>
+	<String Id="cg_lblNewGame" >NEW GAME</String>
+	<String Id="cg_lblGameName" >Game name</String>
+	<String Id="cg_lblNoOfPlayers" >Number of Players</String>
+	<String Id="cg_btnCancel" >Cancel</String>
+	<String Id="cg_btnCreateNewGame" >Create</String>
 	
 </LanguageEntry>

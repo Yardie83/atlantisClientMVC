@@ -130,10 +130,10 @@ public class AtlantisView {
 
                     gameLobbyView.getGameListView().getItems().add(
                             gameName
-                            + " : "
-                            + currentJoinedUsers + " "
-                            + outOf
-                            + " " + numberOfPlayers + " " + players);
+                                    + " : "
+                                    + currentJoinedUsers + " "
+                                    + outOf
+                                    + " " + numberOfPlayers + " " + players);
                 }
             }
             // Clear the list in the model to avoid duplicate entries the next time we receive the list
@@ -174,6 +174,10 @@ public class AtlantisView {
         }
         setXYLocation(createGameStage, parentStage);
         setDimensions(createGameStage, parentStage);
+
+        getControls(this.createGameView);
+        setControlText(this.controls);
+
         activeOverlayStage = createGameStage;
     }
 
@@ -190,7 +194,6 @@ public class AtlantisView {
             loginStage.setScene(new Scene(loginView));
             setupOverlay(loginStage, parentStage, "css_LoginView");
         }
-
         setXYLocation(loginStage, parentStage);
         setDimensions(loginStage, parentStage);
 
@@ -285,18 +288,15 @@ public class AtlantisView {
     private void setControlText(ArrayList<Control> controls) {
 
         for (Control control : controls) {
-            if (control instanceof ButtonBase) {
-                if (control instanceof Button) {
-                    Button button = (Button) control;
-                    addLanguageTextToButtonControl(button);
-                } else if (control instanceof RadioButton) {
-                    RadioButton button = (RadioButton) control;
-                    addLanguageTextToButtonControl(button);
-                } else if (control instanceof Label) {
-                    Label label = (Label) control;
-                    addLanguageTextToLabelControl(label);
-                }
-                //if control label was here with just if
+            if (control instanceof Button) {
+                Button button = (Button) control;
+                addLanguageTextToButtonControl(button);
+            } else if (control instanceof RadioButton) {
+                RadioButton button = (RadioButton) control;
+                addLanguageTextToButtonControl(button);
+            } else if (control instanceof Label) {
+                Label label = (Label) control;
+                addLanguageTextToLabelControl(label);
             }
         }
         controls.clear();
@@ -305,6 +305,7 @@ public class AtlantisView {
     /**
      * Loris Grether
      * <br>
+     *
      * @param button
      */
     private void addLanguageTextToButtonControl(ButtonBase button) {

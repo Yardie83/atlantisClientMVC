@@ -55,10 +55,8 @@ public class AtlantisModel {
     private LanguageHandler languageHandler;
 
     private Player localPlayer;
-    private boolean isMusic = true;
 
     private AtlantisConfig conf;
-
 
     private Music musicThread;
 
@@ -79,6 +77,7 @@ public class AtlantisModel {
         autoConnect = true;
 
         this.handleLanguages();
+        //the language can not be set here, because we first have to create the view respectively the controls
         this.handleSettings();
         this.soundController(conf.getIsMusic());
         moveValid = new SimpleBooleanProperty();
@@ -234,6 +233,7 @@ public class AtlantisModel {
         gameList.add(message.getMessageObject().toString());
     }
 
+    //this method instantiate the language handler
     private void handleLanguages() {
         languageHandler = new LanguageHandler();
         if (languageHandler.getLanguageList().size() == 0 || languageHandler.getLanguageList() == null) {
@@ -345,7 +345,8 @@ public class AtlantisModel {
             musicThread.interrupt();
             musicThread = null;
         }
-        isMusic = status;
+        this.conf.setIsMusic(status);
+        this.conf.createAtlantisConfig();
     }
 
     public Language getSelectedLanguage(String culture) {
@@ -426,6 +427,4 @@ public class AtlantisModel {
     public Player getLocalPlayer() {
         return localPlayer;
     }
-
-
 }

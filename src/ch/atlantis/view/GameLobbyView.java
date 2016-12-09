@@ -431,5 +431,4 @@ public class GameLobbyView extends Pane {
     public BorderPane getRoot() {
         return root;
     }
-
 }
