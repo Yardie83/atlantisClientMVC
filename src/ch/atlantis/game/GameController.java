@@ -85,7 +85,9 @@ public class GameController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (!newValue) {
-                    gameBoardView.showTargetIsOccupiedMessage();
+                    gameBoardView.setInfoLabelText("Target is occupied. \nPlay another card to jump over");
+                    gameBoardView.setDisableButtonMove(false);
+                    gameBoardView.setDisableButtonEndTurn(true);
                 }
                 gameModel.targetNotOccupiedProperty().set(true);
             }
@@ -95,7 +97,7 @@ public class GameController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (newValue.intValue() != 0) {
-                    gameBoardView.getInfoLabel().setText("You need to cross water\nPay with a bridge or with collected cards");
+                    gameBoardView.setInfoLabelText("You need to cross water\nPay with a bridge or with collected cards");
                 }
                 gameModel.waterOnTheWayPathIdProperty().set(0);
             }
@@ -140,9 +142,9 @@ public class GameController {
                 }
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
                     clickCount++;
-                    gameBoardView.getInfoLabel().setText("");
                     gameBoardView.resetHighlight(gameModel.getSelectedCard());
                     gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
+                    gameBoardView.setInfoLabelText("");
                     if (gameModel.canMoveDirectly()) {
                         gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
                         gameModel.getSelectedCard().setOpacity(0);
@@ -150,7 +152,7 @@ public class GameController {
                         gameBoardView.moveGamePiece();
                         gameBoardView.getButtonMove().setDisable(true);
                         gameBoardView.getButtonEndTurn().setDisable(false);
-                        gameBoardView.getInfoLabel().setText("Press \"End Turn\" to confirm your move");
+                        gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
                     }
                 }
             }
@@ -165,10 +167,12 @@ public class GameController {
                 if (gameBoardView.getButtonBuyCards().isDisabled()) {
                     gameBoardView.getButtonBuyCards().setDisable(false);
                 }
+                gameBoardView.getButtonReset().setDisable(true);
                 gameBoardView.resetHighlight(gameModel.getSelectedCard());
                 gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                 gameModel.getSelectedGamePiece().resetPathId();
                 gameBoardView.moveGamePiece();
+                gameBoardView.setInfoLabelText("Your turn\nSelect a game piece and a card");
                 gameModel.getSelectedCard().setOpacity(1);
                 gameModel.getSelectedCard().setDisable(false);
                 gameModel.setSelectedCard(null);
@@ -196,7 +200,6 @@ public class GameController {
                 }
             }
         });
-
     }
 
     private void handleMouseEventsGamePieces() {

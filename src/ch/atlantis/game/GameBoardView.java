@@ -304,6 +304,11 @@ public class GameBoardView extends Pane {
         Scene gameScene = new Scene(this);
         gameScene.getStylesheets().add(css);
         gameStage = view.getGameLobbyView().getGameLobbyStage();
+        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()){
+            infoLabel.setText("Your turn\nSelect a game piece and a card");
+        }else{
+            infoLabel.setText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait." );
+        }
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -345,11 +350,13 @@ public class GameBoardView extends Pane {
                 //Move the gamePiece
                 moveGamePiece(selectedGamePiece);
                 int previousTurn = gameModel.getPreviousTurn();
-                //Update the score
-                if (gameModel.getLocalPlayerId() == previousTurn ) {
+                //Update the score and the infoLabel
+                if (gameModel.getLocalPlayerId() == previousTurn) {
                     lblScoreLocalPlayer.setText("Score: " + String.valueOf(gameModel.getPlayers().get(previousTurn).getScore()));
+                    setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait.");
                 } else {
                     scoresLabels.get(previousTurn).setText("Score: " + String.valueOf(gameModel.getPlayers().get(previousTurn).getScore()));
+                    setInfoLabelText("Your turn\nSelect a game piece and a card");
                 }
 
                 //Update the movementCards
@@ -365,16 +372,8 @@ public class GameBoardView extends Pane {
                     Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
                     removePathCard(pathCardToRemove);
                 }
-            }
-        });
-    }
 
-    public void showTargetIsOccupiedMessage() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                infoLabel.setText("Target is occupied\nPlay another card to jump over");
-                System.out.println("GameController -> Target is occupied. Play another card");
+
             }
         });
     }
@@ -425,4 +424,31 @@ public class GameBoardView extends Pane {
         return infoLabel;
     }
 
+    public void setDisableButtonMove(boolean disableButtonMove) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                buttonMove.setDisable(false);
+            }
+        });
+    }
+
+    public void setDisableButtonEndTurn(boolean disableButtonEndTurn) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                buttonEndTurn.setDisable(disableButtonEndTurn);
+            }
+        });
+    }
+
+    public void setInfoLabelText(String s) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                infoLabel.setText(s);
+                System.out.println(s);
+            }
+        });
+    }
 }
