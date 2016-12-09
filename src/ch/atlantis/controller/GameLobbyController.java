@@ -80,7 +80,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuItemGameRules().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                model.showGameRules();
+                view.getGameLobbyView().showGameRules();
             }
         });
 

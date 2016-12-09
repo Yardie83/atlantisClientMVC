@@ -13,15 +13,16 @@ import java.util.HashMap;
 public class GameModel {
 
     private HashMap<String, Object> currentGameStateMap;
-    private SimpleBooleanProperty targetIsOccupied;
+    private SimpleBooleanProperty targetNotOccupied;
     private HashMap<String, Object> newGameStateMap;
+    private ArrayList<Card> selectedCards;
     private GamePiece selectedGamePiece;
     private ArrayList<Player> players;
     private ArrayList<Card> pathCards;
     private ArrayList<Tile> tiles;
     private Card newCardFromDeck;
     private ArrayList<Card> deck;
-    private Player localPlayer;
+    private int localPlayerId;
     private Card selectedCard;
     private int indexOfPathCardToRemove;
     private int indexOfPathCardToShow;
@@ -37,9 +38,10 @@ public class GameModel {
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
-
-        targetIsOccupied = new SimpleBooleanProperty(false);
+        localPlayerId = localPlayer.getPlayerID();
+        targetNotOccupied = new SimpleBooleanProperty(true);
         waterOnTheWayPathId = new SimpleIntegerProperty(0);
+        selectedCards = new ArrayList<>();
         newGameStateMap = (HashMap<String, Object>) message.getMessageObject();
         currentGameStateMap = newGameStateMap;
         targetFoundInTurn = -1;
@@ -47,25 +49,25 @@ public class GameModel {
         previousTurn = currentTurn;
 
         readInitialGameStateMap(newGameStateMap);
-        initLocalPlayer(localPlayer);
         applyPlayerColor();
 
     }
 
-    private void initLocalPlayer(Player localPlayer) {
-        for (Player player : players) {
-            if (player.getPlayerID() == localPlayer.getPlayerID()) {
-                this.localPlayer = player;
-            }
-        }
-    }
-
+    /**
+     * Hermann Grieder
+     * <br>
+     * Sets the color values according to the player id's. So player 1 will always be red for each client, etc.
+     */
     private void applyPlayerColor() {
         for (Player player : players) {
             player.applyColor();
         }
     }
 
+    /**
+     * Finds the target path id of where the gamePiece should ultimately end up on.
+     * @return int - The targetPathId
+     */
     public int findTargetPathId() {
 
         int startPathId = 101;
@@ -101,20 +103,20 @@ public class GameModel {
      * Checks if the targetPathId that was found is already occupied.
      *
      * @param targetPathId    The pathId the gamePiece should be moved to
-     * @param activeGamePiece The gamePiece that was moved
+     * @param selectedGamePiece The gamePiece that was moved
      * @return True if the target is occupied, false if it is free to go to
      */
-    private boolean checkIfOccupied(int targetPathId, GamePiece activeGamePiece) {
+    private boolean checkIfOccupied(int targetPathId, GamePiece selectedGamePiece) {
         for (Player player : players) {
             for (GamePiece gamePiece : player.getGamePieces()) {
-                if (gamePiece != activeGamePiece && gamePiece.getCurrentPathId() == targetPathId) {
+                if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId) {
                     System.out.println("GameModel -> TargetPathId is occupied");
-                    return true;
+                    return false;
                 }
             }
         }
         System.out.println("GameModel -> TargetPathId is not occupied");
-        return false;
+        return true;
     }
 
     /**
@@ -252,11 +254,11 @@ public class GameModel {
     public HashMap<String, Object> writeGameStateMap() {
         HashMap<String, Object> gameStateMap = new HashMap<>();
         gameStateMap.put("CurrentTurn", currentTurn);
-        gameStateMap.put("PlayerId", localPlayer.getPlayerID());
-        gameStateMap.put("GameName", localPlayer.getGameName());
-        indexOfSelectedCard = players.get(localPlayer.getPlayerID()).getMovementCards().indexOf(selectedCard);
+        gameStateMap.put("PlayerId", players.get(currentTurn).getPlayerID());
+        gameStateMap.put("GameName", players.get(currentTurn).getGameName());
+        indexOfSelectedCard = players.get(localPlayerId).getMovementCards().indexOf(selectedCard);
         gameStateMap.put("SelectedCard", indexOfSelectedCard);
-        gameStateMap.put("GamePieceIndex", localPlayer.getGamePieces().indexOf(selectedGamePiece));
+        gameStateMap.put("GamePieceIndex", players.get(localPlayerId).getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathId", targetPathId);
         return gameStateMap;
     }
@@ -293,44 +295,36 @@ public class GameModel {
         indexOfPathCardToRemove = (int) gameStateMap.get("IndexOfCardToRemove");
         indexOfPathCardToShow = (int) gameStateMap.get("IndexOfCardToShow");
         newCardFromDeck = (Card) gameStateMap.get("DeckCard");
+        System.out.println(newCardFromDeck);
     }
 
     /**
      * Hermann Grieder
      * <br>
      */
-    public void updateValues() {
+    public boolean updateValues() {
         players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex).setCurrentPathId(targetPathIdRemote);
         players.get(previousTurn).getMovementCards().remove(cardPlayedIndex);
         players.get(previousTurn).getMovementCards().add(newCardFromDeck);
         players.get(previousTurn).addScore(pathCards.get(indexOfPathCardToRemove).getValue());
         pathCards.get(indexOfPathCardToRemove).setPathId(-1);
         pathCards.get(indexOfPathCardToShow).setIsOnTop(true);
-        localPlayer = players.get(localPlayer.getPlayerID());
-        System.out.println(localPlayer.getScore() + " <- Local Score : Remote Score -> " + players.get(previousTurn).getScore());
+        selectedGamePiece = players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex);
+        selectedCard = players.get(previousTurn).getMovementCards().get(cardPlayedIndex);
+        selectedGamePiece.setCurrentPathId(targetPathIdRemote);
+        selectedCards.clear();
+        return true;
     }
 
     public void saveCurrentGameState() {
         if (targetFoundInTurn != currentTurn) findTargetPathId();
         currentGameStateMap = writeGameStateMap();
 
-        for (GamePiece gamePiece : players.get(localPlayer.getPlayerID()).getGamePieces() ){
+        for (GamePiece gamePiece : players.get(localPlayerId).getGamePieces() ){
             gamePiece.setStartPathId(gamePiece.getCurrentPathId());
         }
     }
 
-    /**
-     * Hermann Grieder
-     * <br>
-     * @param gameStateMap
-     */
-    @SuppressWarnings("unchecked")
-    public void reloadGameStateMap(HashMap<String, Object> gameStateMap) {
-        currentTurn = (int) gameStateMap.get("CurrentTurn");
-        selectedCard = (Card) gameStateMap.get("Card");
-        selectedGamePiece = (GamePiece) gameStateMap.get("GamePiece");
-        System.out.println("CurrentTurn: " + this.currentTurn);
-    }
     // ****************************** HANDLE MOVE **************************************//
 
     /**
@@ -345,7 +339,7 @@ public class GameModel {
         targetPathId = findTargetPathId();
         selectedGamePiece.setTargetPathId(targetPathId);
         // Check if the target pathId is already occupied by someone else
-        targetIsOccupied.setValue(checkIfOccupied(targetPathId, selectedGamePiece));
+        targetNotOccupied.setValue(checkIfOccupied(targetPathId, selectedGamePiece));
 
         // Check if there is water on the way to the target. Returns the pathId of that water tile or 0 if not water is on the way
 
@@ -357,11 +351,8 @@ public class GameModel {
             priceToCrossWater = getPriceForCrossing(waterOnTheWayPathId.get());
         }
 
-//        // Set the targetPathId as the currentPathId in the active gamePiece
-//        players.get(localPlayer.getPlayerID()).getGamePieces().get(selectedGamePieceIndex).setCurrentPathId(targetPathId);
-
         System.out.println("GameModel -> Move can be done directly");
-        return !targetIsOccupied.getValue() && waterOnTheWayPathId.get() == 0;
+        return targetNotOccupied.getValue() && waterOnTheWayPathId.get() == 0;
     }
 
 
@@ -414,8 +405,8 @@ public class GameModel {
         return deck;
     }
 
-    public Player getLocalPlayer() {
-        return localPlayer;
+    public int getLocalPlayerId() {
+        return localPlayerId;
     }
 
     public int getCurrentTurn() {
@@ -466,8 +457,8 @@ public class GameModel {
         return currentGameStateMap;
     }
 
-    public SimpleBooleanProperty targetIsOccupiedProperty() {
-        return targetIsOccupied;
+    public SimpleBooleanProperty targetNotOccupiedProperty() {
+        return targetNotOccupied;
     }
 
     public SimpleIntegerProperty waterOnTheWayPathIdProperty() {

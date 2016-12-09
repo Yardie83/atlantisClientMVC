@@ -259,6 +259,12 @@ public class AtlantisView {
         overlayStage.setMinWidth(parentStage.getWidth());
     }
 
+    /**
+     * Loris Grether
+     * <br>
+     *
+     * @param pane
+     */
     private void getControls(Pane pane) {
         for (Node node : pane.getChildren()) {
             if (node instanceof Pane) {
@@ -270,6 +276,12 @@ public class AtlantisView {
         }
     }
 
+    /**
+     * Loris Grether
+     * <br>
+     *
+     * @param controls
+     */
     private void setControlText(ArrayList<Control> controls) {
 
         for (Control control : controls) {
@@ -290,6 +302,11 @@ public class AtlantisView {
         controls.clear();
     }
 
+    /**
+     * Loris Grether
+     * <br>
+     * @param button
+     */
     private void addLanguageTextToButtonControl(ButtonBase button) {
         if (selectedLanguage != null) {
             for (String id : selectedLanguage.getLanguageTable().keySet()) {

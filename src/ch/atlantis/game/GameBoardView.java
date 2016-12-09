@@ -224,10 +224,13 @@ public class GameBoardView extends Pane {
         infoLabel.setStyle("-fx-text-fill: white");
         localPlayerBox.getChildren().addAll(top, HBoxMovementCards, infoLabel);
 
-        String score = Integer.toString(gameModel.getLocalPlayer().getScore());
-        Label lblLocalPlayer = new Label(gameModel.getLocalPlayer().getPlayerName());
+        String score = Integer.toString(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getScore());
+        Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
+        lblLocalPlayer.setStyle("-fx-text-fill: white");
         lblScoreLocalPlayer = new Label("Score: " + score);
+        lblScoreLocalPlayer.setStyle("-fx-text-fill: white");
         Label label3 = new Label("|");
+        label3.setStyle("-fx-text-fill: white");
 
         top.getChildren().addAll(lblLocalPlayer, label3, lblScoreLocalPlayer);
         return localPlayerBox;
@@ -239,9 +242,11 @@ public class GameBoardView extends Pane {
         opponentsBox.setMinWidth(consoleTile.getSide());
         scoresLabels = new HashMap<>();
         for (Player player : gameModel.getPlayers()) {
-            if (player.getPlayerID() != gameModel.getLocalPlayer().getPlayerID()) {
+            if (player.getPlayerID() != gameModel.getLocalPlayerId()) {
                 Label lblOpponentName = new Label(player.getPlayerName());
+                lblOpponentName.setStyle("-fx-text-fill: white");
                 Label lblOpponentScore = new Label(Integer.toString(player.getScore()));
+                lblOpponentScore.setStyle("-fx-text-fill: white");
                 scoresLabels.put(player.getPlayerID(), lblOpponentScore);
                 opponentsBox.getChildren().addAll(lblOpponentName, lblOpponentScore);
             }
@@ -251,7 +256,7 @@ public class GameBoardView extends Pane {
 
     private HBox placeMovementCards() {
         HBox bottom = new HBox(10);
-        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayer().getPlayerID()).getMovementCards()) {
+        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
             System.out.println("GameBoard -> Card: " + card.getColorSet() + " added");
             styleMovementCard(card);
             bottom.getChildren().add(card);
@@ -299,15 +304,30 @@ public class GameBoardView extends Pane {
         Scene gameScene = new Scene(this);
         gameScene.getStylesheets().add(css);
         gameStage = view.getGameLobbyView().getGameLobbyStage();
-        gameStage.setScene(gameScene);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                gameStage.setScene(gameScene);
+            }
+        });
+
     }
 
 
     //*************************** METHODS DURING THE ACTIVE GAME *****************************//
 
     public void moveGamePiece() {
-        int targetPathId = gameModel.getSelectedGamePiece().getCurrentPathId();
         GamePiece selectedGamePiece = gameModel.getSelectedGamePiece();
+        int targetPathId = selectedGamePiece.getCurrentPathId();
+        move(selectedGamePiece, targetPathId);
+    }
+
+    public void moveGamePiece(GamePiece selectedGamePiece) {
+        int targetPathId = selectedGamePiece.getCurrentPathId();
+        move(selectedGamePiece, targetPathId);
+    }
+
+    private void move(GamePiece selectedGamePiece, int targetPathId) {
         for (Tile targetTile : gameModel.getTiles()) {
             if (targetTile.getPathId() == targetPathId) {
                 int x = targetTile.getX() + (targetTile.getSide() / 2);
@@ -318,31 +338,43 @@ public class GameBoardView extends Pane {
     }
 
     public void updateBoard() {
+        GamePiece selectedGamePiece = gameModel.getSelectedGamePiece();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 //Move the gamePiece
-                moveGamePiece();
-
+                moveGamePiece(selectedGamePiece);
+                int previousTurn = gameModel.getPreviousTurn();
                 //Update the score
-                if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()) {
-                    lblScoreLocalPlayer.setText("Score: " + String.valueOf(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getScore()));
+                if (gameModel.getLocalPlayerId() == previousTurn ) {
+                    lblScoreLocalPlayer.setText("Score: " + String.valueOf(gameModel.getPlayers().get(previousTurn).getScore()));
                 } else {
-                    scoresLabels.get(gameModel.getPreviousTurn()).setText("Score: " + String.valueOf(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getScore()));
+                    scoresLabels.get(previousTurn).setText("Score: " + String.valueOf(gameModel.getPlayers().get(previousTurn).getScore()));
                 }
 
                 //Update the movementCards
-                if (gameModel.getLocalPlayer().getPlayerID() == gameModel.getPreviousTurn()) {
-                    HBoxMovementCards.getChildren().remove(gameModel.getCardPlayedIndex());
-                    styleMovementCard(gameModel.getNewCardFromDeck());
-                    HBoxMovementCards.getChildren().add(gameModel.getNewCardFromDeck());
+                if (gameModel.getLocalPlayerId() == previousTurn) {
+                    for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
+                        styleMovementCard(card);
+                    }
+                    HBoxMovementCards.getChildren().setAll(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards());
                 }
 
                 //Remove the pathCards
-                if (gameModel.getSelectedGamePiece().getCurrentPathId() != 101) {
+                if (selectedGamePiece.getCurrentPathId() != 101) {
                     Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
                     removePathCard(pathCardToRemove);
                 }
+            }
+        });
+    }
+
+    public void showTargetIsOccupiedMessage() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                infoLabel.setText("Target is occupied\nPlay another card to jump over");
+                System.out.println("GameController -> Target is occupied. Play another card");
             }
         });
     }
@@ -392,4 +424,5 @@ public class GameBoardView extends Pane {
     public Label getInfoLabel() {
         return infoLabel;
     }
+
 }

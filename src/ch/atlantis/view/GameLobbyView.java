@@ -341,6 +341,21 @@ public class GameLobbyView extends Pane {
         });
     }
 
+    /**
+     * Loris Grether
+     * <br>
+     */
+    public void showGameRules() {
+        try {
+            File file = new File("src/ch/atlantis/res/Atlantis_Spielregel.pdf");
+            if (file.exists()) {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void show() {
         this.gameLobbyStage.show();
     }
@@ -416,6 +431,5 @@ public class GameLobbyView extends Pane {
     public BorderPane getRoot() {
         return root;
     }
-
 
 }

@@ -230,15 +230,12 @@ public class AtlantisModel {
         System.out.println("AtlantisModel -> GameOver: " + gameOver);
     }
 
-
     private void handleGameList(Message message) {
         gameList.add(message.getMessageObject().toString());
     }
 
     private void handleLanguages() {
-
         languageHandler = new LanguageHandler();
-
         if (languageHandler.getLanguageList().size() == 0 || languageHandler.getLanguageList() == null) {
             System.out.println("AtlantisModel -> No languages available");
         } else {
@@ -250,7 +247,6 @@ public class AtlantisModel {
     }
 
     private void handleSettings() {
-
         if (conf == null) {
             conf = new AtlantisConfig();
             if (!conf.readAtlantisConfig()) {
@@ -289,6 +285,12 @@ public class AtlantisModel {
         sendMessage(new Message(MessageType.JOINGAME, gameName));
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Sends a message to the outputStream in the current Thread
+     * @param message The message object to be sentg
+     */
     public void sendMessage(Message message) {
         if ((socket == null || socket.isClosed()) && autoConnect) {
             connectToServer();
@@ -325,17 +327,12 @@ public class AtlantisModel {
         }
     }
 
-    public void showGameRules() {
-        try {
-            File file = new File("src/ch/atlantis/res/Atlantis_Spielregel.pdf");
-            if (file.exists()) {
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * Loris Grether
+     * <br>
+     *
+     * @param status
+     */
     public void soundController(boolean status) {
 
         if (status) {
@@ -352,23 +349,14 @@ public class AtlantisModel {
     }
 
     public Language getSelectedLanguage(String culture) {
-
         for (Language language : this.getLanguageList()) {
-
             if (language.getCulture().equals(culture)) {
-
                 return language;
             }
         }
         return null;
     }
 
-    /**
-     * Splits a message at the "," sign.
-     *
-     * @param message Message received from the client
-     * @return String[]
-     */
     private String[] splitMessage(Message message) {
         return message.getMessageObject().toString().split(",");
     }
@@ -391,10 +379,6 @@ public class AtlantisModel {
 
     public SimpleIntegerProperty loginSuccessProperty() {
         return loginSuccess;
-    }
-
-    public boolean isMoveValid() {
-        return moveValid.get();
     }
 
     public SimpleBooleanProperty moveValidProperty() {
