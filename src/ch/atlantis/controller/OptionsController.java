@@ -62,6 +62,7 @@ public class OptionsController {
 
         RadioButton rb = (RadioButton) view.getOptionsView().getRadioBtnGroupSound().getSelectedToggle();
 
+        // if the radio button "on" or "ein" is selected and the music is not runnig, the music will be turned on
         if (rb.getText().equals(view.getSelectedLanguage().getLanguageTable().get("optionsView_radioBtnSoundOn")) && !model.getIsMusic()) {
             model.soundController(true);
         } else if (rb.getText().equals(view.getSelectedLanguage().getLanguageTable().get("optionsView_radioBtnSoundOff")) && model.getIsMusic()) {
