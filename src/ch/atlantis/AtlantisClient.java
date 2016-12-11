@@ -6,6 +6,7 @@ import ch.atlantis.view.AtlantisView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.logging.*;
 
 
@@ -15,6 +16,7 @@ import java.util.logging.*;
  * Start of the application.
  * Creates the model, the view, and the controller.
  *
+ *
  * Logger configuration.
  *
  */
@@ -22,8 +24,9 @@ import java.util.logging.*;
 
 public class AtlantisClient extends Application {
 
-    // Name of the main logger
-    private final static Logger LOGGER = Logger.getLogger(AtlantisClient.class.getName());
+    public static final String AtlantisLogger = AtlantisClient.class.getSimpleName();
+    private Logger logger = null;
+    public FileHandler fh = null;
 
     public static void main(String[] args) {
         launch();
@@ -32,20 +35,28 @@ public class AtlantisClient extends Application {
     @Override
     public void start(Stage introStage) throws Exception {
 
+        logger = Logger.getLogger(AtlantisLogger);
+        logger.setLevel(Level.FINEST);
+
+        try {
+
+            // Configure logger with handler and formatter
+            fh = new FileHandler("AtlantisLog.txt", 50000, 1);
+            logger.addHandler(fh);
+            SimpleFormatter formatter = new SimpleFormatter();
+            fh.setFormatter(formatter);
+
+            logger.setLevel(Level.INFO);
+
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         AtlantisModel model = new AtlantisModel();
         AtlantisView view = new AtlantisView(introStage, model);
         new AtlantisController(model, view);
-
-        LOGGER.setLevel(Level.INFO);
-
-        Handler fh = new FileHandler("log.txt");
-        LOGGER.addHandler(fh);
-
-        Handler ch = new ConsoleHandler();
-        LOGGER.addHandler(ch);
-
-        LogManager lm = LogManager.getLogManager();
-        lm.addLogger(LOGGER);
 
     }
 }

@@ -28,6 +28,7 @@ public class GameController {
     private GameBoardView gameBoardView;
     private AtlantisModel atlantisModel;
     private AtlantisView atlantisView;
+    private
 
     int clickCount;
 
@@ -138,7 +139,7 @@ public class GameController {
         gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                // Code
             }
         });
 
