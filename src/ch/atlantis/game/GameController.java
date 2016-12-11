@@ -4,7 +4,6 @@ import ch.atlantis.controller.OptionsController;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.MessageType;
 import ch.atlantis.view.AtlantisView;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -66,30 +65,32 @@ public class GameController {
                 if (newValue) {
                     if (atlantisModel.getMessage().getMessageObject() instanceof HashMap) {
                         HashMap<String, Object> gameStateMap = (HashMap<String, Object>) atlantisModel.getMessage().getMessageObject();
-                        gameModel.readGameStateMap(gameStateMap);
-                        gameModel.updateValues();
-                        handleMouseEventsMovementCards();
-                        gameBoardView.updateBoard();
-                        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
-                            gameBoardView.getButtonMove().setDisable(false);
-                            gameBoardView.getButtonBuyCards().setDisable(false);
-                            gameModel.setSelectedCard(null);
-                            gameModel.setSelectedGamePiece(null);
+                        if(gameModel.readGameStateMap(gameStateMap)) {
+                            gameModel.updateValues();
+                            handleMouseEventsMovementCards();
+                            gameBoardView.updateBoard();
+                            if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
+                                gameBoardView.getButtonMove().setDisable(false);
+                                gameBoardView.getButtonBuyCards().setDisable(false);
+                                gameModel.setSelectedCard(null);
+                                gameModel.setSelectedGamePiece(null);
+                                gameModel.setTargetPathIds(null);
+                            }
                         }
                     }
                 }
             }
         });
 
-        gameModel.targetNotOccupiedProperty().addListener(new ChangeListener<Boolean>() {
+        gameModel.occupiedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (!newValue) {
+                if (newValue) {
                     gameBoardView.setInfoLabelText("Target is occupied. \nPlay another card to jump over");
                     gameBoardView.setDisableButtonMove(false);
                     gameBoardView.setDisableButtonEndTurn(true);
+                    gameModel.occupiedProperty().set(false);
                 }
-                gameModel.targetNotOccupiedProperty().set(true);
             }
         });
 
@@ -106,10 +107,10 @@ public class GameController {
 
     private void handleEscapeKey() {
         // ********************************* OPTIONS OVERLAY ********************************* //
+
         /*
          * On KeyPressed Esc the options menu is shown
          */
-        //TODO: Make this work
         gameBoardView.getGameStage().getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -123,6 +124,17 @@ public class GameController {
     }
 
     private void handleMouseEventsGameControlButtons() {
+
+        // TODO: Just for testing. Needs to be deleted later.
+        gameBoardView.getButtonGameOver().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                gameBoardView.createCreateGameView();
+                gameBoardView.getGameOverStage().show();
+                //backToLobbyButtonHandler();
+            }
+        });
+
         gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -137,8 +149,11 @@ public class GameController {
                 gameBoardView.getButtonReset().setDisable(false);
 
                 if (clickCount == 0) {
-                    gameModel.saveCurrentGameState();
-                    System.out.println("GameModel -> Current Game State Saved");
+                    for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
+                        gamePiece.setStartPathId(gamePiece.getCurrentPathId());
+                        gameModel.getPlayedCardsIndices().clear();
+                    }
+                    System.out.println("GameModel -> Start path Ids set");
                 }
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
                     clickCount++;
@@ -146,18 +161,19 @@ public class GameController {
                     gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                     gameBoardView.setInfoLabelText("");
                     if (gameModel.canMoveDirectly()) {
-                            System.out.println("GameModel -> Move can be done directly");
-                            System.out.println("Press \"End Turn\" to confirm your move");
-                            gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
-                            gameModel.getSelectedCard().setOpacity(0);
-                            gameModel.getSelectedCard().setDisable(true);
-                            gameBoardView.moveGamePiece();
-                            gameBoardView.getButtonMove().setDisable(true);
-                            gameBoardView.getButtonEndTurn().setDisable(false);
-                            gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
-                    }else{
+                        System.out.println("GameModel -> Move can be done directly");
+                        gameBoardView.getButtonMove().setDisable(true);
+                        gameBoardView.getButtonEndTurn().setDisable(false);
+                        gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
+                    } else {
                         System.out.println("GameModel -> Move can not be done directly");
                     }
+                    gameModel.getSelectedCard().setOpacity(0);
+                    gameModel.getSelectedCard().setDisable(true);
+                    gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
+                    gameBoardView.moveGamePiece();
+                    gameModel.addToPlayedCards();
+
                 }
             }
         });
@@ -171,19 +187,19 @@ public class GameController {
                 if (gameBoardView.getButtonBuyCards().isDisabled()) {
                     gameBoardView.getButtonBuyCards().setDisable(false);
                 }
-                if(gameBoardView.getButtonEndTurn().isDisabled()){
+                if (gameBoardView.getButtonEndTurn().isDisabled()) {
                     gameBoardView.getButtonEndTurn().setDisable(false);
                 }
                 gameBoardView.getButtonReset().setDisable(true);
-                gameBoardView.resetHighlight(gameModel.getSelectedCard());
                 gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                 gameModel.getSelectedGamePiece().resetPathId();
                 gameBoardView.moveGamePiece();
-                gameBoardView.setInfoLabelText("Your turn\nSelect a game piece and a card");
-                gameModel.getSelectedCard().setOpacity(1);
-                gameModel.getSelectedCard().setDisable(false);
+                gameBoardView.resetCards();
                 gameModel.setSelectedCard(null);
                 gameModel.setSelectedGamePiece(null);
+                gameModel.getPlayedCardsIndices().clear();
+                gameModel.setTargetPathIds(null);
+                gameBoardView.setInfoLabelText("Your turn\nSelect a game piece and a card");
                 clickCount = 0;
             }
         });
@@ -199,19 +215,27 @@ public class GameController {
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());
                         gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                        sendMoveMessage();
-                        gameModel.setSelectedCard(null);
-                        gameModel.setSelectedGamePiece(null);
+                        System.out.println("GameController -> End of Turn of player " + gameModel.getLocalPlayerId());
                         clickCount = 0;
+                        sendMoveMessage();
                     }
                 }
             }
         });
     }
 
+//    private void backToLobbyButtonHandler() {
+//        gameBoardView.getGameOverView().getButtonBackToLobby().setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//
+//            }
+//        });
+//    }
+
     private void handleMouseEventsGamePieces() {
         ArrayList<GamePiece> gamePieces = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces();
-        for (GamePiece gamePiece : gamePieces ) {
+        for (GamePiece gamePiece : gamePieces) {
             /*
              * Selects the gamePiece the player clicked on
              */
@@ -221,7 +245,8 @@ public class GameController {
                     if (gameModel.getSelectedGamePiece() != null) {
                         gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                     }
-                    if (clickCount == 0 /*&& gameModel.getSelectedGamePiece().getCurrentPathId() != 400 */ ) {
+                    if (clickCount == 0 && gamePiece.getCurrentPathId() != 400) {
+                        System.out.println("GameController -> GamePiece selected");
                         gameModel.setSelectedGamePiece(gamePiece);
                     }
                     System.out.println("GameController -> GamePiece Current Path Id: " + gameModel.getSelectedGamePiece().getCurrentPathId());
@@ -270,6 +295,7 @@ public class GameController {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());
                     }
                     gameModel.setSelectedCard(card);
+                    System.out.println("Index of selected card: " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().indexOf(card));
                     System.out.println("GameController -> ColorSet of selected Card: " + gameModel.getSelectedCard().getColorSet());
                     gameBoardView.highlightItem(card);
                 }

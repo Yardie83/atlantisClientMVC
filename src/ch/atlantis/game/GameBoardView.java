@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -43,6 +44,10 @@ public class GameBoardView extends Pane {
     private Label lblScoreLocalPlayer;
     private HBox HBoxMovementCards;
     private Label infoLabel;
+    private Button buttonGameOver;
+    private ComboBoxBase<Object> createGameStage;
+    private GameOverView gameOverView;
+    private Stage gameOverStage;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -207,8 +212,9 @@ public class GameBoardView extends Pane {
         buttonReset.setDisable(true);
         buttonEndTurn = new Button("End Turn");
         buttonEndTurn.setDisable(true);
+        buttonGameOver = new Button("Game Over Test");
 
-        gameControls.getChildren().addAll(buttonBuyCards, buttonMove, buttonReset, buttonEndTurn);
+        gameControls.getChildren().addAll(buttonBuyCards, buttonMove, buttonReset, buttonEndTurn, buttonGameOver);
 
         return gameControls;
     }
@@ -269,6 +275,8 @@ public class GameBoardView extends Pane {
         card.setHeight(80);
         card.setStroke(Color.TRANSPARENT);
         card.setStrokeWidth(2);
+        card.setOpacity(1);
+        card.setDisable(false);
         card.applyCardImages(listCardImages);
     }
 
@@ -343,13 +351,17 @@ public class GameBoardView extends Pane {
     }
 
     public void updateBoard() {
-        GamePiece selectedGamePiece = gameModel.getSelectedGamePiece();
+
+        GamePiece selectedGamePiece = gameModel.getPlayers().get(gameModel.getPreviousTurn()).getGamePieces().get(gameModel.getGamePieceUsedIndex());
+        ArrayList<Card> cards = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards();
+        int previousTurn = gameModel.getPreviousTurn();
+
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 //Move the gamePiece
                 moveGamePiece(selectedGamePiece);
-                int previousTurn = gameModel.getPreviousTurn();
+
                 //Update the score and the infoLabel
                 if (gameModel.getLocalPlayerId() == previousTurn) {
                     lblScoreLocalPlayer.setText("Score: " + String.valueOf(gameModel.getPlayers().get(previousTurn).getScore()));
@@ -361,11 +373,14 @@ public class GameBoardView extends Pane {
 
                 //Update the movementCards
                 if (gameModel.getLocalPlayerId() == previousTurn) {
-                    for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
+                    System.out.println("Cards on Hand: " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
+                    for (Card card : cards) {
                         styleMovementCard(card);
+                        HBoxMovementCards.getChildren().removeAll(card);
                     }
-                    HBoxMovementCards.getChildren().setAll(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards());
                 }
+
+                HBoxMovementCards.getChildren().setAll(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards());
 
                 //Remove the pathCards
                 if (selectedGamePiece.getCurrentPathId() != 101) {
@@ -418,6 +433,14 @@ public class GameBoardView extends Pane {
         return buttonEndTurn;
     }
 
+    public Button getButtonGameOver() {
+        return buttonGameOver;
+    }
+
+    public GameOverView getGameOverView() {
+        return gameOverView;
+    }
+
     public Label getInfoLabel() {
         return infoLabel;
     }
@@ -448,5 +471,34 @@ public class GameBoardView extends Pane {
                 System.out.println(s);
             }
         });
+    }
+
+    public void resetCards() {
+        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()){
+            card.setOpacity(1);
+            card.setDisable(false);
+            resetHighlight(card);
+        }
+    }
+
+    public void createCreateGameView() {
+        Stage parentStage = gameStage;
+        if (this.gameOverView == null) {
+            this.gameOverView = new GameOverView(gameStage.getHeight(), gameStage.getWidth());
+            gameOverStage = new Stage();
+            gameOverStage.setScene(new Scene(gameOverView));
+            view.setupOverlay(gameOverStage, parentStage, "css_GameOverView");
+        }
+        view.setXYLocation(gameOverStage, parentStage);
+        view.setDimensions(gameOverStage, parentStage);
+
+        //getControls(this.createGameView);
+        //setControlText(this.controls);
+
+        //activeOverlayStage = createGameStage;
+    }
+
+    public Stage getGameOverStage() {
+        return gameOverStage;
     }
 }

@@ -302,6 +302,7 @@ public class AtlantisModel {
             try {
                 System.out.println("Sending to Server -> " + message.getMessageObject());
                 outputStream.writeObject(message);
+                outputStream.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }

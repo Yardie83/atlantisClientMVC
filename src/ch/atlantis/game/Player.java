@@ -68,22 +68,10 @@ public class Player implements Serializable {
         return playerName;
     }
 
-    public void addScore(int score) {
-        this.score += score;
-    }
-
-    public void subtractScore(int score) {
-        this.score -= score;
-    }
-
     public ArrayList<GamePiece> getGamePieces() {
         return gamePieces;
     }
 
     public ArrayList<Card> getMovementCards() { return movementCards; }
-
-    public void addMovementCard(Card newMovementCard){
-        movementCards.add(newMovementCard);
-    }
 
 }

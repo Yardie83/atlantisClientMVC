@@ -250,14 +250,14 @@ public class AtlantisView {
         this.activeOverlayStage = this.optionsStage;
     }
 
-    private void setXYLocation(Stage overlayStage, Stage parentStage) {
+    public void setXYLocation(Stage overlayStage, Stage parentStage) {
         overlayStage.setX(parentStage.getX());
         overlayStage.setY(parentStage.getY());
     }
 
     // TODO: This does not work. The overlayStage does not react. I think it must be the root pane, but how to get
     // there?
-    private void setDimensions(Stage overlayStage, Stage parentStage) {
+    public void setDimensions(Stage overlayStage, Stage parentStage) {
         overlayStage.setMinHeight(parentStage.getHeight());
         overlayStage.setMinWidth(parentStage.getWidth());
     }
@@ -343,7 +343,7 @@ public class AtlantisView {
      * @param overlayStage The stage of the overlay to set up
      */
 
-    private void setupOverlay(Stage overlayStage, Stage parentStage, String cssString) {
+    public void setupOverlay(Stage overlayStage, Stage parentStage, String cssString) {
 
         if (cssString != null) {
             String css = this.getClass().getResource("../res/css/" + cssString + ".css").toExternalForm();
