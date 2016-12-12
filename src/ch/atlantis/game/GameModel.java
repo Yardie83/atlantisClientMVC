@@ -290,7 +290,7 @@ public class GameModel {
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
         // server. So I finally tried to create a new ArrayList and it works. I do not know why this problem exists.
         ArrayList<Integer> newPlayedCardsIndices = new ArrayList<>();
-        for(Integer integer : playedCardsIndices){
+        for(Integer integer : playedCardsIndices) {
             newPlayedCardsIndices.add(integer);
         }
 
