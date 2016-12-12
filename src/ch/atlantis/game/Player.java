@@ -18,6 +18,7 @@ public class Player implements Serializable {
     private Color color;
     private int bridge;
     private int score;
+    private int gamePiecesOnLand;
 
     public Player(int playerID, String gameName, String playerName) {
         this.playerName = playerName;
