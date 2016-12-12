@@ -71,7 +71,7 @@ public class GameController {
                             handleMouseEventsMovementCards();
                             gameBoardView.updateBoard();
                             if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
-                                gameBoardView.getButtonMove().setDisable(false);
+                                gameBoardView.setDisableButtonMove(false);
                                 gameBoardView.getButtonBuyCards().setDisable(false);
                                 gameModel.setSelectedCard(null);
                                 gameModel.setSelectedGamePiece(null);
@@ -130,8 +130,8 @@ public class GameController {
         gameBoardView.getButtonGameOver().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                gameBoardView.createCreateGameView();
-                gameBoardView.getGameOverStage().show();
+                gameBoardView.createGameOverView();
+                gameBoardView.showGameOver();
                 //backToLobbyButtonHandler();
             }
         });
@@ -163,8 +163,8 @@ public class GameController {
                     gameBoardView.setInfoLabelText("");
                     if (gameModel.canMoveDirectly()) {
                         System.out.println("GameModel -> Move can be done directly");
-                        gameBoardView.getButtonMove().setDisable(true);
-                        gameBoardView.getButtonEndTurn().setDisable(false);
+                        gameBoardView.setDisableButtonMove(true);
+                        gameBoardView.setDisableButtonEndTurn(false);
                         gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
                     } else {
                         System.out.println("GameModel -> Move can not be done directly");
@@ -183,13 +183,13 @@ public class GameController {
             @Override
             public void handle(ActionEvent event) {
                 if (gameBoardView.getButtonMove().isDisabled()) {
-                    gameBoardView.getButtonMove().setDisable(false);
+                    gameBoardView.setDisableButtonMove(false);
                 }
                 if (gameBoardView.getButtonBuyCards().isDisabled()) {
                     gameBoardView.getButtonBuyCards().setDisable(false);
                 }
                 if (gameBoardView.getButtonEndTurn().isDisabled()) {
-                    gameBoardView.getButtonEndTurn().setDisable(false);
+                    gameBoardView.setDisableButtonEndTurn(false);
                 }
                 gameBoardView.getButtonReset().setDisable(true);
                 gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
@@ -210,8 +210,8 @@ public class GameController {
             public void handle(ActionEvent event) {
                 gameBoardView.getButtonReset().setDisable(true);
                 gameBoardView.getButtonBuyCards().setDisable(true);
-                gameBoardView.getButtonMove().setDisable(true);
-                gameBoardView.getButtonEndTurn().setDisable(true);
+                gameBoardView.setDisableButtonMove(true);
+                gameBoardView.setDisableButtonEndTurn(true);
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());

@@ -40,12 +40,10 @@ public class GameBoardView extends Pane {
     private Button buttonReset;
     private Button buttonEndTurn;
     private Hashtable<String, ImageView> listCardImages;
-    private Label lblLocalPlayer;
     private Label lblScoreLocalPlayer;
     private HBox HBoxMovementCards;
     private Label infoLabel;
     private Button buttonGameOver;
-    private ComboBoxBase<Object> createGameStage;
     private GameOverView gameOverView;
     private Stage gameOverStage;
 
@@ -153,8 +151,9 @@ public class GameBoardView extends Pane {
                     gamePiece.setLayoutY(startCard.getLayoutY() + offsetY);
                     gamePiece.setCurrentPathId(startCard.getPathId());
                 }
+                // Style them
                 styleGamePiece(player, gamePiece);
-
+                // Add them to the view
                 this.getChildren().add(gamePiece);
                 offsetX += 20;
             }
@@ -164,7 +163,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Styles the gamePiece. Sets the color, width and height as well as the style class for CSS
+     * Styles the gamePiece. Sets the color, width and height.
      *
      * @param player    The player to whom the gamePiece belongs to
      * @param gamePiece The gamePiece to be styled
@@ -280,6 +279,11 @@ public class GameBoardView extends Pane {
         card.applyCardImages(listCardImages);
     }
 
+    /**
+     * Loris Grether
+     *
+     * @return
+     */
     private Hashtable<String, ImageView> readCardImages() {
         Hashtable<String, ImageView> listCardImages = new Hashtable<>();
 
@@ -307,16 +311,11 @@ public class GameBoardView extends Pane {
     }
 
     public void show() {
-
         String css = this.getClass().getResource("../res/css/css_Game.css").toExternalForm();
         Scene gameScene = new Scene(this);
         gameScene.getStylesheets().add(css);
         gameStage = view.getGameLobbyView().getGameLobbyStage();
-        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()){
-            infoLabel.setText("Your turn\nSelect a game piece and a card");
-        }else{
-            infoLabel.setText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait." );
-        }
+        setInfoLblTextOnNewTurn();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -324,6 +323,14 @@ public class GameBoardView extends Pane {
             }
         });
 
+    }
+
+    private void setInfoLblTextOnNewTurn() {
+        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()){
+            setInfoLabelText("Your turn\nSelect a game piece and a card");
+        }else{
+            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait.");
+        }
     }
 
 
@@ -355,6 +362,7 @@ public class GameBoardView extends Pane {
         GamePiece selectedGamePiece = gameModel.getPlayers().get(gameModel.getPreviousTurn()).getGamePieces().get(gameModel.getGamePieceUsedIndex());
         ArrayList<Card> cards = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards();
         int previousTurn = gameModel.getPreviousTurn();
+        int score = gameModel.getPlayers().get(previousTurn).getScore();
 
         Platform.runLater(new Runnable() {
             @Override
@@ -364,22 +372,20 @@ public class GameBoardView extends Pane {
 
                 //Update the score and the infoLabel
                 if (gameModel.getLocalPlayerId() == previousTurn) {
-                    lblScoreLocalPlayer.setText("Score: " + String.valueOf(gameModel.getPlayers().get(previousTurn).getScore()));
-                    setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait.");
+                    updateScoreLabel(lblScoreLocalPlayer, score);
+                    setInfoLblTextOnNewTurn();
                 } else {
-                    scoresLabels.get(previousTurn).setText("Score: " + String.valueOf(gameModel.getPlayers().get(previousTurn).getScore()));
-                    setInfoLabelText("Your turn\nSelect a game piece and a card");
+                    updateScoreLabel(scoresLabels.get(previousTurn), score);
+                    setInfoLblTextOnNewTurn();
                 }
 
                 //Update the movementCards
                 if (gameModel.getLocalPlayerId() == previousTurn) {
-                    System.out.println("Cards on Hand: " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
                     for (Card card : cards) {
                         styleMovementCard(card);
                         HBoxMovementCards.getChildren().removeAll(card);
                     }
                 }
-
                 HBoxMovementCards.getChildren().setAll(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards());
 
                 //Remove the pathCards
@@ -389,6 +395,74 @@ public class GameBoardView extends Pane {
                 }
             }
         });
+    }
+
+    private void updateScoreLabel(Label scoreLabel, int score) {
+        System.out.println("Total of " + score + " points");
+        System.out.println("CurrentTurn: " + gameModel.getCurrentTurn());
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                scoreLabel.setText("Score: " + String.valueOf(score));
+            }
+        });
+    }
+
+    public void setDisableButtonMove(boolean disableButtonMove) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                buttonMove.setDisable(disableButtonMove);
+            }
+        });
+    }
+
+    public void setDisableButtonEndTurn(boolean disableButtonEndTurn) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                buttonEndTurn.setDisable(disableButtonEndTurn);
+            }
+        });
+    }
+
+    public void setInfoLabelText(String s) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                infoLabel.setText(s);
+                System.out.println(s);
+            }
+        });
+    }
+
+    public void resetCards() {
+        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()){
+            card.setOpacity(1);
+            card.setDisable(false);
+            resetHighlight(card);
+        }
+    }
+
+    public void createGameOverView() {
+        Stage parentStage = gameStage;
+        if (this.gameOverView == null) {
+            this.gameOverView = new GameOverView(gameStage.getHeight(), gameStage.getWidth());
+            gameOverStage = new Stage();
+            gameOverStage.setScene(new Scene(gameOverView));
+            view.setupOverlay(gameOverStage, parentStage, "css_GameOverView");
+        }
+        view.setXYLocation(gameOverStage, parentStage);
+        view.setDimensions(gameOverStage, parentStage);
+
+        //getControls(this.createGameView);
+        //setControlText(this.controls);
+
+        //activeOverlayStage = createGameStage;
+    }
+
+    public void showGameOver() {
+        gameOverStage.show();
     }
 
     public void removePathCard(Card pathCard) {
@@ -441,64 +515,4 @@ public class GameBoardView extends Pane {
         return gameOverView;
     }
 
-    public Label getInfoLabel() {
-        return infoLabel;
-    }
-
-    public void setDisableButtonMove(boolean disableButtonMove) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                buttonMove.setDisable(false);
-            }
-        });
-    }
-
-    public void setDisableButtonEndTurn(boolean disableButtonEndTurn) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                buttonEndTurn.setDisable(disableButtonEndTurn);
-            }
-        });
-    }
-
-    public void setInfoLabelText(String s) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                infoLabel.setText(s);
-                System.out.println(s);
-            }
-        });
-    }
-
-    public void resetCards() {
-        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()){
-            card.setOpacity(1);
-            card.setDisable(false);
-            resetHighlight(card);
-        }
-    }
-
-    public void createCreateGameView() {
-        Stage parentStage = gameStage;
-        if (this.gameOverView == null) {
-            this.gameOverView = new GameOverView(gameStage.getHeight(), gameStage.getWidth());
-            gameOverStage = new Stage();
-            gameOverStage.setScene(new Scene(gameOverView));
-            view.setupOverlay(gameOverStage, parentStage, "css_GameOverView");
-        }
-        view.setXYLocation(gameOverStage, parentStage);
-        view.setDimensions(gameOverStage, parentStage);
-
-        //getControls(this.createGameView);
-        //setControlText(this.controls);
-
-        //activeOverlayStage = createGameStage;
-    }
-
-    public Stage getGameOverStage() {
-        return gameOverStage;
-    }
 }

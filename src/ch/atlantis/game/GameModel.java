@@ -120,7 +120,7 @@ public class GameModel {
             nextPathId++;
         }
         // If we cannot find a targetPathId on the path then the next target is the end
-        if (!found && nextPathId + 1 == 154) {
+        if (!found && nextPathId == 154) {
             targetPathId = 400;
         }
         return targetPathId;
@@ -326,6 +326,8 @@ public class GameModel {
         previousTurn = currentTurn;
         currentTurn = (int) gameStateMap.get("CurrentTurn");
         players = (ArrayList<Player>) gameStateMap.get("Players");
+        int score = (int) gameStateMap.get("Score");
+        players.get(previousTurn).setScore(score);
         gamePieceUsedIndex = (int) gameStateMap.get("GamePieceUsedIndex");
         targetPathIdRemote = (int) gameStateMap.get("TargetPathId");
         indexOfPathCardToRemove = (int) gameStateMap.get("IndexOfCardToRemove");
@@ -435,7 +437,6 @@ public class GameModel {
     public void addToPlayedCards() {
         int index = players.get(localPlayerId).getMovementCards().indexOf(selectedCard);
         playedCardsIndices.add(index);
-        System.out.println("PlayedCardSize:  " + playedCardsIndices.size()  + " ");
     }
 
     public ArrayList<Integer> getTargetPathIds() {

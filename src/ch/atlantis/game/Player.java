@@ -68,6 +68,10 @@ public class Player implements Serializable {
         return playerName;
     }
 
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     public ArrayList<GamePiece> getGamePieces() {
         return gamePieces;
     }
