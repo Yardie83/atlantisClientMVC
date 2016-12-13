@@ -39,6 +39,7 @@ public class GameModel {
         localPlayerId = localPlayer.getPlayerID();
         occupied = new SimpleBooleanProperty(false);
         waterOnTheWayPathId = new SimpleIntegerProperty(0);
+        priceToCrossWater = new SimpleIntegerProperty(0);
         playedCardsIndices = new ArrayList<>();
         deckCardToAdd = new ArrayList<>();
         currentTurn = 0;
@@ -80,7 +81,6 @@ public class GameModel {
         waterOnTheWayPathId.set(waterPathId);
 
         // If there is water on the way to the target then calculate the price to cross
-        priceToCrossWater = new SimpleIntegerProperty(0);
         if (waterOnTheWayPathId.get() != 0) {
             priceToCrossWater.set(getPriceForCrossing(waterOnTheWayPathId.get()));
             if(!(players.get(localPlayerId).getPathCardStack().get(paidCardsIndex.get(paidCardsIndex.size()-1)).getValue() >= priceToCrossWater.get())){
