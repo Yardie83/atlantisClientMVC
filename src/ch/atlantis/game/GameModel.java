@@ -99,6 +99,9 @@ public class GameModel {
     }
 
     public void payForCrossing() {
+        if (paidCardsIndex == null){
+            paidCardsIndex = new ArrayList<>();
+        }
         if(selectedStackCard.getValue() >= priceToCrossWater){
             int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
             paidCardsIndex.add(index);
