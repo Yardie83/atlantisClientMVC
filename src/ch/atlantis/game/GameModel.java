@@ -305,8 +305,10 @@ public class GameModel {
         gameStateMap.put("GameName", players.get(currentTurn).getGameName());
         gameStateMap.put("GamePieceIndex", players.get(localPlayerId).getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathIds", targetPathIds);
-        System.out.println("CLIENT --> Paid Card Index : " + paidCardsIndex == null);
-        gameStateMap.put("PaidCards", paidCardsIndex);
+        if (paidCardsIndex != null) {
+            System.out.println("CLIENT --> Paid Card Index : " + paidCardsIndex.size());
+            gameStateMap.put("PaidCards", paidCardsIndex);
+        }
 
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
         // server. So I finally tried to create a new ArrayList and it works. I do not know why this problem exists.
