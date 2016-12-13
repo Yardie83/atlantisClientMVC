@@ -305,6 +305,7 @@ public class GameModel {
         gameStateMap.put("GameName", players.get(currentTurn).getGameName());
         gameStateMap.put("GamePieceIndex", players.get(localPlayerId).getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathIds", targetPathIds);
+        System.out.println("CLIENT --> Paid Card Index : " + paidCardsIndex == null);
         gameStateMap.put("PaidCards", paidCardsIndex);
 
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
@@ -373,13 +374,15 @@ public class GameModel {
     }
 
     private void removePaidCardsFromStack() {
-    ArrayList<Card> stacksCardsToRemove = new ArrayList<>();
-        for (Integer index : paidCardsIndex) {
-            stacksCardsToRemove.add(players.get(previousTurn).getPathCardStack().get(index));
-        }
+        if (!(paidCardsIndex == null || paidCardsIndex.size() == 0)) {
+            ArrayList<Card> stacksCardsToRemove = new ArrayList<>();
+            for (Integer index : paidCardsIndex) {
+                stacksCardsToRemove.add(players.get(previousTurn).getPathCardStack().get(index));
+            }
 
-        for (Card card : stacksCardsToRemove){
-            players.get(previousTurn).getPathCardStack().remove(card);
+            for (Card card : stacksCardsToRemove) {
+                players.get(previousTurn).getPathCardStack().remove(card);
+            }
         }
     }
 
