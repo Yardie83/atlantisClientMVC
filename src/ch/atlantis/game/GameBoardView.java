@@ -200,7 +200,7 @@ public class GameBoardView extends Pane {
 
     }
 
-    private VBox createPathCardsPane() {
+    private VBox createPathCardsPane() { // Create VBox with score cards
         VBox pathCardsPane = new VBox(3);
         pathCardsPane.setMaxWidth(50);
         pathCardsPane.setMinWidth(50);
@@ -414,8 +414,8 @@ public class GameBoardView extends Pane {
         });
     }
 
-    private void updatePathCardsStack() {
-        Platform.runLater(new Runnable() {
+    private void updatePathCardsStack() { // Load score cards in VBox
+        Platform.runLater(new Runnable() { // What is this?
             @Override
             public void run() {
                 stackCardPane.getChildren().setAll(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getPathCardStack());

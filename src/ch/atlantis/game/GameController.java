@@ -28,7 +28,6 @@ public class GameController {
     private GameBoardView gameBoardView;
     private AtlantisModel atlantisModel;
     private AtlantisView atlantisView;
-    private
 
     int clickCount;
 
@@ -120,17 +119,41 @@ public class GameController {
 
     private void handleMouseEventsStackCards() {
 
-        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()){
+        ArrayList<Card> stackCards = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack();
+
+        for (Card card : stackCards){
+            // Highlight stack card when clicked
             card.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if(card != gameModel.getSelectedStackCard()){
-                        gameBoardView.resetHighlight(card);
+                    if(gameModel.getSelectedStackCard() != null) {
+                        gameBoardView.resetHighlight(gameModel.getSelectedStackCard());
                     }
                     gameModel.setSelectedStackCard(card);
                     gameBoardView.highlightItem(card);
                 }
             });
+
+            // Highlight stack card when entered
+            card.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (card != gameModel.getSelectedStackCard()) {
+                        gameBoardView.highlightItem(card);
+                    }
+                }
+            });
+
+            // Reset highlight stack card when exited
+            card.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (card != gameModel.getSelectedCard()) {
+                        gameBoardView.resetHighlight(card);
+                    }
+                }
+            });
+
         }
     }
 
@@ -149,7 +172,6 @@ public class GameController {
                 }
             }
         });
-
     }
 
     private void handleMouseEventsGameControlButtons() {
@@ -167,7 +189,14 @@ public class GameController {
         gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Code
+
+//                int amountOfCardsToBuy = 1; // only as example shown, can be replaced by dropdown gui
+//
+//                if (!atlantisModel.getLocalPlayer().canBuyCards(gameModel.getMinimumScoreToBuy(), amountOfCardsToBuy)) {
+//                    //show dialog
+//                    return;
+//                }
+//                // Create buy method in GameModel -> get cards from deck, update deck for everybody (Server), update player score, update hand cards for local player
             }
         });
 

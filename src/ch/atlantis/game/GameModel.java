@@ -3,6 +3,8 @@ package ch.atlantis.game;
 import ch.atlantis.util.Message;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -363,7 +365,16 @@ public class GameModel {
      * Hermann Grieder
      * <br>
      */
+
     public boolean updateValues() {
+        players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex).setCurrentPathId(targetPathIdRemote);
+
+
+//        int score = pathCards.get(indexOfPathCardToRemove).getValue();
+//        if (previousTurn == localPlayerId) {
+//            scoreList.add(String.valueOf(score));
+//        }
+
         Card pathCardToRemove = pathCards.get(indexOfPathCardToRemove);
         pathCardToRemove.setPathId(-1);
         players.get(previousTurn).getPathCardStack().add(pathCardToRemove);
