@@ -1,15 +1,15 @@
 package ch.atlantis.game;
 
-import ch.atlantis.util.Language;
 import ch.atlantis.view.AtlantisView;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBoxBase;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -34,7 +34,6 @@ public class GameBoardView extends Pane {
     private AtlantisView view;
     private Tile consoleTile;
     private Stage gameStage;
-
     private Button buttonBuyCards;
     private Button buttonMove;
     private Button buttonReset;
@@ -46,6 +45,7 @@ public class GameBoardView extends Pane {
     private Button buttonGameOver;
     private GameOverView gameOverView;
     private Stage gameOverStage;
+    private VBox stackCardPane;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -183,21 +183,37 @@ public class GameBoardView extends Pane {
             }
 
         HBox console = initConsole();
+        stackCardPane = createPathCardsPane();
+        ScrollPane scrollPane = new ScrollPane(stackCardPane);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setMinViewportHeight(50);
+        scrollPane.setVmax(50);
+        scrollPane.setPrefSize(100,50);
+        scrollPane.setMaxHeight(150);
         VBox otherPlayersBox = createOpponentBox();
         VBox localPlayerBox = createLocalPlayerBox();
         VBox gameControls = createGameControls();
 
-        console.getChildren().addAll(otherPlayersBox, localPlayerBox, gameControls);
+        console.getChildren().addAll(scrollPane, otherPlayersBox, localPlayerBox, gameControls);
 
         this.getChildren().add(console);
 
+    }
+
+    private VBox createPathCardsPane() {
+        VBox pathCardsPane = new VBox(3);
+        pathCardsPane.setMaxWidth(50);
+        pathCardsPane.setMinWidth(50);
+        pathCardsPane.setMinHeight(50);
+        return pathCardsPane;
     }
 
     private HBox initConsole() {
         HBox console = new HBox();
         console.setLayoutX(consoleTile.getX());
         console.setLayoutY(consoleTile.getY() + 20);
-        console.setMinHeight(200);
+        console.setMinHeight(150);
         console.setMinWidth(consoleTile.getSide() * 9);
         return console;
     }
@@ -220,7 +236,7 @@ public class GameBoardView extends Pane {
 
     private VBox createLocalPlayerBox() {
         VBox localPlayerBox = new VBox(10);
-        localPlayerBox.setMinHeight(200);
+        localPlayerBox.setMinHeight(150);
         localPlayerBox.setMinWidth(consoleTile.getSide() * 4);
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
@@ -370,10 +386,12 @@ public class GameBoardView extends Pane {
                 //Move the gamePiece
                 moveGamePiece(selectedGamePiece);
 
-                //Update the score and the infoLabel
+                //Update the score and the infoLabel and
+                //add the pathCard that was picked up to the flowPane.
                 if (gameModel.getLocalPlayerId() == previousTurn) {
                     updateScoreLabel(lblScoreLocalPlayer, score);
                     setInfoLblTextOnNewTurn();
+                    updatePathCardsStack();
                 } else {
                     updateScoreLabel(scoresLabels.get(previousTurn), score);
                     setInfoLblTextOnNewTurn();
@@ -393,6 +411,15 @@ public class GameBoardView extends Pane {
                     Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
                     removePathCard(pathCardToRemove);
                 }
+            }
+        });
+    }
+
+    private void updatePathCardsStack() {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                stackCardPane.getChildren().setAll(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getPathCardStack());
             }
         });
     }

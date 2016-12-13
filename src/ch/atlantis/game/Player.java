@@ -12,6 +12,7 @@ public class Player implements Serializable {
     private static final long serialVersionUID = 7661939850705259874L;
     private ArrayList<GamePiece> gamePieces;
     private ArrayList<Card> movementCards;
+    private ArrayList<Card> pathCardStack;
     private String playerName;
     private String gameName;
     private int playerID;
@@ -79,4 +80,10 @@ public class Player implements Serializable {
 
     public ArrayList<Card> getMovementCards() { return movementCards; }
 
+    public ArrayList<Card> getPathCardStack() {
+        if (pathCardStack == null){
+            pathCardStack = new ArrayList<>();
+        }
+        return pathCardStack;
+    }
 }

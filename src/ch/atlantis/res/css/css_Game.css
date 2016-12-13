@@ -4,7 +4,14 @@
     -fx-background-size: stretch;
     -fx-font-family: "Arial Black";
     -fx-font-smoothing-type: lcd;
+}
 
+.scroll-pane {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
 }
 
 

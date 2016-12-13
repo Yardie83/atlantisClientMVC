@@ -14,6 +14,7 @@ public class GameModel {
 
     private SimpleIntegerProperty waterOnTheWayPathId;
     private ArrayList<Integer> playedCardsIndices;
+    private ArrayList<Integer> paidCardsIndex;
     private ArrayList<Integer> targetPathIds;
     private SimpleBooleanProperty occupied;
     private GamePiece selectedGamePiece;
@@ -22,6 +23,7 @@ public class GameModel {
     private ArrayList<Tile> tiles;
     private ArrayList<Card> deckCardToAdd;
     private Card selectedCard;
+    private Card selectedStackCard;
     private int localPlayerId;
     private int indexOfPathCardToRemove;
     private int indexOfPathCardToShow;
@@ -37,6 +39,7 @@ public class GameModel {
         occupied = new SimpleBooleanProperty(false);
         waterOnTheWayPathId = new SimpleIntegerProperty(0);
         playedCardsIndices = new ArrayList<>();
+        deckCardToAdd = new ArrayList<>();
         currentTurn = 0;
         previousTurn = currentTurn;
 
@@ -286,6 +289,7 @@ public class GameModel {
         gameStateMap.put("GameName", players.get(currentTurn).getGameName());
         gameStateMap.put("GamePieceIndex", players.get(localPlayerId).getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathIds", targetPathIds);
+        gameStateMap.put("PaidCards", paidCardsIndex);
 
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
         // server. So I finally tried to create a new ArrayList and it works. I do not know why this problem exists.
@@ -341,7 +345,9 @@ public class GameModel {
      * <br>
      */
     public boolean updateValues() {
-        pathCards.get(indexOfPathCardToRemove).setPathId(-1);
+        Card pathCardToRemove = pathCards.get(indexOfPathCardToRemove);
+        pathCardToRemove.setPathId(-1);
+        players.get(previousTurn).getPathCardStack().add(pathCardToRemove);
         pathCards.get(indexOfPathCardToShow).setIsOnTop(true);
         selectedGamePiece = players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex);
         selectedGamePiece.setCurrentPathId(targetPathIdRemote);
@@ -416,6 +422,10 @@ public class GameModel {
         return gamePieceUsedIndex;
     }
 
+    public ArrayList<Integer> getPaidCardsIndex() {
+        return paidCardsIndex;
+    }
+
     public void setSelectedGamePiece(GamePiece selectedGamePiece) {
         this.selectedGamePiece = selectedGamePiece;
     }
@@ -447,5 +457,13 @@ public class GameModel {
 
     public void setTargetPathIds(ArrayList<Integer> targetPathIds) {
         this.targetPathIds = targetPathIds;
+    }
+
+    public Card getSelectedStackCard() {
+        return selectedStackCard;
+    }
+
+    public void setSelectedStackCard(Card selectedStackCard) {
+        this.selectedStackCard = selectedStackCard;
     }
 }

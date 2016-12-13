@@ -69,6 +69,7 @@ public class GameController {
                         if(gameModel.readGameStateMap(gameStateMap)) {
                             gameModel.updateValues();
                             handleMouseEventsMovementCards();
+                            handleMouseEventsStackCards();
                             gameBoardView.updateBoard();
                             if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                                 gameBoardView.setDisableButtonMove(false);
@@ -104,6 +105,22 @@ public class GameController {
                 gameModel.waterOnTheWayPathIdProperty().set(0);
             }
         });
+    }
+
+    private void handleMouseEventsStackCards() {
+
+        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()){
+            card.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if(card != gameModel.getSelectedStackCard()){
+                        gameBoardView.resetHighlight(card);
+                    }
+                    gameModel.setSelectedStackCard(card);
+                    gameBoardView.highlightItem(card);
+                }
+            });
+        }
     }
 
     private void handleEscapeKey() {
@@ -197,7 +214,6 @@ public class GameController {
                 gameBoardView.moveGamePiece();
                 gameBoardView.resetCards();
                 gameModel.setSelectedCard(null);
-                gameModel.setSelectedGamePiece(null);
                 gameModel.getPlayedCardsIndices().clear();
                 gameModel.setTargetPathIds(null);
                 gameBoardView.setInfoLabelText("Your turn\nSelect a game piece and a card");
