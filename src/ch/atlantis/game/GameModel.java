@@ -32,6 +32,7 @@ public class GameModel {
     private int currentTurn;
     private int previousTurn;
     private int targetPathId;
+    private int priceToCrossWater;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
@@ -79,10 +80,15 @@ public class GameModel {
         waterOnTheWayPathId.set(waterPathId);
 
         // If there is water on the way to the target then calculate the price to cross
-        int priceToCrossWater = 0;
+        priceToCrossWater = 0;
         if (waterOnTheWayPathId.get() != 0) {
             priceToCrossWater = getPriceForCrossing(waterOnTheWayPathId.get());
-            return false;
+            if(!(players.get(localPlayerId).getPathCardStack().get(paidCardsIndex.get(paidCardsIndex.size()-1)).getValue() >= priceToCrossWater)){
+                System.out.println("Paid price is not correct");
+                return false;
+            }else{
+                System.out.println("Paid price was correct");
+            }
         }
 
         // Check if the target pathId is already occupied by someone else
@@ -90,6 +96,13 @@ public class GameModel {
 
         occupied.set(isOccupied);
         return !isOccupied;
+    }
+
+    public void payForCrossing() {
+        if(selectedStackCard.getValue() >= priceToCrossWater){
+            int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
+            paidCardsIndex.add(index);
+        }
     }
 
     /**
@@ -348,12 +361,25 @@ public class GameModel {
         Card pathCardToRemove = pathCards.get(indexOfPathCardToRemove);
         pathCardToRemove.setPathId(-1);
         players.get(previousTurn).getPathCardStack().add(pathCardToRemove);
+        removePaidCardsFromStack();
         pathCards.get(indexOfPathCardToShow).setIsOnTop(true);
         selectedGamePiece = players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex);
         selectedGamePiece.setCurrentPathId(targetPathIdRemote);
         updateMovementCards();
         return true;
     }
+
+    private void removePaidCardsFromStack() {
+    ArrayList<Card> stacksCardsToRemove = new ArrayList<>();
+        for (Integer index : paidCardsIndex) {
+            stacksCardsToRemove.add(players.get(previousTurn).getPathCardStack().get(index));
+        }
+
+        for (Card card : stacksCardsToRemove){
+            players.get(previousTurn).getPathCardStack().remove(card);
+        }
+    }
+
 
     private void updateMovementCards() {
         ArrayList<Card> movementCardsToRemove = new ArrayList<>();
@@ -466,4 +492,6 @@ public class GameModel {
     public void setSelectedStackCard(Card selectedStackCard) {
         this.selectedStackCard = selectedStackCard;
     }
+
+
 }

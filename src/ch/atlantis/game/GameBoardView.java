@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -42,7 +41,7 @@ public class GameBoardView extends Pane {
     private Label lblScoreLocalPlayer;
     private HBox HBoxMovementCards;
     private Label infoLabel;
-    private Button buttonGameOver;
+    private Button buttonPay;
     private GameOverView gameOverView;
     private Stage gameOverStage;
     private VBox stackCardPane;
@@ -227,9 +226,9 @@ public class GameBoardView extends Pane {
         buttonReset.setDisable(true);
         buttonEndTurn = new Button("End Turn");
         buttonEndTurn.setDisable(true);
-        buttonGameOver = new Button("Game Over Test");
+        buttonPay = new Button("Pay to cross");
 
-        gameControls.getChildren().addAll(buttonBuyCards, buttonMove, buttonReset, buttonEndTurn, buttonGameOver);
+        gameControls.getChildren().addAll(buttonBuyCards, buttonMove, buttonReset, buttonEndTurn, buttonPay);
 
         return gameControls;
     }
@@ -534,8 +533,8 @@ public class GameBoardView extends Pane {
         return buttonEndTurn;
     }
 
-    public Button getButtonGameOver() {
-        return buttonGameOver;
+    public Button getButtonPay() {
+        return buttonPay;
     }
 
     public GameOverView getGameOverView() {

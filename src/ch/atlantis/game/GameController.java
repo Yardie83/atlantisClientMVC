@@ -143,13 +143,12 @@ public class GameController {
 
     private void handleMouseEventsGameControlButtons() {
 
-        // TODO: Just for testing. Needs to be deleted later.
-        gameBoardView.getButtonGameOver().setOnAction(new EventHandler<ActionEvent>() {
+        gameBoardView.getButtonPay().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                gameBoardView.createGameOverView();
-                gameBoardView.showGameOver();
-                //backToLobbyButtonHandler();
+                if(gameModel.getSelectedStackCard() != null){
+                    gameModel.payForCrossing();
+                }
             }
         });
 
@@ -183,15 +182,14 @@ public class GameController {
                         gameBoardView.setDisableButtonMove(true);
                         gameBoardView.setDisableButtonEndTurn(false);
                         gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
+                        gameModel.getSelectedCard().setOpacity(0);
+                        gameModel.getSelectedCard().setDisable(true);
+                        gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
+                        gameBoardView.moveGamePiece();
+                        gameModel.addToPlayedCards();
                     } else {
                         System.out.println("GameModel -> Move can not be done directly");
                     }
-                    gameModel.getSelectedCard().setOpacity(0);
-                    gameModel.getSelectedCard().setDisable(true);
-                    gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
-                    gameBoardView.moveGamePiece();
-                    gameModel.addToPlayedCards();
-
                 }
             }
         });
@@ -239,6 +237,12 @@ public class GameController {
                 }
             }
         });
+    }
+
+    private void handleGameOver() {
+        gameBoardView.createGameOverView();
+        gameBoardView.showGameOver();
+        //backToLobbyButtonHandler();
     }
 
 //    private void backToLobbyButtonHandler() {
