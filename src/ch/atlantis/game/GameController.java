@@ -105,6 +105,17 @@ public class GameController {
                 gameModel.waterOnTheWayPathIdProperty().set(0);
             }
         });
+
+        gameModel.priceToCrossWaterProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (newValue.intValue() != 0){
+                    gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross");
+                    gameBoardView.setDisableButtonMove(true);
+                }
+                gameModel.priceToCrossWaterProperty().set(0);
+            }
+        });
     }
 
     private void handleMouseEventsStackCards() {

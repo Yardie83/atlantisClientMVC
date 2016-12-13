@@ -32,7 +32,7 @@ public class GameModel {
     private int currentTurn;
     private int previousTurn;
     private int targetPathId;
-    private int priceToCrossWater;
+    private SimpleIntegerProperty priceToCrossWater;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
@@ -80,10 +80,10 @@ public class GameModel {
         waterOnTheWayPathId.set(waterPathId);
 
         // If there is water on the way to the target then calculate the price to cross
-        priceToCrossWater = 0;
+        priceToCrossWater = new SimpleIntegerProperty(0);
         if (waterOnTheWayPathId.get() != 0) {
-            priceToCrossWater = getPriceForCrossing(waterOnTheWayPathId.get());
-            if(!(players.get(localPlayerId).getPathCardStack().get(paidCardsIndex.get(paidCardsIndex.size()-1)).getValue() >= priceToCrossWater)){
+            priceToCrossWater.set(getPriceForCrossing(waterOnTheWayPathId.get()));
+            if(!(players.get(localPlayerId).getPathCardStack().get(paidCardsIndex.get(paidCardsIndex.size()-1)).getValue() >= priceToCrossWater.get())){
                 System.out.println("Paid price is not correct");
                 return false;
             }else{
@@ -102,7 +102,7 @@ public class GameModel {
         if (paidCardsIndex == null){
             paidCardsIndex = new ArrayList<>();
         }
-        if(selectedStackCard.getValue() >= priceToCrossWater){
+        if(selectedStackCard.getValue() >= priceToCrossWater.get()){
             int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
             paidCardsIndex.add(index);
         }
@@ -473,6 +473,10 @@ public class GameModel {
 
     public SimpleIntegerProperty waterOnTheWayPathIdProperty() {
         return waterOnTheWayPathId;
+    }
+
+    public SimpleIntegerProperty priceToCrossWaterProperty() {
+        return priceToCrossWater;
     }
 
     public void addToPlayedCards() {
