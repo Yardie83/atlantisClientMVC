@@ -373,6 +373,7 @@ public class GameModel {
         selectedGamePiece.setCurrentPathId(targetPathIdRemote);
         updateMovementCards();
         return true;
+
     }
 
     private void removePaidCardsFromStack() {
