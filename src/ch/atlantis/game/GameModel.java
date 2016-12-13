@@ -20,7 +20,7 @@ public class GameModel {
     private ArrayList<Player> players;
     private ArrayList<Card> pathCards;
     private ArrayList<Tile> tiles;
-    private Card deckCardToAdd;
+    private ArrayList<Card> deckCardToAdd;
     private Card selectedCard;
     private int localPlayerId;
     private int indexOfPathCardToRemove;
@@ -332,7 +332,7 @@ public class GameModel {
         targetPathIdRemote = (int) gameStateMap.get("TargetPathId");
         indexOfPathCardToRemove = (int) gameStateMap.get("IndexOfCardToRemove");
         indexOfPathCardToShow = (int) gameStateMap.get("IndexOfCardToShow");
-        deckCardToAdd = (Card) gameStateMap.get("DeckCardToAdd");
+        deckCardToAdd = (ArrayList<Card>) gameStateMap.get("DeckCardsToAdd");
         return true;
     }
 
@@ -359,7 +359,9 @@ public class GameModel {
             players.get(previousTurn).getMovementCards().remove(card);
         }
 
-        players.get(previousTurn).getMovementCards().add(deckCardToAdd);
+        for (Card card : deckCardToAdd) {
+            players.get(previousTurn).getMovementCards().add(card);
+        }
     }
 
 //        // TODO: We need a list for the individuals score picked up by the player. So we can later pay with it.
