@@ -56,8 +56,7 @@ public class GameController {
     private void addListeners() {
 
         /*
-         * Listens if a move message was received in the atlantisModel
-         * then calls the gameModel readInitialGameStateMap method and the gameBoardView update method
+         * Listens if a move message was received in the atlantisModel. Will be executed for all player moves.
          */
         atlantisModel.moveValidProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -77,6 +76,7 @@ public class GameController {
                                 gameModel.setSelectedCard(null);
                                 gameModel.setSelectedGamePiece(null);
                                 gameModel.setTargetPathIds(null);
+                                gameModel.clearPaidCardsIndex();
                             }
                         }
                     }
@@ -148,6 +148,7 @@ public class GameController {
             public void handle(ActionEvent event) {
                 if(gameModel.getSelectedStackCard() != null){
                     gameModel.payForCrossing();
+                    tryToMove();
                 }
             }
         });
@@ -162,9 +163,6 @@ public class GameController {
         gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                gameBoardView.getButtonBuyCards().setDisable(true);
-                gameBoardView.getButtonReset().setDisable(false);
-
                 if (clickCount == 0) {
                     for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
                         gamePiece.setStartPathId(gamePiece.getCurrentPathId());
@@ -172,25 +170,7 @@ public class GameController {
                     }
                     System.out.println("GameModel -> Start path Ids set");
                 }
-                if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
-                    clickCount++;
-                    gameBoardView.resetHighlight(gameModel.getSelectedCard());
-                    gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                    gameBoardView.setInfoLabelText("");
-                    if (gameModel.canMoveDirectly()) {
-                        System.out.println("GameModel -> Move can be done directly");
-                        gameBoardView.setDisableButtonMove(true);
-                        gameBoardView.setDisableButtonEndTurn(false);
-                        gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
-                        gameModel.getSelectedCard().setOpacity(0);
-                        gameModel.getSelectedCard().setDisable(true);
-                        gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
-                        gameBoardView.moveGamePiece();
-                        gameModel.addToPlayedCards();
-                    } else {
-                        System.out.println("GameModel -> Move can not be done directly");
-                    }
-                }
+                tryToMove();
             }
         });
 
@@ -237,6 +217,31 @@ public class GameController {
                 }
             }
         });
+    }
+
+    private void tryToMove() {
+        gameBoardView.getButtonBuyCards().setDisable(true);
+        gameBoardView.getButtonReset().setDisable(false);
+
+        if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
+            clickCount++;
+            gameBoardView.resetHighlight(gameModel.getSelectedCard());
+            gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
+            gameBoardView.setInfoLabelText("");
+            if (gameModel.canMoveDirectly()) {
+                System.out.println("GameModel -> Move can be done directly");
+                gameBoardView.setDisableButtonMove(true);
+                gameBoardView.setDisableButtonEndTurn(false);
+                gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
+                gameModel.getSelectedCard().setOpacity(0);
+                gameModel.getSelectedCard().setDisable(true);
+                gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
+                gameBoardView.moveGamePiece();
+                gameModel.addToPlayedCards();
+            } else {
+                System.out.println("GameModel -> Move can not be done directly");
+            }
+        }
     }
 
     private void handleGameOver() {

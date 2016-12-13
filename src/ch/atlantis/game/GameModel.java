@@ -497,4 +497,7 @@ public class GameModel {
     }
 
 
+    public void clearPaidCardsIndex() {
+        paidCardsIndex = null;
+    }
 }
