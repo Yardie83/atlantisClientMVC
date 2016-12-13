@@ -136,7 +136,7 @@ public class GameModel {
     private boolean checkIfOccupied(int targetPathId, GamePiece selectedGamePiece) {
         for (Player player : players) {
             for (GamePiece gamePiece : player.getGamePieces()) {
-                if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId) {
+                if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId && gamePiece.getCurrentPathId() != 400) {
                     System.out.println("GameModel -> TargetPathId is occupied");
                     return true;
                 }
