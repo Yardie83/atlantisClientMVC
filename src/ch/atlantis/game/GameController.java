@@ -74,7 +74,7 @@ public class GameController {
                             gameBoardView.updateBoard();
                             if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                                 gameBoardView.setDisableButtonMove(false);
-                                gameBoardView.getButtonBuyCards().setDisable(false);
+                                gameBoardView.getButtonBuyCards().setDisable(true);
                                 gameModel.setSelectedCard(null);
                                 gameModel.setSelectedGamePiece(null);
                                 gameModel.setTargetPathIds(null);
@@ -120,6 +120,10 @@ public class GameController {
         });
     }
 
+    /**
+     * Can Heval Cokyasar
+     */
+
     private void handleMouseEventsStackCards() {
 
         ArrayList<Card> pathCardStack = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack();
@@ -129,8 +133,20 @@ public class GameController {
                 @Override
                 public void handle(MouseEvent event) {
                     if (gameModel.getSelectedStackCard() != null) {
+                        gameBoardView.setInfoLabelText("");
                         gameBoardView.resetHighlight(gameModel.getSelectedStackCard());
                     }
+                    if (card.getValue() > 1) {
+                        gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + "\n" +
+                                "You get " +  (card.getValue() / 2) + " cards, press \"Buy Cards\".");
+                        gameBoardView.getButtonBuyCards().setDisable(false);
+                    }
+                    if (card.getValue() == 1 && (!gameBoardView.getButtonBuyCards().isDisabled())) {
+                        gameBoardView.getButtonBuyCards().setDisable(true);
+                        gameBoardView.setInfoLabelText("The selected card's value is to low.");
+                    }
+
+
                     gameModel.setSelectedStackCard(card);
                     gameModel.setSelectedStackCardIndex(pathCardStack.indexOf(card));
                     System.out.println("GameController -> You selected card of index of " + gameModel.getSelectedStackCardIndex());
@@ -190,17 +206,21 @@ public class GameController {
             }
         });
 
+        /**
+         * Can Heval Cokyasar
+         *
+         */
         gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                handleGameOver();
-//                int amountOfCardsToBuy = 1; // only as example shown, can be replaced by dropdown gui
-//
-//                if (!atlantisModel.getLocalPlayer().canBuyCards(gameModel.getMinimumScoreToBuy(), amountOfCardsToBuy)) {
-//                    //show dialog
-//                    return;
-//                }
-//                // Create buy method in GameModel -> get cards from deck, update deck for everybody (Server), update player score, update hand cards for local player
+                if (gameModel.getSelectedStackCardIndex() != -1) {
+                    HashMap<String, Object> hashToBuyCards = new HashMap<String, Object>();
+                    String gameName = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName();
+                    Integer indexToSend = new Integer(gameModel.getSelectedStackCardIndex());
+                    hashToBuyCards.put("GameName", gameName);
+                    hashToBuyCards.put("Index", indexToSend);
+                    atlantisModel.sendMessage(new Message(MessageType.BUYCARD, hashToBuyCards)); // Send message to server
+                }
             }
         });
 
@@ -225,9 +245,6 @@ public class GameController {
             public void handle(ActionEvent event) {
                 if (gameBoardView.getButtonMove().isDisabled()) {
                     gameBoardView.setDisableButtonMove(false);
-                }
-                if (gameBoardView.getButtonBuyCards().isDisabled()) {
-                    gameBoardView.getButtonBuyCards().setDisable(false);
                 }
                 if (!gameBoardView.getButtonEndTurn().isDisabled()) {
                     gameBoardView.setDisableButtonEndTurn(true);

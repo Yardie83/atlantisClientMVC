@@ -17,5 +17,6 @@ public enum MessageType {
     GAMEINIT,
     MOVE,
     GAMEOVER,
+    BUYCARD,
 }
 

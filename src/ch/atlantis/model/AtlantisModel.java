@@ -174,6 +174,9 @@ public class AtlantisModel {
                                 case GAMEOVER:
                                     handleGameOver(message);
                                     break;
+                                case BUYCARD:
+
+                                    break;
                             }
                         }
                     } catch (SocketException e) {
