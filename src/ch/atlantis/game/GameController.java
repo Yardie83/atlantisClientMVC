@@ -103,8 +103,8 @@ public class GameController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (newValue.intValue() != 0) {
                     gameBoardView.setInfoLabelText("You need to cross water\nPay with a bridge or with collected cards");
+                    gameBoardView.getButtonEndTurn().setDisable(true);
                 }
-                gameModel.waterOnTheWayPathIdProperty().set(0);
             }
         });
 
@@ -114,8 +114,8 @@ public class GameController {
                 if (newValue.intValue() != 0) {
                     gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross");
                     gameBoardView.setDisableButtonMove(true);
+                    gameBoardView.getButtonPay().setDisable(false);
                 }
-                gameModel.priceToCrossWaterProperty().set(0);
             }
         });
     }
@@ -136,17 +136,17 @@ public class GameController {
                         gameBoardView.setInfoLabelText("");
                         gameBoardView.resetHighlight(gameModel.getSelectedStackCard());
                     }
-                    if (card.getValue() > 1) {
-                        gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + "\n" +
-                                "You get " +  (card.getValue() / 2) + " cards, press \"Buy Cards\".");
-                        gameBoardView.getButtonBuyCards().setDisable(false);
+                    if (clickCount == 0) {
+                        if (card.getValue() > 1) {
+                            gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + "\n" +
+                                    "You get " + (card.getValue() / 2) + " cards, press \"Buy Cards\".");
+                            gameBoardView.getButtonBuyCards().setDisable(false);
+                        }
+                        if (card.getValue() == 1 && (!gameBoardView.getButtonBuyCards().isDisabled())) {
+                            gameBoardView.getButtonBuyCards().setDisable(true);
+                            gameBoardView.setInfoLabelText("The selected card's value is to low.");
+                        }
                     }
-                    if (card.getValue() == 1 && (!gameBoardView.getButtonBuyCards().isDisabled())) {
-                        gameBoardView.getButtonBuyCards().setDisable(true);
-                        gameBoardView.setInfoLabelText("The selected card's value is to low.");
-                    }
-
-
                     gameModel.setSelectedStackCard(card);
                     gameModel.setSelectedStackCardIndex(pathCardStack.indexOf(card));
                     System.out.println("GameController -> You selected card of index of " + gameModel.getSelectedStackCardIndex());
@@ -200,8 +200,12 @@ public class GameController {
             @Override
             public void handle(ActionEvent event) {
                 if (gameModel.getSelectedStackCard() != null) {
-                    gameModel.payForCrossing();
-                    tryToMove();
+                    if (gameModel.payForCrossing()) {
+                        gameBoardView.setInfoLabelText("You paid the required amount");
+                        tryToMove();
+                    } else {
+                        gameBoardView.setInfoLabelText("Sorry amount is not sufficient");
+                    }
                 }
             }
         });
@@ -272,6 +276,7 @@ public class GameController {
                 gameBoardView.getButtonBuyCards().setDisable(true);
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(true);
+                gameBoardView.getButtonPay().setDisable(true);
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());

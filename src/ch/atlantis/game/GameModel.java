@@ -80,32 +80,33 @@ public class GameModel {
         // water is on the way to the target
         int waterPathId = getWaterPathId(selectedGamePiece.getCurrentPathId(), targetPathId);
         waterOnTheWayPathId.set(waterPathId);
+        int priceToCross = getPriceForCrossing(waterPathId);
+        priceToCrossWater.set(priceToCross);
 
         // If there is water on the way to the target then calculate the price to cross
         if (waterOnTheWayPathId.get() != 0) {
-            priceToCrossWater.set(getPriceForCrossing(waterOnTheWayPathId.get()));
-            if (!(players.get(localPlayerId).getPathCardStack().get(paidCardsIndex.get(paidCardsIndex.size() - 1)).getValue() >= priceToCrossWater.get())) {
-                System.out.println("Paid price is not correct");
-                return false;
-            } else {
-                System.out.println("Paid price was correct");
-            }
+            return false;
         }
-
         // Check if the target pathId is already occupied by someone else
         boolean isOccupied = checkIfOccupied(targetPathId, selectedGamePiece);
-
         occupied.set(isOccupied);
+
         return !isOccupied;
     }
 
-    public void payForCrossing() {
+    public boolean payForCrossing() {
         if (paidCardsIndex == null) {
             paidCardsIndex = new ArrayList<>();
         }
         if (selectedStackCard.getValue() >= priceToCrossWater.get()) {
             int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
+
             paidCardsIndex.add(index);
+            priceToCrossWater.set(0);
+            waterOnTheWayPathId.set(0);
+            return true;
+        } else {
+            return false;
         }
     }
 
