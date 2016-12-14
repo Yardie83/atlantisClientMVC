@@ -122,7 +122,9 @@ public class GameController {
 
     private void handleMouseEventsStackCards() {
 
-        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()) {
+        ArrayList<Card> pathCardStack = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack();
+
+        for (Card card : pathCardStack) {
             card.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
