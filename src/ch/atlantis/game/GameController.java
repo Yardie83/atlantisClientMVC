@@ -189,7 +189,7 @@ public class GameController {
         gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                handleGameOver();
 //                int amountOfCardsToBuy = 1; // only as example shown, can be replaced by dropdown gui
 //
 //                if (!atlantisModel.getLocalPlayer().canBuyCards(gameModel.getMinimumScoreToBuy(), amountOfCardsToBuy)) {
