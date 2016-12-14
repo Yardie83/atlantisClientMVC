@@ -133,6 +133,27 @@ public class GameController {
                     gameBoardView.highlightItem(card);
                 }
             });
+
+            // Highlight stack card when entered
+            card.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (card != gameModel.getSelectedStackCard()) {
+                        gameBoardView.highlightItem(card);
+                    }
+                }
+            });
+
+            // Reset highlight stack card when exited
+            card.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    if (card != gameModel.getSelectedStackCard()) {
+                        gameBoardView.resetHighlight(card);
+                    }
+                }
+            });
+
         }
     }
 
@@ -151,7 +172,6 @@ public class GameController {
                 }
             }
         });
-
     }
 
     private void handleMouseEventsGameControlButtons() {
@@ -169,7 +189,14 @@ public class GameController {
         gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                handleGameOver();
+
+//                int amountOfCardsToBuy = 1; // only as example shown, can be replaced by dropdown gui
+//
+//                if (!atlantisModel.getLocalPlayer().canBuyCards(gameModel.getMinimumScoreToBuy(), amountOfCardsToBuy)) {
+//                    //show dialog
+//                    return;
+//                }
+//                // Create buy method in GameModel -> get cards from deck, update deck for everybody (Server), update player score, update hand cards for local player
             }
         });
 
