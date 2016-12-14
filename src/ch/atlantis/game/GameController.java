@@ -128,10 +128,12 @@ public class GameController {
             card.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (card != gameModel.getSelectedStackCard()) {
-                        gameBoardView.resetHighlight(card);
+                    if (gameModel.getSelectedStackCard() != null) {
+                        gameBoardView.resetHighlight(gameModel.getSelectedStackCard());
                     }
                     gameModel.setSelectedStackCard(card);
+                    gameModel.setSelectedStackCardIndex(pathCardStack.indexOf(card));
+                    System.out.println("GameController -> You selected card of index of " + gameModel.getSelectedStackCardIndex());
                     gameBoardView.highlightItem(card);
                 }
             });

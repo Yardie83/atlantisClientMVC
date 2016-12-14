@@ -3,8 +3,6 @@ package ch.atlantis.game;
 import ch.atlantis.util.Message;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +24,7 @@ public class GameModel {
     private ArrayList<Card> deckCardToAdd;
     private Card selectedCard;
     private Card selectedStackCard;
+    private int selectedStackCardIndex;
     private int localPlayerId;
     private int indexOfPathCardToRemove;
     private int indexOfPathCardToShow;
@@ -504,13 +503,17 @@ public class GameModel {
         this.targetPathIds = targetPathIds;
     }
 
-    public Card getSelectedStackCard() {
-        return selectedStackCard;
+    public int getSelectedStackCardIndex() {
+        return selectedStackCardIndex;
     }
 
-    public void setSelectedStackCard(Card selectedStackCard) {
-        this.selectedStackCard = selectedStackCard;
+    public void setSelectedStackCardIndex(int selectedStackCardIndex) {
+        this.selectedStackCardIndex = selectedStackCardIndex;
     }
+
+    public Card getSelectedStackCard() { return selectedStackCard; }
+
+    public void setSelectedStackCard(Card selectedStackCard) { this.selectedStackCard = selectedStackCard; }
 
     public void clearPaidCardsIndex() {
         paidCardsIndex = null;
