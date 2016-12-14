@@ -1,6 +1,7 @@
 package ch.atlantis.controller;
 
 import ch.atlantis.game.Game;
+import ch.atlantis.game.GameController;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.Message;
 import ch.atlantis.util.MessageType;
@@ -17,8 +18,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-
-import java.util.Collections;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
@@ -177,6 +176,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getStartGameBtn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                view.getGameLobbyView().getStartGameBtn().setDisable(true);
                 model.sendMessage(new Message(MessageType.STARTGAME));
             }
         });
@@ -185,6 +185,7 @@ public class GameLobbyController {
          * ******************************************************************
          * BUBBLES!! It creates bubbles(!!) when you click in the gameLobby!!
          * ******************************************************************
+         *
          * Hermann Grieder
          */
         view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -337,7 +338,25 @@ public class GameLobbyController {
                 if (newValue == Boolean.TRUE) {
                     Game g = new Game(model, view);
                     g.showGame();
+                    listenForGameOver(g.getGameController());
                     model.gameInfoProperty().setValue(false);
+                }
+            }
+        });
+    }
+
+    private void listenForGameOver(GameController gameController) {
+        gameController.gameOverProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue){
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.getGameLobbyView().getGameLobbyStage().setScene(view.getGameLobbyView().getScene());
+                            gameController.gameOverProperty().set(false);
+                        }
+                    });
                 }
             }
         });

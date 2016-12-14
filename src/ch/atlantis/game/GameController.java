@@ -4,6 +4,7 @@ import ch.atlantis.controller.OptionsController;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.MessageType;
 import ch.atlantis.view.AtlantisView;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -28,15 +29,16 @@ public class GameController {
     private GameBoardView gameBoardView;
     private AtlantisModel atlantisModel;
     private AtlantisView atlantisView;
-    private
+    private SimpleBooleanProperty gameOver;
 
-    int clickCount;
+    private int clickCount;
 
     public GameController(AtlantisView atlantisView, AtlantisModel atlantisModel, GameModel gameModel, GameBoardView gameBoardView) {
         this.atlantisView = atlantisView;
         this.atlantisModel = atlantisModel;
         this.gameModel = gameModel;
         this.gameBoardView = gameBoardView;
+        gameOver = new SimpleBooleanProperty(false);
     }
 
     public void startGame() {
@@ -65,7 +67,7 @@ public class GameController {
                 if (newValue) {
                     if (atlantisModel.getMessage().getMessageObject() instanceof HashMap) {
                         HashMap<String, Object> gameStateMap = (HashMap<String, Object>) atlantisModel.getMessage().getMessageObject();
-                        if(gameModel.readGameStateMap(gameStateMap)) {
+                        if (gameModel.readGameStateMap(gameStateMap)) {
                             gameModel.updateValues();
                             handleMouseEventsMovementCards();
                             handleMouseEventsStackCards();
@@ -109,7 +111,7 @@ public class GameController {
         gameModel.priceToCrossWaterProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if (newValue.intValue() != 0){
+                if (newValue.intValue() != 0) {
                     gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross");
                     gameBoardView.setDisableButtonMove(true);
                 }
@@ -120,11 +122,11 @@ public class GameController {
 
     private void handleMouseEventsStackCards() {
 
-        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()){
+        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()) {
             card.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if(card != gameModel.getSelectedStackCard()){
+                    if (card != gameModel.getSelectedStackCard()) {
                         gameBoardView.resetHighlight(card);
                     }
                     gameModel.setSelectedStackCard(card);
@@ -157,7 +159,7 @@ public class GameController {
         gameBoardView.getButtonPay().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(gameModel.getSelectedStackCard() != null){
+                if (gameModel.getSelectedStackCard() != null) {
                     gameModel.payForCrossing();
                     tryToMove();
                 }
@@ -167,7 +169,7 @@ public class GameController {
         gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                // Code
+                handleGameOver();
             }
         });
 
@@ -177,9 +179,11 @@ public class GameController {
                 if (clickCount == 0) {
                     for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
                         gamePiece.setStartPathId(gamePiece.getCurrentPathId());
+                        System.out.println("GameModel -> Start path Ids set");
                         gameModel.getPlayedCardsIndices().clear();
+                        System.out.println("Played cards indices cleared");
                     }
-                    System.out.println("GameModel -> Start path Ids set");
+
                 }
                 tryToMove();
             }
@@ -194,8 +198,11 @@ public class GameController {
                 if (gameBoardView.getButtonBuyCards().isDisabled()) {
                     gameBoardView.getButtonBuyCards().setDisable(false);
                 }
-                if (gameBoardView.getButtonEndTurn().isDisabled()) {
-                    gameBoardView.setDisableButtonEndTurn(false);
+                if (!gameBoardView.getButtonEndTurn().isDisabled()) {
+                    gameBoardView.setDisableButtonEndTurn(true);
+                }
+                if (!gameBoardView.getButtonPay().isDisabled()) {
+                    gameBoardView.getButtonPay().setDisable(true);
                 }
                 gameBoardView.getButtonReset().setDisable(true);
                 gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
@@ -239,36 +246,42 @@ public class GameController {
             gameBoardView.resetHighlight(gameModel.getSelectedCard());
             gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
             gameBoardView.setInfoLabelText("");
+
             if (gameModel.canMoveDirectly()) {
                 System.out.println("GameModel -> Move can be done directly");
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(false);
                 gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
-                gameModel.getSelectedCard().setOpacity(0);
-                gameModel.getSelectedCard().setDisable(true);
-                gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
-                gameBoardView.moveGamePiece();
-                gameModel.addToPlayedCards();
             } else {
-                System.out.println("GameModel -> Move can not be done directly");
+                System.out.println("GameModel -> Move cannot be done directly");
             }
+            gameModel.getSelectedCard().setOpacity(0);
+            gameModel.getSelectedCard().setDisable(true);
+            gameModel.addToPlayedCards();
+            gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
+            gameBoardView.moveGamePiece();
+        } else if (gameModel.getSelectedCard() == null && gameModel.getSelectedGamePiece() != null) {
+            gameBoardView.setInfoLabelText("Please select a card to play");
+        } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() != null) {
+            gameBoardView.setInfoLabelText("Please select a game piece to play");
         }
     }
 
     private void handleGameOver() {
         gameBoardView.createGameOverView();
         gameBoardView.showGameOver();
-        //backToLobbyButtonHandler();
+        backToLobbyButtonHandler();
     }
 
-//    private void backToLobbyButtonHandler() {
-//        gameBoardView.getGameOverView().getButtonBackToLobby().setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//
-//            }
-//        });
-//    }
+    private void backToLobbyButtonHandler() {
+        gameBoardView.getGameOverView().getBtnBackToLobby().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                gameOver.set(true);
+                gameBoardView.hideGameOver();
+            }
+        });
+    }
 
     private void handleMouseEventsGamePieces() {
         ArrayList<GamePiece> gamePieces = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces();
@@ -365,5 +378,13 @@ public class GameController {
                 }
             });
         }
+    }
+
+    public boolean isGameOver() {
+        return gameOver.get();
+    }
+
+    public SimpleBooleanProperty gameOverProperty() {
+        return gameOver;
     }
 }

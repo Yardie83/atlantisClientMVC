@@ -109,6 +109,7 @@ public class AtlantisView {
     }
 
     public void updateGameList() {
+
         // Only if the list is not empty go on
         if (model.getGameList().size() != 0) {
             // Clear the current list in the gameLobby every time we receive the list

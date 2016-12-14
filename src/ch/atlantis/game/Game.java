@@ -20,4 +20,8 @@ public class Game {
     public void showGame() {
         gameController.startGame();
     }
+
+    public GameController getGameController() {
+        return gameController;
+    }
 }

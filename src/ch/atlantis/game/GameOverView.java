@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
  */
 public class GameOverView extends Pane {
     private final VBox root;
+    private final GameModel gameModel;
 
     //TOP Element
     private Label lblGameOver;
@@ -33,7 +34,9 @@ public class GameOverView extends Pane {
 
     private Label lblScore;
 
-    public GameOverView(double height, double width) {
+    public GameOverView(double height, double width, GameModel gameModel) {
+
+        this.gameModel = gameModel;
 
         root = new VBox(30);
         root.setMinHeight(height);
@@ -60,9 +63,18 @@ public class GameOverView extends Pane {
 
         centerPane = new GridPane();
 
-        centerPane.add(lblUserName = new Label("Username: "), 0, 0);
-        centerPane.add(lblScore = new Label("Score: "), 1, 0);
+        String winnerName = gameModel.getWinnerName();
 
+        for (int i = 0; i < gameModel.getPlayers().size(); i++) {
+            centerPane.add(new Label("Player: " + gameModel.getPlayers().get(i).getPlayerName()), 0, i);
+            centerPane.add(new Label("Score: " + gameModel.getPlayers().get(i).getScore()), 1, i);
+            if (gameModel.getPlayers().get(i).getPlayerName().equals(winnerName)) {
+                centerPane.add(new Label("Winner"), 2, i);
+            }
+            if(winnerName == null){
+                centerPane.add(new Label("Draw"), 2, i);
+            }
+        }
         return centerPane;
     }
 
@@ -81,12 +93,9 @@ public class GameOverView extends Pane {
         /* Common Style Class for the buttons in the Login View*/
         btnBackToLobby.getStyleClass().add("buttons");
 
-
-
-
         /* Common Style Class for the Labels in the Login View*/
         lblGameOver.getStyleClass().add("labels");
-        lblUserName.getStyleClass().add("labels");
+//        lblUserName.getStyleClass().add("labels");
 
 
         //TOP Element IDs
@@ -94,7 +103,7 @@ public class GameOverView extends Pane {
 
         // CENTER Elements IDs
         centerPane.setId("centerPane");
-        lblUserName.setId("gameOver_lblUserName");
+//        lblUserName.setId("gameOver_lblUserName");
 
 
         //BOTTOM Elements IDs
@@ -102,7 +111,9 @@ public class GameOverView extends Pane {
 
 
         btnBackToLobby.setId("gameOver_btnBackToLobby");
+    }
 
-
+    public Button getBtnBackToLobby() {
+        return btnBackToLobby;
     }
 }

@@ -84,36 +84,30 @@ public class GameBoardView extends Pane {
     }
 
     private void drawPath() {
-        Card cardToMoveToFront = null;
         for (Card card : gameModel.getPathCards()) {
             for (Tile tile : gameModel.getTiles()) {
                 if (card.getCardType() == CardType.START && tile.getPathId() == 300) {
                     drawSpecialCards(card, tile);
                     card.setLayoutX(tile.getX() - tile.getSide());
                     card.setLayoutY(tile.getY());
+                    card.toBack();
                 } else if (card.getCardType() == CardType.END && tile.getPathId() == 400) {
                     drawSpecialCards(card, tile);
-                    card.setLayoutX(tile.getX() - tile.getSide() + 17);
-                    card.setLayoutY(tile.getY() - tile.getSide());
+                    card.setLayoutX(tile.getX() - tile.getSide() + 15);
+                    card.setLayoutY(tile.getY() - (tile.getSide()/3));
+                    card.toBack();
                 } else if (card.getPathId() == tile.getPathId()) {
                     drawMainPath(card, tile);
-                    // In order to have the last pathCard before the end be drawn on top of the end
-                    // we have to single out the last card and tell it specifically to be on top.
-                    // Could not get it to work any other way.
-                    // Another idea would be to single out the start and the end card and after we draw
-                    // the path to draw the start and end and send them to the back. There is no problem with the first
-                    // card for some reason
                     if (card.getPathId() == 153) {
-                        cardToMoveToFront = card;
+                        int index = gameModel.getPathCards().indexOf(card);
+                        gameModel.getPathCards().get(index).toFront();
                     }
                 }
             }
             card.applyCardImages(listCardImages);
             this.getChildren().add(card);
         }
-        // Here we tell the last path card to be on top in order to be drawn on top of the end card
-        int index = gameModel.getPathCards().indexOf(cardToMoveToFront);
-        gameModel.getPathCards().get(index).toFront();
+
     }
 
     private void drawMainPath(Card card, Tile tile) {
@@ -209,7 +203,7 @@ public class GameBoardView extends Pane {
     }
 
     private HBox initConsole() {
-        HBox console = new HBox();
+        HBox console = new HBox(10);
         console.setLayoutX(consoleTile.getX());
         console.setLayoutY(consoleTile.getY() + 20);
         console.setMinHeight(150);
@@ -219,16 +213,25 @@ public class GameBoardView extends Pane {
 
     private VBox createGameControls() {
         VBox gameControls = new VBox(10);
-
-        buttonBuyCards = new Button("Buy Cards");
+        HBox firstRow = new HBox(5);
         buttonMove = new Button("Move");
         buttonReset = new Button("Reset");
-        buttonReset.setDisable(true);
+        firstRow.getChildren().addAll(buttonMove, buttonReset);
         buttonEndTurn = new Button("End Turn");
-        buttonEndTurn.setDisable(true);
+        HBox secondRow = new HBox(5);
+        buttonBuyCards = new Button("Buy Cards");
         buttonPay = new Button("Pay to cross");
+        secondRow.getChildren().addAll(buttonEndTurn, buttonBuyCards, buttonPay);
 
-        gameControls.getChildren().addAll(buttonBuyCards, buttonMove, buttonReset, buttonEndTurn, buttonPay);
+        buttonReset.setDisable(true);
+        buttonPay.setDisable(true);
+        setDisableButtonEndTurn(true);
+        buttonBuyCards.setDisable(true);
+        if(gameModel.getCurrentTurn() != gameModel.getLocalPlayerId()){
+            setDisableButtonMove(true);
+        }
+
+        gameControls.getChildren().addAll(firstRow, secondRow);
 
         return gameControls;
     }
@@ -277,7 +280,6 @@ public class GameBoardView extends Pane {
     private HBox placeMovementCards() {
         HBox bottom = new HBox(10);
         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
-            System.out.println("GameBoard -> Card: " + card.getColorSet() + " added");
             styleMovementCard(card);
             bottom.getChildren().add(card);
         }
@@ -303,10 +305,6 @@ public class GameBoardView extends Pane {
         Hashtable<String, ImageView> listCardImages = new Hashtable<>();
 
         File folder = new File("src/ch/atlantis/res/Spielmaterial/");
-
-        if (!folder.isDirectory()) {
-            //TODO:Error blabla
-        }
 
         File[] myFiles = folder.listFiles();
 
@@ -473,7 +471,7 @@ public class GameBoardView extends Pane {
     public void createGameOverView() {
         Stage parentStage = gameStage;
         if (this.gameOverView == null) {
-            this.gameOverView = new GameOverView(gameStage.getHeight(), gameStage.getWidth());
+            this.gameOverView = new GameOverView(gameStage.getHeight(), gameStage.getWidth(), gameModel );
             gameOverStage = new Stage();
             gameOverStage.setScene(new Scene(gameOverView));
             view.setupOverlay(gameOverStage, parentStage, "css_GameOverView");
@@ -507,7 +505,7 @@ public class GameBoardView extends Pane {
     }
 
     void highlightItem(Rectangle item) {
-        item.setStroke(Color.BLACK);
+        item.setStroke(Color.WHITE);
         item.setStrokeWidth(2);
     }
 
@@ -541,4 +539,7 @@ public class GameBoardView extends Pane {
         return gameOverView;
     }
 
+    public void hideGameOver() {
+        gameOverStage.hide();
+    }
 }

@@ -83,10 +83,10 @@ public class GameModel {
         // If there is water on the way to the target then calculate the price to cross
         if (waterOnTheWayPathId.get() != 0) {
             priceToCrossWater.set(getPriceForCrossing(waterOnTheWayPathId.get()));
-            if(!(players.get(localPlayerId).getPathCardStack().get(paidCardsIndex.get(paidCardsIndex.size()-1)).getValue() >= priceToCrossWater.get())){
+            if (!(players.get(localPlayerId).getPathCardStack().get(paidCardsIndex.get(paidCardsIndex.size() - 1)).getValue() >= priceToCrossWater.get())) {
                 System.out.println("Paid price is not correct");
                 return false;
-            }else{
+            } else {
                 System.out.println("Paid price was correct");
             }
         }
@@ -99,10 +99,10 @@ public class GameModel {
     }
 
     public void payForCrossing() {
-        if (paidCardsIndex == null){
+        if (paidCardsIndex == null) {
             paidCardsIndex = new ArrayList<>();
         }
-        if(selectedStackCard.getValue() >= priceToCrossWater.get()){
+        if (selectedStackCard.getValue() >= priceToCrossWater.get()) {
             int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
             paidCardsIndex.add(index);
         }
@@ -114,7 +114,7 @@ public class GameModel {
      * @return int - The targetPathId
      */
     public int findTargetPathId() {
-        if (targetPathIds == null){
+        if (targetPathIds == null) {
             targetPathIds = new ArrayList<>();
         }
         int startPathId = 101;
@@ -313,7 +313,8 @@ public class GameModel {
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
         // server. So I finally tried to create a new ArrayList and it works. I do not know why this problem exists.
         ArrayList<Integer> newPlayedCardsIndices = new ArrayList<>();
-        for(Integer integer : playedCardsIndices) {
+        System.out.println("Played cards indices size : " + playedCardsIndices.size());
+        for (Integer integer : playedCardsIndices) {
             newPlayedCardsIndices.add(integer);
         }
 
@@ -391,11 +392,11 @@ public class GameModel {
 
     private void updateMovementCards() {
         ArrayList<Card> movementCardsToRemove = new ArrayList<>();
-        for (Integer index : playedCardsIndices){
+        for (Integer index : playedCardsIndices) {
             movementCardsToRemove.add(players.get(previousTurn).getMovementCards().get(index));
         }
 
-        for (Card card : movementCardsToRemove){
+        for (Card card : movementCardsToRemove) {
             players.get(previousTurn).getMovementCards().remove(card);
         }
 
@@ -403,12 +404,6 @@ public class GameModel {
             players.get(previousTurn).getMovementCards().add(card);
         }
     }
-
-//        // TODO: We need a list for the individuals score picked up by the player. So we can later pay with it.
-//        // Add the score of that card to the player
-//        players.get(activePlayerId).addScore(scoreToAdd);
-//        System.out.println("GameModel -> Score of " + scoreToAdd + " added to " + players.get(activePlayerId).getPlayerName());
-
 
     // ********************************* GETTERS & SETTERS ***************************** //
 
@@ -505,8 +500,22 @@ public class GameModel {
         this.selectedStackCard = selectedStackCard;
     }
 
-
     public void clearPaidCardsIndex() {
         paidCardsIndex = null;
+    }
+
+    public String getWinnerName() {
+        String winner = null;
+        int score = 0;
+        for (Player player : players) {
+            if (player.getScore() > score) {
+                score = player.getScore();
+                winner = player.getPlayerName();
+            }
+            if (player.getScore() == score){
+                winner = null;
+            }
+        }
+        return winner;
     }
 }
