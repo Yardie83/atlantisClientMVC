@@ -148,7 +148,7 @@ public class GameController {
             card.setOnMouseExited(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    if (card != gameModel.getSelectedCard()) {
+                    if (card != gameModel.getSelectedStackCard()) {
                         gameBoardView.resetHighlight(card);
                     }
                 }
