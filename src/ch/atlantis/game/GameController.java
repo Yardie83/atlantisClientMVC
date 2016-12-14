@@ -407,10 +407,6 @@ public class GameController {
         }
     }
 
-    public boolean isGameOver() {
-        return gameOver.get();
-    }
-
     public SimpleBooleanProperty gameOverProperty() {
         return gameOver;
     }
