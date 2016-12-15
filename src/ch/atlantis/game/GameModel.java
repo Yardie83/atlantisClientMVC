@@ -34,6 +34,7 @@ public class GameModel {
     private int previousTurn;
     private int targetPathId;
     private SimpleIntegerProperty priceToCrossWater;
+    int pathIdAfter;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
@@ -85,6 +86,7 @@ public class GameModel {
 
         // If there is water on the way to the target then calculate the price to cross
         if (waterOnTheWayPathId.get() != 0) {
+            selectedGamePiece.setCurrentPathId(pathIdAfter);
             return false;
         }
         // Check if the target pathId is already occupied by someone else
@@ -100,7 +102,6 @@ public class GameModel {
         }
         if (selectedStackCard.getValue() >= priceToCrossWater.get()) {
             int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
-
             paidCardsIndex.add(index);
             priceToCrossWater.set(0);
             waterOnTheWayPathId.set(0);
@@ -159,6 +160,7 @@ public class GameModel {
             for (GamePiece gamePiece : player.getGamePieces()) {
                 if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId && gamePiece.getCurrentPathId() != 400) {
                     System.out.println("GameModel -> TargetPathId is occupied");
+                    selectedGamePiece.setCurrentPathId(targetPathId);
                     return true;
                 }
             }
@@ -247,7 +249,7 @@ public class GameModel {
      */
     private int getValueFromCardAfter(int pathId) {
         int valueOfCardAfter = 0;
-        int pathIdAfter = pathId + 1;
+        pathIdAfter = pathId + 1;
         ArrayList<Card> tempList = new ArrayList<>();
 
         if (pathIdAfter < 154) {

@@ -304,6 +304,7 @@ public class GameController {
                 System.out.println("GameModel -> Move can be done directly");
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(false);
+                gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
                 gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
             } else {
                 System.out.println("GameModel -> Move cannot be done directly");
@@ -311,7 +312,6 @@ public class GameController {
             gameModel.getSelectedCard().setOpacity(0);
             gameModel.getSelectedCard().setDisable(true);
             gameModel.addToPlayedCards();
-            gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
             gameBoardView.moveGamePiece();
         } else if (gameModel.getSelectedCard() == null && gameModel.getSelectedGamePiece() != null) {
             gameBoardView.setInfoLabelText("Please select a card to play");
