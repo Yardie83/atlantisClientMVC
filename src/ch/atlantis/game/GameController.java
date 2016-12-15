@@ -102,9 +102,14 @@ public class GameController {
                         ArrayList<Card> arrayListOfPurchasedCards = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
                         if (arrayListOfPurchasedCards.size() != 0) {
                             for (Card card : arrayListOfPurchasedCards) {
+                                System.out.println("IN LISTENER FOR BUYING CARDS -> " + card);
                                 gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
+                                System.out.println("SIZE OF MOVEMENTCARDS AFTER ADDING CARD TO PLAYER -> " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
                             }
-                            gameBoardView.updateBoard();
+                            gameBoardView.updateMovementCards();
+                            atlantisModel.givePurchasedCards().setValue(false);
+                            gameBoardView.getButtonBuyCards().setDisable(true);
+                            gameBoardView.setInfoLabelText("You got a new Card");
                             arrayListOfPurchasedCards.clear();
                         }
                     }

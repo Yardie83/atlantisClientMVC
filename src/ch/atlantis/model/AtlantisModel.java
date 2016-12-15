@@ -198,7 +198,6 @@ public class AtlantisModel {
 
     private void handlePurchasedCards(Message message) {
         givePurchasedCards.setValue(true);
-        givePurchasedCards.setValue(false);
     }
 
 

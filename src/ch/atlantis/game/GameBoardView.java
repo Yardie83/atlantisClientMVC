@@ -427,6 +427,21 @@ public class GameBoardView extends Pane {
         });
     }
 
+    public void updateMovementCards() { // Load score cards in VBox
+        Platform.runLater(new Runnable() { // What is this?
+            @Override
+            public void run() {
+                if (gameModel.getLocalPlayerId() == gameModel.getCurrentTurn()) {
+                    for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
+                        styleMovementCard(card);
+                        HBoxMovementCards.getChildren().removeAll(card);
+                    }
+                }
+                HBoxMovementCards.getChildren().setAll(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards());
+            }
+        });
+    }
+
     private void updateScoreLabel(Label scoreLabel, int score) {
         logger.info("Total of " + score + " points.");
         logger.info("CurrentTurn: " + gameModel.getCurrentTurn());
