@@ -1,5 +1,6 @@
 package ch.atlantis.game;
 
+import ch.atlantis.AtlantisClient;
 import ch.atlantis.controller.OptionsController;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.MessageType;
@@ -15,8 +16,10 @@ import javafx.scene.input.MouseEvent;
 
 import ch.atlantis.util.Message;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by Hermann Grieder on 31.08.2016.
@@ -33,7 +36,12 @@ public class GameController {
 
     private int clickCount;
 
+    private Logger logger;
+
     public GameController(AtlantisView atlantisView, AtlantisModel atlantisModel, GameModel gameModel, GameBoardView gameBoardView) {
+
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
+
         this.atlantisView = atlantisView;
         this.atlantisModel = atlantisModel;
         this.gameModel = gameModel;
@@ -80,6 +88,24 @@ public class GameController {
                                 gameModel.setTargetPathIds(null);
                                 gameModel.clearPaidCardsIndex();
                             }
+                        }
+                    }
+                }
+            }
+        });
+
+        atlantisModel.givePurchasedCards().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    if (atlantisModel.getMessage().getMessageObject() instanceof ArrayList) {
+                        ArrayList<Card> arrayListOfPurchasedCards = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
+                        if (arrayListOfPurchasedCards.size() != 0) {
+                            for (Card card : arrayListOfPurchasedCards) {
+                                gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
+                            }
+                            gameBoardView.updateBoard();
+                            arrayListOfPurchasedCards.clear();
                         }
                     }
                 }
@@ -140,7 +166,7 @@ public class GameController {
                     }
                     gameModel.setSelectedStackCard(card);
                     gameModel.setSelectedStackCardIndex(pathCardStack.indexOf(card));
-                    System.out.println("GameController -> You selected card of index of " + gameModel.getSelectedStackCardIndex());
+                    logger.info("GameController -> You selected the card of index of " + gameModel.getSelectedStackCardIndex());
                     gameBoardView.highlightItem(card);
                 }
             });
@@ -229,9 +255,9 @@ public class GameController {
                 if (clickCount == 0) {
                     for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
                         gamePiece.setStartPathId(gamePiece.getCurrentPathId());
-                        System.out.println("GameModel -> Start path Ids set");
+                        logger.info("GameModel -> Start path IDs set.");
                         gameModel.getPlayedCardsIndices().clear();
-                        System.out.println("Played cards indices cleared");
+                        logger.info("Played card indices cleared.");
                     }
                 }
                 tryToMove();
@@ -275,7 +301,7 @@ public class GameController {
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());
                         gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                        System.out.println("GameController -> End of Turn of player " + gameModel.getLocalPlayerId());
+                        logger.info("GameController -> End of turn of player " + gameModel.getLocalPlayerId());
                         clickCount = 0;
                         gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getSelectedGamePiece().getStartPathId());
                         sendMoveMessage();
@@ -295,13 +321,13 @@ public class GameController {
             gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
             gameBoardView.setInfoLabelText("");
             if (gameModel.canMoveDirectly()) {
-                System.out.println("GameModel -> Move can be done directly");
+                logger.info("GameModel -> Mode can be done directly.");
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(false);
                 gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
                 gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
             } else {
-                System.out.println("GameModel -> Move cannot be done directly");
+                logger.info("GameModel -> Move cannot be done directly.");
             }
             gameModel.getSelectedCard().setOpacity(0);
             gameModel.getSelectedCard().setDisable(true);
@@ -343,10 +369,10 @@ public class GameController {
                         gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                     }
                     if (clickCount == 0 && gamePiece.getCurrentPathId() != 400) {
-                        System.out.println("GameController -> GamePiece selected");
+                        logger.info("GameController -> GamePiece selected.");
                         gameModel.setSelectedGamePiece(gamePiece);
                     }
-                    System.out.println("GameController -> GamePiece Current Path Id: " + gameModel.getSelectedGamePiece().getCurrentPathId());
+                    logger.info("GameController -> GamePiece current path ID: " + gameModel.getSelectedGamePiece().getCurrentPathId());
                     gameBoardView.highlightItem(gamePiece);
                 }
             });
@@ -392,8 +418,8 @@ public class GameController {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());
                     }
                     gameModel.setSelectedCard(card);
-                    System.out.println("Index of selected card: " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().indexOf(card));
-                    System.out.println("GameController -> ColorSet of selected Card: " + gameModel.getSelectedCard().getColorSet());
+                    logger.info("Index of selected card: " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().indexOf(card));
+                    logger.info("GameController -> ColorSet of selected dard: " + gameModel.getSelectedCard().getColorSet());
                     gameBoardView.highlightItem(card);
                 }
             });

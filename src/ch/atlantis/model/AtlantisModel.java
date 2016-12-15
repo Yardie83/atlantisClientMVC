@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.SocketException;
 import java.time.LocalDateTime;
@@ -35,8 +36,6 @@ import java.util.logging.Logger;
  */
 public class AtlantisModel {
 
-    private Logger logger;
-
     private ObjectInputStream inReader;
     private ObjectOutputStream outputStream;
     private Message message;
@@ -51,6 +50,7 @@ public class AtlantisModel {
     private SimpleBooleanProperty gameReady;
     private SimpleBooleanProperty gameInfo;
     private SimpleStringProperty userName;
+    private SimpleBooleanProperty givePurchasedCards;
     private ObservableList<String> gameList;
     private LanguageHandler languageHandler;
 
@@ -60,12 +60,11 @@ public class AtlantisModel {
 
     private Music musicThread;
 
+    private Logger logger;
 
     public AtlantisModel() {
 
         logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
-
-        logger.info("Du Hayvan!");
 
         chatString = new SimpleStringProperty();
         connectionStatus = new SimpleStringProperty();
@@ -76,6 +75,7 @@ public class AtlantisModel {
         gameReady = new SimpleBooleanProperty(false);
         gameInfo = new SimpleBooleanProperty(false);
         gameList = FXCollections.observableArrayList();
+        givePurchasedCards = new SimpleBooleanProperty(false);
         autoConnect = true;
 
         this.handleLanguages();
@@ -103,15 +103,15 @@ public class AtlantisModel {
             closeConnection();
         }
         if (autoConnect) {
-            chatString.setValue(LocalDateTime.now() + " Connecting to Server...");
+            chatString.setValue(LocalDateTime.now() + " Connecting to server...");
             try {
                 socket = new Socket(HOST, PORT);
                 outputStream = new ObjectOutputStream(socket.getOutputStream());
                 inReader = new ObjectInputStream(socket.getInputStream());
                 receiveMessage();
             } catch (IOException e) {
-                System.err.println("Connection to the server failed!\nPlease check if the server is running");
-                chatString.setValue(LocalDateTime.now() + " Connection to the server failed!\nPlease check if the " +
+                logger.warning("Connection to the server failed. Check if the server is running.");
+                chatString.setValue(LocalDateTime.now() + " Connection to the server failed. Check if the " +
                         "server is running");
                 connectionStatus.setValue("Disconnected");
             }
@@ -129,16 +129,16 @@ public class AtlantisModel {
         Task receiveMessageTask = new Task() {
             @Override
             protected Object call() throws Exception {
-                System.out.println("Connected to Server\nWaiting for incoming messages");
-                chatString.setValue(LocalDateTime.now() + " Connected to Server\nWaiting for incoming messages");
-                connectionStatus.setValue("Connected");
+                logger.info("Connected to server...waiting for incoming messages.");
+                chatString.setValue(LocalDateTime.now() + " Connected to server...waiting for incoming messages.");
+                connectionStatus.setValue("Connected.");
                 while (autoConnect) {
                     try {
                         if ((socket == null || socket.isClosed())) {
                             connectToServer();
                         } else {
                             message = (Message) inReader.readObject();
-                            System.out.println("Server -> " + message.getMessageObject());
+                            logger.info("Server -> " + message.getMessageObject());
                             switch (message.getMessageType()) {
 
                                 case DISCONNECT:
@@ -175,16 +175,16 @@ public class AtlantisModel {
                                     handleGameOver(message);
                                     break;
                                 case BUYCARD:
-
+                                    handlePurchasedCards(message);
                                     break;
                             }
                         }
                     } catch (SocketException e) {
-                        System.out.println("Connection closed by server");
+                        logger.info("Connection closed by server.");
                         closeConnection();
                         autoConnect = false;
                     } catch (Exception e) {
-                        System.out.println("AtlantisModel: Error reading message");
+                        logger.info("AtlantisModel -> Error reading message.");
                         e.printStackTrace();
                         closeConnection();
                     }
@@ -195,6 +195,12 @@ public class AtlantisModel {
         Thread clientTask = new Thread(receiveMessageTask);
         clientTask.start();
     }
+
+    private void handlePurchasedCards(Message message) {
+        givePurchasedCards.setValue(true);
+        givePurchasedCards.setValue(false);
+    }
+
 
     private void handleReadyGame(Message message) {
         String[] gameInfo = splitMessage(message);
@@ -230,7 +236,7 @@ public class AtlantisModel {
 
     private void handleGameOver(Message message) {
         Boolean gameOver = (Boolean) message.getMessageObject();
-        System.out.println("AtlantisModel -> GameOver: " + gameOver);
+        logger.info("AtlantisModel -> GameOver: " + gameOver);
     }
 
     private void handleGameList(Message message) {
@@ -241,7 +247,7 @@ public class AtlantisModel {
     private void handleLanguages() {
         languageHandler = new LanguageHandler();
         if (languageHandler.getLanguageList().size() == 0 || languageHandler.getLanguageList() == null) {
-            System.out.println("AtlantisModel -> No languages available");
+            logger.info("AtlantisModel -> No languages available.");
         } else {
 
             //success
@@ -304,7 +310,7 @@ public class AtlantisModel {
             chatString.setValue(LocalDateTime.now() + " Maximum connection attempts reached.");
         } else {
             try {
-                System.out.println("Sending to Server -> " + message.getMessageObject());
+                logger.info("Sending to server -> " + message.getMessageObject());
                 outputStream.writeObject(message);
                 outputStream.flush();
             } catch (IOException e) {
@@ -327,7 +333,7 @@ public class AtlantisModel {
                 socket.close();
             }
         } catch (IOException e) {
-            System.out.println("Could not close connection to the server");
+            logger.info("Could not close the connection to the server.");
             e.printStackTrace();
         }
     }
@@ -389,6 +395,14 @@ public class AtlantisModel {
 
     public SimpleBooleanProperty moveValidProperty() {
         return moveValid;
+    }
+
+    public SimpleBooleanProperty givePurchasedCards() {
+        return givePurchasedCards;
+    }
+
+    public void givePurchasedCards(boolean bool) {
+        this.givePurchasedCards.setValue(bool);
     }
 
     public SimpleStringProperty userNameProperty() {

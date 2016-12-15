@@ -1,5 +1,6 @@
 package ch.atlantis.model;
 
+import ch.atlantis.AtlantisClient;
 import com.sun.javafx.scene.layout.region.Margins;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -22,6 +23,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Created by LorisGrether on 10.10.2016.
@@ -35,8 +37,11 @@ public class AtlantisConfig {
 
     private Boolean isMusic;
 
+    private Logger logger;
 
     public AtlantisConfig() {
+
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
 
         File myFile = new File(ConfigPath);
 
@@ -54,8 +59,8 @@ public class AtlantisConfig {
         File xmlConfigurationFile = new File(ConfigPath);
 
         if (!xmlConfigurationFile.exists()) {
+            logger.warning("The Configuration file could not be imported.");
             return false;
-            //log error blabla
         }
 
         try {

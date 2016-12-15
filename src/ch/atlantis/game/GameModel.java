@@ -1,11 +1,13 @@
 package ch.atlantis.game;
 
+import ch.atlantis.AtlantisClient;
 import ch.atlantis.util.Message;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * Created by Hermann Grieder on 28.10.2016
@@ -36,8 +38,13 @@ public class GameModel {
     private SimpleIntegerProperty priceToCrossWater;
     private int pathIdAfter;
 
+    private Logger logger;
+
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
+
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
+
         localPlayerId = localPlayer.getPlayerID();
         occupied = new SimpleBooleanProperty(false);
         waterOnTheWayPathId = new SimpleIntegerProperty(0);
@@ -50,7 +57,6 @@ public class GameModel {
         HashMap<String, Object> newGameStateMap = (HashMap<String, Object>) message.getMessageObject();
         readInitialGameStateMap(newGameStateMap);
         applyPlayerColor();
-
     }
 
     /**
@@ -137,7 +143,7 @@ public class GameModel {
                         && pathCard.getColorSet() == selectedCard.getColorSet()) {
                     found = true;
                     targetPathId = pathCard.getPathId();
-                    System.out.println("Target Path Id: " + targetPathId);
+                    logger.info(String.valueOf(targetPathId));
                 }
             }
             nextPathId++;
@@ -160,13 +166,13 @@ public class GameModel {
         for (Player player : players) {
             for (GamePiece gamePiece : player.getGamePieces()) {
                 if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId && gamePiece.getCurrentPathId() != 400) {
-                    System.out.println("GameModel -> TargetPathId is occupied");
+                    logger.info("GameModel -> TargetPathID is occupied.");
                     selectedGamePiece.setCurrentPathId(targetPathId);
                     return true;
                 }
             }
         }
-        System.out.println("GameModel -> TargetPathId is not occupied");
+        logger.info("GameModel -> TargetPathID is not occupied.");
         return false;
     }
 
@@ -208,10 +214,10 @@ public class GameModel {
         }
         // If by the time we get to the target path and have not found any water tiles we return 0
         if (startPathId == targetPathId) {
-            System.out.println("No water found to the target");
+            logger.info("No water found to the target.");
             return 0;
         }
-        System.out.println("Water found on PathId: " + startPathId);
+        logger.info("Water found on PathID: " + startPathId);
         return startPathId;
     }
 
@@ -228,10 +234,10 @@ public class GameModel {
         int valueBehind = getValueFromCardBehind(pathId);
         int valueAfter = getValueFromCardAfter(pathId);
         if (valueBehind > valueAfter) {
-            System.out.println("GameModel -> Price to cross: " + valueAfter);
+            logger.info("GameModel -> Price to cross: " + valueAfter);
             return valueAfter;
         } else {
-            System.out.println("GameModel -> Price to cross: " + valueBehind);
+            logger.info("GameModel -> Price to cross: " + valueBehind);
             return valueBehind;
         }
     }
@@ -311,14 +317,14 @@ public class GameModel {
         gameStateMap.put("GamePieceIndex", players.get(localPlayerId).getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathIds", targetPathIds);
         if (paidCardsIndex != null) {
-            System.out.println("CLIENT --> Paid Card Index : " + paidCardsIndex.size());
+            logger.info("Client -> Paid card index: " + paidCardsIndex.size());
             gameStateMap.put("PaidCards", paidCardsIndex);
         }
 
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
         // server. So I finally tried to create a new ArrayList and it works. I do not know why this problem exists.
         ArrayList<Integer> newPlayedCardsIndices = new ArrayList<>();
-        System.out.println("Played cards indices size : " + playedCardsIndices.size());
+        logger.info("Played cards indices size: " + playedCardsIndices.size());
         for (Integer integer : playedCardsIndices) {
             newPlayedCardsIndices.add(integer);
         }
@@ -341,7 +347,7 @@ public class GameModel {
         players = (ArrayList<Player>) gameStateMap.get("Players");
         tiles = (ArrayList<Tile>) gameStateMap.get("Tiles");
         pathCards = (ArrayList<Card>) gameStateMap.get("PathCards");
-        System.out.println("CurrentTurn: " + this.currentTurn);
+        logger.info("CurrentTurn: " + this.currentTurn);
     }
 
     /**

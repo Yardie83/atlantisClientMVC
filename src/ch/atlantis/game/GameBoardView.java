@@ -1,5 +1,6 @@
 package ch.atlantis.game;
 
+import ch.atlantis.AtlantisClient;
 import ch.atlantis.view.AtlantisView;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -20,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.logging.Logger;
 
 /**
  * Created by Hermann Grieder on 23.08.2016.
@@ -46,7 +48,11 @@ public class GameBoardView extends Pane {
     private Stage gameOverStage;
     private VBox stackCardPane;
 
+    private Logger logger;
+
     public GameBoardView(GameModel gameModel, AtlantisView view) {
+
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
 
         this.gameModel = gameModel;
         this.view = view;
@@ -422,8 +428,8 @@ public class GameBoardView extends Pane {
     }
 
     private void updateScoreLabel(Label scoreLabel, int score) {
-        System.out.println("Total of " + score + " points");
-        System.out.println("CurrentTurn: " + gameModel.getCurrentTurn());
+        logger.info("Total of " + score + " points.");
+        logger.info("CurrentTurn: " + gameModel.getCurrentTurn());
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -455,7 +461,7 @@ public class GameBoardView extends Pane {
             @Override
             public void run() {
                 infoLabel.setText(s);
-                System.out.println(s);
+                logger.info(s);
             }
         });
     }
