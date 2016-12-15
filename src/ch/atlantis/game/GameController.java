@@ -98,21 +98,12 @@ public class GameController {
             }
         });
 
-        gameModel.waterOnTheWayPathIdProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if (newValue.intValue() != 0) {
-                    gameBoardView.setInfoLabelText("You need to cross water\nPay with a bridge or with collected cards");
-                    gameBoardView.getButtonEndTurn().setDisable(true);
-                }
-            }
-        });
-
         gameModel.priceToCrossWaterProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (newValue.intValue() != 0) {
                     gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross");
+                    gameBoardView.getButtonEndTurn().setDisable(true);
                     gameBoardView.setDisableButtonMove(true);
                     gameBoardView.getButtonPay().setDisable(false);
                 }
@@ -201,11 +192,15 @@ public class GameController {
             public void handle(ActionEvent event) {
                 if (gameModel.getSelectedStackCard() != null) {
                     if (gameModel.payForCrossing()) {
+                        gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getPathIdAfter()-1);
                         gameBoardView.setInfoLabelText("You paid the required amount");
+                        gameModel.waterOnTheWayPathIdProperty().set(0);
                         tryToMove();
                     } else {
                         gameBoardView.setInfoLabelText("Sorry amount is not sufficient");
                     }
+                }else{
+                    gameBoardView.setInfoLabelText("Select a card to pay with");
                 }
             }
         });
@@ -238,7 +233,6 @@ public class GameController {
                         gameModel.getPlayedCardsIndices().clear();
                         System.out.println("Played cards indices cleared");
                     }
-
                 }
                 tryToMove();
             }
@@ -283,6 +277,7 @@ public class GameController {
                         gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                         System.out.println("GameController -> End of Turn of player " + gameModel.getLocalPlayerId());
                         clickCount = 0;
+                        gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getSelectedGamePiece().getStartPathId());
                         sendMoveMessage();
                     }
                 }
@@ -299,7 +294,6 @@ public class GameController {
             gameBoardView.resetHighlight(gameModel.getSelectedCard());
             gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
             gameBoardView.setInfoLabelText("");
-
             if (gameModel.canMoveDirectly()) {
                 System.out.println("GameModel -> Move can be done directly");
                 gameBoardView.setDisableButtonMove(true);

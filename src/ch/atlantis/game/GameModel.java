@@ -17,24 +17,24 @@ public class GameModel {
     private ArrayList<Integer> paidCardsIndex;
     private ArrayList<Integer> targetPathIds;
     private SimpleBooleanProperty occupied;
+    private ArrayList<Card> deckCardToAdd;
     private GamePiece selectedGamePiece;
     private ArrayList<Player> players;
     private ArrayList<Card> pathCards;
     private ArrayList<Tile> tiles;
-    private ArrayList<Card> deckCardToAdd;
     private Card selectedCard;
-    private Card selectedStackCard;
     private int selectedStackCardIndex;
     private int localPlayerId;
     private int indexOfPathCardToRemove;
     private int indexOfPathCardToShow;
+    private Card selectedStackCard;
     private int targetPathIdRemote;
     private int gamePieceUsedIndex;
     private int currentTurn;
     private int previousTurn;
     private int targetPathId;
     private SimpleIntegerProperty priceToCrossWater;
-    int pathIdAfter;
+    private int pathIdAfter;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
@@ -76,24 +76,26 @@ public class GameModel {
 
         // Find the target pathId on the client side
         targetPathId = findTargetPathId();
-        targetPathIds.add(targetPathId);
+        if(!targetPathIds.contains(targetPathId)) {
+            targetPathIds.add(targetPathId);
+        }
         // Check if there is water on the way to the target. Returns the pathId of that water tile or 0 if no
         // water is on the way to the target
         int waterPathId = getWaterPathId(selectedGamePiece.getCurrentPathId(), targetPathId);
         waterOnTheWayPathId.set(waterPathId);
         int priceToCross = getPriceForCrossing(waterPathId);
-        priceToCrossWater.set(priceToCross);
-
-        // If there is water on the way to the target then calculate the price to cross
-        if (waterOnTheWayPathId.get() != 0) {
-            selectedGamePiece.setCurrentPathId(pathIdAfter);
-            return false;
+        boolean hasWater = false;
+        if (priceToCross != 0){
+            hasWater = true;
         }
+        int sumCrossPrice = priceToCrossWater.get();
+        priceToCrossWater.set(sumCrossPrice+priceToCross);
+        System.out.println(priceToCrossWater.get());
         // Check if the target pathId is already occupied by someone else
         boolean isOccupied = checkIfOccupied(targetPathId, selectedGamePiece);
         occupied.set(isOccupied);
 
-        return !isOccupied;
+        return (!isOccupied && !hasWater);
     }
 
     public boolean payForCrossing() {
@@ -104,7 +106,6 @@ public class GameModel {
             int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
             paidCardsIndex.add(index);
             priceToCrossWater.set(0);
-            waterOnTheWayPathId.set(0);
             return true;
         } else {
             return false;
@@ -136,7 +137,7 @@ public class GameModel {
                         && pathCard.getColorSet() == selectedCard.getColorSet()) {
                     found = true;
                     targetPathId = pathCard.getPathId();
-                    System.out.println(targetPathId);
+                    System.out.println("Target Path Id: " + targetPathId);
                 }
             }
             nextPathId++;
@@ -535,5 +536,9 @@ public class GameModel {
             }
         }
         return winner;
+    }
+
+    public int getPathIdAfter() {
+        return pathIdAfter;
     }
 }

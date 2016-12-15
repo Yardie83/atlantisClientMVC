@@ -360,7 +360,7 @@ public class GameBoardView extends Pane {
         move(selectedGamePiece, targetPathId);
     }
 
-    private void move(GamePiece selectedGamePiece, int targetPathId) {
+    public void move(GamePiece selectedGamePiece, int targetPathId) {
         for (Tile targetTile : gameModel.getTiles()) {
             if (targetTile.getPathId() == targetPathId) {
                 int x = targetTile.getX() + (targetTile.getSide() / 2);
