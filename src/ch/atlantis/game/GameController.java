@@ -16,7 +16,6 @@ import javafx.scene.input.MouseEvent;
 
 import ch.atlantis.util.Message;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -86,7 +85,6 @@ public class GameController {
                                 gameModel.setSelectedCard(null);
                                 gameModel.setSelectedGamePiece(null);
                                 gameModel.setTargetPathIds(null);
-
                                 gameModel.clearPaidCardsIndex();
                             }
                         }
@@ -237,10 +235,11 @@ public class GameController {
             @Override
             public void handle(ActionEvent event) {
                 if (gameModel.getSelectedStackCard() != null) {
-                    if (gameModel.payForCrossing()) {
-                        gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getPathIdAfter()-1);
-                        gameBoardView.setInfoLabelText("You paid the required amount");
-                        gameModel.waterOnTheWayPathIdProperty().set(0);
+                    if (gameModel.hasPaidCorrectPrice()) {
+                        gameBoardView.getButtonPay().setDisable(true);
+                        gameModel.getSelectedStackCard().setOpacity(0);
+                        gameModel.getSelectedStackCard().setDisable(true);
+                        gameModel.setSelectedStackCard(null);
                         tryToMove();
                     } else {
                         gameBoardView.setInfoLabelText("Sorry amount is not sufficient");
@@ -248,6 +247,7 @@ public class GameController {
                 }else{
                     gameBoardView.setInfoLabelText("Select a card to pay with");
                 }
+                gameModel.setPaidCorrectPrice(false);
             }
         });
 
@@ -345,9 +345,8 @@ public class GameController {
                 logger.info("GameModel -> Mode can be done directly.");
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(false);
-                gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
                 gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
-
+                gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
             } else {
                 logger.info("GameModel -> Move cannot be done directly.");
             }
