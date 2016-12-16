@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -14,9 +15,9 @@ import java.util.logging.Logger;
  */
 public class GameModel {
 
-    private SimpleIntegerProperty waterOnTheWayPathId;
+    private SimpleIntegerProperty priceToCrossWater;
     private ArrayList<Integer> playedCardsIndices;
-    private ArrayList<Integer> paidCardsIndex;
+    private ArrayList<Integer> paidCardIndices;
     private ArrayList<Integer> targetPathIds;
     private SimpleBooleanProperty occupied;
     private ArrayList<Card> deckCardToAdd;
@@ -24,18 +25,18 @@ public class GameModel {
     private ArrayList<Player> players;
     private ArrayList<Card> pathCards;
     private ArrayList<Tile> tiles;
+    private Card selectedStackCard;
     private Card selectedCard;
     private int selectedStackCardIndex;
-    private int localPlayerId;
     private int indexOfPathCardToRemove;
     private int indexOfPathCardToShow;
-    private Card selectedStackCard;
+    private boolean paidCorrectPrice;
     private int targetPathIdRemote;
     private int gamePieceUsedIndex;
+    private int localPlayerId;
     private int currentTurn;
     private int previousTurn;
     private int targetPathId;
-    private SimpleIntegerProperty priceToCrossWater;
     private int pathIdAfter;
 
     private Logger logger;
@@ -44,13 +45,13 @@ public class GameModel {
     public GameModel(Message message, Player localPlayer) {
 
         logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
-
+        logger.setLevel(Level.INFO);
         localPlayerId = localPlayer.getPlayerID();
         occupied = new SimpleBooleanProperty(false);
-        waterOnTheWayPathId = new SimpleIntegerProperty(0);
         priceToCrossWater = new SimpleIntegerProperty(0);
         playedCardsIndices = new ArrayList<>();
         deckCardToAdd = new ArrayList<>();
+        paidCardIndices = new ArrayList<>();
         currentTurn = 0;
         previousTurn = currentTurn;
 
@@ -82,40 +83,47 @@ public class GameModel {
 
         // Find the target pathId on the client side
         targetPathId = findTargetPathId();
-        if(!targetPathIds.contains(targetPathId)) {
+        if (!targetPathIds.contains(targetPathId)) {
             targetPathIds.add(targetPathId);
         }
-        // Check if there is water on the way to the target. Returns the pathId of that water tile or 0 if no
-        // water is on the way to the target
-        int waterPathId = getWaterPathId(selectedGamePiece.getCurrentPathId(), targetPathId);
-        waterOnTheWayPathId.set(waterPathId);
-        int priceToCross = getPriceForCrossing(waterPathId);
-        boolean hasWater = false;
-        if (priceToCross != 0){
-            hasWater = true;
-        }
-        int sumCrossPrice = priceToCrossWater.get();
-        priceToCrossWater.set(sumCrossPrice+priceToCross);
-        System.out.println(priceToCrossWater.get());
         // Check if the target pathId is already occupied by someone else
-        boolean isOccupied = checkIfOccupied(targetPathId, selectedGamePiece);
-        occupied.set(isOccupied);
-
-        return (!isOccupied && !hasWater);
+        occupied.set(checkIfOccupied());
+        System.out.println(occupied);
+        boolean hasWater = false;
+        if (!occupied.get() && !paidCorrectPrice) {
+            hasWater = checkForWater();
+        }
+        System.out.println("Occupied: " + occupied + " hasWater: " + hasWater);
+        return (!occupied.get() && !hasWater);
     }
 
-    public boolean payForCrossing() {
-        if (paidCardsIndex == null) {
-            paidCardsIndex = new ArrayList<>();
+    private boolean checkForWater() {
+        // Check if there is water on the way to the target. Returns the pathId of that water tile or 0 if no
+        // water is on the way to the target
+        int priceToCross = 0;
+        int waterPathId = getWaterPathId(selectedGamePiece.getStartPathId());
+        while (waterPathId != 0 && waterPathId < 154) {
+            priceToCross += getPriceForCrossing(waterPathId);
+            waterPathId = getWaterPathId(pathIdAfter - 1);
         }
-        if (selectedStackCard.getValue() >= priceToCrossWater.get()) {
-            int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
-            paidCardsIndex.add(index);
+        priceToCrossWater.set(priceToCross);
+        System.out.println("Price to cross " + priceToCrossWater.get());
+        System.out.println("Price to cross true / false: " + (priceToCross != 0));
+        return priceToCross != 0;
+    }
+
+    public boolean hasPaidCorrectPrice() {
+        paidCorrectPrice = false;
+
+        int sumValuePaidCards = 0;
+        for (int index : paidCardIndices){
+            sumValuePaidCards += players.get(localPlayerId).getPathCardStack().get(index).getValue();
+        }
+        if (sumValuePaidCards >= priceToCrossWater.get()) {
             priceToCrossWater.set(0);
-            return true;
-        } else {
-            return false;
+            paidCorrectPrice = true;
         }
+        return paidCorrectPrice;
     }
 
     /**
@@ -152,17 +160,16 @@ public class GameModel {
         if (!found && nextPathId == 154) {
             targetPathId = 400;
         }
+        System.out.println("Target path id is : " + targetPathId);
         return targetPathId;
     }
 
     /**
      * Checks if the targetPathId that was found is already occupied.
      *
-     * @param targetPathId      The pathId the gamePiece should be moved to
-     * @param selectedGamePiece The gamePiece that was moved
      * @return True if the target is occupied, false if it is free to go to
      */
-    private boolean checkIfOccupied(int targetPathId, GamePiece selectedGamePiece) {
+    private boolean checkIfOccupied() {
         for (Player player : players) {
             for (GamePiece gamePiece : player.getGamePieces()) {
                 if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId && gamePiece.getCurrentPathId() != 400) {
@@ -183,10 +190,9 @@ public class GameModel {
      * to the target to check if there is water on the way
      *
      * @param currentPathId The pathId of the GamePiece to be moved
-     * @param targetPathId  The targetPathId where the GamePiece ultimately should be
      * @return The pathId of the water tile
      */
-    private int getWaterPathId(int currentPathId, int targetPathId) {
+    private int getWaterPathId(int currentPathId) {
         int startPathId = currentPathId + 1;
 
         // If the gamePiece is on the home tile we need to check from the first actual path tile
@@ -209,7 +215,7 @@ public class GameModel {
             }
             // Recursive call in case we find more than one card on that pathId.
             if (count != 1) {
-                return getWaterPathId(startPathId, targetPathId);
+                return getWaterPathId(startPathId);
             }
         }
         // If by the time we get to the target path and have not found any water tiles we return 0
@@ -316,9 +322,9 @@ public class GameModel {
         gameStateMap.put("GameName", players.get(currentTurn).getGameName());
         gameStateMap.put("GamePieceIndex", players.get(localPlayerId).getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathIds", targetPathIds);
-        if (paidCardsIndex != null) {
-            logger.info("Client -> Paid card index: " + paidCardsIndex.size());
-            gameStateMap.put("PaidCards", paidCardsIndex);
+        if (paidCardIndices != null) {
+            logger.info("Client -> Paid card index: " + paidCardIndices.size());
+            gameStateMap.put("PaidCards", paidCardIndices);
         }
 
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
@@ -398,9 +404,9 @@ public class GameModel {
     }
 
     private void removePaidCardsFromStack() {
-        if (!(paidCardsIndex == null || paidCardsIndex.size() == 0)) {
+        if (!(paidCardIndices == null || paidCardIndices.size() == 0)) {
             ArrayList<Card> stacksCardsToRemove = new ArrayList<>();
-            for (Integer index : paidCardsIndex) {
+            for (Integer index : paidCardIndices) {
                 stacksCardsToRemove.add(players.get(previousTurn).getPathCardStack().get(index));
             }
 
@@ -409,6 +415,8 @@ public class GameModel {
             }
         }
     }
+
+
 
 
     private void updateMovementCards() {
@@ -472,10 +480,6 @@ public class GameModel {
         return gamePieceUsedIndex;
     }
 
-    public ArrayList<Integer> getPaidCardsIndex() {
-        return paidCardsIndex;
-    }
-
     public void setSelectedGamePiece(GamePiece selectedGamePiece) {
         this.selectedGamePiece = selectedGamePiece;
     }
@@ -492,10 +496,6 @@ public class GameModel {
         return occupied;
     }
 
-    public SimpleIntegerProperty waterOnTheWayPathIdProperty() {
-        return waterOnTheWayPathId;
-    }
-
     public SimpleIntegerProperty priceToCrossWaterProperty() {
         return priceToCrossWater;
     }
@@ -503,10 +503,6 @@ public class GameModel {
     public void addToPlayedCards() {
         int index = players.get(localPlayerId).getMovementCards().indexOf(selectedCard);
         playedCardsIndices.add(index);
-    }
-
-    public ArrayList<Integer> getTargetPathIds() {
-        return targetPathIds;
     }
 
     public void setTargetPathIds(ArrayList<Integer> targetPathIds) {
@@ -521,12 +517,16 @@ public class GameModel {
         this.selectedStackCardIndex = selectedStackCardIndex;
     }
 
-    public Card getSelectedStackCard() { return selectedStackCard; }
+    public Card getSelectedStackCard() {
+        return selectedStackCard;
+    }
 
-    public void setSelectedStackCard(Card selectedStackCard) { this.selectedStackCard = selectedStackCard; }
+    public void setSelectedStackCard(Card selectedStackCard) {
+        this.selectedStackCard = selectedStackCard;
+    }
 
-    public void clearPaidCardsIndex() {
-        paidCardsIndex = null;
+    public void clearPaidCardsIndices() {
+        paidCardIndices.clear();
     }
 
     public String getWinnerName() {
@@ -537,14 +537,18 @@ public class GameModel {
                 score = player.getScore();
                 winner = player.getPlayerName();
             }
-            if (player.getScore() == score){
+            if (player.getScore() == score) {
                 winner = null;
             }
         }
         return winner;
     }
 
-    public int getPathIdAfter() {
-        return pathIdAfter;
+    public void setPaidCorrectPrice(boolean paidCorrectPrice) {
+        this.paidCorrectPrice = paidCorrectPrice;
+    }
+
+    public ArrayList<Integer> getPaidCardIndices() {
+        return paidCardIndices;
     }
 }

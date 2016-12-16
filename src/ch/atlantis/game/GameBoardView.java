@@ -49,6 +49,9 @@ public class GameBoardView extends Pane {
     private Stage gameOverStage;
     private VBox stackCardPane;
 
+    private int offsetX = 10;
+    private int offsetY = 5;
+
     private Logger logger;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
@@ -141,8 +144,8 @@ public class GameBoardView extends Pane {
         }
 
         // Offset values so the gamePieces are not placed on top of each other upon start
-        int offsetX = 10;
-        int offsetY = 5;
+        offsetX = 10;
+        offsetY = 5;
         // For each player place each gamePiece onto the start card
         for (Player player : gameModel.getPlayers()) {
             for (GamePiece gamePiece : player.getGamePieces()) {
@@ -381,13 +384,21 @@ public class GameBoardView extends Pane {
     }
 
     public void move(GamePiece selectedGamePiece, int targetPathId) {
+        int x = 0;
+        int y = 0;
         for (Tile targetTile : gameModel.getTiles()) {
+            if (targetTile.getPathId() == 400 && targetTile.getPathId() == targetPathId) {
+                x = (targetTile.getX() + offsetX + targetTile.getSide() / 3);
+                y = (targetTile.getY() + offsetY);
+                offsetX = 10;
+                offsetY += 15;
+            }
             if (targetTile.getPathId() == targetPathId) {
-                int x = targetTile.getX() + (targetTile.getSide() / 2);
-                int y = targetTile.getY() + (targetTile.getSide() / 2);
-                selectedGamePiece.move(x, y);
+                x = targetTile.getX() + (targetTile.getSide() / 2);
+                y = targetTile.getY() + (targetTile.getSide() / 2);
             }
         }
+        selectedGamePiece.move(x, y);
     }
 
     public void updateBoard() {
