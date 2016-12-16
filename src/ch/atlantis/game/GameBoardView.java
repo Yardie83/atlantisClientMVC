@@ -187,20 +187,19 @@ public class GameBoardView extends Pane {
 
         HBox console = initConsole();
         stackCardPane = createPathCardsPane();
-        ScrollPane scrollPane = new ScrollPane(stackCardPane);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setMinViewportHeight(50);
-        scrollPane.setVmax(50);
-        scrollPane.setPrefSize(100,50);
-        scrollPane.setMaxHeight(150);
-
+        ScrollPane scrollPaneStackCards = new ScrollPane(stackCardPane);
+        scrollPaneStackCards.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPaneStackCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneStackCards.setMinViewportHeight(50);
+        scrollPaneStackCards.setVmax(50);
+        scrollPaneStackCards.setPrefSize(100,50);
+        scrollPaneStackCards.setMaxHeight(150);
 
         VBox otherPlayersBox = createOpponentBox();
         VBox localPlayerBox = createLocalPlayerBox();
         VBox gameControls = createGameControls();
 
-        console.getChildren().addAll(scrollPane, otherPlayersBox, localPlayerBox, gameControls);
+        console.getChildren().addAll(scrollPaneStackCards, otherPlayersBox, localPlayerBox, gameControls);
 
         this.getChildren().add(console);
 
@@ -257,9 +256,13 @@ public class GameBoardView extends Pane {
         top.setAlignment(Pos.CENTER);
         HBoxMovementCards = placeMovementCards();
 
-        ScrollPane scrollPane = new ScrollPane(HBoxMovementCards);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        ScrollPane scrollPaneMovementCards = new ScrollPane(HBoxMovementCards);
+        scrollPaneMovementCards.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneMovementCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPaneMovementCards.setMinViewportHeight(50);
+        scrollPaneMovementCards.setVmax(50);
+        scrollPaneMovementCards.setPrefSize(100,50);
+        scrollPaneMovementCards.setMaxHeight(150);
 
         infoLabel = new Label("");
         infoLabel.setStyle("-fx-text-fill: white");
