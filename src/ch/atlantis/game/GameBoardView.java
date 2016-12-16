@@ -266,7 +266,7 @@ public class GameBoardView extends Pane {
 
         infoLabel = new Label("");
         infoLabel.setStyle("-fx-text-fill: white");
-        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, scrollPane, infoLabel);
+        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, scrollPaneMovementCards, infoLabel);
 
         String score = Integer.toString(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getScore());
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
