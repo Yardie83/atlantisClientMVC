@@ -114,6 +114,7 @@ public class GameController {
                             handleMouseEventsMovementCards();
                             atlantisModel.givePurchasedCards().setValue(false);
                             gameBoardView.getButtonBuyCards().setDisable(true);
+                            gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack().remove(gameModel.getSelectedStackCardIndex());
                             gameBoardView.setInfoLabelText("You got a new Card");
                             arrayListOfPurchasedCards.clear();
                         }
@@ -164,6 +165,7 @@ public class GameController {
             card.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
+                    gameModel.setSelectedStackCard(card);
                     if (gameModel.priceToCrossWaterProperty().get() != 0) {
                         int index = pathCardStack.indexOf(card);
                         if (gameModel.getPaidCardIndices() != null && gameModel.getPaidCardIndices().contains(index)) {
@@ -192,7 +194,6 @@ public class GameController {
                                 gameBoardView.setInfoLabelText("The selected card's value is too low to buy a card");
                             }
                         }
-                        gameModel.setSelectedStackCard(card);
                         gameModel.setSelectedStackCardIndex(pathCardStack.indexOf(card));
                         logger.info("GameController -> You selected the card of index of " + gameModel.getSelectedStackCardIndex());
                         gameBoardView.highlightItem(card);
@@ -279,19 +280,25 @@ public class GameController {
          * Can Heval Cokyasar
          *
          */
-        gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (gameModel.getSelectedStackCardIndex() != -1) {
-                    HashMap<String, Object> hashToBuyCards = new HashMap<>();
-                    String gameName = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName();
-                    Integer indexToSend = gameModel.getSelectedStackCardIndex();
-                    hashToBuyCards.put("GameName", gameName);
-                    hashToBuyCards.put("Index", indexToSend);
-                    atlantisModel.sendMessage(new Message(MessageType.BUYCARD, hashToBuyCards)); // Send message to server
-                }
-            }
-        });
+        gameBoardView.getButtonBuyCards().
+
+                setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (gameModel.getSelectedStackCardIndex() != -1) {
+                            HashMap<String, Object> hashToBuyCards = new HashMap<>();
+                            String gameName = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName();
+                            Integer indexToSend = gameModel.getSelectedStackCardIndex();
+                            hashToBuyCards.put("GameName", gameName);
+                            hashToBuyCards.put("Index", indexToSend);
+                            Card card = gameModel.getSelectedStackCard();
+                            gameBoardView.updateLocalPlayerScore(card.getValue());
+                            card.setOpacity(0);
+                            card.setDisable(true);
+                            atlantisModel.sendMessage(new Message(MessageType.BUYCARD, hashToBuyCards)); // Send message to server
+                        }
+                    }
+                });
 
         gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
             @Override

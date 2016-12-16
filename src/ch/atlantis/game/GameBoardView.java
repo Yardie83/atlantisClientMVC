@@ -399,6 +399,12 @@ public class GameBoardView extends Pane {
         selectedGamePiece.move(x, y);
     }
 
+    public void updateLocalPlayerScore(int value) {
+        int currentScore = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getScore();
+        currentScore -= value;
+        lblScoreLocalPlayer.setText("Score: " + currentScore);
+    }
+
     public void updateBoard() {
 
         GamePiece selectedGamePiece = gameModel.getPlayers().get(gameModel.getPreviousTurn()).getGamePieces().get(gameModel.getGamePieceUsedIndex());
