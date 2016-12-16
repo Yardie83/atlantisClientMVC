@@ -86,6 +86,7 @@ public class GameController {
                                 gameModel.setSelectedCard(null);
                                 gameModel.setSelectedGamePiece(null);
                                 gameModel.setTargetPathIds(null);
+
                                 gameModel.clearPaidCardsIndex();
                             }
                         }
