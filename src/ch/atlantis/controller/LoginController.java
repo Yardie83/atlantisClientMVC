@@ -54,6 +54,7 @@ public class LoginController {
                 view.closeActiveOverlay();
                 view.createNewProfileView();
                 new NewProfileController(model, view);
+                clearTextFields();
                 view.getProfileStage().show();
             }
         });
@@ -63,6 +64,7 @@ public class LoginController {
             public void handle(MouseEvent event) {
                 view.getLoginView().getLblError().setText("");
                 view.closeActiveOverlay();
+                clearTextFields();
             }
         });
     }
@@ -96,6 +98,7 @@ public class LoginController {
                             view.getGameLobbyView().removeLoginBtn();
                             view.closeActiveOverlay();
                             model.loginSuccessProperty().setValue(0);
+                            clearTextFields();
                         } else if (model.loginSuccessProperty().getValue().equals(2)) {
                             //view.getLoginView().getLblError().setText("Username or Password are wrong");
                             view.getLoginView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("login_lblError2"));
@@ -106,5 +109,10 @@ public class LoginController {
                 });
             }
         });
+    }
+
+    private void clearTextFields(){
+        this.view.getLoginView().getTxtUserName().setText("");
+        this.view.getLoginView().getTxtPassword().setText("");
     }
 }

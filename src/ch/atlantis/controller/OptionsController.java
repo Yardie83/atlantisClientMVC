@@ -49,6 +49,7 @@ public class OptionsController {
             @Override
             public void handle(ActionEvent event) {
                 view.getOptionsStage().close();
+                resetViewSettings();
             }
         });
     }
@@ -88,14 +89,28 @@ public class OptionsController {
 
                 model.setConfigLanguage(culture);
                 view.getOptionsView().setSelectedComboboxLanguage(culture);
-                //view.getOptionsStage().close();
+
+                //TODO: Ask bradley if there is another solution to handle this problem (hallo guest1, willkommen in atlantis blabla )
+                model.userNameProperty().setValue(model.userNameProperty().get().concat(" "));
+                model.userNameProperty().setValue(model.userNameProperty().get().substring(0, model.userNameProperty().get().length() - 1));
+
             } else {
                 //TODO: (Loris) Error message
             }
-        } else {
-            //view.getOptionsStage().close();
         }
     }
+
+    private void resetViewSettings() {
+
+        view.getOptionsView().setSelectedComboboxLanguage(model.getConfigLanguage());
+
+        if (model.getIsMusic()) {
+            view.getOptionsView().getRadioBtnGroupSound().getToggles().get(0).setSelected(true);
+        } else {
+            view.getOptionsView().getRadioBtnGroupSound().getToggles().get(1).setSelected(true);
+        }
+    }
+
     //END Handle Options Controls
 }
 

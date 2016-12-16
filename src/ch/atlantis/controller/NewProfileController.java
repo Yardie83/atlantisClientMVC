@@ -42,7 +42,6 @@ public class NewProfileController {
                     //Show the Error label when fields are left empty
                     //view.getNewProfileView().getLblError().setText("Please fill in all fields");
                     view.getNewProfileView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("login_lblError1"));
-
                     view.getNewProfileView().getLblError().setVisible(true);
                 } else if (!password.equals(passwordRevision)) {
                     //Show the Error label when the passwords do not match
@@ -71,6 +70,7 @@ public class NewProfileController {
                             view.getGameLobbyView().removeLoginBtn();
                             view.getNewProfileView().getLblError().setText("");
                             view.closeActiveOverlay();
+                            clearTextFields();
                             model.createProfileSuccessProperty().setValue(0);
                         } else if (model.createProfileSuccessProperty().getValue().equals(2)) {
                             //view.getNewProfileView().getLblError().setText("Username already exists");
@@ -90,8 +90,15 @@ public class NewProfileController {
             public void handle(ActionEvent event) {
                 view.getNewProfileView().getLblError().setText("");
                 view.closeActiveOverlay();
+                clearTextFields();
             }
         });
+    }
+
+    private void clearTextFields(){
+        this.view.getNewProfileView().getTxtUserName().setText("");
+        this.view.getNewProfileView().getTxtPassword().setText("");
+        this.view.getNewProfileView().getTxtPasswordRevision().setText("");
     }
 }
 

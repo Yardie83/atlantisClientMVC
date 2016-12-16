@@ -33,7 +33,6 @@ public class CreateGameController {
                     view.getCreateGameView().getLblError().setText("");
                     view.closeActiveOverlay();
                 }
-
             }
         });
 
@@ -63,16 +62,16 @@ public class CreateGameController {
             @Override
             public void handle(ActionEvent event) {
                 view.getCreateGameView().getLblError().setText("");
-                view.getCreateGameView().clearGameNameTxtField();
                 view.closeActiveOverlay();
+                clearTextFields();
             }
         });
     }
 
     private void createGame() {
         view.getCreateGameView().getLblError().setText("");
-        view.getCreateGameView().clearGameNameTxtField();
         view.closeActiveOverlay();
+        clearTextFields();
         view.getGameLobbyView().showPopUp(view.getSelectedLanguage().getLanguageTable().get("msgGameCreated"), 200);
     }
 
@@ -89,6 +88,10 @@ public class CreateGameController {
             model.sendMessage(new Message(MessageType.NEWGAME, message));
             return true;
         }
+    }
+
+    private void clearTextFields(){
+        this.view.getCreateGameView().getTxtGameName().setText("");
     }
 }
 

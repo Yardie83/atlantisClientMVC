@@ -59,20 +59,19 @@ public class GameLobbyController {
          * *******************************
          */
 
+        view.getGameLobbyView().getMenuItemInfo().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+
+
+            }
+        });
+
         view.getGameLobbyView().getMenuItemExit().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 closeApplication();
-            }
-        });
-
-        //TODO: Does not work on top-level Menus. Need to add a submenu or delete the whole thing
-        view.getGameLobbyView().getMenuOptions().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                view.createOptionsView();
-                new OptionsController(model, view);
-                view.getOptionsStage().show();
             }
         });
 
@@ -349,7 +348,7 @@ public class GameLobbyController {
         gameController.gameOverProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue){
+                if (newValue) {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {

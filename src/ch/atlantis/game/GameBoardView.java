@@ -39,6 +39,7 @@ public class GameBoardView extends Pane {
     private Button buttonMove;
     private Button buttonReset;
     private Button buttonEndTurn;
+    private Button buttonGameRules;
     private Hashtable<String, ImageView> listCardImages;
     private Label lblScoreLocalPlayer;
     private HBox HBoxMovementCards;
@@ -190,6 +191,8 @@ public class GameBoardView extends Pane {
         scrollPane.setVmax(50);
         scrollPane.setPrefSize(100,50);
         scrollPane.setMaxHeight(150);
+
+
         VBox otherPlayersBox = createOpponentBox();
         VBox localPlayerBox = createLocalPlayerBox();
         VBox gameControls = createGameControls();
@@ -222,7 +225,8 @@ public class GameBoardView extends Pane {
         HBox firstRow = new HBox(5);
         buttonMove = new Button("Move");
         buttonReset = new Button("Reset");
-        firstRow.getChildren().addAll(buttonMove, buttonReset);
+        buttonGameRules = new Button("Rules");
+        firstRow.getChildren().addAll(buttonMove, buttonReset, buttonGameRules);
         buttonEndTurn = new Button("End Turn");
         HBox secondRow = new HBox(5);
         buttonBuyCards = new Button("Buy Cards");
@@ -249,9 +253,19 @@ public class GameBoardView extends Pane {
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
         HBoxMovementCards = placeMovementCards();
+
+        ScrollPane scrollPane = new ScrollPane(HBoxMovementCards);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+//        scrollPane.setMinViewportHeight(50);
+//        scrollPane.setVmax(50);
+//        scrollPane.setPrefSize(100,50);
+//        scrollPane.setMaxHeight(150);
+
+
         infoLabel = new Label("");
         infoLabel.setStyle("-fx-text-fill: white");
-        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, infoLabel);
+        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, scrollPane, infoLabel);
 
         String score = Integer.toString(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getScore());
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
@@ -547,6 +561,8 @@ public class GameBoardView extends Pane {
     public Button getButtonReset() {
         return buttonReset;
     }
+
+    public Button getButtonGameRules() {return buttonGameRules;}
 
     public Button getButtonEndTurn() {
         return buttonEndTurn;

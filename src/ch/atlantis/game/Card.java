@@ -29,6 +29,11 @@ public class Card extends Rectangle implements Serializable {
     private CardType cardType;
     private int pathID;
 
+
+    /**
+     * Loris Grether
+     *
+     */
     public void applyCardImages(Hashtable<String, ImageView> listCardImages) {
 
         if (this.getCardType() == CardType.WATER){

@@ -157,9 +157,4 @@ public class CreateGameView extends Pane {
     public Button getBtnCreateNewGame() {
         return btnCreateNewGame;
     }
-
-    public void clearGameNameTxtField() {
-        txtGameName.setText("");
-    }
-
 }

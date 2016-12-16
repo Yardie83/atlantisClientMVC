@@ -9,10 +9,16 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -23,12 +29,9 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import sun.applet.Main;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -54,9 +57,9 @@ public class GameLobbyView extends Pane {
     private VBox vBoxTop;
     private MenuBar menuBar;
     private Menu menuHelp;
-    private Menu menuOptions;
     private Menu menuFile;
     private MenuItem menuItemExit;
+    private MenuItem menuItemInfo;
     private MenuItem menuItemGameRules;
     private HBox bottomHBox;
     private VBox rightVBox;
@@ -87,10 +90,6 @@ public class GameLobbyView extends Pane {
         //Set Mouse Cursor Image
         //Image image = new Image("/ch/atlantis/res/Fishi.png");
         //gameLobbyScene.setCursor(new ImageCursor(image));
-
-//        double x = MouseInfo.getPointerInfo().getLocation().getX();
-//        double y = MouseInfo.getPointerInfo().getLocation().getY();
-//        double angleToTurn = Math.toDegrees(Math.atan2(y, x));
 
         root = new BorderPane();
 
@@ -128,16 +127,16 @@ public class GameLobbyView extends Pane {
         menuBar = new MenuBar();
 
         menuFile = new Menu("File");
-        menuOptions = new Menu("Options");
         menuHelp = new Menu("Help");
 
+        menuItemInfo = new MenuItem("Infos");
         menuItemExit = new MenuItem("Exit");
         menuItemGameRules = new MenuItem("Game Rules");
 
-        menuFile.getItems().add(menuItemExit);
+        menuFile.getItems().addAll(menuItemInfo, menuItemExit);
         menuHelp.getItems().add(menuItemGameRules);
 
-        menuBar.getMenus().addAll(menuFile, menuOptions, menuHelp);
+        menuBar.getMenus().addAll(menuFile, menuHelp);
 
         lblWindowTitle = new Label("Welcome to Atlantis");
 
@@ -264,8 +263,8 @@ public class GameLobbyView extends Pane {
         vBoxTop.setId("vBoxTop");
         menuBar.setId("menuBar");
         menuFile.setId("menuFile");
-        menuOptions.setId("menuOptions");
         menuHelp.setId("menuHelp");
+        menuItemInfo.setId("menuItemInfo");
         menuItemExit.setId("menuItemExit");
         menuItemGameRules.setId("menuItemGameRules");
         lblWindowTitle.setId("lblWindowTitle");
@@ -412,8 +411,8 @@ public class GameLobbyView extends Pane {
         return lblWindowTitle;
     }
 
-    public Menu getMenuOptions() {
-        return menuOptions;
+    public MenuItem getMenuItemInfo() {
+        return this.menuItemInfo;
     }
 
     public MenuItem getMenuItemExit() {
