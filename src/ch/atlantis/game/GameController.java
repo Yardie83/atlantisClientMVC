@@ -131,7 +131,6 @@ public class GameController {
                     gameBoardView.setInfoLabelText("Target is occupied. \nPlay another card to jump over");
                     gameBoardView.setDisableButtonMove(false);
                     gameBoardView.setDisableButtonEndTurn(true);
-                    gameModel.occupiedProperty().set(false);
                 }
             }
         });
@@ -146,7 +145,7 @@ public class GameController {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (newValue.intValue() != 0) {
                     gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross");
-                    gameBoardView.getButtonEndTurn().setDisable(true);
+                    gameBoardView.setDisableButtonEndTurn(true);
                     gameBoardView.setDisableButtonMove(true);
                     gameBoardView.getButtonPay().setDisable(false);
                 }
@@ -341,12 +340,14 @@ public class GameController {
             gameBoardView.resetHighlight(gameModel.getSelectedCard());
             gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
             gameBoardView.setInfoLabelText("");
+            gameModel.occupiedProperty().set(false);
             if (gameModel.canMoveDirectly()) {
                 logger.info("GameModel -> Mode can be done directly.");
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(false);
                 gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
                 gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
+
             } else {
                 logger.info("GameModel -> Move cannot be done directly.");
             }

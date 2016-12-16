@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -44,7 +45,7 @@ public class GameModel {
     public GameModel(Message message, Player localPlayer) {
 
         logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
-
+        logger.setLevel(Level.INFO);
         localPlayerId = localPlayer.getPlayerID();
         occupied = new SimpleBooleanProperty(false);
         waterOnTheWayPathId = new SimpleIntegerProperty(0);
@@ -82,26 +83,34 @@ public class GameModel {
 
         // Find the target pathId on the client side
         targetPathId = findTargetPathId();
-        if(!targetPathIds.contains(targetPathId)) {
+        if (!targetPathIds.contains(targetPathId)) {
             targetPathIds.add(targetPathId);
         }
+        // Check if the target pathId is already occupied by someone else
+        occupied.set(checkIfOccupied());
+        System.out.println(occupied);
+        boolean hasWater = false;
+        if (occupied.get()) {
+            hasWater = checkForWater();
+
+        }
+        System.out.println("Occupiec: " + occupied + " hasWater: " + hasWater );
+        return (!occupied.get() && !hasWater);
+    }
+
+    private boolean checkForWater() {
         // Check if there is water on the way to the target. Returns the pathId of that water tile or 0 if no
         // water is on the way to the target
-        int waterPathId = getWaterPathId(selectedGamePiece.getCurrentPathId(), targetPathId);
-        waterOnTheWayPathId.set(waterPathId);
-        int priceToCross = getPriceForCrossing(waterPathId);
-        boolean hasWater = false;
-        if (priceToCross != 0){
-            hasWater = true;
+        int priceToCross = 0;
+        int waterPathId = getWaterPathId(selectedGamePiece.getStartPathId(), targetPathId);
+        while (waterPathId != 0) {
+            priceToCross += getPriceForCrossing(waterPathId);
+            waterPathId = getWaterPathId(pathIdAfter, targetPathId);
         }
-        int sumCrossPrice = priceToCrossWater.get();
-        priceToCrossWater.set(sumCrossPrice+priceToCross);
-        System.out.println(priceToCrossWater.get());
-        // Check if the target pathId is already occupied by someone else
-        boolean isOccupied = checkIfOccupied(targetPathId, selectedGamePiece);
-        occupied.set(isOccupied);
-
-        return (!isOccupied && !hasWater);
+        priceToCrossWater.set(priceToCross);
+        System.out.println("Price to cross " + priceToCrossWater.get());
+        System.out.println("Price to cross true / false: " + (priceToCross != 0));
+        return priceToCross != 0;
     }
 
     public boolean payForCrossing() {
@@ -158,11 +167,9 @@ public class GameModel {
     /**
      * Checks if the targetPathId that was found is already occupied.
      *
-     * @param targetPathId      The pathId the gamePiece should be moved to
-     * @param selectedGamePiece The gamePiece that was moved
      * @return True if the target is occupied, false if it is free to go to
      */
-    private boolean checkIfOccupied(int targetPathId, GamePiece selectedGamePiece) {
+    private boolean checkIfOccupied() {
         for (Player player : players) {
             for (GamePiece gamePiece : player.getGamePieces()) {
                 if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId && gamePiece.getCurrentPathId() != 400) {
@@ -521,9 +528,13 @@ public class GameModel {
         this.selectedStackCardIndex = selectedStackCardIndex;
     }
 
-    public Card getSelectedStackCard() { return selectedStackCard; }
+    public Card getSelectedStackCard() {
+        return selectedStackCard;
+    }
 
-    public void setSelectedStackCard(Card selectedStackCard) { this.selectedStackCard = selectedStackCard; }
+    public void setSelectedStackCard(Card selectedStackCard) {
+        this.selectedStackCard = selectedStackCard;
+    }
 
     public void clearPaidCardsIndex() {
         paidCardsIndex = null;
@@ -537,7 +548,7 @@ public class GameModel {
                 score = player.getScore();
                 winner = player.getPlayerName();
             }
-            if (player.getScore() == score){
+            if (player.getScore() == score) {
                 winner = null;
             }
         }
