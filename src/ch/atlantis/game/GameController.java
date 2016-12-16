@@ -94,6 +94,11 @@ public class GameController {
             }
         });
 
+        /**
+         * Can Heval Cokyasar
+         *
+         */
+
         atlantisModel.givePurchasedCards().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -107,6 +112,7 @@ public class GameController {
                                 System.out.println("SIZE OF MOVEMENTCARDS AFTER ADDING CARD TO PLAYER -> " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
                             }
                             gameBoardView.updateMovementCards();
+                            handleMouseEventsMovementCards();
                             atlantisModel.givePurchasedCards().setValue(false);
                             gameBoardView.getButtonBuyCards().setDisable(true);
                             gameBoardView.setInfoLabelText("You got a new Card");
@@ -128,6 +134,11 @@ public class GameController {
                 }
             }
         });
+
+        /**
+         * Fabian Witschi
+         *
+         */
 
         gameModel.priceToCrossWaterProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -195,7 +206,6 @@ public class GameController {
                     }
                 }
             });
-
         }
     }
 
@@ -217,6 +227,11 @@ public class GameController {
     }
 
     private void handleMouseEventsGameControlButtons() {
+
+        /**
+         * Fabian Witschi
+         *
+         */
 
         gameBoardView.getButtonPay().setOnAction(new EventHandler<ActionEvent>() {
             @Override
