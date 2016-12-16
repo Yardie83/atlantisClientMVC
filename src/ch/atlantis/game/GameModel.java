@@ -15,9 +15,9 @@ import java.util.logging.Logger;
  */
 public class GameModel {
 
-    private SimpleIntegerProperty waterOnTheWayPathId;
+    private SimpleIntegerProperty priceToCrossWater;
     private ArrayList<Integer> playedCardsIndices;
-    private ArrayList<Integer> paidCardsIndex;
+    private ArrayList<Integer> paidCardIndices;
     private ArrayList<Integer> targetPathIds;
     private SimpleBooleanProperty occupied;
     private ArrayList<Card> deckCardToAdd;
@@ -25,22 +25,21 @@ public class GameModel {
     private ArrayList<Player> players;
     private ArrayList<Card> pathCards;
     private ArrayList<Tile> tiles;
+    private Card selectedStackCard;
     private Card selectedCard;
     private int selectedStackCardIndex;
-    private int localPlayerId;
     private int indexOfPathCardToRemove;
     private int indexOfPathCardToShow;
-    private Card selectedStackCard;
+    private boolean paidCorrectPrice;
     private int targetPathIdRemote;
     private int gamePieceUsedIndex;
+    private int localPlayerId;
     private int currentTurn;
     private int previousTurn;
     private int targetPathId;
-    private SimpleIntegerProperty priceToCrossWater;
     private int pathIdAfter;
 
     private Logger logger;
-    private boolean paidCorrectPrice;
 
     @SuppressWarnings("unchecked")
     public GameModel(Message message, Player localPlayer) {
@@ -49,10 +48,10 @@ public class GameModel {
         logger.setLevel(Level.INFO);
         localPlayerId = localPlayer.getPlayerID();
         occupied = new SimpleBooleanProperty(false);
-        waterOnTheWayPathId = new SimpleIntegerProperty(0);
         priceToCrossWater = new SimpleIntegerProperty(0);
         playedCardsIndices = new ArrayList<>();
         deckCardToAdd = new ArrayList<>();
+        paidCardIndices = new ArrayList<>();
         currentTurn = 0;
         previousTurn = currentTurn;
 
@@ -115,12 +114,12 @@ public class GameModel {
 
     public boolean hasPaidCorrectPrice() {
         paidCorrectPrice = false;
-        if (paidCardsIndex == null) {
-            paidCardsIndex = new ArrayList<>();
+
+        int sumValuePaidCards = 0;
+        for (int index : paidCardIndices){
+            sumValuePaidCards += players.get(localPlayerId).getPathCardStack().get(index).getValue();
         }
-        if (selectedStackCard.getValue() >= priceToCrossWater.get()) {
-            int index = players.get(localPlayerId).getPathCardStack().indexOf(selectedStackCard);
-            paidCardsIndex.add(index);
+        if (sumValuePaidCards >= priceToCrossWater.get()) {
             priceToCrossWater.set(0);
             paidCorrectPrice = true;
         }
@@ -322,9 +321,9 @@ public class GameModel {
         gameStateMap.put("GameName", players.get(currentTurn).getGameName());
         gameStateMap.put("GamePieceIndex", players.get(localPlayerId).getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathIds", targetPathIds);
-        if (paidCardsIndex != null) {
-            logger.info("Client -> Paid card index: " + paidCardsIndex.size());
-            gameStateMap.put("PaidCards", paidCardsIndex);
+        if (paidCardIndices != null) {
+            logger.info("Client -> Paid card index: " + paidCardIndices.size());
+            gameStateMap.put("PaidCards", paidCardIndices);
         }
 
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
@@ -404,9 +403,9 @@ public class GameModel {
     }
 
     private void removePaidCardsFromStack() {
-        if (!(paidCardsIndex == null || paidCardsIndex.size() == 0)) {
+        if (!(paidCardIndices == null || paidCardIndices.size() == 0)) {
             ArrayList<Card> stacksCardsToRemove = new ArrayList<>();
-            for (Integer index : paidCardsIndex) {
+            for (Integer index : paidCardIndices) {
                 stacksCardsToRemove.add(players.get(previousTurn).getPathCardStack().get(index));
             }
 
@@ -525,8 +524,8 @@ public class GameModel {
         this.selectedStackCard = selectedStackCard;
     }
 
-    public void clearPaidCardsIndex() {
-        paidCardsIndex = null;
+    public void clearPaidCardsIndices() {
+        paidCardIndices.clear();
     }
 
     public String getWinnerName() {
@@ -546,5 +545,9 @@ public class GameModel {
 
     public void setPaidCorrectPrice(boolean paidCorrectPrice) {
         this.paidCorrectPrice = paidCorrectPrice;
+    }
+
+    public ArrayList<Integer> getPaidCardIndices() {
+        return paidCardIndices;
     }
 }
