@@ -247,6 +247,7 @@ public class GameController {
                 }else{
                     gameBoardView.setInfoLabelText("Select a card to pay with");
                 }
+
                 gameModel.setPaidCorrectPrice(false);
             }
         });
