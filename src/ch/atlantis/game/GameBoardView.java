@@ -260,11 +260,6 @@ public class GameBoardView extends Pane {
         ScrollPane scrollPane = new ScrollPane(HBoxMovementCards);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-//        scrollPane.setMinViewportHeight(50);
-//        scrollPane.setVmax(50);
-//        scrollPane.setPrefSize(100,50);
-//        scrollPane.setMaxHeight(150);
-
 
         infoLabel = new Label("");
         infoLabel.setStyle("-fx-text-fill: white");
