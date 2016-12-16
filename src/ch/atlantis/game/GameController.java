@@ -127,7 +127,7 @@ public class GameController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    gameBoardView.setInfoLabelText("Target is occupied. \nPlay another card to jump over");
+                    gameBoardView.setInfoLabelText("Target is occupied. Play another card to jump over");
                     gameBoardView.setDisableButtonMove(false);
                     gameBoardView.setDisableButtonEndTurn(true);
                 }
@@ -185,7 +185,7 @@ public class GameController {
 
                         if (clickCount == 0) {
                             if (card.getValue() > 1) {
-                                gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + "\n" +
+                                gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + ". " +
                                         "You get " + (card.getValue() / 2) + " cards, press \"Buy Cards\".");
                                 gameBoardView.getButtonBuyCards().setDisable(false);
                             }
@@ -335,7 +335,7 @@ public class GameController {
                 gameModel.setSelectedCard(null);
                 gameModel.getPlayedCardsIndices().clear();
                 gameModel.setTargetPathIds(null);
-                gameBoardView.setInfoLabelText("Your turn\nSelect a game piece and a card");
+                gameBoardView.setInfoLabelText("Your turn. Select a game piece and a card");
                 clickCount = 0;
             }
         });
