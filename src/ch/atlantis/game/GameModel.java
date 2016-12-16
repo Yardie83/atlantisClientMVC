@@ -102,7 +102,7 @@ public class GameModel {
         // water is on the way to the target
         int priceToCross = 0;
         int waterPathId = getWaterPathId(selectedGamePiece.getStartPathId());
-        while (waterPathId != 0) {
+        while (waterPathId != 0 && waterPathId < 154) {
             priceToCross += getPriceForCrossing(waterPathId);
             waterPathId = getWaterPathId(pathIdAfter - 1);
         }
@@ -160,6 +160,7 @@ public class GameModel {
         if (!found && nextPathId == 154) {
             targetPathId = 400;
         }
+        System.out.println("Target path id is : " + targetPathId);
         return targetPathId;
     }
 
