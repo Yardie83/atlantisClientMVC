@@ -278,88 +278,80 @@ public class GameController {
          * Can Heval Cokyasar
          *
          */
-        gameBoardView.getButtonBuyCards().
+        gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (gameModel.getSelectedStackCardIndex() != -1) {
+                    HashMap<String, Object> hashToBuyCards = new HashMap<>();
+                    String gameName = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName();
+                    Integer indexToSend = gameModel.getSelectedStackCardIndex();
+                    hashToBuyCards.put("GameName", gameName);
+                    hashToBuyCards.put("Index", indexToSend);
+                    atlantisModel.sendMessage(new Message(MessageType.BUYCARD, hashToBuyCards)); // Send message to server
+                }
+            }
+        });
 
-                setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (gameModel.getSelectedStackCardIndex() != -1) {
-                            HashMap<String, Object> hashToBuyCards = new HashMap<>();
-                            String gameName = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName();
-                            Integer indexToSend = gameModel.getSelectedStackCardIndex();
-                            hashToBuyCards.put("GameName", gameName);
-                            hashToBuyCards.put("Index", indexToSend);
-                            atlantisModel.sendMessage(new Message(MessageType.BUYCARD, hashToBuyCards)); // Send message to server
-                        }
-                    }
-                });
-
-        gameBoardView.getButtonMove().
-
-                setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (clickCount == 0) {
-                            for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
-                                gamePiece.setStartPathId(gamePiece.getCurrentPathId());
-                                logger.info("GameModel -> Start path IDs set.");
-                                gameModel.getPlayedCardsIndices().clear();
-                                logger.info("Played card indices cleared.");
-                            }
-                        }
-                        tryToMove();
-                    }
-                });
-
-        gameBoardView.getButtonReset().
-
-                setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (gameBoardView.getButtonMove().isDisabled()) {
-                            gameBoardView.setDisableButtonMove(false);
-                        }
-                        if (!gameBoardView.getButtonEndTurn().isDisabled()) {
-                            gameBoardView.setDisableButtonEndTurn(true);
-                        }
-                        if (!gameBoardView.getButtonPay().isDisabled()) {
-                            gameBoardView.getButtonPay().setDisable(true);
-                        }
-                        gameBoardView.getButtonReset().setDisable(true);
-                        gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                        gameModel.getSelectedGamePiece().resetPathId();
-                        gameBoardView.moveGamePiece();
-                        gameBoardView.resetCards();
-                        gameModel.setSelectedCard(null);
+        gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (clickCount == 0) {
+                    for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
+                        gamePiece.setStartPathId(gamePiece.getCurrentPathId());
+                        logger.info("GameModel -> Start path IDs set.");
                         gameModel.getPlayedCardsIndices().clear();
-                        gameModel.setTargetPathIds(null);
-                        gameBoardView.setInfoLabelText("Your turn\nSelect a game piece and a card");
+                        logger.info("Played card indices cleared.");
+                    }
+                }
+                tryToMove();
+            }
+        });
+
+        gameBoardView.getButtonReset().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (gameBoardView.getButtonMove().isDisabled()) {
+                    gameBoardView.setDisableButtonMove(false);
+                }
+                if (!gameBoardView.getButtonEndTurn().isDisabled()) {
+                    gameBoardView.setDisableButtonEndTurn(true);
+                }
+                if (!gameBoardView.getButtonPay().isDisabled()) {
+                    gameBoardView.getButtonPay().setDisable(true);
+                }
+                gameBoardView.getButtonReset().setDisable(true);
+                gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
+                gameModel.getSelectedGamePiece().resetPathId();
+                gameBoardView.moveGamePiece();
+                gameBoardView.resetCards();
+                gameModel.setSelectedCard(null);
+                gameModel.getPlayedCardsIndices().clear();
+                gameModel.setTargetPathIds(null);
+                gameBoardView.setInfoLabelText("Your turn\nSelect a game piece and a card");
+                clickCount = 0;
+            }
+        });
+
+        gameBoardView.getButtonEndTurn().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                gameBoardView.getButtonReset().setDisable(true);
+                gameBoardView.getButtonBuyCards().setDisable(true);
+                gameBoardView.setDisableButtonMove(true);
+                gameBoardView.setDisableButtonEndTurn(true);
+                gameBoardView.getButtonPay().setDisable(true);
+                if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
+                    if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
+                        gameBoardView.resetHighlight(gameModel.getSelectedCard());
+                        gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
+                        logger.info("GameController -> End of turn of player " + gameModel.getLocalPlayerId());
                         clickCount = 0;
+                        gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getSelectedGamePiece().getStartPathId());
+                        sendMoveMessage();
                     }
-                });
-
-        gameBoardView.getButtonEndTurn().
-
-                setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        gameBoardView.getButtonReset().setDisable(true);
-                        gameBoardView.getButtonBuyCards().setDisable(true);
-                        gameBoardView.setDisableButtonMove(true);
-                        gameBoardView.setDisableButtonEndTurn(true);
-                        gameBoardView.getButtonPay().setDisable(true);
-                        if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
-                            if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
-                                gameBoardView.resetHighlight(gameModel.getSelectedCard());
-                                gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
-                                logger.info("GameController -> End of turn of player " + gameModel.getLocalPlayerId());
-                                clickCount = 0;
-                                gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getSelectedGamePiece().getStartPathId());
-                                sendMoveMessage();
-                            }
-                        }
-                    }
-                });
+                }
+            }
+        });
 
         gameBoardView.getButtonGameRules().setOnAction(new EventHandler<ActionEvent>() {
             @Override
