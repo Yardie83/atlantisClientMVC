@@ -417,6 +417,8 @@ public class GameModel {
     }
 
 
+
+
     private void updateMovementCards() {
         ArrayList<Card> movementCardsToRemove = new ArrayList<>();
         for (Integer index : playedCardsIndices) {
