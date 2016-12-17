@@ -104,7 +104,7 @@ public class GameBoardView extends Pane {
                 } else if (card.getCardType() == CardType.END && tile.getPathId() == 400) {
                     drawSpecialCards(card, tile);
                     card.setLayoutX(tile.getX() - tile.getSide() + 15);
-                    card.setLayoutY(tile.getY() - (tile.getSide()/3));
+                    card.setLayoutY(tile.getY() - (tile.getSide() / 3));
                     card.toBack();
                 } else if (card.getPathId() == tile.getPathId()) {
                     drawMainPath(card, tile);
@@ -192,7 +192,7 @@ public class GameBoardView extends Pane {
         scrollPaneStackCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPaneStackCards.setMinViewportHeight(50);
         scrollPaneStackCards.setVmax(50);
-        scrollPaneStackCards.setPrefSize(100,50);
+        scrollPaneStackCards.setPrefSize(100, 50);
         scrollPaneStackCards.setMaxHeight(150);
 
         VBox otherPlayersBox = createOpponentBox();
@@ -239,7 +239,7 @@ public class GameBoardView extends Pane {
         buttonPay.setDisable(true);
         setDisableButtonEndTurn(true);
         buttonBuyCards.setDisable(true);
-        if(gameModel.getCurrentTurn() != gameModel.getLocalPlayerId()){
+        if (gameModel.getCurrentTurn() != gameModel.getLocalPlayerId()) {
             setDisableButtonMove(true);
         }
 
@@ -261,7 +261,7 @@ public class GameBoardView extends Pane {
         scrollPaneMovementCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPaneMovementCards.setMinViewportHeight(50);
         scrollPaneMovementCards.setVmax(50);
-        scrollPaneMovementCards.setPrefSize(100,50);
+        scrollPaneMovementCards.setPrefSize(100, 50);
         scrollPaneMovementCards.setMaxHeight(150);
 
         infoLabel = new Label("");
@@ -360,10 +360,10 @@ public class GameBoardView extends Pane {
     }
 
     private void setInfoLblTextOnNewTurn() {
-        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()){
+        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
             setInfoLabelText("Your turn\nSelect a game piece and a card");
-        }else{
-            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait.");
+        } else {
+            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() + "'s turn. Please wait.");
         }
     }
 
@@ -439,7 +439,7 @@ public class GameBoardView extends Pane {
                 HBoxMovementCards.getChildren().setAll(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards());
 
                 //Remove the pathCards
-                if (selectedGamePiece.getCurrentPathId() != 101) {
+                if (selectedGamePiece.getCurrentPathId() != 101 && gameModel.getIndexOfPathCardToRemove() != -1) {
                     Card pathCardToRemove = gameModel.getPathCards().get(gameModel.getIndexOfPathCardToRemove());
                     removePathCard(pathCardToRemove);
                 }
@@ -511,7 +511,7 @@ public class GameBoardView extends Pane {
     }
 
     public void resetCards() {
-        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()){
+        for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
             card.setOpacity(1);
             card.setDisable(false);
             resetHighlight(card);
@@ -520,23 +520,16 @@ public class GameBoardView extends Pane {
 
     public void createGameOverView() {
         Stage parentStage = gameStage;
-        if (this.gameOverView == null) {
-            this.gameOverView = new GameOverView(gameStage.getHeight(), gameStage.getWidth(), gameModel );
+        if (gameOverView == null) {
+            gameOverView = new GameOverView(gameStage.getHeight(), gameStage.getWidth(), gameModel);
             gameOverStage = new Stage();
             gameOverStage.setScene(new Scene(gameOverView));
             view.setupOverlay(gameOverStage, parentStage, "css_GameOverView");
+            view.setXYLocation(gameOverStage, parentStage);
+            view.setDimensions(gameOverStage, parentStage);
+            gameOverStage.show();
         }
-        view.setXYLocation(gameOverStage, parentStage);
-        view.setDimensions(gameOverStage, parentStage);
 
-        //getControls(this.createGameView);
-        //setControlText(this.controls);
-
-        //activeOverlayStage = createGameStage;
-    }
-
-    public void showGameOver() {
-        gameOverStage.show();
     }
 
     public void removePathCard(Card pathCard) {
@@ -577,7 +570,9 @@ public class GameBoardView extends Pane {
         return buttonReset;
     }
 
-    public Button getButtonGameRules() {return buttonGameRules;}
+    public Button getButtonGameRules() {
+        return buttonGameRules;
+    }
 
     public Button getButtonEndTurn() {
         return buttonEndTurn;

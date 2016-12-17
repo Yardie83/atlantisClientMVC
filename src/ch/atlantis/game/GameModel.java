@@ -116,7 +116,7 @@ public class GameModel {
         paidCorrectPrice = false;
 
         int sumValuePaidCards = 0;
-        for (int index : paidCardIndices){
+        for (int index : paidCardIndices) {
             sumValuePaidCards += players.get(localPlayerId).getPathCardStack().get(index).getValue();
         }
         if (sumValuePaidCards >= priceToCrossWater.get()) {
@@ -385,17 +385,16 @@ public class GameModel {
     public boolean updateValues() {
         players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex).setCurrentPathId(targetPathIdRemote);
 
-
-//        int score = pathCards.get(indexOfPathCardToRemove).getValue();
-//        if (previousTurn == localPlayerId) {
-//            scoreList.add(String.valueOf(score));
-//        }
-
-        Card pathCardToRemove = pathCards.get(indexOfPathCardToRemove);
-        pathCardToRemove.setPathId(-1);
-        players.get(previousTurn).getPathCardStack().add(pathCardToRemove);
+        if (indexOfPathCardToRemove != -1) {
+            Card pathCardToRemove = pathCards.get(indexOfPathCardToRemove);
+            pathCardToRemove.setPathId(-1);
+            players.get(previousTurn).getPathCardStack().add(pathCardToRemove);
+        }
         removePaidCardsFromStack();
-        pathCards.get(indexOfPathCardToShow).setIsOnTop(true);
+
+        if (indexOfPathCardToShow != -1) {
+            pathCards.get(indexOfPathCardToShow).setIsOnTop(true);
+        }
         selectedGamePiece = players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex);
         selectedGamePiece.setCurrentPathId(targetPathIdRemote);
         updateMovementCards();
@@ -415,8 +414,6 @@ public class GameModel {
             }
         }
     }
-
-
 
 
     private void updateMovementCards() {
@@ -536,8 +533,7 @@ public class GameModel {
             if (player.getScore() > score) {
                 score = player.getScore();
                 winner = player.getPlayerName();
-            }
-            if (player.getScore() == score) {
+            }else if (player.getScore() == score) {
                 winner = null;
             }
         }

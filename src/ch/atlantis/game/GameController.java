@@ -5,6 +5,7 @@ import ch.atlantis.controller.OptionsController;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.util.MessageType;
 import ch.atlantis.view.AtlantisView;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -71,22 +72,20 @@ public class GameController {
             @Override
             @SuppressWarnings("unchecked")
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    if (atlantisModel.getMessage().getMessageObject() instanceof HashMap) {
-                        HashMap<String, Object> gameStateMap = (HashMap<String, Object>) atlantisModel.getMessage().getMessageObject();
-                        if (gameModel.readGameStateMap(gameStateMap)) {
-                            gameModel.updateValues();
-                            handleMouseEventsMovementCards();
-                            handleMouseEventsStackCards();
-                            gameBoardView.updateBoard();
-                            if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
-                                gameBoardView.setDisableButtonMove(false);
-                                gameBoardView.getButtonBuyCards().setDisable(true);
-                                gameModel.setSelectedCard(null);
-                                gameModel.setSelectedGamePiece(null);
-                                gameModel.setTargetPathIds(null);
-                                gameModel.clearPaidCardsIndices();
-                            }
+                if (newValue && atlantisModel.getMessage().getMessageObject() instanceof HashMap) {
+                    HashMap<String, Object> gameStateMap = (HashMap<String, Object>) atlantisModel.getMessage().getMessageObject();
+                    if (gameModel.readGameStateMap(gameStateMap)) {
+                        gameModel.updateValues();
+                        handleMouseEventsMovementCards();
+                        handleMouseEventsStackCards();
+                        gameBoardView.updateBoard();
+                        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
+                            gameBoardView.setDisableButtonMove(false);
+                            gameBoardView.getButtonBuyCards().setDisable(true);
+                            gameModel.setSelectedCard(null);
+                            gameModel.setSelectedGamePiece(null);
+                            gameModel.setTargetPathIds(null);
+                            gameModel.clearPaidCardsIndices();
                         }
                     }
                 }
@@ -101,24 +100,28 @@ public class GameController {
         atlantisModel.givePurchasedCards().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    if (atlantisModel.getMessage().getMessageObject() instanceof ArrayList) {
-                        ArrayList<Card> arrayListOfPurchasedCards = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
-                        if (arrayListOfPurchasedCards.size() != 0) {
-                            for (Card card : arrayListOfPurchasedCards) {
-                                System.out.println("IN LISTENER FOR BUYING CARDS -> " + card);
-                                gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
-                                System.out.println("SIZE OF MOVEMENTCARDS AFTER ADDING CARD TO PLAYER -> " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
-                            }
-                            gameBoardView.updateMovementCards();
-                            handleMouseEventsMovementCards();
-                            atlantisModel.givePurchasedCards().setValue(false);
-                            gameBoardView.getButtonBuyCards().setDisable(true);
-                            gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack().remove(gameModel.getSelectedStackCardIndex());
-                            gameBoardView.setInfoLabelText("You got a new Card");
-                            arrayListOfPurchasedCards.clear();
+                if (newValue && atlantisModel.getMessage().getMessageObject() instanceof ArrayList) {
+                    ArrayList<Card> arrayListOfPurchasedCards = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
+                    if (arrayListOfPurchasedCards.size() != 0) {
+                        for (Card card : arrayListOfPurchasedCards) {
+                            gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
                         }
+                        gameBoardView.updateMovementCards();
+                        handleMouseEventsMovementCards();
+                        atlantisModel.givePurchasedCards().setValue(false);
+                        gameBoardView.getButtonBuyCards().setDisable(true);
+                        gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack().remove(gameModel.getSelectedStackCardIndex());
+                        gameBoardView.setInfoLabelText("You got a new Card");
                     }
+                }
+            }
+        });
+
+        atlantisModel.gameOverProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue){
+                    handleGameOver();
                 }
             }
         });
@@ -154,7 +157,6 @@ public class GameController {
 
     /**
      * Can Heval Cokyasar
-     *
      */
 
     private void handleMouseEventsStackCards() {
@@ -364,7 +366,8 @@ public class GameController {
         gameBoardView.getButtonGameRules().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                atlantisView.getGameLobbyView().showGameRules();
+                //atlantisView.getGameLobbyView().showGameRules();
+                handleGameOver();
             }
         });
     }
@@ -400,9 +403,14 @@ public class GameController {
     }
 
     private void handleGameOver() {
-        gameBoardView.createGameOverView();
-        gameBoardView.showGameOver();
-        backToLobbyButtonHandler();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                gameBoardView.createGameOverView();
+                backToLobbyButtonHandler();
+            }
+        });
+
     }
 
     private void backToLobbyButtonHandler() {

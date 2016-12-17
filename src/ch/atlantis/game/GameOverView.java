@@ -14,6 +14,8 @@ import javafx.scene.paint.Color;
 
 /**
  * Created by Hermann Grieder on 11.12.2016.
+ * The Game Over View when the game is finished. It shows the score of all the players
+ * and the winner. From this view the players can go back to the gameLobby.
  */
 public class GameOverView extends Pane {
     private final VBox root;
@@ -24,7 +26,6 @@ public class GameOverView extends Pane {
 
     //CENTER Elements
     private GridPane centerPane;
-    private Label lblUserName;
 
     //BOTTOM Elements
     private VBox bottomPane;
@@ -32,7 +33,6 @@ public class GameOverView extends Pane {
 
     private Button btnBackToLobby;
 
-    private Label lblScore;
 
     public GameOverView(double height, double width, GameModel gameModel) {
 

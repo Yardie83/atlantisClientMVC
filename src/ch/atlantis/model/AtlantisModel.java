@@ -45,6 +45,7 @@ public class AtlantisModel {
     private SimpleStringProperty chatString;
     private SimpleStringProperty connectionStatus;
     private SimpleIntegerProperty createProfileSuccess;
+    private SimpleBooleanProperty gameOver;
     private SimpleIntegerProperty loginSuccess;
     private SimpleBooleanProperty moveValid;
     private SimpleBooleanProperty gameReady;
@@ -75,6 +76,7 @@ public class AtlantisModel {
         gameReady = new SimpleBooleanProperty(false);
         gameInfo = new SimpleBooleanProperty(false);
         gameList = FXCollections.observableArrayList();
+        gameOver = new SimpleBooleanProperty(false);
         givePurchasedCards = new SimpleBooleanProperty(false);
         autoConnect = true;
 
@@ -234,8 +236,10 @@ public class AtlantisModel {
     }
 
     private void handleGameOver(Message message) {
-        Boolean gameOver = (Boolean) message.getMessageObject();
+        Boolean isGameOver = (Boolean) message.getMessageObject();
+        gameOver.set(isGameOver);
         logger.info("AtlantisModel -> GameOver: " + gameOver);
+        gameOver.set(false);
     }
 
     private void handleGameList(Message message) {
@@ -305,15 +309,13 @@ public class AtlantisModel {
             connectToServer();
             autoConnect = false;
             sendMessage(message);
-        } else if (!autoConnect) {
-            chatString.setValue(LocalDateTime.now() + " Maximum connection attempts reached.");
         } else {
             try {
                 logger.info("Sending to server -> " + message.getMessageObject());
                 outputStream.writeObject(message);
                 outputStream.flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Cannot send message to server");
             }
         }
     }
@@ -359,6 +361,8 @@ public class AtlantisModel {
         this.conf.createAtlantisConfig();
     }
 
+    // ***************************** GETTERS & SETTERS **************************//
+
     public Language getSelectedLanguage(String culture) {
         for (Language language : this.getLanguageList()) {
             if (language.getCulture().equals(culture)) {
@@ -398,10 +402,6 @@ public class AtlantisModel {
 
     public SimpleBooleanProperty givePurchasedCards() {
         return givePurchasedCards;
-    }
-
-    public void givePurchasedCards(boolean bool) {
-        this.givePurchasedCards.setValue(bool);
     }
 
     public SimpleStringProperty userNameProperty() {
@@ -444,5 +444,9 @@ public class AtlantisModel {
 
     public Player getLocalPlayer() {
         return localPlayer;
+    }
+
+    public SimpleBooleanProperty gameOverProperty() {
+        return gameOver;
     }
 }

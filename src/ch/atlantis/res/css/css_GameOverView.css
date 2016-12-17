@@ -26,7 +26,7 @@
     -fx-alignment: center;
 }
 
-.labels {
+.label {
     -fx-font-size: 14px;
     -fx-text-fill: white;
     -fx-text-alignment: left;
