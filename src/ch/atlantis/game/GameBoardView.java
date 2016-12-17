@@ -260,9 +260,9 @@ public class GameBoardView extends Pane {
         scrollPaneMovementCards.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPaneMovementCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPaneMovementCards.setMinViewportHeight(50);
-        scrollPaneMovementCards.setVmax(50);
-        scrollPaneMovementCards.setPrefSize(100, 50);
+        scrollPaneMovementCards.setPrefSize(50,100);
         scrollPaneMovementCards.setMaxHeight(150);
+        scrollPaneMovementCards.minViewportHeightProperty().set(50);
 
         infoLabel = new Label("");
         infoLabel.setStyle("-fx-text-fill: white");
@@ -360,10 +360,10 @@ public class GameBoardView extends Pane {
     }
 
     private void setInfoLblTextOnNewTurn() {
-        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
-            setInfoLabelText("Your turn\nSelect a game piece and a card");
-        } else {
-            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() + "'s turn. Please wait.");
+        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()){
+            setInfoLabelText("Your turn. Select a game piece and a card");
+        }else{
+            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait.");
         }
     }
 
