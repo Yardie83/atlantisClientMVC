@@ -18,5 +18,7 @@ public enum MessageType {
     MOVE,
     GAMEOVER,
     BUYCARD,
+    CANTMOVE,
+    NEWTURN,
 }
 

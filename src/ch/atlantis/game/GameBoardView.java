@@ -40,6 +40,7 @@ public class GameBoardView extends Pane {
     private Button buttonReset;
     private Button buttonEndTurn;
     private Button buttonGameRules;
+    private Button buttonCantMove;
     private Hashtable<String, ImageView> listCardImages;
     private Label lblScoreLocalPlayer;
     private HBox HBoxMovementCards;
@@ -228,7 +229,8 @@ public class GameBoardView extends Pane {
         buttonMove = new Button("Move");
         buttonReset = new Button("Reset");
         buttonGameRules = new Button("Rules");
-        firstRow.getChildren().addAll(buttonMove, buttonReset, buttonGameRules);
+        buttonCantMove = new Button("Cant Move");
+        firstRow.getChildren().addAll(buttonMove, buttonReset, buttonGameRules, buttonCantMove);
         buttonEndTurn = new Button("End Turn");
         HBox secondRow = new HBox(5);
         buttonBuyCards = new Button("Buy Cards");
@@ -241,6 +243,7 @@ public class GameBoardView extends Pane {
         buttonBuyCards.setDisable(true);
         if (gameModel.getCurrentTurn() != gameModel.getLocalPlayerId()) {
             setDisableButtonMove(true);
+            buttonCantMove.setDisable(true);
         }
 
         gameControls.getChildren().addAll(firstRow, secondRow);
@@ -456,8 +459,8 @@ public class GameBoardView extends Pane {
         });
     }
 
-    public void updateMovementCards() { // Load score cards in VBox
-        Platform.runLater(new Runnable() { // What is this?
+    public void updateMovementCards() {
+        Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 if (gameModel.getLocalPlayerId() == gameModel.getCurrentTurn()) {
@@ -581,6 +584,8 @@ public class GameBoardView extends Pane {
     public Button getButtonPay() {
         return buttonPay;
     }
+
+    public Button getButtonCantMove() { return  buttonCantMove; }
 
     public GameOverView getGameOverView() {
         return gameOverView;

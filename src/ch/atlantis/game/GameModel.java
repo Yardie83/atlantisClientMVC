@@ -16,6 +16,8 @@ import java.util.logging.Logger;
 public class GameModel {
 
     private SimpleIntegerProperty priceToCrossWater;
+    private SimpleIntegerProperty priceToCrossWaterAutomatically;
+    private boolean cantMoveButtonHasBeenPressed;
     private ArrayList<Integer> playedCardsIndices;
     private ArrayList<Integer> paidCardIndices;
     private ArrayList<Integer> targetPathIds;
@@ -49,6 +51,7 @@ public class GameModel {
         localPlayerId = localPlayer.getPlayerID();
         occupied = new SimpleBooleanProperty(false);
         priceToCrossWater = new SimpleIntegerProperty(0);
+        priceToCrossWaterAutomatically = new SimpleIntegerProperty(0);
         playedCardsIndices = new ArrayList<>();
         deckCardToAdd = new ArrayList<>();
         paidCardIndices = new ArrayList<>();
@@ -106,7 +109,11 @@ public class GameModel {
             priceToCross += getPriceForCrossing(waterPathId);
             waterPathId = getWaterPathId(pathIdAfter - 1);
         }
-        priceToCrossWater.set(priceToCross);
+        if (cantMoveButtonHasBeenPressed) {
+            priceToCrossWaterAutomatically.set(priceToCross);
+        } else {
+            priceToCrossWater.set(priceToCross);
+        }
         System.out.println("Price to cross " + priceToCrossWater.get());
         System.out.println("Price to cross true / false: " + (priceToCross != 0));
         return priceToCross != 0;
@@ -453,8 +460,16 @@ public class GameModel {
         return currentTurn;
     }
 
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
     public int getPreviousTurn() {
         return previousTurn;
+    }
+
+    public void setPreviousTurn(int previousTurn) {
+        this.previousTurn = previousTurn;
     }
 
     public Card getSelectedCard() {
@@ -497,10 +512,16 @@ public class GameModel {
         return priceToCrossWater;
     }
 
+    public SimpleIntegerProperty priceToCrossWaterAutomatically() {
+        return priceToCrossWaterAutomatically;
+    }
+
     public void addToPlayedCards() {
         int index = players.get(localPlayerId).getMovementCards().indexOf(selectedCard);
         playedCardsIndices.add(index);
     }
+
+    public ArrayList<Integer> getTargetPathIds() { return targetPathIds; }
 
     public void setTargetPathIds(ArrayList<Integer> targetPathIds) {
         this.targetPathIds = targetPathIds;
@@ -546,5 +567,11 @@ public class GameModel {
 
     public ArrayList<Integer> getPaidCardIndices() {
         return paidCardIndices;
+    }
+
+    public boolean getCantMoveButtonHasBeenPressed() { return cantMoveButtonHasBeenPressed; }
+
+    public void setCantMoveButtonHasBeenPressed(boolean cantMoveButtonHasBeenPressed) {
+        this.cantMoveButtonHasBeenPressed = cantMoveButtonHasBeenPressed;
     }
 }

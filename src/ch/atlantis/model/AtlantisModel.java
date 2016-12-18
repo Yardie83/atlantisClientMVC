@@ -52,6 +52,8 @@ public class AtlantisModel {
     private SimpleBooleanProperty gameInfo;
     private SimpleStringProperty userName;
     private SimpleBooleanProperty givePurchasedCards;
+    private SimpleBooleanProperty cardsForNotMoving;
+    private SimpleBooleanProperty newTurn;
     private ObservableList<String> gameList;
     private LanguageHandler languageHandler;
 
@@ -78,6 +80,8 @@ public class AtlantisModel {
         gameList = FXCollections.observableArrayList();
         gameOver = new SimpleBooleanProperty(false);
         givePurchasedCards = new SimpleBooleanProperty(false);
+        cardsForNotMoving = new SimpleBooleanProperty(false);
+        newTurn = new SimpleBooleanProperty(false);
         autoConnect = true;
 
         this.handleLanguages();
@@ -177,7 +181,13 @@ public class AtlantisModel {
                                     handleGameOver(message);
                                     break;
                                 case BUYCARD:
-                                    handlePurchasedCards(message);
+                                    handlePurchasedCards();
+                                    break;
+                                case CANTMOVE:
+                                    handleCantMove();
+                                    break;
+                                case NEWTURN:
+                                    handleNewTurn();
                                     break;
                             }
                         }
@@ -198,8 +208,19 @@ public class AtlantisModel {
         clientTask.start();
     }
 
-    private void handlePurchasedCards(Message message) {
+    private void handleNewTurn() {
+        newTurn.setValue(true);
+        newTurn.setValue(false);
+    }
+
+    private void handleCantMove() {
+        cardsForNotMoving.setValue(true);
+        cardsForNotMoving.setValue(false);
+    }
+
+    private void handlePurchasedCards() {
         givePurchasedCards.setValue(true);
+        givePurchasedCards.setValue(false);
     }
 
 
@@ -400,9 +421,11 @@ public class AtlantisModel {
         return moveValid;
     }
 
-    public SimpleBooleanProperty givePurchasedCards() {
-        return givePurchasedCards;
-    }
+    public SimpleBooleanProperty givePurchasedCards() { return givePurchasedCards; }
+
+    public SimpleBooleanProperty cardsForNotMoving() { return cardsForNotMoving; }
+
+    public SimpleBooleanProperty newTurn() { return newTurn; }
 
     public SimpleStringProperty userNameProperty() {
         return userName;

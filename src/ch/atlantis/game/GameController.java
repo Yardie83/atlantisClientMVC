@@ -80,13 +80,54 @@ public class GameController {
                         handleMouseEventsStackCards();
                         gameBoardView.updateBoard();
                         if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
-                            gameBoardView.setDisableButtonMove(false);
-                            gameBoardView.getButtonBuyCards().setDisable(true);
-                            gameModel.setSelectedCard(null);
-                            gameModel.setSelectedGamePiece(null);
-                            gameModel.setTargetPathIds(null);
-                            gameModel.clearPaidCardsIndices();
+                            updateLocalValues();
                         }
+                    }
+                }
+            }
+        });
+
+        /**
+         * Fabian Witschi
+         *
+         */
+
+        atlantisModel.cardsForNotMoving().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue && atlantisModel.getMessage().getMessageObject() instanceof ArrayList) {
+                    ArrayList<Card> listOfCantMove = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
+                    if (listOfCantMove.size() != 0) {
+                        for (Card card : listOfCantMove) {
+                            System.out.println("Card that we received from the server - > " + card);
+                            gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
+                        }
+                        System.out.println("Size of cards after receiving all of the cards - > " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
+                        gameBoardView.updateMovementCards();
+                        handleMouseEventsMovementCards();
+                        gameBoardView.setInfoLabelText("You got two new cards");
+                    }
+                }
+            }
+        });
+
+        /**
+         * Fabian Witschi
+         *
+         */
+
+        atlantisModel.newTurn().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    int newTurn = (Integer) atlantisModel.getMessage().getMessageObject();
+                    gameModel.setPreviousTurn(gameModel.getCurrentTurn());
+                    System.out.println("PREVIOUS TURN WAS - > " + gameModel.getPreviousTurn());
+                    gameModel.setCurrentTurn(newTurn);
+                    System.out.println("CURRENT TURN IS - > " + gameModel.getCurrentTurn());
+                    gameBoardView.updateBoard();
+                    if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
+                        updateLocalValues();
                     }
                 }
             }
@@ -108,7 +149,6 @@ public class GameController {
                         }
                         gameBoardView.updateMovementCards();
                         handleMouseEventsMovementCards();
-                        atlantisModel.givePurchasedCards().setValue(false);
                         gameBoardView.getButtonBuyCards().setDisable(true);
                         gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack().remove(gameModel.getSelectedStackCardIndex());
                         gameBoardView.setInfoLabelText("You got a new Card");
@@ -153,10 +193,25 @@ public class GameController {
                 }
             }
         });
+
+        gameModel.priceToCrossWaterAutomatically().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if (newValue.intValue() != 0) {
+                    int sumValue = 0;
+                    for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()) {
+                        sumValue += card.getValue();
+                        if (sumValue >= newValue.intValue()) {
+                            gameModel.setPaidCorrectPrice(true);
+                        }
+                    }
+                }
+            }
+        });
     }
 
     /**
-     * Can Heval Cokyasar
+     * Can Heval Cokyasar & Hermann Grieder
      */
 
     private void handleMouseEventsStackCards() {
@@ -243,6 +298,29 @@ public class GameController {
     }
 
     private void handleMouseEventsGameControlButtons() {
+
+        /**
+         * Fabian Witschi
+         *
+         */
+
+        gameBoardView.getButtonCantMove().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                gameModel.setCantMoveButtonHasBeenPressed(true);
+                if(!(tryMoveAutomatically())) {
+                    gameBoardView.setInfoLabelText("You will get two cards");
+                    atlantisModel.sendMessage(new Message(MessageType.CANTMOVE, gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName()));
+                } else {
+                    gameBoardView.setInfoLabelText("You CAN move with your cards");
+                    gameBoardView.getButtonCantMove().setDisable(true);
+                    gameModel.getTargetPathIds().clear();
+                }
+                gameModel.setSelectedCard(null);
+                gameModel.setSelectedGamePiece(null);
+                gameModel.setCantMoveButtonHasBeenPressed(false);
+            }
+        });
 
         /**
          * Fabian Witschi
@@ -350,6 +428,7 @@ public class GameController {
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(true);
                 gameBoardView.getButtonPay().setDisable(true);
+                gameBoardView.getButtonCantMove().setDisable(true);
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());
@@ -372,6 +451,29 @@ public class GameController {
         });
     }
 
+    private boolean tryMoveAutomatically() {
+        boolean canMoveAutomatically = false;
+
+        for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
+            gameModel.setSelectedGamePiece(gamePiece);
+            for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
+                gameModel.setSelectedCard(card);
+                if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
+                    gameModel.occupiedProperty().set(false);
+                    if (gameModel.canMoveDirectly()) {
+                        canMoveAutomatically = true;
+                        System.out.println("BOOLEAN VALUE IS - > " + canMoveAutomatically);
+                        return canMoveAutomatically;
+                    }
+                    gameModel.getSelectedCard().setDisable(true);
+                    gameModel.addToPlayedCards();
+                }
+            }
+        }
+        System.out.println("BOOLEAN VALUE IS - > " + canMoveAutomatically);
+        return canMoveAutomatically;
+    }
+
     private void tryToMove() {
         gameBoardView.getButtonBuyCards().setDisable(true);
         gameBoardView.getButtonReset().setDisable(false);
@@ -383,7 +485,7 @@ public class GameController {
             gameBoardView.setInfoLabelText("");
             gameModel.occupiedProperty().set(false);
             if (gameModel.canMoveDirectly()) {
-                logger.info("GameModel -> Mode can be done directly.");
+                logger.info("GameModel -> Move can be done directly.");
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(false);
                 gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
@@ -395,9 +497,14 @@ public class GameController {
             gameModel.getSelectedCard().setDisable(true);
             gameModel.addToPlayedCards();
             gameBoardView.moveGamePiece();
-        } else if (gameModel.getSelectedCard() == null && gameModel.getSelectedGamePiece() != null) {
+        }
+        else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
+            gameBoardView.setInfoLabelText("Please select a card and\na gamepiece to play");
+        }
+        else if (gameModel.getSelectedCard() == null) {
             gameBoardView.setInfoLabelText("Please select a card to play");
-        } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() != null) {
+        }
+        else if (gameModel.getSelectedGamePiece() == null) {
             gameBoardView.setInfoLabelText("Please select a game piece to play");
         }
     }
@@ -518,6 +625,16 @@ public class GameController {
                 }
             });
         }
+    }
+
+    private void updateLocalValues() {
+        gameBoardView.setDisableButtonMove(false);
+        gameBoardView.getButtonCantMove().setDisable(false);
+        gameBoardView.getButtonBuyCards().setDisable(true);
+        gameModel.setSelectedCard(null);
+        gameModel.setSelectedGamePiece(null);
+        gameModel.setTargetPathIds(null);
+        gameModel.clearPaidCardsIndices();
     }
 
     public SimpleBooleanProperty gameOverProperty() {
