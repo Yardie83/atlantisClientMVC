@@ -419,7 +419,7 @@ public class GameController {
                 gameBoardView.moveGamePiece();
                 gameBoardView.resetCards();
                 gameModel.setSelectedCard(null);
-                gameModel.getPlayedCardsIndices().clear();
+                gameModel.setSelectedGamePiece(null);
                 gameModel.getPaidCardIndices().clear();
                 gameModel.setTargetPathIds(null);
                 gameBoardView.setInfoLabelText("Your turn. Select a game piece and a card");
@@ -502,7 +502,7 @@ public class GameController {
             gameModel.getSelectedCard().setDisable(true);
             gameBoardView.moveGamePiece();
         } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
-            gameBoardView.setInfoLabelText("Please select a card and\na gamepiece to play");
+            gameBoardView.setInfoLabelText("Please select a card and a game piece to play");
         } else if (gameModel.getSelectedCard() == null) {
             gameBoardView.setInfoLabelText("Please select a card to play");
         } else if (gameModel.getSelectedGamePiece() == null) {
