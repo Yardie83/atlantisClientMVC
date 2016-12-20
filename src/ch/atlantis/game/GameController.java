@@ -160,7 +160,7 @@ public class GameController {
         atlantisModel.gameOverProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue){
+                if (newValue) {
                     handleGameOver();
                 }
             }
@@ -308,7 +308,7 @@ public class GameController {
             @Override
             public void handle(ActionEvent event) {
                 gameModel.setCantMoveButtonHasBeenPressed(true);
-                if(!(tryMoveAutomatically())) {
+                if (!(tryMoveAutomatically())) {
                     gameBoardView.setInfoLabelText("You will get two cards");
                     atlantisModel.sendMessage(new Message(MessageType.CANTMOVE, gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName()));
                 } else {
@@ -363,25 +363,23 @@ public class GameController {
          * Can Heval Cokyasar
          *
          */
-        gameBoardView.getButtonBuyCards().
-
-                setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        if (gameModel.getSelectedStackCardIndex() != -1) {
-                            HashMap<String, Object> hashToBuyCards = new HashMap<>();
-                            String gameName = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName();
-                            Integer indexToSend = gameModel.getSelectedStackCardIndex();
-                            hashToBuyCards.put("GameName", gameName);
-                            hashToBuyCards.put("Index", indexToSend);
-                            Card card = gameModel.getSelectedStackCard();
-                            gameBoardView.updateLocalPlayerScore(card.getValue());
-                            card.setOpacity(0);
-                            card.setDisable(true);
-                            atlantisModel.sendMessage(new Message(MessageType.BUYCARD, hashToBuyCards)); // Send message to server
-                        }
-                    }
-                });
+        gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (gameModel.getSelectedStackCardIndex() != -1) {
+                    HashMap<String, Object> hashToBuyCards = new HashMap<>();
+                    String gameName = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName();
+                    Integer indexToSend = gameModel.getSelectedStackCardIndex();
+                    hashToBuyCards.put("GameName", gameName);
+                    hashToBuyCards.put("Index", indexToSend);
+                    Card card = gameModel.getSelectedStackCard();
+                    gameBoardView.updateLocalPlayerScore(card.getValue());
+                    card.setOpacity(0);
+                    card.setDisable(true);
+                    atlantisModel.sendMessage(new Message(MessageType.BUYCARD, hashToBuyCards)); // Send message to server
+                }
+            }
+        });
 
         gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -435,6 +433,8 @@ public class GameController {
                 gameBoardView.setDisableButtonEndTurn(true);
                 gameBoardView.getButtonPay().setDisable(true);
                 gameBoardView.getButtonCantMove().setDisable(true);
+                gameBoardView.resetHighlight(gameModel.getSelectedCard());
+                gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                         gameBoardView.resetHighlight(gameModel.getSelectedCard());
@@ -486,8 +486,6 @@ public class GameController {
 
         if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
             clickCount++;
-            gameBoardView.resetHighlight(gameModel.getSelectedCard());
-            gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
             gameBoardView.setInfoLabelText("");
             gameModel.occupiedProperty().set(false);
             if (gameModel.canMoveDirectly()) {
@@ -503,14 +501,11 @@ public class GameController {
             gameModel.getSelectedCard().setDisable(true);
             gameModel.addToPlayedCards();
             gameBoardView.moveGamePiece();
-        }
-        else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
+        } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
             gameBoardView.setInfoLabelText("Please select a card and\na gamepiece to play");
-        }
-        else if (gameModel.getSelectedCard() == null) {
+        } else if (gameModel.getSelectedCard() == null) {
             gameBoardView.setInfoLabelText("Please select a card to play");
-        }
-        else if (gameModel.getSelectedGamePiece() == null) {
+        } else if (gameModel.getSelectedGamePiece() == null) {
             gameBoardView.setInfoLabelText("Please select a game piece to play");
         }
     }
