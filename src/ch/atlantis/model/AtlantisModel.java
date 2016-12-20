@@ -336,7 +336,7 @@ public class AtlantisModel {
                 outputStream.writeObject(message);
                 outputStream.flush();
             } catch (IOException e) {
-                System.out.println("Cannot send message to server");
+                logger.info("Cannot send message to server");
             }
         }
     }

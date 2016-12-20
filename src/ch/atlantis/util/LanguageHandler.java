@@ -1,5 +1,6 @@
 package ch.atlantis.util;
 
+import ch.atlantis.AtlantisClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -13,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.logging.Logger;
 
 /**
  * Created by Loris Grether on 22.08.2016.
@@ -27,7 +29,11 @@ public class LanguageHandler {
 
     private ArrayList<Language> languageList;
 
+    private Logger logger;
+
     public LanguageHandler() {
+
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
 
         languageList = new ArrayList<>();
         getFiles();
@@ -75,7 +81,7 @@ public class LanguageHandler {
         } catch (SAXException asf) {
 
         } catch (FileNotFoundException notFoundException) {
-            System.out.println("Language File could not be found.");
+            logger.info("Language File could not be found.");
 
         } catch (IOException ioException) {
 
