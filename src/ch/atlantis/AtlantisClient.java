@@ -29,7 +29,6 @@ public class AtlantisClient extends Application {
     private Logger logger = null;
     public FileHandler fh = null;
 
-
     public static void main(String[] args) {
         launch();
     }
@@ -40,17 +39,12 @@ public class AtlantisClient extends Application {
         logger = Logger.getLogger(AtlantisLogger);
         logger.setLevel(Level.INFO);
 
-
-
         try {
 
             // Configure logger with handler and formatter
             fh = new FileHandler("AtlantisLog.txt", 50000, 1);
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
-
-            //formatter.format(LogRecord record) {
-            //}
 
             fh.setFormatter(formatter);
 

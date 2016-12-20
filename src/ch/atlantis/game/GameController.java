@@ -99,10 +99,10 @@ public class GameController {
                     ArrayList<Card> listOfCantMove = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
                     if (listOfCantMove.size() != 0) {
                         for (Card card : listOfCantMove) {
-                            System.out.println("Card that we received from the server - > " + card);
+                            logger.info("Card that we received from the server - > " + card);
                             gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
                         }
-                        System.out.println("Size of cards after receiving all of the cards - > " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
+                        logger.info("Size of cards after receiving all of the cards - > " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
                         gameBoardView.updateMovementCards();
                         handleMouseEventsMovementCards();
                         gameBoardView.setInfoLabelText("You got two new cards");
@@ -122,9 +122,10 @@ public class GameController {
                 if (newValue) {
                     int newTurn = (Integer) atlantisModel.getMessage().getMessageObject();
                     gameModel.setPreviousTurn(gameModel.getCurrentTurn());
-                    System.out.println("PREVIOUS TURN WAS - > " + gameModel.getPreviousTurn());
+                    logger.info("Previous turn was - > " + gameModel.getPreviousTurn());
                     gameModel.setCurrentTurn(newTurn);
-                    System.out.println("CURRENT TURN IS - > " + gameModel.getCurrentTurn());
+
+                    logger.info("Current turn is - > " + gameModel.getCurrentTurn());
                     gameBoardView.updateBoard();
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
                         updateLocalValues();
@@ -227,13 +228,13 @@ public class GameController {
                         int index = pathCardStack.indexOf(card);
                         if (gameModel.getPaidCardIndices() != null && gameModel.getPaidCardIndices().contains(index)) {
                             gameBoardView.resetHighlight(card);
-                            System.out.println("Index: " + index + " trying to remove");
+                            logger.info("Index: " + index + " trying to remove");
                             gameModel.getPaidCardIndices().remove(index);
-                            System.out.println("Index: " + index + " removed");
+                            logger.info("Index: " + index + " removed");
                         } else {
-                            System.out.println("Index: " + index + " trying to add");
+                            logger.info("Index: " + index + " trying to add");
                             gameModel.getPaidCardIndices().add(index);
-                            System.out.println("Index: " + index + " added");
+                            logger.info("Index: " + index + " added");
                             gameBoardView.highlightItem(card);
                         }
                     } else if (gameModel.getSelectedStackCard() != null) {
@@ -344,7 +345,7 @@ public class GameController {
                         tryToMove();
                     } else {
                         gameModel.clearPaidCardsIndices();
-                        System.out.println("Paid Cards Index cleared");
+                        logger.info("Paid Cards Index cleared");
                         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()) {
                             gameBoardView.resetHighlight(card);
                         }
@@ -468,7 +469,7 @@ public class GameController {
                     gameModel.occupiedProperty().set(false);
                     if (gameModel.canMoveDirectly()) {
                         canMoveAutomatically = true;
-                        System.out.println("BOOLEAN VALUE IS - > " + canMoveAutomatically);
+                        logger.info("Boolean value is -> " + canMoveAutomatically);
                         return canMoveAutomatically;
                     }
                     gameModel.getSelectedCard().setDisable(true);
@@ -476,7 +477,7 @@ public class GameController {
                 }
             }
         }
-        System.out.println("BOOLEAN VALUE IS - > " + canMoveAutomatically);
+        logger.info("Boolean value is -> " + canMoveAutomatically);
         return canMoveAutomatically;
     }
 

@@ -80,7 +80,7 @@ public class Player implements Serializable {
 
     public ArrayList<Card> getMovementCards() { return movementCards; }
 
-    public ArrayList<Card> getPathCardStack() { // Instanzierung ab Erstbenutzung
+    public ArrayList<Card> getPathCardStack() {
         if (pathCardStack == null){
             pathCardStack = new ArrayList<>();
         }

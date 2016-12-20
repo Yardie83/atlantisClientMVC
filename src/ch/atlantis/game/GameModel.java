@@ -91,12 +91,12 @@ public class GameModel {
         }
         // Check if the target pathId is already occupied by someone else
         occupied.set(checkIfOccupied());
-        System.out.println(occupied);
+        logger.info(String.valueOf(occupied));
         boolean hasWater = false;
         if (!occupied.get() && !paidCorrectPrice) {
             hasWater = checkForWater();
         }
-        System.out.println("Occupied: " + occupied + " hasWater: " + hasWater);
+        logger.info("Occupied: " + occupied + " hasWater: " + hasWater);
         return (!occupied.get() && !hasWater);
     }
 
@@ -107,17 +107,17 @@ public class GameModel {
         int waterPathId = getWaterPathId(selectedGamePiece.getStartPathId());
         while (waterPathId != 0 && waterPathId < 154) {
             priceToCross += getPriceForCrossing(waterPathId);
-            System.out.println("Price to cross water is - > " + priceToCross);
+            logger.info("Price to cross water is - > " + priceToCross);
             waterPathId = getWaterPathId(pathIdAfter - 1);
         }
         if (cantMoveButtonHasBeenPressed) {
             priceToCrossWaterAutomatically.set(priceToCross);
         } else {
-            System.out.println("Price to cross water when done - > " + priceToCross);
+            logger.info("Price to cross water when done - > " + priceToCross);
             priceToCrossWater.set(priceToCross);
         }
-        System.out.println("Price to cross " + priceToCrossWater.get());
-        System.out.println("Price to cross true / false: " + (priceToCross != 0));
+        logger.info("Price to cross " + priceToCrossWater.get());
+        logger.info("Price to cross true / false: " + (priceToCross != 0));
         return priceToCross != 0;
     }
 
@@ -169,7 +169,7 @@ public class GameModel {
         if (!found && nextPathId == 154) {
             targetPathId = 400;
         }
-        System.out.println("Target path id is : " + targetPathId);
+        logger.info("Target path id is : " + targetPathId);
         return targetPathId;
     }
 
@@ -305,12 +305,12 @@ public class GameModel {
      * @return valueOfCardBehind
      */
     private int getValueFromCardBehind(int pathId) {
-        System.out.println("IN METHOD VALUEFROMCARDBEHIND - > (PATHID) " + pathId);
+        logger.info("In method VALUEFROMCARDBEHIND - > (PATHID) " + pathId);
         int pathIdBehind = pathId - 1;
-        System.out.println("IN METHOD VALUEFROMCARDBEHIND - > (PATHIDBEHIND) " + pathIdBehind);
+        logger.info("In method VALUEFROMCARDBEHIND - > (PATHIDBEHIND) " + pathIdBehind);
         int valueOfCardBehind = 0;
         for (Card pathCard : pathCards) {
-            System.out.println("IN METHOD VALUEFROMCARDBEHIND - > (CARDID) " + pathCard.getPathId());
+            logger.info("In method VALUEFROMCARDBEHIND - > (CARDID) " + pathCard.getPathId());
             if (pathCard.getPathId() == pathIdBehind) {
                 if (pathCard.getCardType() != CardType.WATER && pathCard.isOnTop()) {
                     valueOfCardBehind = pathCard.getValue();
@@ -344,7 +344,7 @@ public class GameModel {
         ArrayList<Integer> newPlayedCardsIndices = new ArrayList<>();
         logger.info("Played cards indices size: " + playedCardsIndices.size());
         for (Integer integer : playedCardsIndices) {
-            System.out.println(integer);
+            logger.info(String.valueOf(integer));
             newPlayedCardsIndices.add(integer);
         }
 
