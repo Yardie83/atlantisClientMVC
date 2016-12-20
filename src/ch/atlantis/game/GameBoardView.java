@@ -55,6 +55,10 @@ public class GameBoardView extends Pane {
     private int offsetY = 5;
 
     private Logger logger;
+    private int width;
+    private HBox bottomHBox;
+    private Label lblStatus;
+    private int height;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -72,8 +76,8 @@ public class GameBoardView extends Pane {
      */
     private void initBoard() {
 
-        int height = view.heightProperty().getValue();
-        int width = view.widthProperty().getValue();
+        height = view.heightProperty().getValue();
+        width = view.widthProperty().getValue();
         super.setMinHeight(height);
         super.setMinWidth(width);
 
@@ -93,6 +97,10 @@ public class GameBoardView extends Pane {
         drawGamePieces();
 
         drawConsole();
+
+        addInfoLabel();
+
+        addCSS();
     }
 
     private void drawPath() {
@@ -268,9 +276,7 @@ public class GameBoardView extends Pane {
         scrollPaneMovementCards.setMaxHeight(150);
         scrollPaneMovementCards.minViewportHeightProperty().set(50);
 
-        infoLabel = new Label("");
-        infoLabel.setStyle("-fx-text-fill: white");
-        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, scrollPaneMovementCards, infoLabel);
+        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, scrollPaneMovementCards);
 
         String score = Integer.toString(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getScore());
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
@@ -282,6 +288,18 @@ public class GameBoardView extends Pane {
 
         top.getChildren().addAll(lblLocalPlayer, label3, lblScoreLocalPlayer);
         return localPlayerBox;
+    }
+
+    private void addInfoLabel(){
+
+        bottomHBox = new HBox(10);
+        bottomHBox.setPrefWidth(width);
+        lblStatus = new Label("Your Color: " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getColorName());
+
+        infoLabel = new Label("");
+        infoLabel.setStyle("-fx-text-fill: white");
+        bottomHBox.getChildren().addAll(lblStatus, infoLabel);
+        this.getChildren().add(bottomHBox);
     }
 
     private VBox createOpponentBox() {
@@ -426,12 +444,11 @@ public class GameBoardView extends Pane {
                 //add the pathCard that was picked up to the flowPane.
                 if (gameModel.getLocalPlayerId() == previousTurn) {
                     updateScoreLabel(lblScoreLocalPlayer, score);
-                    setInfoLblTextOnNewTurn();
                     updatePathCardsStack();
                 } else {
                     updateScoreLabel(scoresLabels.get(previousTurn), score);
-                    setInfoLblTextOnNewTurn();
                 }
+                setInfoLblTextOnNewTurn();
 
                 //Update the movementCards
                 if (gameModel.getLocalPlayerId() == previousTurn) {
@@ -564,6 +581,12 @@ public class GameBoardView extends Pane {
     void highlightItem(Circle item) {
         item.setStroke(Color.WHITE);
         item.setStrokeWidth(2);
+    }
+
+    private void addCSS(){
+        bottomHBox.setId("bottomHBox");
+        lblStatus.setId("lblStatus");
+        infoLabel.setId("lblInfo");
     }
 
     // ************************************* GETTERS / SETTERS ********************************************* //

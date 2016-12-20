@@ -62,25 +62,6 @@ part of the border pane in the game lobby
     -fx-alignment: top-center;
 }
 
-#menuBar {
-
-}
-
-#menuFile {
-
-}
-
-#menuOptions {
-
-}
-
-#menuHelp {
-
-}
-
-#gameRules {
-
-}
 
 #lblWindowTitle {
     -fx-text-fill: #87c1f5;
@@ -190,7 +171,6 @@ part of the border pane in the game lobby
     -fx-alignment: center-left;
     -fx-padding: 7px 10px 10px 10px;;
     -fx-text-fill: whitesmoke;
-
 }
 
 #lblInfo {
@@ -212,54 +192,6 @@ part of the border pane in the game lobby
     -fx-min-width: 250px;
     -fx-background-color: #292828;
     -fx-opacity: 0.6;
-
-}
-
-#btnCreateGame {
-
-}
-
-#btnCreateGame:hover {
-
-}
-
-#btnCreateGame:pressed {
-
-}
-
-#btnLogin {
-
-}
-
-#btnLogin:hover {
-
-}
-
-#btnLogin:pressed {
-
-}
-
-#btnCreateProfile {
-
-}
-
-#btnCreateProfile:hover {
-
-}
-
-#btnCreateProfile:pressed {
-
-}
-
-#btnOptions {
-
-}
-
-#btnOptions:hover {
-
-}
-
-#btnOptions:pressed {
 
 }
 

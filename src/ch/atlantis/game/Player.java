@@ -48,6 +48,23 @@ public class Player implements Serializable {
 
     public Color getColor() { return color; }
 
+    public String getColorName(){
+        switch (playerID) {
+            case 0:
+                return "red";
+
+            case 1:
+                return "blue";
+
+            case 2:
+                return "green";
+
+            case 3:
+                return "yellow";
+            }
+            return null;
+    }
+
     public int getScore() { return score; }
 
     public int getBridge() {

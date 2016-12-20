@@ -40,4 +40,25 @@
 
 }
 
+#bottomHBox {
+    -fx-min-height: 30px;
+    -fx-max-height: 30px;
+    -fx-pref-height: 30px;
+    -fx-background-color: #292828;
+    -fx-opacity: 0.8;
+    -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, -2, 5);
+}
+
+#lblStatus {
+    -fx-alignment: center-left;
+    -fx-padding: 7px 10px 10px 10px;;
+    -fx-text-fill: whitesmoke;
+}
+
+#lblInfo {
+    -fx-alignment: center-left;
+    -fx-padding: 7px 10px 10px 5px;
+    -fx-text-fill: whitesmoke;
+}
+
 
