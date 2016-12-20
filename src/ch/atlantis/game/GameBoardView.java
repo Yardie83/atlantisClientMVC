@@ -248,6 +248,7 @@ public class GameBoardView extends Pane {
 
         buttonReset.setDisable(true);
         buttonPay.setDisable(true);
+        buttonCantMove.setDisable(true);
         setDisableButtonEndTurn(true);
         buttonBuyCards.setDisable(true);
         if (gameModel.getCurrentTurn() != gameModel.getLocalPlayerId()) {
