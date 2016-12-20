@@ -311,6 +311,7 @@ public class GameController {
                 gameModel.setCantMoveButtonHasBeenPressed(true);
                 if (!(tryMoveAutomatically())) {
                     gameBoardView.setInfoLabelText("You will get two cards");
+                    gameBoardView.getButtonMove().setDisable(true);
                     atlantisModel.sendMessage(new Message(MessageType.CANTMOVE, gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName()));
                 } else {
                     gameBoardView.setInfoLabelText("You CAN move with your cards");
@@ -452,14 +453,12 @@ public class GameController {
         gameBoardView.getButtonGameRules().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //atlantisView.getGameLobbyView().showGameRules();
-                handleGameOver();
+                atlantisView.getGameLobbyView().showGameRules();
             }
         });
     }
 
     private boolean tryMoveAutomatically() {
-        boolean canMoveAutomatically = false;
 
         for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
             gameModel.setSelectedGamePiece(gamePiece);
@@ -468,17 +467,16 @@ public class GameController {
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
                     gameModel.occupiedProperty().set(false);
                     if (gameModel.canMoveDirectly()) {
-                        canMoveAutomatically = true;
-                        logger.info("Boolean value is -> " + canMoveAutomatically);
-                        return canMoveAutomatically;
+                        logger.info("Boolean value is -> " + true);
+                        return true;
                     }
                     gameModel.getSelectedCard().setDisable(true);
                     gameModel.addToPlayedCards();
                 }
             }
         }
-        logger.info("Boolean value is -> " + canMoveAutomatically);
-        return canMoveAutomatically;
+        logger.info("Boolean value is -> " + false);
+        return false;
     }
 
     private void tryToMove() {
