@@ -420,6 +420,7 @@ public class GameController {
                 gameBoardView.resetCards();
                 gameModel.setSelectedCard(null);
                 gameModel.getPlayedCardsIndices().clear();
+                gameModel.getPaidCardIndices().clear();
                 gameModel.setTargetPathIds(null);
                 gameBoardView.setInfoLabelText("Your turn. Select a game piece and a card");
                 clickCount = 0;
@@ -489,6 +490,7 @@ public class GameController {
             gameModel.occupiedProperty().set(false);
             if (gameModel.canMoveDirectly()) {
                 logger.info("GameModel -> Move can be done directly.");
+                gameModel.addToPlayedCards();
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(false);
                 gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
@@ -498,7 +500,6 @@ public class GameController {
             }
             gameModel.getSelectedCard().setOpacity(0);
             gameModel.getSelectedCard().setDisable(true);
-            gameModel.addToPlayedCards();
             gameBoardView.moveGamePiece();
         } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
             gameBoardView.setInfoLabelText("Please select a card and\na gamepiece to play");

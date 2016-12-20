@@ -187,6 +187,7 @@ public class GameModel {
                 if (gamePiece != selectedGamePiece && gamePiece.getCurrentPathId() == targetPathId && gamePiece.getCurrentPathId() != 400) {
                     logger.info("GameModel -> TargetPathID is occupied.");
                     selectedGamePiece.setCurrentPathId(targetPathId);
+                    addToPlayedCards();
                     return true;
                 }
             }
@@ -337,10 +338,14 @@ public class GameModel {
         gameStateMap.put("GameName", players.get(currentTurn).getGameName());
         gameStateMap.put("GamePieceIndex", players.get(localPlayerId).getGamePieces().indexOf(selectedGamePiece));
         gameStateMap.put("TargetPathIds", targetPathIds);
-        if (paidCardIndices != null) {
-            logger.info("Client -> Paid card index: " + paidCardIndices.size());
-            gameStateMap.put("PaidCards", paidCardIndices);
+        ArrayList<Integer> newPaidCardsIndices = new ArrayList<>();
+        logger.info("Paid cards indices size: " + paidCardIndices.size());
+        for (Integer integer : paidCardIndices) {
+            logger.info(String.valueOf(integer));
+            newPaidCardsIndices.add(integer);
         }
+
+        gameStateMap.put("PaidCards", newPaidCardsIndices);
 
         // Strange behaviour: When I try to send playedCardsIndices directly, a maximum of one number arrives at the
         // server. So I finally tried to create a new ArrayList and it works. I do not know why this problem exists.
