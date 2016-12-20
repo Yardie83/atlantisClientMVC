@@ -208,6 +208,7 @@ public class GameBoardView extends Pane {
         VBox otherPlayersBox = createOpponentBox();
         VBox localPlayerBox = createLocalPlayerBox();
         VBox gameControls = createGameControls();
+        gameControls.setTranslateY(40);
 
         console.getChildren().addAll(scrollPaneStackCards, otherPlayersBox, localPlayerBox, gameControls);
 
@@ -566,22 +567,22 @@ public class GameBoardView extends Pane {
 
     void resetHighlight(Rectangle item) {
         item.setStroke(Color.TRANSPARENT);
-        item.setStrokeWidth(2);
+        item.setStrokeWidth(4);
     }
 
     void highlightItem(Rectangle item) {
-        item.setStroke(Color.WHITE);
-        item.setStrokeWidth(2);
+        item.setStroke(Color.LIGHTGREEN);
+        item.setStrokeWidth(4);
     }
 
     void resetHighlight(Circle item) {
         item.setStroke(Color.TRANSPARENT);
-        item.setStrokeWidth(2);
+        item.setStrokeWidth(4);
     }
 
     void highlightItem(Circle item) {
-        item.setStroke(Color.WHITE);
-        item.setStrokeWidth(2);
+        item.setStroke(Color.LIGHTGREEN);
+        item.setStrokeWidth(4);
     }
 
     private void addCSS(){

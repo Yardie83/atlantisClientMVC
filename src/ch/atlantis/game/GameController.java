@@ -453,8 +453,7 @@ public class GameController {
         gameBoardView.getButtonGameRules().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //atlantisView.getGameLobbyView().showGameRules();
-                handleGameOver();
+                atlantisView.getGameLobbyView().showGameRules();
             }
         });
     }
