@@ -313,9 +313,12 @@ public class GameController {
                     atlantisModel.sendMessage(new Message(MessageType.CANTMOVE, gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName()));
                 } else {
                     gameBoardView.setInfoLabelText("You CAN move with your cards");
-                    gameBoardView.getButtonCantMove().setDisable(true);
-                    gameModel.getTargetPathIds().clear();
                 }
+                gameBoardView.getButtonCantMove().setDisable(true);
+                gameModel.setPaidCorrectPrice(false);
+                gameModel.getTargetPathIds().clear();
+                gameModel.getPlayedCardsIndices().clear();
+                gameModel.getPaidCardIndices().clear();
                 gameModel.setSelectedCard(null);
                 gameModel.setSelectedGamePiece(null);
                 gameModel.setCantMoveButtonHasBeenPressed(false);
@@ -400,6 +403,9 @@ public class GameController {
             public void handle(ActionEvent event) {
                 if (gameBoardView.getButtonMove().isDisabled()) {
                     gameBoardView.setDisableButtonMove(false);
+                }
+                if (gameBoardView.getButtonCantMove().isDisabled()) {
+                    gameBoardView.getButtonCantMove().setDisable(false);
                 }
                 if (!gameBoardView.getButtonEndTurn().isDisabled()) {
                     gameBoardView.setDisableButtonEndTurn(true);

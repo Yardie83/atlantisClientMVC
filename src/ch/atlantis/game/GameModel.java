@@ -107,11 +107,13 @@ public class GameModel {
         int waterPathId = getWaterPathId(selectedGamePiece.getStartPathId());
         while (waterPathId != 0 && waterPathId < 154) {
             priceToCross += getPriceForCrossing(waterPathId);
+            System.out.println("Price to cross water is - > " + priceToCross);
             waterPathId = getWaterPathId(pathIdAfter - 1);
         }
         if (cantMoveButtonHasBeenPressed) {
             priceToCrossWaterAutomatically.set(priceToCross);
         } else {
+            System.out.println("Price to cross water when done - > " + priceToCross);
             priceToCrossWater.set(priceToCross);
         }
         System.out.println("Price to cross " + priceToCrossWater.get());
@@ -261,7 +263,7 @@ public class GameModel {
      * Since we found the first water card on the way to the target card it might be that on the following
      * card it has more water cards and this method is checking if there is on the next pathId more than one card
      * if so we want to get the one at the top which is cardtype NOT water and is on top. If we get only one card
-     * on the pathId we recall the method (recursive) in order to iterate through the follwing cards until we get
+     * on the pathId we recall the method (recursive) in order to iterate through the following cards until we get
      * a "normal" path card.
      *
      * @param pathId
@@ -303,9 +305,12 @@ public class GameModel {
      * @return valueOfCardBehind
      */
     private int getValueFromCardBehind(int pathId) {
+        System.out.println("IN METHOD VALUEFROMCARDBEHIND - > (PATHID) " + pathId);
         int pathIdBehind = pathId - 1;
+        System.out.println("IN METHOD VALUEFROMCARDBEHIND - > (PATHIDBEHIND) " + pathIdBehind);
         int valueOfCardBehind = 0;
         for (Card pathCard : pathCards) {
+            System.out.println("IN METHOD VALUEFROMCARDBEHIND - > (CARDID) " + pathCard.getPathId());
             if (pathCard.getPathId() == pathIdBehind) {
                 if (pathCard.getCardType() != CardType.WATER && pathCard.isOnTop()) {
                     valueOfCardBehind = pathCard.getValue();
