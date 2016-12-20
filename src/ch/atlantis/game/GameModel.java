@@ -344,6 +344,7 @@ public class GameModel {
         ArrayList<Integer> newPlayedCardsIndices = new ArrayList<>();
         logger.info("Played cards indices size: " + playedCardsIndices.size());
         for (Integer integer : playedCardsIndices) {
+            System.out.println(integer);
             newPlayedCardsIndices.add(integer);
         }
 

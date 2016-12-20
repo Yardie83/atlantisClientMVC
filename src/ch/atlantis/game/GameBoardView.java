@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
@@ -173,8 +174,8 @@ public class GameBoardView extends Pane {
      * @param gamePiece The gamePiece to be styled
      */
     private void styleGamePiece(Player player, GamePiece gamePiece) {
-        gamePiece.setWidth(10);
-        gamePiece.setHeight(10);
+        gamePiece.setRadius(10);
+
         gamePiece.setStroke(Color.TRANSPARENT);
         gamePiece.setStrokeWidth(2);
         gamePiece.setFill(player.getColor());
@@ -551,6 +552,16 @@ public class GameBoardView extends Pane {
     }
 
     void highlightItem(Rectangle item) {
+        item.setStroke(Color.WHITE);
+        item.setStrokeWidth(2);
+    }
+
+    void resetHighlight(Circle item) {
+        item.setStroke(Color.TRANSPARENT);
+        item.setStrokeWidth(2);
+    }
+
+    void highlightItem(Circle item) {
         item.setStroke(Color.WHITE);
         item.setStrokeWidth(2);
     }
