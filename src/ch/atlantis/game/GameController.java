@@ -124,7 +124,6 @@ public class GameController {
                     gameModel.setPreviousTurn(gameModel.getCurrentTurn());
                     logger.info("Previous turn was - > " + gameModel.getPreviousTurn());
                     gameModel.setCurrentTurn(newTurn);
-
                     logger.info("Current turn is - > " + gameModel.getCurrentTurn());
                     gameBoardView.updateBoard();
                     if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
@@ -146,7 +145,7 @@ public class GameController {
                     ArrayList<Card> arrayListOfPurchasedCards = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
                     if (arrayListOfPurchasedCards.size() != 0) {
                         for (Card card : arrayListOfPurchasedCards) {
-                            gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
+                            gameModel.getPlayers().get(gameModel.getCurrentTurn()).getMovementCards().add(card);
                         }
                         gameBoardView.updateMovementCards();
                         handleMouseEventsMovementCards();
@@ -352,9 +351,7 @@ public class GameController {
                         }
                         gameBoardView.setInfoLabelText("Sorry amount is not sufficient");
                     }
-                } else
-
-                {
+                } else {
                     gameBoardView.setInfoLabelText("Select a card to pay with");
                 }
                 gameModel.setPaidCorrectPrice(false);

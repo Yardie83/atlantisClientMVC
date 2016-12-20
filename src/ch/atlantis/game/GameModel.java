@@ -440,6 +440,7 @@ public class GameModel {
     private void updateMovementCards() {
         ArrayList<Card> movementCardsToRemove = new ArrayList<>();
         for (Integer index : playedCardsIndices) {
+            System.out.println("Index to remove " + index);
             movementCardsToRemove.add(players.get(previousTurn).getMovementCards().get(index));
         }
 
