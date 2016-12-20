@@ -48,6 +48,7 @@ public class OptionsController {
         view.getOptionsView().getBtnCancel().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                //view.closeActiveOverlay();
                 view.getOptionsStage().close();
                 resetViewSettings();
             }

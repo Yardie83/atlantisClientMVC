@@ -12,12 +12,21 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import java.util.Locale;
+import java.util.Optional;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
@@ -62,9 +71,9 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuItemInfo().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-
-
+                view.createInformationView();
+                new InformationController(model, view);
+                view.getInformationStage().show();
             }
         });
 

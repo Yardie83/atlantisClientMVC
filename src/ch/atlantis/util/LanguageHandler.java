@@ -47,6 +47,7 @@ public class LanguageHandler {
             //TODO: Log error Message
         }
 
+        //en-US --> locales
         File[] myFiles = folder.listFiles();
 
         for (File file : myFiles){

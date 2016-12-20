@@ -130,6 +130,7 @@ public class GameLobbyView extends Pane {
         menuHelp = new Menu("Help");
 
         menuItemInfo = new MenuItem("Infos");
+        menuItemInfo.setDisable(true);
         menuItemExit = new MenuItem("Exit");
         menuItemGameRules = new MenuItem("Game Rules");
 

@@ -97,6 +97,7 @@ public class LoginController {
                             view.getGameLobbyView().showPopUp(view.getSelectedLanguage().getLanguageTable().get("msgLoggedIn"), 200);
                             view.getGameLobbyView().removeLoginBtn();
                             view.closeActiveOverlay();
+                            view.getGameLobbyView().getMenuItemInfo().setDisable(false);
                             model.loginSuccessProperty().setValue(0);
                             clearTextFields();
                         } else if (model.loginSuccessProperty().getValue().equals(2)) {

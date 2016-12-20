@@ -36,6 +36,9 @@ public class AtlantisView {
     private LoginView loginView;
     private Stage loginStage;
 
+    private InformationView informationView;
+    private Stage informationStage;
+
     private NewProfileView newProfileView;
     private Stage profileStage;
 
@@ -204,6 +207,23 @@ public class AtlantisView {
         activeOverlayStage = loginStage;
     }
 
+    public void createInformationView() {
+        Stage parentStage = gameLobbyView.getGameLobbyStage();
+        if (informationView == null) {
+            informationView = new InformationView(height.getValue(), width.getValue());
+            informationStage = new Stage();
+            informationStage.setScene(new Scene(informationView));
+            setupOverlay(informationStage, parentStage, "css_InformationView");
+        }
+        setXYLocation(informationStage, parentStage);
+        setDimensions(informationStage, parentStage);
+
+        getControls(this.informationView);
+        setControlText(this.controls);
+
+        activeOverlayStage = informationStage;
+    }
+
     /**
      * Creates the New Profile view
      * <p>
@@ -326,7 +346,6 @@ public class AtlantisView {
             for (String id : selectedLanguage.getLanguageTable().keySet()) {
                 if (label.getId() != null) {
                     if (label.getId().equals(id)) {
-                        //TODO: Bradley is this okey? instead of the loop?
                         label.setText(selectedLanguage.getLanguageTable().get(id));
                     }
                 }
@@ -389,6 +408,10 @@ public class AtlantisView {
     public Stage getLoginStage() {
         return loginStage;
     }
+
+    public InformationView getInformationView() {return this.informationView;}
+
+    public Stage getInformationStage() {return this.informationStage;}
 
     public NewProfileView getNewProfileView() {
         return newProfileView;
