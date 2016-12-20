@@ -1,10 +1,13 @@
 package ch.atlantis.controller;
 
+import ch.atlantis.AtlantisClient;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.view.AtlantisView;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.WindowEvent;
+
+import java.util.logging.Logger;
 
 /**
  * Created by Hermann Grieder on 28.08.2016.
@@ -12,12 +15,18 @@ import javafx.stage.WindowEvent;
  * Plays the introVideo on startup and switches to the GameLobby
  * on mouseClick on the video
  */
+
 public class IntroController {
 
     final private AtlantisModel model;
     final private AtlantisView view;
 
+    private Logger logger;
+
     public IntroController(AtlantisModel model, AtlantisView view) {
+
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
+
         this.model = model;
         this.view = view;
         handleIntroViewControls();
@@ -31,7 +40,7 @@ public class IntroController {
                 try {
                     view.getIntroView().getMediaPlayer().play();
                 } catch (Exception e) {
-                    System.err.println("Not able to play intro video");
+                    logger.warning("Not able to play intro video");
                 }
             }
         });

@@ -1,5 +1,6 @@
 package ch.atlantis.view;
 
+import ch.atlantis.AtlantisClient;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Scene;
@@ -10,6 +11,7 @@ import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
@@ -19,8 +21,11 @@ public class IntroView extends Pane {
     private Scene introScene;
     private MediaPlayer mp;
     private MediaView mediaView;
+    private Logger logger;
 
     public IntroView(Stage introStage) {
+
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
 
         introScene = new Scene(this);
         introStage.setScene(introScene);
@@ -42,7 +47,7 @@ public class IntroView extends Pane {
             this.getChildren().add(mediaView);
 
         } catch (Exception e) {
-            System.out.println("Could not load intro movie");
+            logger.info("Could not load intro movie.");
             e.printStackTrace();
         }
     }
