@@ -7,7 +7,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.*;
 
 /**
@@ -25,9 +24,8 @@ import java.util.logging.*;
 public class AtlantisClient extends Application {
 
     public static final String AtlantisLogger = AtlantisClient.class.getSimpleName();
-    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private Logger logger = null;
-    public FileHandler fh = null;
+    private FileHandler fh = null;
 
     public static void main(String[] args) {
         launch();
@@ -37,12 +35,11 @@ public class AtlantisClient extends Application {
     public void start(Stage introStage) throws Exception {
 
         logger = Logger.getLogger(AtlantisLogger);
-        logger.setLevel(Level.INFO);
 
         try {
 
             // Configure logger with handler and formatter
-            fh = new FileHandler("AtlantisLog.txt", 50000, 1);
+            fh = new FileHandler("AtlantisClientLog.txt", 50000, 1);
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
 
