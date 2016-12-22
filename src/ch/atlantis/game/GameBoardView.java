@@ -280,7 +280,7 @@ public class GameBoardView extends Pane {
 
         localPlayerBox.getChildren().addAll(top, HBoxMovementCards, scrollPaneMovementCards);
 
-        String score = Integer.toString(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getScore());
+        String score = "0";
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
         lblLocalPlayer.setStyle("-fx-text-fill: white");
         lblScoreLocalPlayer = new Label("Score: " + score);
@@ -313,7 +313,7 @@ public class GameBoardView extends Pane {
             if (player.getPlayerID() != gameModel.getLocalPlayerId()) {
                 Label lblOpponentName = new Label(player.getPlayerName());
                 lblOpponentName.setStyle("-fx-text-fill: white");
-                Label lblOpponentScore = new Label(Integer.toString(player.getScore()));
+                Label lblOpponentScore = new Label("0");
                 lblOpponentScore.setStyle("-fx-text-fill: white");
                 scoresLabels.put(player.getPlayerID(), lblOpponentScore);
                 opponentsBox.getChildren().addAll(lblOpponentName, lblOpponentScore);
@@ -421,12 +421,6 @@ public class GameBoardView extends Pane {
             }
         }
         selectedGamePiece.move(x, y);
-    }
-
-    public void updateLocalPlayerScore(int value) {
-        int currentScore = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getScore();
-        currentScore -= value;
-        lblScoreLocalPlayer.setText("Score: " + currentScore);
     }
 
     public void updateBoard() {

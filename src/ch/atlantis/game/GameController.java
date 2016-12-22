@@ -75,6 +75,7 @@ public class GameController {
                 if (newValue && atlantisModel.getMessage().getMessageObject() instanceof HashMap) {
                     HashMap<String, Object> gameStateMap = (HashMap<String, Object>) atlantisModel.getMessage().getMessageObject();
                     if (gameModel.readGameStateMap(gameStateMap)) {
+                        System.out.println("The size of played cards when arrives " + gameModel.getPlayedCardsIndices().size());
                         gameModel.updateValues();
                         handleMouseEventsMovementCards();
                         handleMouseEventsStackCards();
@@ -147,6 +148,7 @@ public class GameController {
                         for (Card card : arrayListOfPurchasedCards) {
                             gameModel.getPlayers().get(gameModel.getCurrentTurn()).getMovementCards().add(card);
                         }
+                        System.out.println("SIZE OF CARDS -- > " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
                         gameBoardView.updateMovementCards();
                         handleMouseEventsMovementCards();
                         gameBoardView.getButtonBuyCards().setDisable(true);
@@ -372,7 +374,6 @@ public class GameController {
                     hashToBuyCards.put("GameName", gameName);
                     hashToBuyCards.put("Index", indexToSend);
                     Card card = gameModel.getSelectedStackCard();
-                    gameBoardView.updateLocalPlayerScore(card.getValue());
                     card.setOpacity(0);
                     card.setDisable(true);
                     atlantisModel.sendMessage(new Message(MessageType.BUYCARD, hashToBuyCards)); // Send message to server

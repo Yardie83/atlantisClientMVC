@@ -332,7 +332,7 @@ public class GameModel {
      */
     public HashMap<String, Object> writeGameStateMap() {
         HashMap<String, Object> gameStateMap = new HashMap<>();
-
+        System.out.println("Score before we send the message - > " + players.get(currentTurn).getScore());
         gameStateMap.put("CurrentTurn", currentTurn);
         gameStateMap.put("PlayerId", players.get(currentTurn).getPlayerID());
         gameStateMap.put("GameName", players.get(currentTurn).getGameName());
@@ -389,7 +389,9 @@ public class GameModel {
         currentTurn = (int) gameStateMap.get("CurrentTurn");
         players = (ArrayList<Player>) gameStateMap.get("Players");
         int score = (int) gameStateMap.get("Score");
+        System.out.println("Score we receive on client side - > " + score);
         players.get(previousTurn).setScore(score);
+        System.out.println("Score we have in our player - > " + players.get(previousTurn).getScore());
         gamePieceUsedIndex = (int) gameStateMap.get("GamePieceUsedIndex");
         targetPathIdRemote = (int) gameStateMap.get("TargetPathId");
         indexOfPathCardToRemove = (int) gameStateMap.get("IndexOfCardToRemove");
@@ -451,6 +453,7 @@ public class GameModel {
         for (Card card : deckCardToAdd) {
             players.get(previousTurn).getMovementCards().add(card);
         }
+        playedCardsIndices.clear();
     }
 
     // ********************************* GETTERS & SETTERS ***************************** //
