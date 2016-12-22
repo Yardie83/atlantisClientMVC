@@ -414,8 +414,7 @@ public class GameBoardView extends Pane {
                 y = (targetTile.getY() + offsetY);
                 offsetX = 10;
                 offsetY += 15;
-            }
-            if (targetTile.getPathId() == targetPathId) {
+            } else if (targetTile.getPathId() == targetPathId) {
                 x = targetTile.getX() + (targetTile.getSide() / 2);
                 y = targetTile.getY() + (targetTile.getSide() / 2);
             }
