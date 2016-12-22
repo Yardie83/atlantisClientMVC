@@ -88,8 +88,8 @@ public class GameLobbyView extends Pane {
         gameLobbyStage.setScene(gameLobbyScene);
 
         //Set Mouse Cursor Image
-        //Image image = new Image("/ch/atlantis/res/Fishi.png");
-        //gameLobbyScene.setCursor(new ImageCursor(image));
+        Image image = new Image("/ch/atlantis/res/Fishi.png");
+        gameLobbyScene.setCursor(new ImageCursor(image));
 
         root = new BorderPane();
 
@@ -315,8 +315,8 @@ public class GameLobbyView extends Pane {
                     c.setStyle("-fx-border-color: WHITE;" +
                             "-fx-border-width: 1px;" +
                             "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
-                    c.setCenterX(event.getX() + r.nextInt(10) - 5);
-                    c.setCenterY(event.getY() + r.nextInt(10));
+                    c.setCenterX(event.getSceneX() + r.nextInt(10) - 5);
+                    c.setCenterY(event.getSceneY() + r.nextInt(10));
 
                     getChildren().add(c);
 

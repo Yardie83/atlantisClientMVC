@@ -12,6 +12,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -196,12 +197,13 @@ public class GameLobbyController {
          *
          * Hermann Grieder
          */
-        view.getGameLobbyView().getScene().setOnMouseClicked(new EventHandler<MouseEvent>() {
+        view.getGameLobbyView().getScene().addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
             @Override
-            public void handle(MouseEvent event) {
-                view.getGameLobbyView().createBubbles(event, 12);
+            public void handle(MouseEvent mouseEvent) {
+                view.getGameLobbyView().createBubbles(mouseEvent, 12);
             }
         });
+
 
         // When the X Button is clicked, close the Application
         view.getGameLobbyView().getGameLobbyStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
