@@ -316,7 +316,7 @@ public class GameLobbyView extends Pane {
                             "-fx-border-width: 1px;" +
                             "-fx-effect: dropshadow(gaussian, #bee1dc, 1, 0.3, -1, -1)");
                     c.setCenterX(event.getSceneX() + r.nextInt(10) - 5);
-                    c.setCenterY(event.getSceneY() + r.nextInt(10));
+                    c.setCenterY(event.getSceneY() + r.nextInt(10) - 15);
 
                     getChildren().add(c);
 
