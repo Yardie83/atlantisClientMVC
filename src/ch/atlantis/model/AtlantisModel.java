@@ -48,6 +48,7 @@ public class AtlantisModel {
     private SimpleBooleanProperty gameOver;
     private SimpleIntegerProperty loginSuccess;
     private SimpleBooleanProperty moveValid;
+    private SimpleBooleanProperty gameOverScores;
     private SimpleBooleanProperty gameReady;
     private SimpleBooleanProperty gameInfo;
     private SimpleStringProperty userName;
@@ -79,6 +80,7 @@ public class AtlantisModel {
         gameInfo = new SimpleBooleanProperty(false);
         gameList = FXCollections.observableArrayList();
         gameOver = new SimpleBooleanProperty(false);
+        gameOverScores = new SimpleBooleanProperty(false);
         givePurchasedCards = new SimpleBooleanProperty(false);
         cardsForNotMoving = new SimpleBooleanProperty(false);
         newTurn = new SimpleBooleanProperty(false);
@@ -257,10 +259,15 @@ public class AtlantisModel {
     }
 
     private void handleGameOver(Message message) {
-        Boolean isGameOver = (Boolean) message.getMessageObject();
-        gameOver.set(isGameOver);
-        logger.info("AtlantisModel -> GameOver: " + gameOver);
-        gameOver.set(false);
+        if (message.getMessageObject() instanceof HashMap) {
+            gameOverScores.setValue(true);
+            gameOverScores.setValue(false);
+        } else {
+            Boolean isGameOver = (Boolean) message.getMessageObject();
+            gameOver.set(isGameOver);
+            logger.info("AtlantisModel -> GameOver: " + gameOver);
+            gameOver.set(false);
+        }
     }
 
     private void handleGameList(Message message) {
@@ -420,6 +427,8 @@ public class AtlantisModel {
     public SimpleBooleanProperty moveValidProperty() {
         return moveValid;
     }
+
+    public SimpleBooleanProperty gameOverScores() { return gameOverScores; }
 
     public SimpleBooleanProperty givePurchasedCards() { return givePurchasedCards; }
 
