@@ -19,6 +19,7 @@ import ch.atlantis.util.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -100,7 +101,7 @@ public class GameController {
                     ArrayList<Card> listOfCantMove = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
                     if (listOfCantMove.size() != 0) {
                         for (Card card : listOfCantMove) {
-                            logger.info("Card that we received from the server - > " + card);
+                            logger.info("Card received from the server - > " + card);
                             gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
                         }
                         logger.info("Size of cards after receiving all of the cards - > " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
@@ -153,7 +154,7 @@ public class GameController {
                         handleMouseEventsMovementCards();
                         gameBoardView.getButtonBuyCards().setDisable(true);
                         gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack().remove(gameModel.getSelectedStackCardIndex());
-                        gameBoardView.setInfoLabelText("You got a new Card");
+                        gameBoardView.setInfoLabelText("You got (a) new Card(s)");
                     }
                 }
             }
@@ -164,6 +165,19 @@ public class GameController {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     handleGameOver();
+                }
+            }
+        });
+
+        atlantisModel.gameOverScores().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    HashMap<Integer, Integer> mapOfScores = (HashMap<Integer, Integer>) atlantisModel.getMessage().getMessageObject();
+                    for (Map.Entry<Integer, Integer> entry : mapOfScores.entrySet()) {
+                        int playerId = entry.getKey();
+                        gameModel.getPlayers().get(playerId).setScore(entry.getValue());
+                    }
                 }
             }
         });
@@ -242,7 +256,7 @@ public class GameController {
                         gameBoardView.setInfoLabelText("");
                         gameBoardView.resetHighlight(gameModel.getSelectedStackCard());
 
-                        if (clickCount == 0) {
+                        if (clickCount == 0 && gameModel.getLocalPlayerId() == gameModel.getCurrentTurn()) {
                             if (card.getValue() > 1) {
                                 gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + ". " +
                                         "You get " + (card.getValue() / 2) + " cards, press \"Buy Cards\".");
@@ -351,7 +365,7 @@ public class GameController {
                         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()) {
                             gameBoardView.resetHighlight(card);
                         }
-                        gameBoardView.setInfoLabelText("Sorry amount is not sufficient");
+                        gameBoardView.setInfoLabelText("Sorry amount is not sufficient. Price to cross " + gameModel.priceToCrossWaterProperty());
                     }
                 } else {
                     gameBoardView.setInfoLabelText("Select a card to pay with");
@@ -414,7 +428,7 @@ public class GameController {
                 gameBoardView.getButtonReset().setDisable(true);
                 gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                 gameModel.getSelectedGamePiece().resetPathId();
-                gameBoardView.moveGamePiece();
+                gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
                 gameBoardView.resetCards();
                 gameModel.setSelectedCard(null);
                 gameModel.setSelectedGamePiece(null);
@@ -498,13 +512,13 @@ public class GameController {
             }
             gameModel.getSelectedCard().setOpacity(0);
             gameModel.getSelectedCard().setDisable(true);
-            gameBoardView.moveGamePiece();
+            gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
         } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
-            gameBoardView.setInfoLabelText("Please select a card and a game piece to play");
+            gameBoardView.setInfoLabelText("Please select a card and a game piece to play and then press move");
         } else if (gameModel.getSelectedCard() == null) {
-            gameBoardView.setInfoLabelText("Please select a card to play");
+            gameBoardView.setInfoLabelText("Please select a card to play and then press move" );
         } else if (gameModel.getSelectedGamePiece() == null) {
-            gameBoardView.setInfoLabelText("Please select a game piece to play");
+            gameBoardView.setInfoLabelText("Please select a game piece to play and then press move");
         }
     }
 

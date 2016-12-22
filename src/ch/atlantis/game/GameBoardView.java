@@ -313,7 +313,7 @@ public class GameBoardView extends Pane {
             if (player.getPlayerID() != gameModel.getLocalPlayerId()) {
                 Label lblOpponentName = new Label(player.getPlayerName());
                 lblOpponentName.setStyle("-fx-text-fill: white");
-                Label lblOpponentScore = new Label("0");
+                Label lblOpponentScore = new Label("Score: 0");
                 lblOpponentScore.setStyle("-fx-text-fill: white");
                 scoresLabels.put(player.getPlayerID(), lblOpponentScore);
                 opponentsBox.getChildren().addAll(lblOpponentName, lblOpponentScore);
@@ -385,7 +385,7 @@ public class GameBoardView extends Pane {
 
     private void setInfoLblTextOnNewTurn() {
         if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()){
-            setInfoLabelText("Your turn. Select a game piece and a card");
+            setInfoLabelText("Your turn. Select a game piece and a card and then press move");
         }else{
             setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait.");
         }
@@ -394,17 +394,23 @@ public class GameBoardView extends Pane {
 
     //*************************** METHODS DURING THE ACTIVE GAME *****************************//
 
-    public void moveGamePiece() {
-        GamePiece selectedGamePiece = gameModel.getSelectedGamePiece();
-        int targetPathId = selectedGamePiece.getCurrentPathId();
-        move(selectedGamePiece, targetPathId);
-    }
-
+    /**
+     *Hermann Grieder
+     * @param selectedGamePiece
+     */
     public void moveGamePiece(GamePiece selectedGamePiece) {
         int targetPathId = selectedGamePiece.getCurrentPathId();
         move(selectedGamePiece, targetPathId);
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Moves the selected game piece to the target path. If the target path is the atlantis land
+     * then we move the game piece to the land with an offset
+     * @param selectedGamePiece
+     * @param targetPathId
+     */
     public void move(GamePiece selectedGamePiece, int targetPathId) {
         int x = 0;
         int y = 0;
