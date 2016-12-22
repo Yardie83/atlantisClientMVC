@@ -242,7 +242,7 @@ public class GameController {
                         gameBoardView.setInfoLabelText("");
                         gameBoardView.resetHighlight(gameModel.getSelectedStackCard());
 
-                        if (clickCount == 0) {
+                        if (clickCount == 0 && gameModel.getLocalPlayerId() == gameModel.getCurrentTurn()) {
                             if (card.getValue() > 1) {
                                 gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + ". " +
                                         "You get " + (card.getValue() / 2) + " cards, press \"Buy Cards\".");
@@ -351,7 +351,7 @@ public class GameController {
                         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()) {
                             gameBoardView.resetHighlight(card);
                         }
-                        gameBoardView.setInfoLabelText("Sorry amount is not sufficient");
+                        gameBoardView.setInfoLabelText("Sorry amount is not sufficient. Price to cross " + gameModel.priceToCrossWaterProperty());
                     }
                 } else {
                     gameBoardView.setInfoLabelText("Select a card to pay with");
@@ -414,7 +414,7 @@ public class GameController {
                 gameBoardView.getButtonReset().setDisable(true);
                 gameBoardView.resetHighlight(gameModel.getSelectedGamePiece());
                 gameModel.getSelectedGamePiece().resetPathId();
-                gameBoardView.moveGamePiece();
+                gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
                 gameBoardView.resetCards();
                 gameModel.setSelectedCard(null);
                 gameModel.setSelectedGamePiece(null);
@@ -498,7 +498,7 @@ public class GameController {
             }
             gameModel.getSelectedCard().setOpacity(0);
             gameModel.getSelectedCard().setDisable(true);
-            gameBoardView.moveGamePiece();
+            gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
         } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
             gameBoardView.setInfoLabelText("Please select a card and a game piece to play");
         } else if (gameModel.getSelectedCard() == null) {

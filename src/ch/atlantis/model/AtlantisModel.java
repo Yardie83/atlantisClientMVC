@@ -323,7 +323,7 @@ public class AtlantisModel {
      * Hermann Grieder
      * <br>
      * Sends a message to the outputStream in the current Thread
-     * @param message The message object to be sentg
+     * @param message The message object to be sent
      */
     public void sendMessage(Message message) {
         if ((socket == null || socket.isClosed()) && autoConnect) {

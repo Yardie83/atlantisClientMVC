@@ -394,17 +394,23 @@ public class GameBoardView extends Pane {
 
     //*************************** METHODS DURING THE ACTIVE GAME *****************************//
 
-    public void moveGamePiece() {
-        GamePiece selectedGamePiece = gameModel.getSelectedGamePiece();
-        int targetPathId = selectedGamePiece.getCurrentPathId();
-        move(selectedGamePiece, targetPathId);
-    }
-
+    /**
+     *Hermann Grieder
+     * @param selectedGamePiece
+     */
     public void moveGamePiece(GamePiece selectedGamePiece) {
         int targetPathId = selectedGamePiece.getCurrentPathId();
         move(selectedGamePiece, targetPathId);
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Moves the selected game piece to the target path. If the target path is the atlantis land
+     * then we move the game piece to the land with an offset
+     * @param selectedGamePiece
+     * @param targetPathId
+     */
     public void move(GamePiece selectedGamePiece, int targetPathId) {
         int x = 0;
         int y = 0;
