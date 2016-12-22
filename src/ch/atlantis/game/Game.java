@@ -15,6 +15,10 @@ public class Game {
         GameModel gameModel = new GameModel(model.getMessage(), model.getLocalPlayer());
         GameBoardView gameBoardView = new GameBoardView(gameModel, view);
         gameController = new GameController(view, model, gameModel, gameBoardView);
+
+        view.getControls(gameBoardView);
+        view.setControlText(view.getListOfControls());
+
     }
 
     public void showGame() {

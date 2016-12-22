@@ -7,10 +7,11 @@
     <String Id="btnLogin" >Anmelden</String>
     <String Id="btnCreateProfile" >Profil Erstellen</String>
     <String Id="btnOptions" >Optionen</String>
+	<String Id="btnStartGame" >Spiel Starten</String>
 	
     <String Id="menuFile" >Datei</String>
-    <String Id="menuOptions" >Optionen</String>
     <String Id="menuHelp" >Hilfe</String>
+	<String Id="menuItemInfo" >Informationen</String>
     <String Id="menuItemExit" >Beenden</String>
     <String Id="menuItemGameRules" >Spielregeln</String>
 	
@@ -66,5 +67,24 @@
 	<String Id="cg_lblNoOfPlayers" >Anzahl der Spieler</String>
 	<String Id="cg_btnCancel" >Abbrechen</String>
 	<String Id="cg_btnCreateNewGame" >Erstellen</String>
+
+	<!-- InformationView Controls -->
+	<String Id="information_lblInformation" >Informationen</String>
+	<String Id="information_lblGameTime" >Spielzeit: </String>
+	<String Id="information_lblCumulatedGameTime" >Gesammte Spielzeit: </String>
+	<String Id="information_lblNumberOfGames" >Anzahl der Spiele: </String>
+	<String Id="information_btnCancel" >Schliessen</String>
+	
+	<!-- GameBordView Controls -->
+	<String Id="gameBordView_btnGameRules" >Spielregeln</String>
+	<String Id="gameBordView_btnBuyCards" >Karten kaufen</String>
+	<String Id="gameBordView_btnCantMove" >Kein Zug möglich</String>
+	<String Id="gameBordView_btnEndTurn" >Zug Ende</String>
+	<String Id="gameBordView_btnMove" >Spielen</String>
+	<String Id="gameBordView_btnPay" >Bezahlen</String>
+	<String Id="gameBordView_btnReset" >Zurücksetzen</String>
+	
+<!-- 	<String Id="lblInfo" >Zurücksetzen</String>
+	<String Id="gameBordView_lblScoreLocalPlayer" >Zurücksetzen</String> -->
 
 </LanguageEntry>

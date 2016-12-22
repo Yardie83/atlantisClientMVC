@@ -69,15 +69,6 @@ public class GameLobbyController {
          * *******************************
          */
 
-        view.getGameLobbyView().getMenuItemInfo().setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                view.createInformationView();
-                new InformationController(model, view);
-                view.getInformationStage().show();
-            }
-        });
-
         view.getGameLobbyView().getMenuItemExit().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -88,7 +79,7 @@ public class GameLobbyController {
         view.getGameLobbyView().getMenuItemGameRules().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.getGameLobbyView().showGameRules();
+                model.showGameRules();
             }
         });
 
@@ -97,6 +88,18 @@ public class GameLobbyController {
          * Create Game, Login, Create Profile and Options Controls EventHandlers
          * *********************************************************************
          */
+
+        // Create and show Information Overlay
+        view.getGameLobbyView().getMenuItemInfo().setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                view.createInformationView();
+                view.getInformationView().setLblCumulatedGameTimeSolution(String.valueOf(model.getCumulatedGameTime() + " min"));
+                view.getInformationView().setLblNumberOfGamesSolution(String.valueOf(model.getNumberOfGames()));
+                new InformationController(model, view);
+                view.getInformationStage().show();
+            }
+        });
 
         // Create and show GAME Overlay
         view.getGameLobbyView().getBtnCreateGame().setOnAction(new EventHandler<ActionEvent>() {
@@ -182,10 +185,10 @@ public class GameLobbyController {
          * Hermann Grieder
          */
 
-        view.getGameLobbyView().getStartGameBtn().setOnAction(new EventHandler<ActionEvent>() {
+        view.getGameLobbyView().getBtnStartGame().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                view.getGameLobbyView().getStartGameBtn().setDisable(true);
+                view.getGameLobbyView().getBtnStartGame().setDisable(true);
                 model.sendMessage(new Message(MessageType.STARTGAME));
             }
         });
@@ -203,7 +206,6 @@ public class GameLobbyController {
                 view.getGameLobbyView().createBubbles(mouseEvent, 12);
             }
         });
-
 
         // When the X Button is clicked, close the Application
         view.getGameLobbyView().getGameLobbyStage().setOnCloseRequest(new EventHandler<WindowEvent>() {
@@ -335,9 +337,9 @@ public class GameLobbyController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    view.getGameLobbyView().getStartGameBtn().setDisable(false);
+                    view.getGameLobbyView().getBtnStartGame().setDisable(false);
                 } else {
-                    view.getGameLobbyView().getStartGameBtn().setVisible(true);
+                    view.getGameLobbyView().getBtnStartGame().setVisible(true);
                 }
             }
         });

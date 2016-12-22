@@ -30,8 +30,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -68,7 +67,7 @@ public class GameLobbyView extends Pane {
     private Pane popup;
     private Separator s0;
     private Label lblGameTitles;
-    private Button startGameBtn;
+    private Button btnStartGame;
 
     public GameLobbyView(int height, int width, Boolean fullscreen) {
 
@@ -167,10 +166,10 @@ public class GameLobbyView extends Pane {
         txtArea.setEditable(false);
         txtArea.setWrapText(true);
         txtField = new TextField();
-        startGameBtn = new Button("Start Game");
-        startGameBtn.setVisible(true);
-        startGameBtn.setDisable(true);
-        rightVBox.getChildren().addAll(txtArea, txtField, startGameBtn);
+        btnStartGame = new Button("Start Game");
+        btnStartGame.setVisible(true);
+        btnStartGame.setDisable(true);
+        rightVBox.getChildren().addAll(txtArea, txtField, btnStartGame);
 
         return rightVBox;
     }
@@ -279,7 +278,7 @@ public class GameLobbyView extends Pane {
         rightVBox.setId("rightVBox");
         txtArea.setId("txtArea");
         txtField.setId("txtField");
-        startGameBtn.setId("startGameBtn");
+        btnStartGame.setId("btnStartGame");
 
         //  CSS IDs for the CENTER part of the game lobby (small title and ch.atlantis.game.Game list)
         centerVBox.setId("centerVBox");
@@ -341,19 +340,17 @@ public class GameLobbyView extends Pane {
         });
     }
 
-    /**
-     * Loris Grether
-     * <br>
-     */
-    public void showGameRules() {
-        try {
-            File file = new File("src/ch/atlantis/res/Atlantis_Spielregel.pdf");
-            if (file.exists()) {
-                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ArrayList<MenuItem> getMenuItemControls() {
+
+        ArrayList<MenuItem> menuItem = new ArrayList<>();
+
+        menuItem.add(this.menuFile);
+        menuItem.add(this.menuHelp);
+        menuItem.add(this.menuItemInfo);
+        menuItem.add(this.menuItemExit);
+        menuItem.add(this.menuItemGameRules);
+
+        return menuItem;
     }
 
     public void show() {
@@ -400,8 +397,8 @@ public class GameLobbyView extends Pane {
         return btnOptions;
     }
 
-    public Button getStartGameBtn() {
-        return startGameBtn;
+    public Button getBtnStartGame() {
+        return btnStartGame;
     }
 
     public Label getLblStatus() {

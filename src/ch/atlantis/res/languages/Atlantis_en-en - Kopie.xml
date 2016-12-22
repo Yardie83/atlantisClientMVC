@@ -7,16 +7,17 @@
     <String Id="btnLogin" >Login</String>
     <String Id="btnCreateProfile" >Create Profile</String>
     <String Id="btnOptions" >Options</String>
+	<String Id="btnStartGame" >Start Game</String>
 	
     <String Id="menuFile" >File</String>
-    <String Id="menuOptions" >Options</String>
-    <String Id="menuHelp" >Help</String>
+	<String Id="menuHelp" >Help</String>
+    <String Id="menuItemInfo" >Information</String>
     <String Id="menuItemExit" >Exit</String>
     <String Id="menuItemGameRules" >Game Rules</String>
 	
     <String Id="lblWindowTitle" >Welcome in Atlantis</String>
 	<String Id="lblGameTitles" >Games</String>
-	
+		
 	<!-- NewProfileView Controls -->
 	<String Id="lblNewProfile" >NEW PROFILE</String>
 	<String Id="lblUsername" >Name</String>
@@ -66,5 +67,24 @@
 	<String Id="cg_lblNoOfPlayers" >Number of Players</String>
 	<String Id="cg_btnCancel" >Cancel</String>
 	<String Id="cg_btnCreateNewGame" >Create</String>
+	
+	<!-- InformationView Controls -->
+	<String Id="information_lblInformation" >Information</String>
+	<String Id="information_lblGameTime" >Game time: </String>
+	<String Id="information_lblCumulatedGameTime" >Cumulated Game Time: </String>
+	<String Id="information_lblNumberOfGames" >Number of Games: </String>
+	<String Id="information_btnCancel" >Close</String>
+	
+	<!-- GameBordView Controls -->
+	<String Id="gameBordView_btnGameRules" >Rules</String>
+	<String Id="gameBordView_btnBuyCards" >Buy cards</String>
+	<String Id="gameBordView_btnCantMove" >Can't move</String>
+	<String Id="gameBordView_btnEndTurn" >End Turn</String>
+	<String Id="gameBordView_btnMove" >Move</String>
+	<String Id="gameBordView_btnPay" >Pay</String>
+	<String Id="gameBordView_btnReset" >Reset</String>
+	
+<!-- 	<String Id="lblInfo" >Zurücksetzen</String>
+	<String Id="gameBordView_lblScoreLocalPlayer" >Zurücksetzen</String> -->
 	
 </LanguageEntry>

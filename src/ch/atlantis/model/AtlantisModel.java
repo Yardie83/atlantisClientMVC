@@ -57,6 +57,9 @@ public class AtlantisModel {
     private ObservableList<String> gameList;
     private LanguageHandler languageHandler;
 
+    private int cumulatedGameTime;
+    private int numberOfGames;
+
     private Player localPlayer;
 
     private AtlantisConfig conf;
@@ -189,6 +192,9 @@ public class AtlantisModel {
                                 case NEWTURN:
                                     handleNewTurn();
                                     break;
+                                case PLAYERSTATS:
+                                    updatePlayerStats(message);
+                                    break;
                             }
                         }
                     } catch (SocketException e) {
@@ -206,6 +212,14 @@ public class AtlantisModel {
         };
         Thread clientTask = new Thread(receiveMessageTask);
         clientTask.start();
+    }
+
+    private void updatePlayerStats(Message message) {
+
+        int[] infos = (int[]) message.getMessageObject();
+
+        cumulatedGameTime = infos[0];
+        numberOfGames = infos[1];
     }
 
     private void handleNewTurn() {
@@ -382,6 +396,22 @@ public class AtlantisModel {
         this.conf.createAtlantisConfig();
     }
 
+    /**
+     * Loris Grether
+     * <br>
+     */
+    public void showGameRules() {
+        try {
+            File file = new File("src/ch/atlantis/res/Atlantis_Spielregel.pdf");
+
+            if (file.exists()) {
+                Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     // ***************************** GETTERS & SETTERS **************************//
 
     public Language getSelectedLanguage(String culture) {
@@ -463,6 +493,14 @@ public class AtlantisModel {
 
         this.conf.setConfigLanguage(currentLanguage);
         this.conf.createAtlantisConfig();
+    }
+
+    public int getCumulatedGameTime() {
+        return cumulatedGameTime;
+    }
+
+    public int getNumberOfGames() {
+        return numberOfGames;
     }
 
     public Player getLocalPlayer() {

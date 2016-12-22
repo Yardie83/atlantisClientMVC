@@ -19,10 +19,7 @@ public class InformationView extends Pane {
 
     private Label lblInformation;
 
-    private Label lblGameTime;
     private Label lblCumulatedGameTime;
-
-    private Label lblGameTimeSolution;
     private Label lblCumulatedGameTimeSolution;
 
     private Label lblNumberOfGames;
@@ -58,23 +55,17 @@ public class InformationView extends Pane {
         GridPane centerPane = new GridPane();
         centerPane.setId("centerPane");
 
-        lblGameTime = new Label("Game Time: ");
-        lblGameTimeSolution = new Label("1");
-
         lblCumulatedGameTime = new Label("Cumulated Game Time: ");
-        lblCumulatedGameTimeSolution = new Label("2");
+        lblCumulatedGameTimeSolution = new Label("");
 
         lblNumberOfGames = new Label("Number of played Games: ");
-        lblNumberOfGamesSolution = new Label("3");
+        lblNumberOfGamesSolution = new Label("");
 
-        centerPane.add(lblGameTime, 0, 0);
-        centerPane.add(lblGameTimeSolution, 1, 0);
+        centerPane.add(lblCumulatedGameTime, 0, 0);
+        centerPane.add(lblCumulatedGameTimeSolution, 1, 0);
 
-        centerPane.add(lblCumulatedGameTime, 0, 1);
-        centerPane.add(lblCumulatedGameTimeSolution, 1, 1);
-
-        centerPane.add(lblNumberOfGames, 0, 2);
-        centerPane.add(lblNumberOfGamesSolution, 1, 2);
+        centerPane.add(lblNumberOfGames, 0, 1);
+        centerPane.add(lblNumberOfGamesSolution, 1, 1);
 
         return centerPane;
     }
@@ -89,12 +80,23 @@ public class InformationView extends Pane {
 
         root.setId("root");
 
-        btnClose.setId("information_btnCancel");
+        lblInformation.setId("information_lblInformation");
+        lblCumulatedGameTime.setId("information_lblCumulatedGameTime");
+        lblNumberOfGames.setId("information_lblNumberOfGames");
 
-        lblInformation.setId("lblInformation");
+        btnClose.setId("information_btnCancel");
     }
 
     public Button getBtnClose() {
         return btnClose;
     }
+
+    public void setLblCumulatedGameTimeSolution(String lblCumulatedGameTimeSolution) {
+        this.lblCumulatedGameTimeSolution.setText(lblCumulatedGameTimeSolution);
+    }
+
+    public void setLblNumberOfGamesSolution(String lblNumberOfGamesSolution) {
+        this.lblNumberOfGamesSolution.setText(lblNumberOfGamesSolution);
+    }
+
 }

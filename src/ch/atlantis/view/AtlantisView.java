@@ -49,6 +49,7 @@ public class AtlantisView {
     private SimpleIntegerProperty width;
 
     private ArrayList<Control> controls;
+    private ArrayList<MenuItem> menuItems;
 
     private boolean fullscreen;
     private Stage activeOverlayStage;
@@ -64,12 +65,7 @@ public class AtlantisView {
 
         this.setSelectedLanguage(model.getSelectedLanguage(model.getConfigLanguage()));
 
-        this.setLabelLanguageText();
-
         controls = new ArrayList<>();
-    }
-
-    private void setLabelLanguageText() {
     }
 
     /**
@@ -109,6 +105,7 @@ public class AtlantisView {
 
         getControls(this.gameLobbyView);
         setControlText(controls);
+        setMenuItemText(gameLobbyView.getMenuItemControls());
     }
 
     public void updateGameList() {
@@ -289,7 +286,7 @@ public class AtlantisView {
      *
      * @param pane
      */
-    private void getControls(Pane pane) {
+    public void getControls(Pane pane) {
         for (Node node : pane.getChildren()) {
             if (node instanceof Pane) {
                 getControls((Pane) node);
@@ -300,27 +297,45 @@ public class AtlantisView {
         }
     }
 
+    private void setMenuItemText(ArrayList<MenuItem> menuItems) {
+
+        for (MenuItem item : menuItems) {
+
+            if (selectedLanguage != null) {
+                for (String id : selectedLanguage.getLanguageTable().keySet()) {
+                    if (item.getId() != null) {
+                        if (item.getId().equals(id)) {
+                            item.setText(selectedLanguage.getLanguageTable().get(id));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Loris Grether
      * <br>
      *
      * @param controls
      */
-    private void setControlText(ArrayList<Control> controls) {
+    public void setControlText(ArrayList<Control> controls) {
 
-        for (Control control : controls) {
-            if (control instanceof Button) {
-                Button button = (Button) control;
-                addLanguageTextToButtonControl(button);
-            } else if (control instanceof RadioButton) {
-                RadioButton button = (RadioButton) control;
-                addLanguageTextToButtonControl(button);
-            } else if (control instanceof Label) {
-                Label label = (Label) control;
-                addLanguageTextToLabelControl(label);
+        if (selectedLanguage != null) {
+            for (Control control : controls) {
+                if (control instanceof Button) {
+                    Button button = (Button) control;
+                    addLanguageTextToButtonControl(button);
+                } else if (control instanceof RadioButton) {
+                    RadioButton button = (RadioButton) control;
+                    addLanguageTextToButtonControl(button);
+                } else if (control instanceof Label) {
+                    Label label = (Label) control;
+                    addLanguageTextToLabelControl(label);
+                }
             }
+            controls.clear();
         }
-        controls.clear();
     }
 
     /**
@@ -330,24 +345,20 @@ public class AtlantisView {
      * @param button
      */
     private void addLanguageTextToButtonControl(ButtonBase button) {
-        if (selectedLanguage != null) {
-            for (String id : selectedLanguage.getLanguageTable().keySet()) {
-                if (button.getId() != null) {
-                    if (button.getId().equals(id)) {
-                        button.setText(selectedLanguage.getLanguageTable().get(id));
-                    }
+        for (String id : selectedLanguage.getLanguageTable().keySet()) {
+            if (button.getId() != null) {
+                if (button.getId().equals(id)) {
+                    button.setText(selectedLanguage.getLanguageTable().get(id));
                 }
             }
         }
     }
 
     private void addLanguageTextToLabelControl(Label label) {
-        if (selectedLanguage != null) {
-            for (String id : selectedLanguage.getLanguageTable().keySet()) {
-                if (label.getId() != null) {
-                    if (label.getId().equals(id)) {
-                        label.setText(selectedLanguage.getLanguageTable().get(id));
-                    }
+        for (String id : selectedLanguage.getLanguageTable().keySet()) {
+            if (label.getId() != null) {
+                if (label.getId().equals(id)) {
+                    label.setText(selectedLanguage.getLanguageTable().get(id));
                 }
             }
         }
@@ -409,9 +420,13 @@ public class AtlantisView {
         return loginStage;
     }
 
-    public InformationView getInformationView() {return this.informationView;}
+    public InformationView getInformationView() {
+        return this.informationView;
+    }
 
-    public Stage getInformationStage() {return this.informationStage;}
+    public Stage getInformationStage() {
+        return this.informationStage;
+    }
 
     public NewProfileView getNewProfileView() {
         return newProfileView;
@@ -478,5 +493,6 @@ public class AtlantisView {
         return gameLobbyView.getGameListView().getSelectionModel().getSelectedItem().toString();
     }
 
+    public ArrayList<Control> getListOfControls(){return this.controls;}
 
 }

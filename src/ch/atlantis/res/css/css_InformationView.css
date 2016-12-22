@@ -30,7 +30,7 @@
     -fx-text-alignment: left;
 }
 
-#lblInformations {
+#information_lblInformation {
     -fx-alignment: center;
     -fx-font-size: 42px;
     -fx-font-weight: bold;

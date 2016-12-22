@@ -71,6 +71,7 @@ public class NewProfileController {
                             view.getNewProfileView().getLblError().setText("");
                             view.closeActiveOverlay();
                             clearTextFields();
+                            view.getGameLobbyView().getMenuItemInfo().setDisable(false);
                             model.createProfileSuccessProperty().setValue(0);
                         } else if (model.createProfileSuccessProperty().getValue().equals(2)) {
                             //view.getNewProfileView().getLblError().setText("Username already exists");

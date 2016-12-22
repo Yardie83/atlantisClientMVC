@@ -581,7 +581,20 @@ public class GameBoardView extends Pane {
     private void addCSS(){
         bottomHBox.setId("bottomHBox");
         lblStatus.setId("lblStatus");
+
+        buttonGameRules.setId("gameBordView_btnGameRules");
+        buttonBuyCards.setId("gameBordView_btnBuyCards");
+        buttonCantMove.setId("gameBordView_btnCantMove");
+        buttonEndTurn.setId("gameBordView_btnEndTurn");
+        buttonMove.setId("gameBordView_btnMove");
+        buttonPay.setId("gameBordView_btnPay");
+        buttonReset.setId("gameBordView_btnReset");
+
         infoLabel.setId("lblInfo");
+        lblScoreLocalPlayer.setId("gameBordView_lblScoreLocalPlayer");
+
+
+        //view.getLoginView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("login_lblError1"));
     }
 
     // ************************************* GETTERS / SETTERS ********************************************* //
