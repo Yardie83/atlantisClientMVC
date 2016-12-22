@@ -313,7 +313,7 @@ public class GameBoardView extends Pane {
             if (player.getPlayerID() != gameModel.getLocalPlayerId()) {
                 Label lblOpponentName = new Label(player.getPlayerName());
                 lblOpponentName.setStyle("-fx-text-fill: white");
-                Label lblOpponentScore = new Label("0");
+                Label lblOpponentScore = new Label("Score: 0");
                 lblOpponentScore.setStyle("-fx-text-fill: white");
                 scoresLabels.put(player.getPlayerID(), lblOpponentScore);
                 opponentsBox.getChildren().addAll(lblOpponentName, lblOpponentScore);

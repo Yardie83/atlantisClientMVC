@@ -154,7 +154,7 @@ public class GameController {
                         handleMouseEventsMovementCards();
                         gameBoardView.getButtonBuyCards().setDisable(true);
                         gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack().remove(gameModel.getSelectedStackCardIndex());
-                        gameBoardView.setInfoLabelText("You got a new Card");
+                        gameBoardView.setInfoLabelText("You got (a) new Card(s)");
                     }
                 }
             }
