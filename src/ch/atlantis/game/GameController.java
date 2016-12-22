@@ -101,7 +101,7 @@ public class GameController {
                     ArrayList<Card> listOfCantMove = (ArrayList<Card>) atlantisModel.getMessage().getMessageObject();
                     if (listOfCantMove.size() != 0) {
                         for (Card card : listOfCantMove) {
-                            logger.info("Card that we received from the server - > " + card);
+                            logger.info("Card received from the server - > " + card);
                             gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().add(card);
                         }
                         logger.info("Size of cards after receiving all of the cards - > " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
@@ -514,11 +514,11 @@ public class GameController {
             gameModel.getSelectedCard().setDisable(true);
             gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
         } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
-            gameBoardView.setInfoLabelText("Please select a card and a game piece to play");
+            gameBoardView.setInfoLabelText("Please select a card and a game piece to play and then press move");
         } else if (gameModel.getSelectedCard() == null) {
-            gameBoardView.setInfoLabelText("Please select a card to play");
+            gameBoardView.setInfoLabelText("Please select a card to play and then press move" );
         } else if (gameModel.getSelectedGamePiece() == null) {
-            gameBoardView.setInfoLabelText("Please select a game piece to play");
+            gameBoardView.setInfoLabelText("Please select a game piece to play and then press move");
         }
     }
 

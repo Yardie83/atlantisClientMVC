@@ -385,7 +385,7 @@ public class GameBoardView extends Pane {
 
     private void setInfoLblTextOnNewTurn() {
         if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()){
-            setInfoLabelText("Your turn. Select a game piece and a card");
+            setInfoLabelText("Your turn. Select a game piece and a card and then press move");
         }else{
             setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait.");
         }
