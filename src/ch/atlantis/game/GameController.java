@@ -19,6 +19,7 @@ import ch.atlantis.util.Message;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -164,6 +165,19 @@ public class GameController {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
                     handleGameOver();
+                }
+            }
+        });
+
+        atlantisModel.gameOverScores().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (newValue) {
+                    HashMap<Integer, Integer> mapOfScores = (HashMap<Integer, Integer>) atlantisModel.getMessage().getMessageObject();
+                    for (Map.Entry<Integer, Integer> entry : mapOfScores.entrySet()) {
+                        int playerId = entry.getKey();
+                        gameModel.getPlayers().get(playerId).setScore(entry.getValue());
+                    }
                 }
             }
         });
