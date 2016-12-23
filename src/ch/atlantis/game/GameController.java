@@ -401,6 +401,7 @@ public class GameController {
                 gameModel.getPaidCardIndices().clear();
                 gameModel.setSelectedCard(null);
                 gameModel.setSelectedGamePiece(null);
+                gameModel.occupiedProperty().setValue(false);
                 gameModel.setCantMoveButtonHasBeenPressed(false);
             }
         });
@@ -592,7 +593,8 @@ public class GameController {
                                 gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
                                 if (gameModel.canMoveDirectly()) {
                                     gameModel.occupiedProperty().setValue(false);
-                                    gameBoardView.moveGamePiece(tempSavingGamePiece);
+                                    gameModel.getSelectedGamePiece().resetPathId();
+                                    gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
                                     return true;
                                 }
                             }
@@ -606,7 +608,6 @@ public class GameController {
                     }
                 }
             }
-            gameBoardView.moveGamePiece(tempSavingGamePiece);
         }
         logger.info("Boolean value is -> " + false);
         return false;
