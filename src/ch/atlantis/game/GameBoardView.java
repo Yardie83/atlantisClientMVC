@@ -60,6 +60,7 @@ public class GameBoardView extends Pane {
     private int width;
     private HBox bottomHBox;
     private Label lblStatus;
+    private Label lblScoreOpponent;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -325,15 +326,15 @@ public class GameBoardView extends Pane {
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
 
-        String score = "0";
+
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
         lblLocalPlayer.setStyle("-fx-text-fill: white");
         HBox scoreBox = new HBox();
         lblScoreText = new Label("Score: ");
-        lblScoreNumber = new Label("0");
+        lblScoreNumber = new Label();
         lblScoreNumber.setStyle("-fx-text-fill: white");
         lblScoreText.setStyle("-fx-text-fill: white");
-        lblScoreLocalPlayer = new Label(score);
+        lblScoreLocalPlayer = new Label("0");
         scoreBox.getChildren().addAll(lblScoreText, lblScoreNumber, lblScoreLocalPlayer);
         lblScoreLocalPlayer.setStyle("-fx-text-fill: white");
         Label label3 = new Label("|");
@@ -388,10 +389,13 @@ public class GameBoardView extends Pane {
             if (player.getPlayerID() != gameModel.getLocalPlayerId()) {
                 Label lblOpponentName = new Label(player.getPlayerName());
                 lblOpponentName.setStyle("-fx-text-fill: white");
-                Label lblOpponentScore = new Label("Score: 0");
+                lblScoreOpponent = new Label("Score: ");
+                lblScoreOpponent.setStyle("-fx-text-fill: white");
+                Label lblOpponentScore = new Label("0");
+                HBox opponentScore = new HBox(lblScoreOpponent, lblOpponentScore);
                 lblOpponentScore.setStyle("-fx-text-fill: white");
                 scoresLabels.put(player.getPlayerID(), lblOpponentScore);
-                opponentsBox.getChildren().addAll(lblOpponentName, lblOpponentScore);
+                opponentsBox.getChildren().addAll(lblOpponentName, opponentScore);
             }
         }
         return opponentsBox;
