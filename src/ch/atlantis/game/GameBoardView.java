@@ -51,6 +51,7 @@ public class GameBoardView extends Pane {
     private Stage gameOverStage;
     private VBox stackCardPane;
     private Label lblScoreText;
+    private Label lblScoreNumber;
 
     private int offsetX = 10;
     private int offsetY = 5;
@@ -328,10 +329,12 @@ public class GameBoardView extends Pane {
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
         lblLocalPlayer.setStyle("-fx-text-fill: white");
         HBox scoreBox = new HBox();
-        lblScoreText = new Label("Score ");
+        lblScoreText = new Label("Score: ");
+        lblScoreNumber = new Label("0");
+        lblScoreNumber.setStyle("-fx-text-fill: white");
         lblScoreText.setStyle("-fx-text-fill: white");
         lblScoreLocalPlayer = new Label(score);
-        scoreBox.getChildren().addAll(lblScoreText, lblScoreLocalPlayer);
+        scoreBox.getChildren().addAll(lblScoreText, lblScoreNumber, lblScoreLocalPlayer);
         lblScoreLocalPlayer.setStyle("-fx-text-fill: white");
         Label label3 = new Label("|");
         label3.setStyle("-fx-text-fill: white");
@@ -609,7 +612,8 @@ public class GameBoardView extends Pane {
             @Override
             public void run() {
                 //scoreLabel.setText("Score: " + String.valueOf(score));
-                scoreLabel.setText(view.getSelectedLanguage().getLanguageTable().get("gameBordView_lblScoreText") + String.valueOf(score));
+                //scoreLabel.setText(view.getSelectedLanguage().getLanguageTable().get("gameBordView_lblScoreText") + String.valueOf(score));
+                scoreLabel.setText(String.valueOf(score));
             }
         });
     }
