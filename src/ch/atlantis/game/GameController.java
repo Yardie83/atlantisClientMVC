@@ -150,6 +150,7 @@ public class GameController {
         /**
          * Can Heval Cokyasar
          *
+         * Add the purchased cards of a user to it's hand cards.
          */
 
         atlantisModel.givePurchasedCards().addListener(new ChangeListener<Boolean>() {
@@ -272,7 +273,9 @@ public class GameController {
     }
 
     /**
-     * Can Heval Cokyasar (Some Parts) & Hermann Grieder (Some Parts)
+     * Can Heval Cokyasar & Hermann Grieder
+     *
+     * Being able for a user to select it's picked up stack cards in order to buy additional hand cards.
      */
 
     private void handleMouseEventsStackCards() {
@@ -369,9 +372,9 @@ public class GameController {
 
         /**
          * Fabian Witschi
-         * If we cant move we have due to rules the option to get two new movement cards. But it is possible to cheat
+         * If we can't move we have due the rules the option to get two new movement cards. But it is possible to cheat
          * and getting two new cards even though you are able to move is not fair to others the button calls the
-         * "canmoveautomaticall" method and it checks if the player is not able to move at all and if so the action method
+         * "canmoveautomatically" method and it checks if the player is not able to move at all and if so the action method
          * will send a message which then gives two cards back from the server. Otherswise we will be notified by a label that
          * we are able to move and we wont get any card.
          *
@@ -448,6 +451,8 @@ public class GameController {
         /**
          * Can Heval Cokyasar
          *
+         * Configure the "Buy Cards" button.
+         * Sending the message object to the AtlantisServer.
          */
         gameBoardView.getButtonBuyCards().setOnAction(new EventHandler<ActionEvent>() {
             @Override
