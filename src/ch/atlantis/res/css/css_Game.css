@@ -49,7 +49,7 @@
     -fx-effect: dropshadow(three-pass-box, black, 5, 0.1, -2, 5);
 }
 
-#lblStatus {
+#gameBordView_lblStatus {
     -fx-alignment: center-left;
     -fx-padding: 7px 10px 10px 10px;;
     -fx-text-fill: whitesmoke;

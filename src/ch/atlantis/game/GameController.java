@@ -62,7 +62,7 @@ public class GameController {
     /**
      * Hermann Grieder
      * <br>
-     *  Sends the moveMap from the gameModel at the end of a turn to the server
+     * Sends the moveMap from the gameModel at the end of a turn to the server
      */
     private void sendMoveMessage() {
         HashMap<String, Object> moveMap = gameModel.writeGameStateMap();
@@ -115,7 +115,8 @@ public class GameController {
                         logger.info("Size of cards after receiving all of the cards - > " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards().size());
                         gameBoardView.updateMovementCards();
                         handleMouseEventsMovementCards();
-                        gameBoardView.setInfoLabelText("You got two new cards");
+                        //gameBoardView.setInfoLabelText("You got two new cards");
+                        gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_TwoNewCards"));
                     }
                 }
             }
@@ -165,6 +166,8 @@ public class GameController {
                         handleMouseEventsMovementCards();
                         gameBoardView.getButtonBuyCards().setDisable(true);
                         gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack().remove(gameModel.getSelectedStackCardIndex());
+                        //gameBoardView.setInfoLabelText("You got (a) new Card(s)");
+                        gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_NewCards"));
                         gameBoardView.setInfoLabelText("You got " + arrayListOfPurchasedCards.size() + " new Card(s)");
                     }
                 }
@@ -215,7 +218,8 @@ public class GameController {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (newValue) {
-                    gameBoardView.setInfoLabelText("Target is occupied. Play another card to jump over");
+                    //gameBoardView.setInfoLabelText("Target is occupied. Play another card to jump over");
+                    gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_OccupiedTarget"));
                     gameBoardView.setDisableButtonMove(false);
                     gameBoardView.setDisableButtonEndTurn(true);
                 }
@@ -232,7 +236,9 @@ public class GameController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (newValue.intValue() != 0) {
-                    gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross. You can select multiple cards to pay.");
+                    //gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross");
+                    gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_PayToCross1") + newValue +
+                            atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_PayToCross2"));
                     gameBoardView.setDisableButtonEndTurn(true);
                     gameBoardView.setDisableButtonMove(true);
                     gameBoardView.getButtonPay().setDisable(false);
@@ -297,13 +303,20 @@ public class GameController {
 
                         if (clickCount == 0 && gameModel.getLocalPlayerId() == gameModel.getCurrentTurn()) {
                             if (card.getValue() > 1) {
-                                gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + ". " +
-                                        "You get " + (card.getValue() / 2) + " cards, press \"Buy Cards\".");
+                                //gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + ". " +
+                                        //"You get " + (card.getValue() / 2) + " cards, press \"Buy Cards\".");
+
+                                gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_BuyCards1")
+                                        + card.getValue() + ". " +
+                                        atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_BuyCards2")
+                                        + (card.getValue() / 2) + atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_BuyCards3"));
+
                                 gameBoardView.getButtonBuyCards().setDisable(false);
                             }
                             if (card.getValue() == 1 && (!gameBoardView.getButtonBuyCards().isDisabled())) {
                                 gameBoardView.getButtonBuyCards().setDisable(true);
-                                gameBoardView.setInfoLabelText("The selected card's value is too low to buy a card");
+                                //gameBoardView.setInfoLabelText("The selected card's value is too low to buy a card");
+                                gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_CardValueTooLow"));
                             }
                         }
                         gameModel.setSelectedStackCardIndex(pathCardStack.indexOf(card));
@@ -373,11 +386,13 @@ public class GameController {
             public void handle(ActionEvent event) {
                 gameModel.setCantMoveButtonHasBeenPressed(true);
                 if (!(tryMoveAutomatically())) {
-                    gameBoardView.setInfoLabelText("You will get two cards");
+                    //gameBoardView.setInfoLabelText("You will get two cards");
+                    gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_WillGet2Cards"));
                     gameBoardView.getButtonMove().setDisable(true);
                     atlantisModel.sendMessage(new Message(MessageType.CANTMOVE, gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGameName()));
                 } else {
-                    gameBoardView.setInfoLabelText("You CAN move with your cards");
+                    //gameBoardView.setInfoLabelText("You CAN move with your cards");
+                    gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_YouCanMove"));
                 }
                 gameBoardView.getButtonCantMove().setDisable(true);
                 gameModel.setPaidCorrectPrice(false);
@@ -417,10 +432,13 @@ public class GameController {
                         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack()) {
                             gameBoardView.resetHighlight(card);
                         }
-                        gameBoardView.setInfoLabelText("Sorry amount is not sufficient. Price to cross " + gameModel.priceToCrossWaterProperty());
+                        //gameBoardView.setInfoLabelText("Sorry amount is not sufficient. Price to cross " + gameModel.priceToCrossWaterProperty());
+                        gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_AmountNotSufficient")
+                                + gameModel.priceToCrossWaterProperty());
                     }
                 } else {
-                    gameBoardView.setInfoLabelText("Select a card to pay with");
+                    //gameBoardView.setInfoLabelText("Select a card to pay with");
+                    gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_SelectCardToPay"));
                 }
                 gameModel.setPaidCorrectPrice(false);
             }
@@ -496,7 +514,8 @@ public class GameController {
                 gameModel.setSelectedGamePiece(null);
                 gameModel.getPaidCardIndices().clear();
                 gameModel.setTargetPathIds(null);
-                gameBoardView.setInfoLabelText("Your turn. Select a game piece and a card");
+                //gameBoardView.setInfoLabelText("Your turn. Select a game piece and a card");
+                gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_YourTurn"));
                 clickCount = 0;
             }
         });
@@ -611,7 +630,8 @@ public class GameController {
                 gameModel.addToPlayedCards();
                 gameBoardView.setDisableButtonMove(true);
                 gameBoardView.setDisableButtonEndTurn(false);
-                gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
+                //gameBoardView.setInfoLabelText("Press \"End Turn\" to confirm your move");
+                gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_ConfirmMove"));
                 gameModel.getSelectedGamePiece().setCurrentPathId(gameModel.getTargetPathId());
             } else {
                 logger.info("GameModel -> Move cannot be done directly.");
@@ -620,11 +640,14 @@ public class GameController {
             gameModel.getSelectedCard().setDisable(true);
             gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
         } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
-            gameBoardView.setInfoLabelText("Please select a card and a game piece to play and then press move");
+            //gameBoardView.setInfoLabelText("Please select a card and a game piece to play and then press move");
+            gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_YourTurn"));
         } else if (gameModel.getSelectedCard() == null) {
-            gameBoardView.setInfoLabelText("Please select a card to play and then press move" );
+            //gameBoardView.setInfoLabelText("Please select a card to play and then press move");
+            gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_SelectCardPressMove"));
         } else if (gameModel.getSelectedGamePiece() == null) {
-            gameBoardView.setInfoLabelText("Please select a game piece to play and then press move");
+            //gameBoardView.setInfoLabelText("Please select a game piece to play and then press move");
+            gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_SelectGamePiecePressMove"));
         }
     }
 

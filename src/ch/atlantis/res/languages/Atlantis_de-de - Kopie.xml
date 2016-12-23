@@ -84,7 +84,26 @@
 	<String Id="gameBordView_btnPay" >Bezahlen</String>
 	<String Id="gameBordView_btnReset" >Zurücksetzen</String>
 	
-<!-- 	<String Id="lblInfo" >Zurücksetzen</String>
-	<String Id="gameBordView_lblScoreLocalPlayer" >Zurücksetzen</String> -->
+	<String Id="gameBordView_lblScoreText" >Punkte: </String>
+	<String Id="gameBordView_lblStatus" >Deine Farbe: </String>
+
+	<String Id="gameBordView_InfoLabel_YourTurn" >Du bist am Zug. Wähle eine Spielfigur und eine Karte und drücke den Knopf "Spielen"</String>
+	<String Id="gameBordView_InfoLabel_NotYourTurn" >'s zug. Bitte warten</String>
+	<String Id="gameBordView_InfoLabel_TwoNewCards" >Du hast zwei neue Karten bekommen</String>
+	<String Id="gameBordView_InfoLabel_NewCards" >Du hast eine/mehrere Karte(n) bekommen</String>
+	<String Id="gameBordView_InfoLabel_OccupiedTarget" >Das Feld ist bereits besetzt. Spiele eine weitere Karte um weiter zu kommen</String>
+	<String Id="gameBordView_InfoLabel_PayToCross1" >Du musst: </String>
+	<String Id="gameBordView_InfoLabel_PayToCross2" > bezahlen um zu überqueren</String>
+	<String Id="gameBordView_InfoLabel_BuyCards1" >Du hast eine Karte mit Folgendem Wert ausgewählt: </String>
+	<String Id="gameBordView_InfoLabel_BuyCards2" > Du bekommst </String>
+	<String Id="gameBordView_InfoLabel_BuyCards3" > Karten. Drücke den Knopf "Karten kaufen"</String>
+	<String Id="gameBordView_InfoLabel_CardValueTooLow" >Der Wert der ausgewählten Karte ist zu niederig </String>
+	<String Id="gameBordView_InfoLabel_WillGet2Cards" >Du würdest zwei Karten bekommen</String>
+	<String Id="gameBordView_InfoLabel_YouCanMove" >Du kannst spielen</String>
+	<String Id="gameBordView_InfoLabel_AmountNotSufficient" >Der Betrag ist nicht ausreichend. Der erforderliche Preis ist: </String>
+	<String Id="gameBordView_InfoLabel_SelectCardToPay" >Wähle eine Karte aus um zu bezahlen</String>
+	<String Id="gameBordView_InfoLabel_ConfirmMove" >Drücke den Knopf "Zug Ende" um deinen Spielzug zu beenden</String>
+	<String Id="gameBordView_InfoLabel_SelectCardPressMove" >Bitte wähle eine Karte die du Spielen möchtest und drücke den Knopf "Spielen"</String>
+	<String Id="gameBordView_InfoLabel_SelectGamePiecePressMove" >Bitte wähle eine Spielfigur die du Spielen möchtest und drücke den Knopf "Spielen"</String>
 
 </LanguageEntry>
