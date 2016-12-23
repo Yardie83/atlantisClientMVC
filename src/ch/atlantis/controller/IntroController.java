@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 /**
  * Created by Hermann Grieder on 28.08.2016.
  * <p>
- * Plays the introVideo on startup and switches to the GameLobby
+ * Plays the introVideo on the start of the application and switches to the GameLobby
  * on mouseClick on the video
  */
 

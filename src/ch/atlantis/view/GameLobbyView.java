@@ -36,7 +36,9 @@ import java.util.Random;
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
  * <p>
- * The GameLobbyView. Also creates the bubbles on mouseClick.
+ * The GameLobbyView. Contains the chat, the needed controls to create a game, join a game, create a player profile
+ * and the options. In the menuBar the user can see his personal stats and can open the game rules as a pdf.
+ * Also creates the bubbles on mouseClick. :-)
  */
 public class GameLobbyView extends Pane {
 
@@ -340,6 +342,10 @@ public class GameLobbyView extends Pane {
         });
     }
 
+    /**
+     * Loris Grether
+     * @return The menuItem arrayList
+     */
     public ArrayList<MenuItem> getMenuItemControls() {
 
         ArrayList<MenuItem> menuItem = new ArrayList<>();

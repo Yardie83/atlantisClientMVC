@@ -7,14 +7,13 @@ import javafx.scene.control.Label;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.InnerShadow;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
  * Created by Hermann Grieder on 11.12.2016.
- * The Game Over View when the game is finished. It shows the score of all the players
+ * The Game Over View for when the game is finished. It shows the score of all the players
  * and the winner. From this view the players can go back to the gameLobby.
  */
 public class GameOverView extends Pane {
@@ -63,7 +62,7 @@ public class GameOverView extends Pane {
 
         centerPane = new GridPane();
 
-        String winnerName = gameModel.getWinnerName();
+        String winnerName = gameModel.calculateWinner();
 
         for (int i = 0; i < gameModel.getPlayers().size(); i++) {
             centerPane.add(new Label("Player: " + gameModel.getPlayers().get(i).getPlayerName()), 0, i);
@@ -95,16 +94,12 @@ public class GameOverView extends Pane {
 
         /* Common Style Class for the Labels in the Login View*/
         lblGameOver.getStyleClass().add("labels");
-//        lblUserName.getStyleClass().add("labels");
-
 
         //TOP Element IDs
         lblGameOver.setId("gameOver_lblGameOver");
 
         // CENTER Elements IDs
         centerPane.setId("centerPane");
-//        lblUserName.setId("gameOver_lblUserName");
-
 
         //BOTTOM Elements IDs
         bottomPane.setId("bottomPane");

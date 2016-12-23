@@ -213,11 +213,7 @@ part of the border pane in the game lobby
     -fx-alignment: top-center;
     -fx-padding: 50px 0px 0px 0px;
     -fx-pref-width: 650px;
-    /*-fx-background-image: url("/ch/atlantis/res/paper_scroll.png");
-    -fx-background-size: contain;
-    -fx-background-position: center;
-    -fx-background-repeat: no-repeat;
-    */
+
 
 }
 

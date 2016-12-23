@@ -11,7 +11,7 @@ import javafx.scene.control.RadioButton;
  * <p>
  * Controller for the OptionsView
  * Handles all events performed on the controls in the OptionsView
- * Blablabla
+ *
  */
 
 public class OptionsController {

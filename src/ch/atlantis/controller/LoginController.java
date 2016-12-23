@@ -15,7 +15,7 @@ import javafx.scene.input.MouseEvent;
 /**
  * Created by Hermann Grieder on 28.08.2016.
  * <p>
- * Controller for the Login View
+ * Controller for the Login View.
  */
 public class LoginController {
 
@@ -29,14 +29,15 @@ public class LoginController {
     }
 
     private void handleLoginViewControls() {
-        //Attempt login on mouseClicked on the Login Button in the Login View
+        //Attempt login on mouseClicked on the Login Button
         view.getLoginView().getBtnLogin().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 attemptLogin();
             }
         });
-        //Attempt login on Enter pressed in the Password TextField in the Login View
+
+        //Attempt login on Enter pressed in the password textField
         view.getLoginView().getTxtPassword().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -46,7 +47,7 @@ public class LoginController {
             }
         });
 
-        //Switch to the new Profile View on mouseClicked on the Create Profile Button in the Login View
+        //Switch to the new Profile View on mouseClicked on the Create Profile Button
         view.getLoginView().getBtnCreateProfile().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -58,7 +59,8 @@ public class LoginController {
                 view.getProfileStage().show();
             }
         });
-        // Handle Cancel Button MouseClick Event in the Login View
+
+        // Handle Cancel Button mouseClick
         view.getLoginView().getBtnCancel().setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -69,9 +71,12 @@ public class LoginController {
         });
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * If the credentials entered are ok we send them to the server.
+     */
     private void attemptLogin() {
-        //TODO: Sanitize userInput by checking that username and password are not SQL statements
-        //TODO: Sanitize input. Check for no commas in game name
         String userName = view.getLoginView().getTxtUserName().getText();
         String password = view.getLoginView().getTxtPassword().getText();
         String credentials = userName + "," + password;
@@ -85,7 +90,16 @@ public class LoginController {
             //Send the login credentials to the server
             model.sendMessage(new Message(MessageType.LOGIN, credentials));
         }
+        listenForLoginSuccess();
 
+    }
+
+    /**
+     * Hermann Grieder
+     * <br>
+     * Once the server has logged us in successfully the login overlay can be closed and the login popup can be shown.
+     */
+    private void listenForLoginSuccess() {
         model.loginSuccessProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -93,7 +107,6 @@ public class LoginController {
                     @Override
                     public void run() {
                         if (model.loginSuccessProperty().getValue().equals(1)) {
-                            //view.getGameLobbyView().showPopUp("You're logged in!", 200);
                             view.getGameLobbyView().showPopUp(view.getSelectedLanguage().getLanguageTable().get("msgLoggedIn"), 200);
                             view.getGameLobbyView().removeLoginBtn();
                             view.closeActiveOverlay();
@@ -101,7 +114,6 @@ public class LoginController {
                             model.loginSuccessProperty().setValue(0);
                             clearTextFields();
                         } else if (model.loginSuccessProperty().getValue().equals(2)) {
-                            //view.getLoginView().getLblError().setText("Username or Password are wrong");
                             view.getLoginView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("login_lblError2"));
                             view.getLoginView().getLblError().setVisible(true);
                             model.loginSuccessProperty().setValue(0);
@@ -112,6 +124,9 @@ public class LoginController {
         });
     }
 
+    /**
+     * Clears both textFields in the login view
+     */
     private void clearTextFields(){
         this.view.getLoginView().getTxtUserName().setText("");
         this.view.getLoginView().getTxtPassword().setText("");

@@ -5,7 +5,9 @@ import ch.atlantis.util.Message;
 import ch.atlantis.view.AtlantisView;
 
 /**
- * Created by Fabian on 15/08/16.
+ * Created by Fabian, Loris Grether and Hermann Grieder on 15/08/16.
+ *
+ * The game class.
  */
 public class Game {
 
@@ -16,6 +18,7 @@ public class Game {
         GameBoardView gameBoardView = new GameBoardView(gameModel, view);
         gameController = new GameController(view, model, gameModel, gameBoardView);
 
+        // Loris Grether
         view.getControls(gameBoardView);
         view.setControlText(view.getListOfControls());
 

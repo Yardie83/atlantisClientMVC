@@ -59,6 +59,11 @@ public class GameController {
         handleMouseEventsGameControlButtons();
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     *  Sends the moveMap from the gameModel at the end of a turn to the server
+     */
     private void sendMoveMessage() {
         HashMap<String, Object> moveMap = gameModel.writeGameStateMap();
         atlantisModel.sendMessage(new Message(MessageType.MOVE, moveMap));

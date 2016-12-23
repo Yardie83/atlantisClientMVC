@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 /**
  * Created by Hermann Grieder on 31.08.2016.
+ *
+ * Tiles are dividing the board view into squares where all the elements are placed on top.
+ * They have a pathId, an x and y coordinate and a side (width) value.
  */
 
 public class Tile implements Serializable {

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.logging.*;
 
 /**
- * Created by Loris Grether and Hermann Grieder and Can Heval Cokyasar on 17.07.2016 / 29.11.2016.
+ * Created by Loris Grether, Hermann Grieder and Can Heval Cokyasar on 17.07.2016 / 29.11.2016.
  *
  * Start of the application.
  * Creates the model, the view, and the controller.
@@ -34,6 +34,20 @@ public class AtlantisClient extends Application {
     @Override
     public void start(Stage introStage) throws Exception {
 
+        initLogger();
+
+        AtlantisModel model = new AtlantisModel();
+        AtlantisView view = new AtlantisView(introStage, model);
+        new AtlantisController(model, view);
+
+    }
+
+    /**
+     * Heval Cokyasar
+     *
+     * Sets up the logger
+     */
+    private void initLogger() {
         logger = Logger.getLogger(AtlantisLogger);
 
         try {
@@ -52,10 +66,5 @@ public class AtlantisClient extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        AtlantisModel model = new AtlantisModel();
-        AtlantisView view = new AtlantisView(introStage, model);
-        new AtlantisController(model, view);
-
     }
 }

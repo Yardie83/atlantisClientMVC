@@ -96,7 +96,6 @@ public class AtlantisView {
                 width.setValue(Screen.getPrimary().getBounds().getWidth());
                 height.setValue(Screen.getPrimary().getBounds().getHeight());
                 gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), true);
-                //ScenicView.show(gameLobbyView);
             } else {
                 gameLobbyView = new GameLobbyView(height.getValue(), width.getValue(), false);
                 bindSizeToStage();
@@ -108,6 +107,11 @@ public class AtlantisView {
         setMenuItemText(gameLobbyView.getMenuItemControls());
     }
 
+    /**
+     * Hermann Grieder and Loris Grether (Language)
+     * <br>
+     *  Updates the gameList in the gameLobby. The newest games are always shown on top of the list.
+     */
     public void updateGameList() {
 
         // Only if the list is not empty go on
@@ -204,6 +208,11 @@ public class AtlantisView {
         activeOverlayStage = loginStage;
     }
 
+    /**
+     * Loris Grether
+     * <br>
+     * Creates the information view with the players statistics.
+     */
     public void createInformationView() {
         Stage parentStage = gameLobbyView.getGameLobbyStage();
         if (informationView == null) {
@@ -273,8 +282,6 @@ public class AtlantisView {
         overlayStage.setY(parentStage.getY());
     }
 
-    // TODO: This does not work. The overlayStage does not react. I think it must be the root pane, but how to get
-    // there?
     public void setDimensions(Stage overlayStage, Stage parentStage) {
         overlayStage.setMinHeight(parentStage.getHeight());
         overlayStage.setMinWidth(parentStage.getWidth());
@@ -297,6 +304,12 @@ public class AtlantisView {
         }
     }
 
+    /**
+     * Loris Grether
+     * <br>
+     *
+     * @param menuItems
+     */
     private void setMenuItemText(ArrayList<MenuItem> menuItems) {
 
         for (MenuItem item : menuItems) {
@@ -353,7 +366,12 @@ public class AtlantisView {
             }
         }
     }
-
+    /**
+     * Loris Grether
+     * <br>
+     *
+     *  @param label
+     */
     private void addLanguageTextToLabelControl(Label label) {
         for (String id : selectedLanguage.getLanguageTable().keySet()) {
             if (label.getId() != null) {
@@ -391,6 +409,10 @@ public class AtlantisView {
         //Make it so that the overlays are always on top of the other windows
         overlayStage.setAlwaysOnTop(true);
     }
+
+
+    // ************************************* GETTERS & SETTERS ********************************************* //
+
 
     public IntroView getIntroView() {
         return introView;

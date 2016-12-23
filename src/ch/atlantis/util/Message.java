@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 /**
  * Created by Hermann Grieder on 19.07.2016.
+ *
+ * The message class. Contains a messageType and the message object.
  */
 public class Message implements Serializable {
 

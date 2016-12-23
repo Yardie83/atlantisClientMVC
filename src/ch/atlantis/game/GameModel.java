@@ -11,7 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by Hermann Grieder on 28.10.2016
+ * Created by Hermann Grieder and Fabian Witschi on 28.10.2016
+ * <p>
+ * The game model is the core class before and during the game.
+ * It hold all the information about the game state. Checks if a move is valid, if the right price for water crossing
+ * has been paid, if a target path is occupied by another game piece and much more.
  */
 public class GameModel {
 
@@ -79,51 +83,113 @@ public class GameModel {
     /**
      * Hermann Grieder
      * <br>
+     * Is called after the move button, the pay button or the can't move button is clicked in the game board view.
+     * It checks if the move can be done directly without any other interaction of the user. This method is called
+     * as many times as there are unresolved obstacles in the way.
      *
-     * @return
+     * @return False when the target is occupied or there is water in the way. True if the way to the target is free
+     * of obstacles.
      */
     public boolean canMoveDirectly() {
 
         // Find the target pathId on the client side
         targetPathId = findTargetPathId();
+        // When multiple movement cards are played during one move, we have to keep track of them.
         if (!targetPathIds.contains(targetPathId)) {
             targetPathIds.add(targetPathId);
         }
         // Check if the target pathId is already occupied by someone else
         occupied.set(checkIfOccupied());
         logger.info(String.valueOf(occupied));
+        // If the target is not occupied, check if we have to cross water to the target or if we have now paid
+        // the price calculated in an early rundown of this method.
         boolean hasWater = false;
         if (!occupied.get() && !paidCorrectPrice) {
             hasWater = checkForWater();
         }
-        logger.info("Occupied: " + occupied + " hasWater: " + hasWater);
+        // If the target is not occupied and there is no water in the way to the target, return true, else false.
+        logger.info("Occupied: " + occupied + "| hasWater: " + hasWater);
         return (!occupied.get() && !hasWater);
     }
 
+    /**
+     * Fabian Witschi
+     *
+     * @return True if there is water on the way to the target, false if there is no water
+     */
     private boolean checkForWater() {
         // Check if there is water on the way to the target. Returns the pathId of that water tile or 0 if no
         // water is on the way to the target
+        int waterPathId = findWaterPathId(selectedGamePiece.getStartPathId());
+
+        // If water was found before the end, find the price to cross
         int priceToCross = 0;
-        int waterPathId = getWaterPathId(selectedGamePiece.getStartPathId());
-        while (waterPathId != 0 && waterPathId < 154) {
-            System.out.println("Water ID before calculating price - > " + waterPathId);
+        // This section deals with the rule that a player can pay for multiple water crossings with one payment
+        // instead of individual payments for each crossing.
+        // We add the price of a crossing and then find the start of the next water crossing and add that price and so on.
+        while (waterPathId != 0 && getValueFromCardAfterWater(waterPathId) != 0) {
             priceToCross += getPriceForCrossing(waterPathId);
-            logger.info("Price to cross water is - > " + priceToCross);
-            waterPathId = getWaterPathId(pathIdAfter - 1);
-            System.out.println("WATER ID - > " + waterPathId);
-            System.out.println("PATH ID AFTER FIRST WATER TILE - > " + pathIdAfter);
+            waterPathId = findWaterPathId(pathIdAfter);
         }
         if (cantMoveButtonHasBeenPressed) {
             priceToCrossWaterAutomatically.set(priceToCross);
         } else {
-            logger.info("Price to cross water when done - > " + priceToCross);
             priceToCrossWater.set(priceToCross);
         }
         logger.info("Price to cross " + priceToCrossWater.get());
-        logger.info("Price to cross true / false: " + (priceToCross != 0));
+
         return priceToCross != 0;
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Recursive method that goes trough each pathCard on the way
+     * to the target trying to find water on the way to the target
+     *
+     * @param currentPathId The pathId of the GamePiece to be moved
+     * @return The pathId of the water tile if one was found, else it returns 0
+     */
+    private int findWaterPathId(int currentPathId) {
+        int startPathId = currentPathId;
+
+        // If the gamePiece is on the home tile we need to check from the first actual path tile
+        if (currentPathId == 300) {
+            startPathId = 101;
+        }
+        // If our target would be the end tile we have to check up to the last path card on the way
+        int target = targetPathId;
+        if (target == 400) {
+            target = 153;
+        }
+        int count = 0;
+        // We count the cards that have the same pathId as the startPathId. If we count more than one
+        // card it must be an exposed water tile.
+        if (startPathId < target) {
+            for (Card pathCard : pathCards) {
+                if (pathCard.getPathId() == startPathId) {
+                    count++;
+                }
+            }
+            // Recursive call in case we find more than one card on that pathId.
+            if (count != 1) {
+                return findWaterPathId(startPathId + 1);
+            }
+        }
+        // If by the time we get to the target path or land tile and have not found any water tiles we return 0
+        if (startPathId >= targetPathId || startPathId >= 153) {
+            logger.info("No water found to the target.");
+            return 0;
+        }
+        logger.info("Water found on PathID: " + startPathId);
+        return startPathId;
+    }
+
+    /**
+     * Hermann Grieder
+     *
+     * @return
+     */
     public boolean hasPaidCorrectPrice() {
         paidCorrectPrice = false;
 
@@ -139,7 +205,9 @@ public class GameModel {
     }
 
     /**
-     * Finds the target path id of where the gamePiece should ultimately end up on.
+     * Hermann Grieder
+     * <p>
+     * Finds the target pathId where the gamePiece should ultimately end up on.
      *
      * @return int - The targetPathId
      */
@@ -177,9 +245,11 @@ public class GameModel {
     }
 
     /**
+     * Hermann Grieder
+     * <p>
      * Checks if the targetPathId that was found is already occupied.
      *
-     * @return True if the target is occupied, false if it is free to go to
+     * @return True if the target is occupied, false if not occupied
      */
     private boolean checkIfOccupied() {
         for (Player player : players) {
@@ -197,50 +267,6 @@ public class GameModel {
     }
 
     /**
-     * Hermann Grieder
-     * <br>
-     * Recursive method that goes trough each pathCard on the way
-     * to the target to check if there is water on the way
-     *
-     * @param currentPathId The pathId of the GamePiece to be moved
-     * @return The pathId of the water tile
-     */
-    private int getWaterPathId(int currentPathId) {
-        int startPathId = currentPathId + 1;
-
-        // If the gamePiece is on the home tile we need to check from the first actual path tile
-        if (currentPathId == 300) {
-            startPathId = 101;
-        }
-        // If our target would be the end tile we have to check up to the last path card on the way
-        int target = targetPathId;
-        if (target == 400) {
-            target = 153;
-        }
-        int count = 0;
-        // We count the cards that have the same pathId as the startPathId. If we count more than one
-        // card it must be an exposed water tile.
-        if (startPathId < target) {
-            for (Card pathCard : pathCards) {
-                if (pathCard.getPathId() == startPathId) {
-                    count++;
-                }
-            }
-            // Recursive call in case we find more than one card on that pathId.
-            if (count != 1) {
-                return getWaterPathId(startPathId);
-            }
-        }
-        // If by the time we get to the target path and have not found any water tiles we return 0
-        if (startPathId == targetPathId) {
-            logger.info("No water found to the target.");
-            return 0;
-        }
-        logger.info("Water found on PathID: " + startPathId);
-        return startPathId;
-    }
-
-    /**
      * Fabian Witschi
      * <br>
      * <p>
@@ -250,8 +276,8 @@ public class GameModel {
      * @return The price to cross
      */
     private int getPriceForCrossing(int pathId) {
-        int valueBehind = getValueFromCardBehind(pathId);
-        int valueAfter = getValueFromCardAfter(pathId);
+        int valueBehind = getValueFromCardBehindWater(pathId);
+        int valueAfter = getValueFromCardAfterWater(pathId);
         if (valueBehind > valueAfter) {
             logger.info("GameModel -> Price to cross: (Value After) " + valueAfter);
             return valueAfter;
@@ -264,16 +290,16 @@ public class GameModel {
     /**
      * Fabian Witschi
      * <br>
-     * Since we found the first water card on the way to the target card it might be that on the following
+     * Since we found the first water card on the way to the target it might be that on the following
      * card it has more water cards and this method is checking if there is on the next pathId more than one card
-     * if so we want to get the one at the top which is cardtype NOT water and is on top. If we get only one card
+     * if so we want to get the one at the top which is cardType NOT water and is on top. If we get only one card
      * on the pathId we recall the method (recursive) in order to iterate through the following cards until we get
      * a "normal" path card.
      *
      * @param pathId
      * @return valueOfCardAfter
      */
-    private int getValueFromCardAfter(int pathId) {
+    private int getValueFromCardAfterWater(int pathId) {
         int valueOfCardAfter = 0;
         pathIdAfter = pathId + 1;
         ArrayList<Card> tempList = new ArrayList<>();
@@ -292,8 +318,8 @@ public class GameModel {
                     }
                 }
             } else {
-                System.out.println("STILL WATER - > " + pathIdAfter);
-                return getValueFromCardAfter(pathIdAfter);
+                System.out.println("MORE WATER ON - > " + pathIdAfter);
+                return getValueFromCardAfterWater(pathIdAfter);
             }
         }
         System.out.println("PRICE AFTER - > " + valueOfCardAfter);
@@ -303,14 +329,14 @@ public class GameModel {
     /**
      * Fabian Witschi
      * <br>
-     * In the method ifWaterOnTheWay we check already each path card until we get to the first water card
-     * therefore it is not necessary to iterate backwards until we find the next "normal" card - so just getting
-     * the value of the card behind is enough for calculating the price for passing
+     * In the method findWaterPathId we found the first water card therefore it is not necessary
+     * to iterate backwards until we find the next "normal" card - so just getting the value of the
+     * card behind is enough for calculating the price for passing
      *
      * @param pathId
      * @return valueOfCardBehind
      */
-    private int getValueFromCardBehind(int pathId) {
+    private int getValueFromCardBehindWater(int pathId) {
         int pathIdBehind = pathId - 1;
         int valueOfCardBehind = 0;
         for (Card pathCard : pathCards) {
@@ -327,8 +353,9 @@ public class GameModel {
     /**
      * Hermann Grieder
      * <br>
+     * Writes the game state HashMap after every turn which is then send to the server.
      *
-     * @return
+     * @return HashMap with the current game state information
      */
     public HashMap<String, Object> writeGameStateMap() {
         HashMap<String, Object> gameStateMap = new HashMap<>();
@@ -365,6 +392,7 @@ public class GameModel {
     /**
      * Hermann Grieder
      * <br>
+     * Reads the initial game state map from the server.
      *
      * @param gameStateMap
      */
@@ -380,6 +408,7 @@ public class GameModel {
     /**
      * Hermann Grieder
      * <br>
+     * Reads the game state map from the server while the game is in progress.
      *
      * @param gameStateMap
      */
@@ -403,9 +432,10 @@ public class GameModel {
     /**
      * Hermann Grieder
      * <br>
+     * Updates values and lists in the model after a move has been validated by the server.
      */
 
-    public boolean updateValues() {
+    public void updateValues() {
         players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex).setCurrentPathId(targetPathIdRemote);
 
         if (indexOfPathCardToRemove != -1) {
@@ -421,10 +451,13 @@ public class GameModel {
         selectedGamePiece = players.get(previousTurn).getGamePieces().get(gamePieceUsedIndex);
         selectedGamePiece.setCurrentPathId(targetPathIdRemote);
         updateMovementCards();
-        return true;
-
     }
 
+    /**
+     * Fabian Witschi
+     * <br>
+     * Removes the cards that where used to pay for the crossing of water from the stack.
+     */
     private void removePaidCardsFromStack() {
         if (!(paidCardIndices == null || paidCardIndices.size() == 0)) {
             ArrayList<Card> stacksCardsToRemove = new ArrayList<>();
@@ -438,7 +471,12 @@ public class GameModel {
         }
     }
 
-
+    /**
+     * Hermann Grieder
+     * <br>
+     * Updates the movement card arrayList in the player by removing the played cards and adding the new card(s)
+     * from the server.
+     */
     private void updateMovementCards() {
         ArrayList<Card> movementCardsToRemove = new ArrayList<>();
         for (Integer index : playedCardsIndices) {
@@ -454,6 +492,26 @@ public class GameModel {
             players.get(previousTurn).getMovementCards().add(card);
         }
         playedCardsIndices.clear();
+    }
+
+    /**
+     * Hermann Grieder
+     * Finds the name of the winner of the game.
+     *
+     * @return The name of the winner
+     */
+    public String calculateWinner() {
+        String winner = null;
+        int score = 0;
+        for (Player player : players) {
+            if (player.getScore() > score) {
+                score = player.getScore();
+                winner = player.getPlayerName();
+            } else if (player.getScore() == score) {
+                winner = null;
+            }
+        }
+        return winner;
     }
 
     // ********************************* GETTERS & SETTERS ***************************** //
@@ -539,7 +597,9 @@ public class GameModel {
         playedCardsIndices.add(index);
     }
 
-    public ArrayList<Integer> getTargetPathIds() { return targetPathIds; }
+    public ArrayList<Integer> getTargetPathIds() {
+        return targetPathIds;
+    }
 
     public void setTargetPathIds(ArrayList<Integer> targetPathIds) {
         this.targetPathIds = targetPathIds;
@@ -565,20 +625,6 @@ public class GameModel {
         paidCardIndices.clear();
     }
 
-    public String getWinnerName() {
-        String winner = null;
-        int score = 0;
-        for (Player player : players) {
-            if (player.getScore() > score) {
-                score = player.getScore();
-                winner = player.getPlayerName();
-            }else if (player.getScore() == score) {
-                winner = null;
-            }
-        }
-        return winner;
-    }
-
     public void setPaidCorrectPrice(boolean paidCorrectPrice) {
         this.paidCorrectPrice = paidCorrectPrice;
     }
@@ -587,7 +633,9 @@ public class GameModel {
         return paidCardIndices;
     }
 
-    public boolean getCantMoveButtonHasBeenPressed() { return cantMoveButtonHasBeenPressed; }
+    public boolean getCantMoveButtonHasBeenPressed() {
+        return cantMoveButtonHasBeenPressed;
+    }
 
     public void setCantMoveButtonHasBeenPressed(boolean cantMoveButtonHasBeenPressed) {
         this.cantMoveButtonHasBeenPressed = cantMoveButtonHasBeenPressed;

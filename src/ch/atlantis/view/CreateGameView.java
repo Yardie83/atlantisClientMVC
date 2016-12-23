@@ -13,7 +13,8 @@ import javafx.scene.paint.Color;
 /**
  * Created by Hermann Grieder on 08.08.2016.
  * <p>
- * Create Game View
+ * Create Game View. This is where the player can create a new game. A name and the number of players is needed.
+ *
  */
 public class CreateGameView extends Pane {
 

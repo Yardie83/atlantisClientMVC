@@ -216,6 +216,11 @@ public class AtlantisModel {
         clientTask.start();
     }
 
+    /**
+     * Loris Grether
+     *
+     * @param message
+     */
     private void updatePlayerStats(Message message) {
 
         int[] infos = (int[]) message.getMessageObject();
@@ -224,22 +229,37 @@ public class AtlantisModel {
         numberOfGames = infos[1];
     }
 
+    /**
+     * Hermann Grieder
+     */
     private void handleNewTurn() {
         newTurn.setValue(true);
         newTurn.setValue(false);
     }
 
+    /**
+     * Fabian Witschi
+     */
     private void handleCantMove() {
         cardsForNotMoving.setValue(true);
         cardsForNotMoving.setValue(false);
     }
 
+    /**
+     * Fabian Witschi
+     */
     private void handlePurchasedCards() {
         givePurchasedCards.setValue(true);
         givePurchasedCards.setValue(false);
     }
 
-
+    /**
+     * Hermann Grieder
+     * <br>
+     * The incoming message tells us if the game is full on the server side and ready to be started.
+     * If we are the player who created the game then we need to be informed that we can now start the game.
+     * @param message The message received from the server
+     */
     private void handleReadyGame(Message message) {
         String[] gameInfo = splitMessage(message);
         String gameName = gameInfo[0];
@@ -255,10 +275,24 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * After the game is full on the server and we send the start message to the server the server sends us
+     * this message back with the final information that we need to show the game. The gameLobbyController is
+     * listening to this SimpleBooleanProperty.
+     */
     private void handleGameInit() {
         gameInfo.set(true);
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     *  After we join a game, the server sends us our playerId for that game specific game.
+     *  We update this information in the localPlayer object.
+     * @param message
+     */
     private void handelJoinGame(Message message) {
         String[] info = splitMessage(message);
         int playerId = Integer.valueOf(info[0]);
@@ -266,12 +300,25 @@ public class AtlantisModel {
         localPlayer = new Player(playerId, gameName, userName.getValue());
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Every time a move has been confirmed by the server we change the moveValid value to true so the game controller
+     * can progress the game and update the to the new state of the game.
+     */
     @SuppressWarnings("unchecked")
     public void handleMove() {
         moveValid.setValue(true);
         moveValid.setValue(false);
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * After every move the server checks if the game is over and informs all the players. Once the game is over
+     * the game controller will show the game over screen.
+     * @param message
+     */
     private void handleGameOver(Message message) {
         if (message.getMessageObject() instanceof HashMap) {
             gameOverScores.setValue(true);
@@ -284,11 +331,23 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Every time a new game is created the server sends us the new gameList. We add all the games from the
+     * message to the gameList observable list. The list is then updated in the view.
+     * @param message
+     */
     private void handleGameList(Message message) {
         gameList.add(message.getMessageObject().toString());
     }
 
-    //this method instantiate the language handler
+    /**
+     * Loris Grether
+     * <br>
+     * This method instantiate the language handler
+     */
+
     private void handleLanguages() {
         languageHandler = new LanguageHandler();
         if (languageHandler.getLanguageList().size() == 0 || languageHandler.getLanguageList() == null) {
@@ -301,6 +360,10 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Loris Grether
+     * <br>
+     */
     private void handleSettings() {
         if (conf == null) {
             conf = new AtlantisConfig();
@@ -310,10 +373,24 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Sets the userName value of the SimpleStringProperty to the value in the incoming message.
+     * @param message The incoming message object
+     */
     private void handleUserName(Message message) {
         userName.setValue(message.getMessageObject().toString());
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Sets the createProfileSuccess SimpleIntegerProperty to 1 if the profile was successfully created otherwise
+     * to 2
+     *
+     * @param message The incoming message object
+     */
     private void handleCreateProfile(Message message) {
         if (message.getMessageObject().equals(Boolean.TRUE)) {
             createProfileSuccess.setValue(1);
@@ -322,6 +399,12 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Sets the loginSuccess SimpleIntegerProperty to 1 if the login was successful, otherwise to 2
+     * @param message The incoming message object
+     */
     private void handleLogin(Message message) {
         if (message.getMessageObject().equals(Boolean.TRUE)) {
             loginSuccess.setValue(1);
@@ -330,6 +413,12 @@ public class AtlantisModel {
         }
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Sets the value of the chatString SimpleStringProperty to the value in the incoming message.
+     * @param message The incoming message object
+     */
     private void handleChatMessage(Message message) {
         chatString.setValue(message.getMessageObject().toString());
     }
@@ -363,6 +452,8 @@ public class AtlantisModel {
     }
 
     /**
+     * Hermann Grieder
+     * <br>
      * Closes the InputStreamReader, OutputStreamReader and the Socket.
      * <p>
      * Hermann Grieder

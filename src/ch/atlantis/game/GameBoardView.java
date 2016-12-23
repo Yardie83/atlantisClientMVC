@@ -58,7 +58,6 @@ public class GameBoardView extends Pane {
     private int width;
     private HBox bottomHBox;
     private Label lblStatus;
-    private int height;
 
     public GameBoardView(GameModel gameModel, AtlantisView view) {
 
@@ -71,12 +70,14 @@ public class GameBoardView extends Pane {
     }
 
     /**
+     * Hermann Grieder
+     * <br>
      * Sets the X and Y values for each tile calculated by the screen height of individual users. Draws the cards,
      * the gamePieces and the player console.
      */
     private void initBoard() {
 
-        height = view.heightProperty().getValue();
+        int height = view.heightProperty().getValue();
         width = view.widthProperty().getValue();
         super.setMinHeight(height);
         super.setMinWidth(width);
@@ -100,9 +101,14 @@ public class GameBoardView extends Pane {
 
         addInfoLabel();
 
-        addCSS();
+        setCSSIds();
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Draws the path
+     */
     private void drawPath() {
         for (Card card : gameModel.getPathCards()) {
             for (Tile tile : gameModel.getTiles()) {
@@ -130,6 +136,11 @@ public class GameBoardView extends Pane {
 
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Draws the main path
+     */
     private void drawMainPath(Card card, Tile tile) {
         card.setWidth(tile.getSide());
         card.setHeight(tile.getSide());
@@ -137,13 +148,22 @@ public class GameBoardView extends Pane {
         card.setLayoutY(tile.getY());
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Draws the start and the end
+     */
     private void drawSpecialCards(Card card, Tile tile) {
         card.setWidth(tile.getSide() * 3);
         card.setHeight(tile.getSide() * 2);
         card.toBack();
     }
 
-
+    /**
+     * Hermann Grieder
+     * <br>
+     * Draws the game piece on start of the game
+     */
     private void drawGamePieces() {
         // First find the start of the game to place the gamePieces onto
         Card startCard = null;
@@ -176,7 +196,9 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Styles the gamePiece. Sets the color, width and height.
+     * Hermann Grieder
+     * <br>
+     * Styles the gamePiece. Sets their color, width and height.
      *
      * @param player    The player to whom the gamePiece belongs to
      * @param gamePiece The gamePiece to be styled
@@ -189,6 +211,13 @@ public class GameBoardView extends Pane {
         gamePiece.setFill(player.getColor());
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Draws the "console" in the bottom of the game board view. The console contains the path cards that where picked
+     * up during the game, the opponents names and score, the player's movement card and his score, and all the game
+     * control buttons.
+     */
     private void drawConsole() {
         for (Tile tile : gameModel.getTiles())
             if (tile.getPathId() == 500) {
@@ -216,6 +245,11 @@ public class GameBoardView extends Pane {
 
     }
 
+    /**
+     * Fabian Witschi
+     *
+     * @return VBox
+     */
     private VBox createPathCardsPane() { // Create VBox with score cards
         VBox pathCardsPane = new VBox(3);
         pathCardsPane.setMaxWidth(50);
@@ -224,6 +258,12 @@ public class GameBoardView extends Pane {
         return pathCardsPane;
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     *
+     * @return HBox
+     */
     private HBox initConsole() {
         HBox console = new HBox(10);
         console.setLayoutX(consoleTile.getX());
@@ -233,6 +273,12 @@ public class GameBoardView extends Pane {
         return console;
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     *
+     * @return VBox with all the game controls
+     */
     private VBox createGameControls() {
         VBox gameControls = new VBox(10);
         HBox firstRow = new HBox(5);
@@ -262,23 +308,20 @@ public class GameBoardView extends Pane {
         return gameControls;
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * The local player's movement cards and score. The movement cards are inside a scrollPane, so when the
+     * player has more than 4 cards he can scroll through the rest of his cards.
+     *
+     * @return VBox
+     */
     private VBox createLocalPlayerBox() {
         VBox localPlayerBox = new VBox(10);
         localPlayerBox.setMinHeight(150);
         localPlayerBox.setMinWidth(consoleTile.getSide() * 4);
         HBox top = new HBox(10);
         top.setAlignment(Pos.CENTER);
-        HBoxMovementCards = placeMovementCards();
-
-        ScrollPane scrollPaneMovementCards = new ScrollPane(HBoxMovementCards);
-        scrollPaneMovementCards.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPaneMovementCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPaneMovementCards.setMinViewportHeight(50);
-        scrollPaneMovementCards.setPrefSize(50,100);
-        scrollPaneMovementCards.setMaxHeight(150);
-        scrollPaneMovementCards.minViewportHeightProperty().set(50);
-
-        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, scrollPaneMovementCards);
 
         String score = "0";
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
@@ -289,10 +332,29 @@ public class GameBoardView extends Pane {
         label3.setStyle("-fx-text-fill: white");
 
         top.getChildren().addAll(lblLocalPlayer, label3, lblScoreLocalPlayer);
+
+        HBoxMovementCards = placeMovementCards();
+
+        ScrollPane scrollPaneMovementCards = new ScrollPane(HBoxMovementCards);
+        scrollPaneMovementCards.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPaneMovementCards.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPaneMovementCards.setMinViewportHeight(50);
+        scrollPaneMovementCards.setPrefSize(50, 100);
+        scrollPaneMovementCards.setMaxHeight(150);
+        scrollPaneMovementCards.minViewportHeightProperty().set(50);
+
+        localPlayerBox.getChildren().addAll(top, HBoxMovementCards, scrollPaneMovementCards);
+
         return localPlayerBox;
     }
 
-    private void addInfoLabel(){
+    /**
+     * Hermann Grieder
+     * <br>
+     * The infoLabel on top of the game. Informs the player of his color, the current turn and what needs to be done
+     * during moves.
+     */
+    private void addInfoLabel() {
 
         bottomHBox = new HBox(10);
         bottomHBox.setPrefWidth(width);
@@ -304,6 +366,11 @@ public class GameBoardView extends Pane {
         this.getChildren().add(bottomHBox);
     }
 
+    /**
+     * The opponent box contains the score and the names of the opponents.
+     *
+     * @return VBox
+     */
     private VBox createOpponentBox() {
         VBox opponentsBox = new VBox(10);
         opponentsBox.setMinHeight(200);
@@ -322,6 +389,13 @@ public class GameBoardView extends Pane {
         return opponentsBox;
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Adds movement cards to the player during the game.
+     *
+     * @return HBox filled with the movement cards.
+     */
     private HBox placeMovementCards() {
         HBox bottom = new HBox(10);
         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
@@ -331,6 +405,11 @@ public class GameBoardView extends Pane {
         return bottom;
     }
 
+    /**
+     * Hermann Grieder
+     *
+     * @param card The movement card to be styled
+     */
     private void styleMovementCard(Card card) {
         card.setWidth(60);
         card.setHeight(80);
@@ -344,7 +423,7 @@ public class GameBoardView extends Pane {
     /**
      * Loris Grether
      *
-     * @return
+     * @return Hashtable<String, ImageView>
      */
     private Hashtable<String, ImageView> readCardImages() {
         Hashtable<String, ImageView> listCardImages = new Hashtable<>();
@@ -358,7 +437,7 @@ public class GameBoardView extends Pane {
                 if (file.exists() && file.isFile()) {
                     if (file.getName().endsWith(".jpg") || file.getName().endsWith(".png")) {
 
-                        //without the substring(4) the path is invalid resp nullPointerException
+                        //without the substring(4) the path is invalid resp. nullPointerException
                         ImageView imageView = new ImageView(new Image(file.getPath().substring(4)));
                         listCardImages.put(file.getName(), imageView);
                     }
@@ -368,6 +447,10 @@ public class GameBoardView extends Pane {
         return listCardImages;
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     */
     public void show() {
         String css = this.getClass().getResource("../res/css/css_Game.css").toExternalForm();
         Scene gameScene = new Scene(this);
@@ -383,11 +466,16 @@ public class GameBoardView extends Pane {
 
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * After every move the infoLabel switches to the right message depending if it is the local players turn or not.
+     */
     private void setInfoLblTextOnNewTurn() {
-        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()){
+        if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
             setInfoLabelText("Your turn. Select a game piece and a card and then press move");
-        }else{
-            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() +"'s turn. Please wait.");
+        } else {
+            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() + "'s turn. Please wait.");
         }
     }
 
@@ -395,25 +483,19 @@ public class GameBoardView extends Pane {
     //*************************** METHODS DURING THE ACTIVE GAME *****************************//
 
     /**
-     *Hermann Grieder
-     * @param selectedGamePiece
-     */
-    public void moveGamePiece(GamePiece selectedGamePiece) {
-        int targetPathId = selectedGamePiece.getCurrentPathId();
-        move(selectedGamePiece, targetPathId);
-    }
-
-    /**
      * Hermann Grieder
      * <br>
      * Moves the selected game piece to the target path. If the target path is the atlantis land
-     * then we move the game piece to the land with an offset
-     * @param selectedGamePiece
-     * @param targetPathId
+     * then we move the game piece to the land with an offset. We use the currentPathId of the GamePiece
+     * because when the server accepts our move we then set the currentPathId to the value of the targetPathId
+     * so they are equivalent.
+     *
+     * @param selectedGamePiece The gamePiece to move
      */
-    public void move(GamePiece selectedGamePiece, int targetPathId) {
+    public void moveGamePiece(GamePiece selectedGamePiece) {
         int x = 0;
         int y = 0;
+        int targetPathId = selectedGamePiece.getCurrentPathId();
         for (Tile targetTile : gameModel.getTiles()) {
             if (targetTile.getPathId() == 400 && targetTile.getPathId() == targetPathId) {
                 x = (targetTile.getX() + offsetX + targetTile.getSide() / 3);
@@ -428,6 +510,11 @@ public class GameBoardView extends Pane {
         selectedGamePiece.move(x, y);
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Updates the game Board after every move.
+     */
     public void updateBoard() {
 
         GamePiece selectedGamePiece = gameModel.getPlayers().get(gameModel.getPreviousTurn()).getGamePieces().get(gameModel.getGamePieceUsedIndex());
@@ -469,8 +556,11 @@ public class GameBoardView extends Pane {
         });
     }
 
+    /**
+     * Fabian Witschi
+     */
     private void updatePathCardsStack() { // Load score cards in VBox
-        Platform.runLater(new Runnable() { // What is this?
+        Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 stackCardPane.getChildren().setAll(gameModel.getPlayers().get(gameModel.getPreviousTurn()).getPathCardStack());
@@ -478,6 +568,9 @@ public class GameBoardView extends Pane {
         });
     }
 
+    /**
+     * Hermann Grieder
+     */
     public void updateMovementCards() {
         Platform.runLater(new Runnable() {
             @Override
@@ -487,12 +580,18 @@ public class GameBoardView extends Pane {
                         styleMovementCard(card);
                         HBoxMovementCards.getChildren().removeAll(card);
                     }
+                    HBoxMovementCards.getChildren().setAll(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards());
                 }
-                HBoxMovementCards.getChildren().setAll(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards());
             }
         });
     }
 
+    /**
+     * Hermann Grieder
+     *
+     * @param scoreLabel The label to be updated
+     * @param score      The score that should be shown
+     */
     private void updateScoreLabel(Label scoreLabel, int score) {
         logger.info("Total of " + score + " points.");
         logger.info("CurrentTurn: " + gameModel.getCurrentTurn());
@@ -504,6 +603,13 @@ public class GameBoardView extends Pane {
         });
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Toggles the moveButton
+     *
+     * @param disableButtonMove True if button should be disabled, false if it should be enabled.
+     */
     public void setDisableButtonMove(boolean disableButtonMove) {
         Platform.runLater(new Runnable() {
             @Override
@@ -513,6 +619,13 @@ public class GameBoardView extends Pane {
         });
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Toggles the endTurn button
+     *
+     * @param disableButtonEndTurn True if button should be disabled, false if it should be enabled.
+     */
     public void setDisableButtonEndTurn(boolean disableButtonEndTurn) {
         Platform.runLater(new Runnable() {
             @Override
@@ -522,6 +635,13 @@ public class GameBoardView extends Pane {
         });
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Sets the text of the infoLabel
+     *
+     * @param s The string the infoLabel should show
+     */
     public void setInfoLabelText(String s) {
         Platform.runLater(new Runnable() {
             @Override
@@ -532,6 +652,9 @@ public class GameBoardView extends Pane {
         });
     }
 
+    /**
+     * Hermann Grieder
+     */
     public void resetCards() {
         for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
             card.setOpacity(1);
@@ -540,6 +663,9 @@ public class GameBoardView extends Pane {
         }
     }
 
+    /**
+     * Hermann Grieder
+     */
     public void createGameOverView() {
         Stage parentStage = gameStage;
         if (gameOverView == null) {
@@ -554,6 +680,10 @@ public class GameBoardView extends Pane {
 
     }
 
+    public void hideGameOver() {
+        gameOverStage.hide();
+    }
+
     public void removePathCard(Card pathCard) {
         this.getChildren().remove(pathCard);
     }
@@ -562,7 +692,9 @@ public class GameBoardView extends Pane {
         view.showOptions();
     }
 
+
     // ************************************* Styling Methods & CSS ***************************************** //
+    // All methods by Hermann Grieder
 
     void resetHighlight(Rectangle item) {
         item.setStroke(Color.TRANSPARENT);
@@ -584,7 +716,7 @@ public class GameBoardView extends Pane {
         item.setStrokeWidth(4);
     }
 
-    private void addCSS(){
+    private void setCSSIds() {
         bottomHBox.setId("bottomHBox");
         lblStatus.setId("lblStatus");
 
@@ -633,13 +765,12 @@ public class GameBoardView extends Pane {
         return buttonPay;
     }
 
-    public Button getButtonCantMove() { return  buttonCantMove; }
+    public Button getButtonCantMove() {
+        return buttonCantMove;
+    }
 
     public GameOverView getGameOverView() {
         return gameOverView;
     }
 
-    public void hideGameOver() {
-        gameOverStage.hide();
-    }
 }

@@ -9,6 +9,7 @@ import java.util.ArrayList;
  * Created by Fabian on 15/08/16.
  */
 public class Player implements Serializable {
+
     private static final long serialVersionUID = 7661939850705259874L;
     private ArrayList<GamePiece> gamePieces;
     private ArrayList<Card> movementCards;
@@ -17,9 +18,7 @@ public class Player implements Serializable {
     private String gameName;
     private int playerID;
     private Color color;
-    private int bridge;
     private int score;
-    private int gamePiecesOnLand;
 
     public Player(int playerID, String gameName, String playerName) {
         this.playerName = playerName;
@@ -29,6 +28,11 @@ public class Player implements Serializable {
         this.gamePieces = null;
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     *  Once the we have a playerId from the server, we can then assign a color to our player.
+     */
     public void applyColor() {
         switch (playerID) {
             case 0:
@@ -46,34 +50,27 @@ public class Player implements Serializable {
         }
     }
 
-    public Color getColor() { return color; }
-
+    /**
+     * Hermann Grieder
+     * @return String, the name of the color of the player.
+     */
     public String getColorName(){
         switch (playerID) {
             case 0:
-                return "red";
-
+                return "Red";
             case 1:
-                return "blue";
-
+                return "Blue";
             case 2:
-                return "green";
-
+                return "Green";
             case 3:
-                return "yellow";
+                return "Yellow";
             }
             return null;
     }
 
+    public Color getColor() { return color; }
+
     public int getScore() { return score; }
-
-    public int getBridge() {
-        return bridge;
-    }
-
-    public void removeBridge() {
-        this.bridge = 0;
-    }
 
     public int getPlayerID() {
         return playerID;

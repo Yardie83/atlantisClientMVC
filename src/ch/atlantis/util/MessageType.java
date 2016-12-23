@@ -2,6 +2,8 @@ package ch.atlantis.util;
 
 /**
  * Created by Hermann Grieder on 19.07.2016.
+ *
+ * The different types of messages that can be send.
  */
 public enum MessageType {
     CHAT,

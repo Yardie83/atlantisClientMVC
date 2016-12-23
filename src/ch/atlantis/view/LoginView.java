@@ -14,7 +14,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 /**
- * Created by Loris Grether on 04.08.2016.
+ * Created by Hermann Grieder and Loris Grether on 04.08.2016.
+ *
+ * Login View
  */
 public class LoginView extends Pane {
 

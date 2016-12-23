@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Hermann Grieder and Loris Grether on 21.07.2016.
+ *
+ * The options view for the game. Used in the gameLobby and in the game itself when the ESC key is pressed.
  */
 public class OptionsView extends Pane {
 
@@ -91,8 +93,8 @@ public class OptionsView extends Pane {
 
         lblLanguage = new Label("Language");
 
-        comboBoxLanguages = new ComboBox<String>();
-        comboBoxLanguages.setTooltip(new Tooltip("select a lanugage"));
+        comboBoxLanguages = new ComboBox<>();
+        comboBoxLanguages.setTooltip(new Tooltip("select a language"));
 
         for (Language language : languageList){
 

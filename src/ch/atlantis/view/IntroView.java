@@ -15,19 +15,18 @@ import java.util.logging.Logger;
 
 /**
  * Created by Loris Grether and Hermann Grieder on 17.07.2016.
+ *
+ * The intro view shows the intro video on start of the application.
  */
 public class IntroView extends Pane {
 
-    private Scene introScene;
     private MediaPlayer mp;
-    private MediaView mediaView;
-    private Logger logger;
 
     public IntroView(Stage introStage) {
 
-        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
+        Logger logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
 
-        introScene = new Scene(this);
+        Scene introScene = new Scene(this);
         introStage.setScene(introScene);
         introStage.setFullScreen(true);
         introStage.setFullScreenExitHint("");
@@ -35,7 +34,7 @@ public class IntroView extends Pane {
         try {
             Media media = new Media(Paths.get("src/ch/atlantis/res/atlantis.mp4").toUri().toString());
             mp = new MediaPlayer(media);
-            mediaView = new MediaView(mp);
+            MediaView mediaView = new MediaView(mp);
             DoubleProperty width = mediaView.fitWidthProperty();
             DoubleProperty height = mediaView.fitHeightProperty();
 

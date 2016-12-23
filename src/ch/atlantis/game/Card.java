@@ -8,22 +8,26 @@ import javafx.scene.shape.Rectangle;
 import java.io.Serializable;
 import java.util.Hashtable;
 
-/**
- * Created by Hermann Grieder on 15/08/16.
- * <p>
- * Card class that defines sets the color and the image for the individual card
- */
 
+/**
+ * Hermann Grieder
+ * <br>
+ *  The different cards types in the game.
+ */
 enum CardType {
     PATH, WATER, START, END, MOVEMENT
 }
 
+/**
+ * Created by Hermann Grieder on 15/08/16.
+ * <p>
+ * Card class that defines the color and the image for the individual card
+ */
 public class Card extends Rectangle implements Serializable {
 
     private static final long serialVersionUID = 1597939850705259874L;
 
     private boolean isOnTop;
-    private boolean isPlayed;
     private int value;
     private int colorSet;
     private CardType cardType;
@@ -33,6 +37,7 @@ public class Card extends Rectangle implements Serializable {
     /**
      * Loris Grether
      *
+     * Adds the scanned images to the cards.
      */
     public void applyCardImages(Hashtable<String, ImageView> listCardImages) {
 
@@ -85,11 +90,4 @@ public class Card extends Rectangle implements Serializable {
         return this.isOnTop;
     }
 
-    public boolean isPlayed() {
-        return this.isPlayed;
-    }
-
-    public void setIsPlayed(Boolean isPlayed) {
-        this.isPlayed = isPlayed;
-    }
 }

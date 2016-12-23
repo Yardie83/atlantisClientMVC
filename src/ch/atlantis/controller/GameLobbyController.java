@@ -61,8 +61,6 @@ public class GameLobbyController {
 
     private void handleGameLobbyControls() {
 
-        Stage gameLobbyStage = view.getGameLobbyView().getGameLobbyStage();
-
         /*
          * *******************************
          * Menu Bar Controls EventHandlers
@@ -150,9 +148,9 @@ public class GameLobbyController {
         });
 
         /*
-         * ******************************
-         * CHAT Application EventHandlers
-         * ******************************
+         * ***********************************************************
+         *               CHAT Application EventHandlers              *
+         * ***********************************************************
          */
 
         /*
@@ -332,7 +330,12 @@ public class GameLobbyController {
             }
         });
 
-
+        /*
+         * Once the game is full on the server and we are the creator of the game
+         * then our start button will be enabled.
+         *
+         * Hermann Grieder
+         */
         model.gameReadyProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -343,7 +346,11 @@ public class GameLobbyController {
                 }
             }
         });
-
+        /*
+         * Creates a new game with its own model, view and controller.
+         *
+         * Hermann Grieder
+         */
         model.gameInfoProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -357,6 +364,12 @@ public class GameLobbyController {
         });
     }
 
+    /**
+     * Hermann Grieder
+     * <br>
+     * Listens if the game is over. If so we show the gameLobby again.
+     * @param gameController The game controller of the current game.
+     */
     private void listenForGameOver(GameController gameController) {
         gameController.gameOverProperty().addListener(new ChangeListener<Boolean>() {
             @Override

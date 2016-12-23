@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 /**
- * Created by Loris Grether on 04.08.2016.
+ * Created by Hermann Grieder and Loris Grether on 04.08.2016.
  * <p>
  * Create New Profile View
  */
