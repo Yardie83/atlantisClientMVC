@@ -159,7 +159,7 @@ public class GameController {
                         handleMouseEventsMovementCards();
                         gameBoardView.getButtonBuyCards().setDisable(true);
                         gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPathCardStack().remove(gameModel.getSelectedStackCardIndex());
-                        gameBoardView.setInfoLabelText("You got (a) new Card(s)");
+                        gameBoardView.setInfoLabelText("You got " + arrayListOfPurchasedCards.size() + " new Card(s)");
                     }
                 }
             }
@@ -207,7 +207,7 @@ public class GameController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (newValue.intValue() != 0) {
-                    gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross");
+                    gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross. You can select multiple cards to pay.");
                     gameBoardView.setDisableButtonEndTurn(true);
                     gameBoardView.setDisableButtonMove(true);
                     gameBoardView.getButtonPay().setDisable(false);
