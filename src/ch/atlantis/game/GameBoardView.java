@@ -50,6 +50,7 @@ public class GameBoardView extends Pane {
     private GameOverView gameOverView;
     private Stage gameOverStage;
     private VBox stackCardPane;
+    private Label lblScoreText;
 
     private int offsetX = 10;
     private int offsetY = 5;
@@ -327,7 +328,7 @@ public class GameBoardView extends Pane {
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
         lblLocalPlayer.setStyle("-fx-text-fill: white");
         HBox scoreBox = new HBox();
-        Label lblScoreText = new Label("Score ");
+        lblScoreText = new Label("Score ");
         lblScoreText.setStyle("-fx-text-fill: white");
         lblScoreLocalPlayer = new Label(score);
         scoreBox.getChildren().addAll(lblScoreText, lblScoreLocalPlayer);
@@ -362,11 +363,13 @@ public class GameBoardView extends Pane {
 
         bottomHBox = new HBox(10);
         bottomHBox.setPrefWidth(width);
-        lblStatus = new Label("Your Color: " + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getColorName());
+        lblStatus = new Label("Your Color:");
+
+        Label playerColor = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getColorName());
 
         infoLabel = new Label("");
         infoLabel.setStyle("-fx-text-fill: white");
-        bottomHBox.getChildren().addAll(lblStatus, infoLabel);
+        bottomHBox.getChildren().addAll(lblStatus, playerColor, infoLabel);
         this.getChildren().add(bottomHBox);
     }
 
@@ -477,9 +480,13 @@ public class GameBoardView extends Pane {
      */
     private void setInfoLblTextOnNewTurn() {
         if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
-            setInfoLabelText("Your turn. Select a game piece and a card and then press move");
+            //setInfoLabelText("Your turn. Select a game piece and a card and then press move");
+            setInfoLabelText(view.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_YourTurn"));
+            setLblStatus(view.getSelectedLanguage().getLanguageTable().get("gameBordView_lblStatus") + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getColorName());
         } else {
-            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() + "'s turn. Please wait.");
+            //setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() + "'s turn. Please wait.");
+            setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() + view.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_NotYourTurn"));
+            setLblStatus(view.getSelectedLanguage().getLanguageTable().get("gameBordView_lblStatus") + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getColorName());
         }
     }
 
@@ -723,7 +730,7 @@ public class GameBoardView extends Pane {
 
     private void setCSSIds() {
         bottomHBox.setId("bottomHBox");
-        lblStatus.setId("lblStatus");
+        lblStatus.setId("gameBordView_lblStatus");
 
         buttonGameRules.setId("gameBordView_btnGameRules");
         buttonBuyCards.setId("gameBordView_btnBuyCards");
@@ -735,6 +742,7 @@ public class GameBoardView extends Pane {
 
         infoLabel.setId("lblInfo");
         lblScoreLocalPlayer.setId("gameBordView_lblScoreLocalPlayer");
+        lblScoreText.setId("gameBordView_lblScoreText");
 
 
         //view.getLoginView().getLblError().setText(view.getSelectedLanguage().getLanguageTable().get("login_lblError1"));
@@ -744,6 +752,10 @@ public class GameBoardView extends Pane {
 
     public Stage getGameStage() {
         return gameStage;
+    }
+
+    public void setLblStatus(String s){
+        this.lblStatus.setText(s);
     }
 
     public Button getButtonBuyCards() {
