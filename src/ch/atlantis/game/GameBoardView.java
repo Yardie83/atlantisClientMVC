@@ -608,7 +608,8 @@ public class GameBoardView extends Pane {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                scoreLabel.setText("Score: " + String.valueOf(score));
+                //scoreLabel.setText("Score: " + String.valueOf(score));
+                scoreLabel.setText(view.getSelectedLanguage().getLanguageTable().get("gameBordView_lblScoreText") + String.valueOf(score));
             }
         });
     }
