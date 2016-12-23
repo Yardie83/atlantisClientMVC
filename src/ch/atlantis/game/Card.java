@@ -36,12 +36,13 @@ public class Card extends Rectangle implements Serializable {
 
     /**
      * Loris Grether
-     *
+     * In order to be able to add the cards like this I had to rename the cards
      * Adds the scanned images to the cards.
      */
     public void applyCardImages(Hashtable<String, ImageView> listCardImages) {
 
         if (this.getCardType() == CardType.WATER){
+            //rectangle setFill
             super.setFill(new ImagePattern(listCardImages.get("water.jpg").getImage()));
 
         }else if (this.getCardType() == CardType.PATH) {

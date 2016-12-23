@@ -41,13 +41,13 @@ public class LanguageHandler {
 
     private void getFiles() {
 
+        //folder directory
         File folder = new File("src/ch/atlantis/res/languages/");
 
         if (!folder.isDirectory()){
-            //TODO: Log error Message
+            logger.warning("Language folder directory error");
         }
 
-        //en-US --> locales
         File[] myFiles = folder.listFiles();
 
         for (File file : myFiles){
@@ -55,7 +55,6 @@ public class LanguageHandler {
                 if (file.getName().endsWith(".xml"));
 
                 readLanguageFile(file.getPath());
-                //TODO: Log file.getPath(); was read
             }
         }
     }
@@ -82,7 +81,7 @@ public class LanguageHandler {
         } catch (SAXException asf) {
 
         } catch (FileNotFoundException notFoundException) {
-            logger.info("Language File could not be found.");
+            logger.info("Language File could not be found. " + path);
 
         } catch (IOException ioException) {
 
@@ -110,6 +109,7 @@ public class LanguageHandler {
         return values;
     }
 
+    //This method modifies the id ("Id="btnLogin"" -->"btnLogin")
     private String modifyValue(String id) {
 
         String[] split = id.split("\"");

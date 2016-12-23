@@ -306,8 +306,6 @@ public class GameController {
 
                         if (clickCount == 0 && gameModel.getLocalPlayerId() == gameModel.getCurrentTurn()) {
                             if (card.getValue() > 1) {
-                                //gameBoardView.setInfoLabelText("You selected a card of value: " + card.getValue() + ". " +
-                                        //"You get " + (card.getValue() / 2) + " cards, press \"Buy Cards\".");
 
                                 gameBoardView.setInfoLabelText(atlantisView.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_BuyCards1")
                                         + card.getValue() + ". " +

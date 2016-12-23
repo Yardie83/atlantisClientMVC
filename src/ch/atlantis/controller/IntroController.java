@@ -53,10 +53,6 @@ public class IntroController {
                 view.getIntroStage().close();
                 view.createGameLobbyView(true);
                 new GameLobbyController(model, view);
-
-                //Load and show the languages
-
-
                 view.getGameLobbyView().show();
             }
         });

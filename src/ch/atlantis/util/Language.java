@@ -8,6 +8,7 @@ import java.util.Hashtable;
  */
 public class Language implements Serializable {
 
+    //en-US --> locales
     private String culture = "";
 
     private Hashtable<String, String> languageTable = new Hashtable<String, String>();

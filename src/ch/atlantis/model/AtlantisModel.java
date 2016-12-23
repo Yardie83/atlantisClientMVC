@@ -218,7 +218,8 @@ public class AtlantisModel {
 
     /**
      * Loris Grether
-     *
+     *This method is for the InformationView
+     * The message from the server will be downcasted
      * @param message
      */
     private void updatePlayerStats(Message message) {
@@ -351,12 +352,9 @@ public class AtlantisModel {
     private void handleLanguages() {
         languageHandler = new LanguageHandler();
         if (languageHandler.getLanguageList().size() == 0 || languageHandler.getLanguageList() == null) {
-            logger.info("AtlantisModel -> No languages available.");
+            logger.warning("No languages available.");
         } else {
-
-            //success
-
-            //TODO: Log languages etc
+            logger.info("The languages files are read in");
         }
     }
 
@@ -365,6 +363,7 @@ public class AtlantisModel {
      * <br>
      */
     private void handleSettings() {
+        //if statement just as a dubblecheck
         if (conf == null) {
             conf = new AtlantisConfig();
             if (!conf.readAtlantisConfig()) {
@@ -503,6 +502,7 @@ public class AtlantisModel {
             File file = new File("src/ch/atlantis/res/Atlantis_Spielregel.pdf");
 
             if (file.exists()) {
+                //http://stackoverflow.com/questions/242579/limit-for-url-length-for-rundll32-url-dll-fileprotocolhandler
                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
             }
         } catch (IOException e) {
@@ -512,6 +512,11 @@ public class AtlantisModel {
 
     // ***************************** GETTERS & SETTERS **************************//
 
+    /**
+     * Loris Grether
+     * @param culture
+     * @return language
+     */
     public Language getSelectedLanguage(String culture) {
         for (Language language : this.getLanguageList()) {
             if (language.getCulture().equals(culture)) {

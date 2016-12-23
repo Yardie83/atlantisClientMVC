@@ -85,6 +85,7 @@
 	<String Id="gameBordView_btnReset" >Reset</String>
 	
 	<String Id="gameBordView_lblScoreText" >Score: </String>
+	<String Id="gameBordView_lblScoreOpponent" >Socre: </String>
 	<String Id="gameBordView_lblStatus" >Your color: </String>
 
 	<String Id="gameBordView_InfoLabel_YourTurn" >Your turn. Select a game piece and a card and then press move</String>
