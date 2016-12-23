@@ -482,9 +482,11 @@ public class GameBoardView extends Pane {
         if (gameModel.getCurrentTurn() == gameModel.getLocalPlayerId()) {
             //setInfoLabelText("Your turn. Select a game piece and a card and then press move");
             setInfoLabelText(view.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_YourTurn"));
+            setLblStatus(view.getSelectedLanguage().getLanguageTable().get("gameBordView_lblStatus") + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getColorName());
         } else {
             //setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() + "'s turn. Please wait.");
             setInfoLabelText(gameModel.getPlayers().get(gameModel.getCurrentTurn()).getPlayerName() + view.getSelectedLanguage().getLanguageTable().get("gameBordView_InfoLabel_NotYourTurn"));
+            setLblStatus(view.getSelectedLanguage().getLanguageTable().get("gameBordView_lblStatus") + gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getColorName());
         }
     }
 
@@ -750,6 +752,10 @@ public class GameBoardView extends Pane {
 
     public Stage getGameStage() {
         return gameStage;
+    }
+
+    public void setLblStatus(String s){
+        this.lblStatus.setText(s);
     }
 
     public Button getButtonBuyCards() {
