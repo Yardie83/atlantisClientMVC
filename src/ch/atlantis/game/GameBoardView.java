@@ -365,11 +365,9 @@ public class GameBoardView extends Pane {
         bottomHBox.setPrefWidth(width);
         lblStatus = new Label("Your Color:");
 
-        Label playerColor = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getColorName());
-
         infoLabel = new Label("");
         infoLabel.setStyle("-fx-text-fill: white");
-        bottomHBox.getChildren().addAll(lblStatus, playerColor, infoLabel);
+        bottomHBox.getChildren().addAll(lblStatus, infoLabel);
         this.getChildren().add(bottomHBox);
     }
 
