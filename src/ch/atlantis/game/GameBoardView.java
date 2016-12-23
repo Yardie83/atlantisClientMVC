@@ -71,7 +71,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Hermann Grieder & Can Heval Cokyasar
      * <br>
      * Sets the X and Y values for each tile calculated by the screen height of individual users. Draws the cards,
      * the gamePieces and the player console.
@@ -106,7 +106,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Hermann Grieder & Can Heval Cokyasar
      * <br>
      * Draws the path
      */
@@ -138,7 +138,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Hermann Grieder & Can Heval Cokyasar
      * <br>
      * Draws the main path
      */
@@ -213,7 +213,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Hermann Grieder & Can Heval Cokyasar
      * <br>
      * Draws the "console" in the bottom of the game board view. The console contains the path cards that where picked
      * up during the game, the opponents names and score, the player's movement card and his score, and all the game
@@ -247,7 +247,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Fabian Witschi
+     * Hermann Grieder & Can Heval Cokyasar
      *
      * @return VBox
      */
@@ -260,7 +260,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Hermann Grieder & Can Heval Cokyasar
      * <br>
      *
      * @return HBox
@@ -275,7 +275,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Hermann Grieder & Can Heval Cokyasar
      * <br>
      *
      * @return VBox with all the game controls
@@ -310,7 +310,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Hermann Grieder & Can Heval Cokyasar
      * <br>
      * The local player's movement cards and score. The movement cards are inside a scrollPane, so when the
      * player has more than 4 cards he can scroll through the rest of his cards.
@@ -354,7 +354,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Hermann Grieder & Can Heval Cokyasar
      * <br>
      * The infoLabel on top of the game. Informs the player of his color, the current turn and what needs to be done
      * during moves.
