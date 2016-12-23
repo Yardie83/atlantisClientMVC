@@ -1,10 +1,13 @@
 package ch.atlantis.controller;
 
+import ch.atlantis.AtlantisClient;
 import ch.atlantis.model.AtlantisModel;
 import ch.atlantis.view.AtlantisView;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.RadioButton;
+
+import java.util.logging.Logger;
 
 /**
  * Created by Loris Grether on 28.08.2016.
@@ -18,8 +21,13 @@ public class OptionsController {
 
     final private AtlantisModel model;
     final private AtlantisView view;
+    private Logger logger;
 
     public OptionsController(AtlantisModel model, AtlantisView view) {
+
+        logger = Logger.getLogger(AtlantisClient.AtlantisLogger);
+
+
         this.model = model;
         this.view = view;
         handleOptionsControls();
@@ -31,9 +39,6 @@ public class OptionsController {
         view.getOptionsView().getBtnApply().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-                //Fullscreen Settings
-                //fullscreenSettings();
 
                 //Music Settings
                 musicSettings();
@@ -91,12 +96,13 @@ public class OptionsController {
                 model.setConfigLanguage(culture);
                 view.getOptionsView().setSelectedComboboxLanguage(culture);
 
-                //TODO: Ask bradley if there is another solution to handle this problem (hallo guest1, willkommen in atlantis blabla )
+                //TODO: Improve if time
                 model.userNameProperty().setValue(model.userNameProperty().get().concat(" "));
                 model.userNameProperty().setValue(model.userNameProperty().get().substring(0, model.userNameProperty().get().length() - 1));
 
             } else {
-                //TODO: (Loris) Error message
+
+                logger.warning("The language could not be changed");
             }
         }
     }

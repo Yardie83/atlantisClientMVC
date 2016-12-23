@@ -85,6 +85,7 @@
 	<String Id="gameBordView_btnReset" >Zurücksetzen</String>
 	
 	<String Id="gameBordView_lblScoreText" >Punkte: </String>
+	<String Id="gameBordView_lblScoreOpponent" >Punkte: </String>
 	<String Id="gameBordView_lblStatus" >Deine Farbe: </String>
 
 	<String Id="gameBordView_InfoLabel_YourTurn" >Du bist am Zug. Wähle eine Spielfigur und eine Karte und drücke den Knopf "Spielen"</String>

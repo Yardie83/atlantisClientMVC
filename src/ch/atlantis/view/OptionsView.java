@@ -27,12 +27,8 @@ public class OptionsView extends Pane {
     // CENTER elements
     private GridPane centerPane;
 
-    private Label lblFullScreen;
     private Label lblSoundToggle;
     private Label lblLanguage;
-
-    private RadioButton radioBtnFullScreenOn;
-    private RadioButton radioBtnFullScreenOff;
 
     private RadioButton radioBtnSoundOn;
     private RadioButton radioBtnSoundOff;
@@ -44,8 +40,6 @@ public class OptionsView extends Pane {
     private Button btnApply;
     private Button btnCancel;
     private ToggleGroup radioBtnGroupSound;
-    private ToggleGroup radioBtnGroupFullscreen;
-
 
     public OptionsView(int height, int width, ArrayList<Language> languageList, String culture, boolean isMusic) {
 
@@ -75,13 +69,6 @@ public class OptionsView extends Pane {
 
         centerPane = new GridPane();
 
-        lblFullScreen = new Label("Fullscreen");
-        radioBtnGroupFullscreen = new ToggleGroup();
-        radioBtnFullScreenOn = new RadioButton("On");
-        radioBtnFullScreenOn.setSelected(true);
-        radioBtnFullScreenOff = new RadioButton("Off");
-        radioBtnGroupFullscreen.getToggles().addAll(radioBtnFullScreenOn, radioBtnFullScreenOff);
-
         lblSoundToggle = new Label("Sound");
         radioBtnGroupSound = new ToggleGroup();
         radioBtnSoundOn = new RadioButton("On");
@@ -102,12 +89,7 @@ public class OptionsView extends Pane {
 
         }
 
-        //comboBoxLanguages.getSelectionModel().selectFirst();
         comboBoxLanguages.getSelectionModel().select(culture);
-
-        centerPane.add(lblFullScreen, 0, 0);
-        centerPane.add(radioBtnFullScreenOn, 1, 0);
-        centerPane.add(radioBtnFullScreenOff, 2, 0);
 
         centerPane.add(lblSoundToggle, 0, 1);
         centerPane.add(radioBtnSoundOn, 1, 1);
@@ -139,7 +121,6 @@ public class OptionsView extends Pane {
         btnCancel.getStyleClass().add("buttons");
 
         /*Common Style Class for the Labels and TextFields in the CENTER*/
-        lblFullScreen.getStyleClass().add("labels");
         lblSoundToggle.getStyleClass().add("labels");
         lblLanguage.getStyleClass().add("labels");
 
@@ -148,15 +129,8 @@ public class OptionsView extends Pane {
 
         /*Style IDs for the controls in the Options View */
         lblOptions.setId("optionsView_lblOptions");
-        lblFullScreen.setId("optionsView_lblFullScreen");
         lblSoundToggle.setId("optionsView_lblSoundToggle");
         lblLanguage.setId("optionsView_lblLanguage");
-
-        radioBtnFullScreenOn.getStyleClass().add("radioButtons");
-        radioBtnFullScreenOff.getStyleClass().add("radioButtons");
-
-        radioBtnFullScreenOn.setId("optionsView_radioBtnFullScreenOn");
-        radioBtnFullScreenOff.setId("optionsView_radioBtnFullScreenOff");
 
         radioBtnSoundOn.getStyleClass().add("radioButtons");
         radioBtnSoundOff.getStyleClass().add("radioButtons");
@@ -189,10 +163,6 @@ public class OptionsView extends Pane {
 
     public ToggleGroup getRadioBtnGroupSound() {
         return radioBtnGroupSound;
-    }
-
-    public ToggleGroup getRadioBtnGroupFullscreen() {
-        return radioBtnGroupFullscreen;
     }
 }
 

@@ -63,6 +63,7 @@ public class AtlantisView {
         width = new SimpleIntegerProperty(1280);
         height = new SimpleIntegerProperty(800);
 
+        //Loris Grether
         this.setSelectedLanguage(model.getSelectedLanguage(model.getConfigLanguage()));
 
         controls = new ArrayList<>();
@@ -255,7 +256,7 @@ public class AtlantisView {
     /**
      * Creates the Options view
      * <p>
-     * Hermann Grieder
+     * Hermann Grieder and Loris Grether
      */
 
     public void createOptionsView() {
@@ -486,6 +487,7 @@ public class AtlantisView {
         this.fullscreen = fullscreen;
     }
 
+    //Loris Grether
     public boolean setSelectedLanguage(Language selectedLanguage) {
 
         if (selectedLanguage != null) {
@@ -500,6 +502,7 @@ public class AtlantisView {
         this.activeOverlayStage.close();
     }
 
+    //Hermann Grieder
     public void showOptions() {
         if (this.optionsView == null) {
             createOptionsView();
