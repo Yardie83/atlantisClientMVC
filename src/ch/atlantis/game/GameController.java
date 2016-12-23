@@ -62,7 +62,7 @@ public class GameController {
     /**
      * Hermann Grieder
      * <br>
-     *  Sends the moveMap from the gameModel at the end of a turn to the server
+     * Sends the moveMap from the gameModel at the end of a turn to the server
      */
     private void sendMoveMessage() {
         HashMap<String, Object> moveMap = gameModel.writeGameStateMap();
@@ -70,8 +70,9 @@ public class GameController {
     }
 
     private void addListeners() {
-
-        /*
+        /**
+         * Hermann Grieder
+         *
          * Listens if a move message was received in the atlantisModel. Will be executed for all player moves.
          */
         atlantisModel.moveValidProperty().addListener(new ChangeListener<Boolean>() {
@@ -144,7 +145,6 @@ public class GameController {
          * Can Heval Cokyasar
          *
          */
-
         atlantisModel.givePurchasedCards().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -164,7 +164,9 @@ public class GameController {
                 }
             }
         });
-
+        /**
+         * Hermann Grieder
+         */
         atlantisModel.gameOverProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -173,7 +175,9 @@ public class GameController {
                 }
             }
         });
-
+        /**
+         * Hermann Grieder
+         */
         atlantisModel.gameOverScores().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -186,7 +190,9 @@ public class GameController {
                 }
             }
         });
-
+        /**
+         * Hermann Grieder
+         */
         gameModel.occupiedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -202,12 +208,11 @@ public class GameController {
          * Fabian Witschi
          *
          */
-
         gameModel.priceToCrossWaterProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if (newValue.intValue() != 0) {
-                    gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross. You can select multiple cards to pay.");
+                    gameBoardView.setInfoLabelText("You have to pay: " + newValue + " to cross the water. You can select multiple cards to pay.");
                     gameBoardView.setDisableButtonEndTurn(true);
                     gameBoardView.setDisableButtonMove(true);
                     gameBoardView.getButtonPay().setDisable(false);
@@ -399,7 +404,9 @@ public class GameController {
                 }
             }
         });
-
+        /**
+         * Hermann Grieder
+         */
         gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -414,7 +421,9 @@ public class GameController {
                 tryToMove();
             }
         });
-
+        /**
+         * Hermann Grieder
+        */
         gameBoardView.getButtonReset().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -443,7 +452,9 @@ public class GameController {
                 clickCount = 0;
             }
         });
-
+        /**
+        * Hermann Grieder
+        */
         gameBoardView.getButtonEndTurn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -467,7 +478,9 @@ public class GameController {
                 }
             }
         });
-
+        /**
+         * Loris Grether
+         */
         gameBoardView.getButtonGameRules().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -476,6 +489,11 @@ public class GameController {
         });
     }
 
+    /**
+     * Fabian Witschi
+     *
+     * @return
+     */
     private boolean tryMoveAutomatically() {
 
         for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
@@ -497,6 +515,9 @@ public class GameController {
         return false;
     }
 
+    /**
+     * Hermann Grieder & Fabian Witschi
+     */
     private void tryToMove() {
         gameBoardView.getButtonBuyCards().setDisable(true);
         gameBoardView.getButtonReset().setDisable(false);
@@ -521,12 +542,15 @@ public class GameController {
         } else if (gameModel.getSelectedGamePiece() == null && gameModel.getSelectedCard() == null) {
             gameBoardView.setInfoLabelText("Please select a card and a game piece to play and then press move");
         } else if (gameModel.getSelectedCard() == null) {
-            gameBoardView.setInfoLabelText("Please select a card to play and then press move" );
+            gameBoardView.setInfoLabelText("Please select a card to play and then press move");
         } else if (gameModel.getSelectedGamePiece() == null) {
             gameBoardView.setInfoLabelText("Please select a game piece to play and then press move");
         }
     }
 
+    /**
+     * Hermann Grieder
+     */
     private void handleGameOver() {
         Platform.runLater(new Runnable() {
             @Override
@@ -538,6 +562,9 @@ public class GameController {
 
     }
 
+    /**
+     * Hermann Grieder
+     */
     private void backToLobbyButtonHandler() {
         gameBoardView.getGameOverView().getBtnBackToLobby().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -548,6 +575,9 @@ public class GameController {
         });
     }
 
+    /**
+     * Hermann Grieder
+     */
     private void handleMouseEventsGamePieces() {
         ArrayList<GamePiece> gamePieces = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces();
         for (GamePiece gamePiece : gamePieces) {
@@ -596,6 +626,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Hermann Grieder
+     */
     private void handleMouseEventsMovementCards() {
         /*
          * Selects the movement card the player clicked on
@@ -645,6 +678,9 @@ public class GameController {
         }
     }
 
+    /**
+     * Hermann Grieder
+     */
     private void updateLocalValues() {
         gameBoardView.setDisableButtonMove(false);
         gameBoardView.getButtonCantMove().setDisable(false);
