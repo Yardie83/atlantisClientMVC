@@ -126,11 +126,13 @@ public class GameModel {
         int priceToCross = 0;
         // This section deals with the rule that a player can pay for multiple water crossings with one payment
         // instead of individual payments for each crossing.
-        // We add the price of a crossing and then find the start of the next water crossing and add that price and so on.
+        // We add the price of a crossing and then find the start of the next water crossing
+        // and add that price to the total and so on.
         while (waterPathId != 0 && getValueFromCardAfterWater(waterPathId) != 0) {
             priceToCross += getPriceForCrossing(waterPathId);
             waterPathId = findWaterPathId(pathIdAfter);
         }
+
         if (cantMoveButtonHasBeenPressed) {
             priceToCrossWaterAutomatically.set(priceToCross);
         } else {

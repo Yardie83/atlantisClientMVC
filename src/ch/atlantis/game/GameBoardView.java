@@ -326,12 +326,16 @@ public class GameBoardView extends Pane {
         String score = "0";
         Label lblLocalPlayer = new Label(gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getPlayerName());
         lblLocalPlayer.setStyle("-fx-text-fill: white");
-        lblScoreLocalPlayer = new Label("Score: " + score);
+        HBox scoreBox = new HBox();
+        Label lblScoreText = new Label("Score ");
+        lblScoreText.setStyle("-fx-text-fill: white");
+        lblScoreLocalPlayer = new Label(score);
+        scoreBox.getChildren().addAll(lblScoreText, lblScoreLocalPlayer);
         lblScoreLocalPlayer.setStyle("-fx-text-fill: white");
         Label label3 = new Label("|");
         label3.setStyle("-fx-text-fill: white");
 
-        top.getChildren().addAll(lblLocalPlayer, label3, lblScoreLocalPlayer);
+        top.getChildren().addAll(lblLocalPlayer, label3, scoreBox);
 
         HBoxMovementCards = placeMovementCards();
 
