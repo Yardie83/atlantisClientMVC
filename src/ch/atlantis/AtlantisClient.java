@@ -10,13 +10,10 @@ import java.io.IOException;
 import java.util.logging.*;
 
 /**
- * Created by Loris Grether, Hermann Grieder and Can Heval Cokyasar on 17.07.2016 / 29.11.2016.
+ * Created by Loris Grether, Hermann Grieder on 17.07.2016.
  *
  * Start of the application.
  * Creates the model, the view, and the controller.
- *
- *
- * Logger configuration.
  *
  */
 
@@ -43,10 +40,11 @@ public class AtlantisClient extends Application {
     }
 
     /**
-     * Heval Cokyasar
+     * Can Heval Cokyasar
      *
-     * Sets up the logger
+     * Configure the logger
      */
+
     private void initLogger() {
         logger = Logger.getLogger(AtlantisLogger);
 
@@ -54,6 +52,7 @@ public class AtlantisClient extends Application {
 
             // Configure logger with handler and formatter
             fh = new FileHandler("AtlantisClientLog.txt", 50000, 1);
+
             logger.addHandler(fh);
             SimpleFormatter formatter = new SimpleFormatter();
 
