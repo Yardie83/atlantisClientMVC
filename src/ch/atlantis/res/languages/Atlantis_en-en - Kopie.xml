@@ -84,7 +84,26 @@
 	<String Id="gameBordView_btnPay" >Pay</String>
 	<String Id="gameBordView_btnReset" >Reset</String>
 	
-<!-- 	<String Id="lblInfo" >Zurücksetzen</String>
-	<String Id="gameBordView_lblScoreLocalPlayer" >Zurücksetzen</String> -->
+	<String Id="gameBordView_lblScoreText" >Score: </String>
+	<String Id="gameBordView_lblStatus" >Your color: </String>
+
+	<String Id="gameBordView_InfoLabel_YourTurn" >Your turn. Select a game piece and a card and then press move</String>
+	<String Id="gameBordView_InfoLabel_NotYourTurn" >'s turn. Please wait</String>
+	<String Id="gameBordView_InfoLabel_TwoNewCards" >You got two new cards</String>
+	<String Id="gameBordView_InfoLabel_NewCards" >You got (a) new Card(s)</String>
+	<String Id="gameBordView_InfoLabel_OccupiedTarget" >Target is occupied. Play another card to jump over</String>
+	<String Id="gameBordView_InfoLabel_PayToCross1" >You have to pay: </String>
+	<String Id="gameBordView_InfoLabel_PayToCross2" > to cross</String>
+	<String Id="gameBordView_InfoLabel_BuyCards1" >You selected a card of value: </String>
+	<String Id="gameBordView_InfoLabel_BuyCards2" > You get</String>
+	<String Id="gameBordView_InfoLabel_BuyCards3" > cards, press "Buy Cards"</String>
+	<String Id="gameBordView_InfoLabel_CardValueTooLow" >The selected card's value is too low to buy a card</String>
+	<String Id="gameBordView_InfoLabel_WillGet2Cards" >You will get two cards</String>
+	<String Id="gameBordView_InfoLabel_YouCanMove" >You CAN move with your cards</String>
+	<String Id="gameBordView_InfoLabel_AmountNotSufficient" >Sorry amount is not sufficient. Price to cross: </String>
+	<String Id="gameBordView_InfoLabel_SelectCardToPay" >Select a card to pay with</String>
+	<String Id="gameBordView_InfoLabel_ConfirmMove" >Press "End Turn" to confirm your move</String>
+	<String Id="gameBordView_InfoLabel_SelectCardPressMove" >Please select a card to play and then press move"</String>
+	<String Id="gameBordView_InfoLabel_SelectGamePiecePressMove" >Please select a game piece to play and then press move</String>
 	
 </LanguageEntry>
