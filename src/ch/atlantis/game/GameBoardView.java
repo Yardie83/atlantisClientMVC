@@ -561,7 +561,7 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Fabian Witschi
+     * Hermann Grieder
      */
     private void updatePathCardsStack() { // Load score cards in VBox
         Platform.runLater(new Runnable() {
@@ -573,7 +573,8 @@ public class GameBoardView extends Pane {
     }
 
     /**
-     * Hermann Grieder
+     * Fabian Witschi
+     * Updates the movement cards if we buy some cards so that we can see them as soon as we get them
      */
     public void updateMovementCards() {
         Platform.runLater(new Runnable() {

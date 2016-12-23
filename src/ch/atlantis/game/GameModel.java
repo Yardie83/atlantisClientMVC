@@ -113,7 +113,9 @@ public class GameModel {
     }
 
     /**
-     * Fabian Witschi
+     * Fabian Witschi & Hermann Grieder
+     * This method is checks if there is water on the path. If we get water the method will add the lower value to the sum
+     * and finally set the price that we have to pay in order to cross the water.
      *
      * @return True if there is water on the way to the target, false if there is no water
      */
@@ -634,11 +636,6 @@ public class GameModel {
     public ArrayList<Integer> getPaidCardIndices() {
         return paidCardIndices;
     }
-
-    public boolean getCantMoveButtonHasBeenPressed() {
-        return cantMoveButtonHasBeenPressed;
-    }
-
     public void setCantMoveButtonHasBeenPressed(boolean cantMoveButtonHasBeenPressed) {
         this.cantMoveButtonHasBeenPressed = cantMoveButtonHasBeenPressed;
     }
