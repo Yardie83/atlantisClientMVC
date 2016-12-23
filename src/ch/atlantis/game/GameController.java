@@ -96,6 +96,9 @@ public class GameController {
 
         /**
          * Fabian Witschi
+         * If we can't move any of our gamepiece there is a button that sends us two cards and this listener
+         * changes to true if we receive such a "cant move" message and gets the two cards from the arraylist
+         * we send from the server to the client.
          *
          */
 
@@ -120,6 +123,9 @@ public class GameController {
 
         /**
          * Fabian Witschi
+         * Just right after receiving two new cards for not moving we change the new turn to the next one
+         * since the rules say that after you received two cards your turn is over. It gets the new incremented
+         * turn on the client and my turn is over.
          *
          */
 
@@ -165,6 +171,11 @@ public class GameController {
             }
         });
 
+        /**
+         * Hermann Grieder
+         *
+         */
+
         atlantisModel.gameOverProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -173,6 +184,14 @@ public class GameController {
                 }
             }
         });
+
+        /**
+         * Fabian Witschi
+         * Before the game is over we send the final score of the clients to each client and iterate through the scores
+         * and so we can update the score of each player and when the gameover message (true) comes in we have the right
+         * scores
+         *
+         */
 
         atlantisModel.gameOverScores().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -187,6 +206,11 @@ public class GameController {
             }
         });
 
+        /**
+         * Hermann Grieder
+         *
+         */
+
         gameModel.occupiedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -200,7 +224,8 @@ public class GameController {
 
         /**
          * Fabian Witschi
-         *
+         * If the price has changed to a certain number this listener is giving the user the information about the price
+         * and disables/enables some buttons which then give the right environment for paying with cards
          */
 
         gameModel.priceToCrossWaterProperty().addListener(new ChangeListener<Number>() {
@@ -214,6 +239,15 @@ public class GameController {
                 }
             }
         });
+
+        /**
+         * Fabian Witschi
+         * If the button "cant move" is pressed a boolean will be set to true and thus a different listener is activated since
+         * we want to have an independent environment for the "automatical" move. The listener goes automatically through
+         * all the path cards that we gathered during the game and stops if we get the right amount to cross -> it tells then
+         * the user that he/she has enough money and obviously enough cards to move and is not allowed to get two cards from
+         * the deck
+         */
 
         gameModel.priceToCrossWaterAutomatically().addListener(new ChangeListener<Number>() {
             @Override
@@ -232,7 +266,7 @@ public class GameController {
     }
 
     /**
-     * Can Heval Cokyasar & Hermann Grieder
+     * Can Heval Cokyasar (Some Parts) & Hermann Grieder (Some Parts)
      */
 
     private void handleMouseEventsStackCards() {
@@ -322,6 +356,15 @@ public class GameController {
 
         /**
          * Fabian Witschi
+         * If we cant move we have due to rules the option to get two new movement cards. But it is possible to cheat
+         * and getting two new cards even though you are able to move is not fair to others the button calls the
+         * "canmoveautomaticall" method and it checks if the player is not able to move at all and if so the action method
+         * will send a message which then gives two cards back from the server. Otherswise we will be notified by a label that
+         * we are able to move and we wont get any card.
+         *
+         * NOTE : Since i could not check the method "tryMoveAutomatically" it might be that some problems occur so if so
+         * just change the condition in the if statement from tryToMoveAutomatically to true and so we always get two cards
+         * (this works since i have tried it several times)
          *
          */
 
@@ -349,6 +392,10 @@ public class GameController {
 
         /**
          * Fabian Witschi
+         * If we have to pay to cross water we are requested to select pathcards in order to pay the right amount. The
+         * button pay calls a method if the paid amount is enough to cross and gives either the message the price is not enough
+         * or it makes the cards invisible until we end the move. Then if we paid the right amount a boolean will be set true
+         * and the tryToMove will be called again but if we paid the right amount it wont check the water again and we can move.
          *
          */
 
@@ -400,6 +447,11 @@ public class GameController {
             }
         });
 
+        /**
+         * Hermann Grieder
+         *
+         */
+
         gameBoardView.getButtonMove().setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -414,6 +466,11 @@ public class GameController {
                 tryToMove();
             }
         });
+
+        /**
+         * Hermann Grieder
+         *
+         */
 
         gameBoardView.getButtonReset().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -443,6 +500,11 @@ public class GameController {
                 clickCount = 0;
             }
         });
+
+        /**
+         * Hermann Grieder
+         *
+         */
 
         gameBoardView.getButtonEndTurn().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -476,10 +538,24 @@ public class GameController {
         });
     }
 
+    /**
+     * Fabian Witschi
+     * It does nothing else than the "tryToMove" but this one is done automatically. If we cant move this method is called and
+     * selects for each gamepiece all the cards as long as needed in order to check if we can move or not. If we can then we
+     * will be notified that we are able to move with our cards and otherwise we will get the two cards which handles the button
+     * above. If we have enough movement cards but have to cross water/or it is occupied the method should pay or move foreward
+     * automatically.
+     *
+     * NOTE : Unfortunately i could never produce such a case and therefore not test the method if it works fine.
+     *
+     * @return
+     */
+
     private boolean tryMoveAutomatically() {
 
         for (GamePiece gamePiece : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces()) {
             gameModel.setSelectedGamePiece(gamePiece);
+            GamePiece tempSavingGamePiece = gamePiece;
             for (Card card : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
                 gameModel.setSelectedCard(card);
                 if (gameModel.getSelectedCard() != null && gameModel.getSelectedGamePiece() != null) {
@@ -490,12 +566,37 @@ public class GameController {
                     }
                     gameModel.getSelectedCard().setDisable(true);
                     gameModel.addToPlayedCards();
+                    if (gameModel.occupiedProperty().get() == true) {
+                        for (Card anotherCard : gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getMovementCards()) {
+                            if (anotherCard != gameModel.getSelectedCard()) {
+                                gameModel.setSelectedCard(anotherCard);
+                                gameBoardView.moveGamePiece(gameModel.getSelectedGamePiece());
+                                if (gameModel.canMoveDirectly()) {
+                                    gameModel.occupiedProperty().setValue(false);
+                                    gameBoardView.moveGamePiece(tempSavingGamePiece);
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    if (gameModel.priceToCrossWaterAutomatically().get() != 0) {
+                        if (gameModel.canMoveDirectly()) {
+                            gameModel.priceToCrossWaterAutomatically().setValue(0);
+                            return true;
+                        }
+                    }
                 }
             }
+            gameBoardView.moveGamePiece(tempSavingGamePiece);
         }
         logger.info("Boolean value is -> " + false);
         return false;
     }
+
+    /**
+     * Hermann Grieder
+     *
+     */
 
     private void tryToMove() {
         gameBoardView.getButtonBuyCards().setDisable(true);
@@ -527,6 +628,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Hermann Grieder
+     *
+     */
+
     private void handleGameOver() {
         Platform.runLater(new Runnable() {
             @Override
@@ -538,6 +644,11 @@ public class GameController {
 
     }
 
+    /**
+     * Hermann Grieder
+     *
+     */
+
     private void backToLobbyButtonHandler() {
         gameBoardView.getGameOverView().getBtnBackToLobby().setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -547,6 +658,11 @@ public class GameController {
             }
         });
     }
+
+    /**
+     * Hermann Grieder
+     *
+     */
 
     private void handleMouseEventsGamePieces() {
         ArrayList<GamePiece> gamePieces = gameModel.getPlayers().get(gameModel.getLocalPlayerId()).getGamePieces();
@@ -596,6 +712,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Hermann Grieder
+     *
+     */
+
     private void handleMouseEventsMovementCards() {
         /*
          * Selects the movement card the player clicked on
@@ -644,6 +765,12 @@ public class GameController {
             });
         }
     }
+
+    /**
+     * Fabian Witschi
+     * Updates the local values
+     *
+     */
 
     private void updateLocalValues() {
         gameBoardView.setDisableButtonMove(false);
